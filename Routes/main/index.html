@@ -160,6 +160,13 @@
 		<span class="icon4"></span>
 		<span class="text4">Prompts</span>
 	</a>
+	<a href="https://github.com/phaticusthiccy/Thena-Web" class="gh" style="scale: 1.2;">
+		<div>
+			<img src="/img?img=github.png" alt="Github">
+		</div>
+		<span class="gh"></span>
+		<span class="gh_text">Github</span>
+	</a>
 	<script>
 	const circle = document.getElementById('circle');
 	var mob = false
@@ -621,6 +628,56 @@
 		}
 
 		.tg:hover .text3 {
+			opacity: 1;
+			transform: translateY(-30px);
+		}
+
+		.gh {
+			position: fixed;
+			bottom: 20px;
+			left: 80px;
+			/*width: 50px;*/
+			height: 50px;
+			border-radius: 50%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			transition: filter 0.5s, box-shadow 0.5s;
+		}
+
+		.gh .gh_text {
+			display: block;
+			position: fixed;
+			margin-top: 0;
+			padding-top: 5px;
+			font-size: 14px;
+			font-weight: bold;
+			opacity: 0;
+			transition: all 0.3s ease;
+			animation: 3s linear infinite alternate animate-background;
+			-webkit-background-clip: text;
+			background-clip: text;
+			color: transparent;
+			background-size: 300%;
+			background-image: linear-gradient(to right, #5BCEFA 0%, #F5A9B8 25%, #FFFFFF 50%, #F5A9B8 75%, #5BCEFA 100%);
+		}
+
+		.gh div {
+			width: 40%;
+			height: 40%;
+			border-radius: 50%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			transition: filter 0.5s, box-shadow 0.5s;
+		}
+
+		.gh:hover div {
+			filter: none;
+			box-shadow: rgb(6, 150, 172) 0px 0px 40px 20px;
+		}
+
+		.gh:hover .gh_text {
 			opacity: 1;
 			transform: translateY(-30px);
 		}
