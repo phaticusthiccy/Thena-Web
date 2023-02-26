@@ -1,12 +1,16 @@
 const express = require("express")
 const point = express.Router();
 const fs = require('fs');
+var weights = require("./main/weights");
 
 point.get('/', async (req, res) => {
     return res.sendFile(__dirname + '/main/index.html')
 })
 point.get('/img', async (req, res) => {
     return res.sendFile(__dirname + "/main/src/" + req.query.img)
+})
+point.get('/thena-prompts', async (req, res) => {
+    return res.sendFile(__dirname + "/main/prompts.html")
 })
 point.get('/allimgs', async (req, res) => {
     return res.send(JSON.stringify(fs.readdirSync(__dirname + "/main/src/").filter((name) => name.includes("Thena"))))
@@ -28,5 +32,17 @@ point.get('/prompts', async (req, res) => {
         Thena286925: {p: ["Hopes", "Life, Thoughts, Happiness", "Serotonin", "The Key"], bg: "/img?img=backgrounds/QxkOsq.webp"},
         Thena463824: {p: ["A Cup of Annihilation", "The Fear", "Incarcerated Fear", "Extinction", "End of Existence"], bg: "/img?img=/backgrounds/Qub4Zc.webp"}
     }))
+})
+point.get('/guide-prompts', function (req, res) {
+    var payloads = []
+    weights = weights.filter(
+        (counts) => counts.count >= req.query.threshold
+    )
+    while (payloads.length < req.query.count && weights.length > 0) {
+        const index = Math.floor(Math.random() * weights.length);
+        const secilen = weights.splice(index, 1)[0];
+        payloads.push(secilen);
+    }
+    return res.send(payloads)
 })
 module.exports = point
