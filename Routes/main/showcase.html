@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Thena AI</title>
+	<meta property="og:image" content='https://thena.up.railway.app/img?img=Thena286925.png'/>
+    <meta property="og:description" content='A Interactive Website for https://t.me/ThenaAIBot'/>
+    <meta property="og:url" content='https://thena.up.railway.app'/>
+	<link rel="shortcut icon" type="image/png" href="https://i.hizliresim.com/d715rxx.png">
+</head>
+
+<body>
+    <div class="gallery" id="gallery">
+    </div>
+</body>
+
+<style>
+body {
+  background-color: rgba(46, 38, 166, 0.533);
+  background: #000;
+  display: grid;
+  position: relative;
+}
+
+.hello {
+  opacity: 1 !important;
+}
+
+.full {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+.full .content {
+  background-color: rgba(0,0,0,0.75) !important;
+  height: 100%;
+  width: 100%;
+  display: grid;
+}
+.full .content img {
+  left: 100%;
+  transform: translate3d(0, 0, 0);
+  animation: zoomin 0.18s ease;
+  max-width: 70%;
+  max-height: 70%;
+  margin: auto;
+}
+.byebye {
+  opacity: 0;
+}
+.byebye:hover {
+  transform: scale(0.2) !important;
+}
+.gallery {
+  display: grid;
+  grid-column-gap: 8px;
+  grid-row-gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-auto-rows: 8px;
+}
+.gallery img {
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 0 16px #333;
+  transition: all 1.5s ease;
+}
+.gallery img:hover {
+  box-shadow: 0 0 32px #333;
+}
+.gallery .content {
+  padding: 4px;
+}
+.gallery .gallery-item {
+  transition: grid-row-start 300ms linear;
+  transition: transform 300ms ease;
+  transition: all 0.5s ease;
+  cursor: pointer;
+}
+.gallery .gallery-item:hover {
+  transform: scale(1.2);
+  z-index: 9;
+}
+.gallery .gallery-item.full {
+  transform: scale(1.2);
+  z-index: 9;
+}
+
+.gallery .gallery-item.full:hover {
+  transform: none;
+  z-index: 9;
+}
+@media (max-width: 600px) {
+  .gallery {
+    grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
+  }
+}
+@media (max-width: 400px) {
+  .gallery {
+    grid-template-columns: repeat(auto-fill, minmax(50%, 1fr));
+  }
+}
+@-moz-keyframes zoomin {
+  0% {
+    max-width: 50%;
+    
+    filter: blur(4px);
+  }
+  30% {
+    filter: blur(4px);
+    
+  }
+  70% {
+    max-width: 50%;
+    
+  }
+  100% {
+    max-width: 100%;
+    
+  }
+}
+@-webkit-keyframes zoomin {
+  0% {
+    max-width: 50%;
+    
+    filter: blur(4px);
+  }
+  30% {
+    filter: blur(4px);
+   
+  }
+  70% {
+    max-width: 50%;
+   
+  }
+  100% {
+    max-width: 100%;
+    
+  }
+}
+@-o-keyframes zoomin {
+  0% {
+    max-width: 50%;
+    
+    filter: blur(4px);
+  }
+  30% {
+    filter: blur(4px);
+    
+  }
+  70% {
+    max-width: 50%;
+  }
+  100% {
+    max-width: 100%;
+  }
+}
+@keyframes zoomin {
+  0% {
+    max-width: 50%;
+    filter: blur(4px);
+  }
+  30% {
+    filter: blur(4px);
+  }
+  70% {
+    max-width: 50%;
+  }
+  100% {
+    max-width: 100%;
+  }
+}
+
+</style>
+<script>
+
+        console.log(1)
+    fetch("/showcase_img").then(
+			response => response.json()
+		).then(data => {
+        var imageBase64s = data
+            var galleryContainer = document.getElementById("gallery");
+            console.log(2)
+            var fullsizecursorevent = false
+
+            // Her Base64 verisi için galeri öğesi oluştur
+            for (var i = 0; i < imageBase64s.length; i++) {
+                var galleryItem = document.createElement("div");
+                galleryItem.className = "gallery-item";
+
+                var content = document.createElement("div");
+                content.className = "content";
+
+                var img = document.createElement("img");
+                img.src = "/img?img=/showcase/" + imageBase64s[i];
+                img.alt = "";
+                img.setAttribute("draggable", "true");
+
+                content.appendChild(img);
+                galleryItem.appendChild(content);
+                galleryContainer.appendChild(galleryItem);
+            }
+            console.log(3)
+            var gallery = document.querySelector('#gallery');
+        var getVal = function (elem, style) { return parseInt(window.getComputedStyle(elem).getPropertyValue(style)); };
+        var getHeight = function (item) { return item.querySelector('.content').getBoundingClientRect().height; };
+        var resizeAll = function () {
+            var altura = getVal(gallery, 'grid-auto-rows');
+            var gap = getVal(gallery, 'grid-row-gap');
+            gallery.querySelectorAll('.gallery-item').forEach(function (item) {
+                var el = item;
+                el.style.gridRowEnd = "span " + Math.ceil((getHeight(item) + gap) / (altura + gap));
+            });
+        };
+        gallery.querySelectorAll('img').forEach(function (item) {
+            item.classList.add('byebye');
+            if (item.complete) {
+                console.log(item.src);
+            }
+            else {
+                item.addEventListener('load', function () {
+                    var altura = getVal(gallery, 'grid-auto-rows');
+                    var gap = getVal(gallery, 'grid-row-gap');
+                    var gitem = item.parentElement.parentElement;
+                    gitem.style.gridRowEnd = "span " + Math.ceil((getHeight(gitem) + gap) / (altura + gap));
+                    item.classList.remove('byebye');
+                });
+            }
+        });
+
+        window.addEventListener('resize', resizeAll);
+        gallery.querySelectorAll('.gallery-item').forEach(function (item) {
+            item.addEventListener('click', function () {        
+                item.classList.toggle('full');  
+                fullsizecursorevent = true      
+            });
+        });
+
+      
+    })
+
+</script>
+
+</html>
