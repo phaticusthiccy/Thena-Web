@@ -4,7 +4,7 @@
   "description": "A Interactive Website for Thena AI",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "npm i pm2 -g && pm2 start app.js"
   },
   "author": "phaticusthiccy",
   "license": "MIT",
