@@ -1,6 +1,8 @@
 <div align="center">
 
-  <img src="https://github.com/user-attachments/assets/175c0d76-b146-460f-bb34-d0ae7e2b57cc" alt="Thena Logo" width="200" />
+  <a href="https://phaticusthiccy.github.io/Thena-Web/">
+    <img src="https://github.com/user-attachments/assets/175c0d76-b146-460f-bb34-d0ae7e2b57cc" alt="Thena Logo" width="200" />
+  </a>
 
   # THENA - AI Image Generator
 
