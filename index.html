@@ -215,6 +215,7 @@
                 opacity: 0.3;
                 pointer-events: none;
                 filter: grayscale(100%);
+                cursor: not-allowed;
                 transform: scale(0.9);
                 border-color: #222;
             }
@@ -428,7 +429,8 @@
                 bottom: 0;
                 background-size: cover;
                 background-position: center;
-                opacity: 0;
+                background-image: var(--bg-image); 
+                opacity: 0.8;
                 transition: opacity 0.4s ease;
                 z-index: 0;
             }
@@ -461,7 +463,7 @@
             }
         
             .model-card.active::before {
-                opacity: 0.3;
+                opacity: 1;
             }
         
             .model-name {
@@ -607,7 +609,7 @@
             }
         
             .info-icon-wrapper:hover {
-                color: #00ff88;
+                color: rgba(var(--primary-rgb), 1);
                 background: rgba(255, 255, 255, 0.1);
             }
         
@@ -635,7 +637,7 @@
         
             .feature-info-card {
                 background: #111;
-                border: 1px solid #333;
+                border: 1px solid rgba(var(--primary-rgb), 0.5);
                 border-radius: 16px;
                 padding: 24px;
                 width: 320px;
@@ -782,12 +784,24 @@
                 overflow: hidden;
             }
         
-            .generate-btn.ready {
-                background: rgba(0, 255, 136, 0.05);
-                border-color: #00ff88;
-                color: #00ff88;
-                cursor: pointer;
-                box-shadow: 0 0 10px rgba(0, 255, 136, 0.1);
+            .generate-btn.ready { 
+                background: rgba(var(--primary-rgb), 0.05) !important; 
+                border-color: var(--primary) !important; 
+                color: var(--primary) !important; 
+                box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.1) !important;
+            }
+
+            .glitch-text.gradient-active {
+                background: var(--theme-bg);
+                background-clip: text;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                text-shadow: none !important;
+                filter: drop-shadow(0 0 10px rgba(var(--primary-rgb), 0.5));
+            }
+
+            .model-card.active, .aspect-btn.active, .extra-btn.active {
+                border-color: var(--primary) !important;
             }
         
             .generate-btn.generating {
@@ -852,7 +866,7 @@
                 width: 20px;
                 height: 20px;
                 border: 2px solid rgba(0, 255, 136, 0.2);
-                border-top-color: #00ff88;
+                border-top-color: rgba(var(--primary-rgb), 1);
                 border-radius: 50%;
                 animation: spin 1s linear infinite;
                 flex-shrink: 0;
@@ -1723,7 +1737,7 @@
                 width: 16px;
                 height: 16px;
                 border: 2px solid rgba(255, 255, 255, 0.2);
-                border-top-color: #00ff88;
+                border-top-color: rgba(var(--primary-rgb), 1);
                 border-radius: 50%;
                 animation: spin 1s linear infinite;
                 margin-left: 8px;
@@ -1781,7 +1795,7 @@
         
             .confirm-content {
                 background: #111;
-                border: 1px solid #333;
+                border: 1px solid rgba(var(--primary-rgb), 0.5); 
                 border-radius: 24px;
                 padding: 30px;
                 width: 90%;
@@ -1789,7 +1803,7 @@
                 text-align: center;
                 transform: scale(0.9) translateY(20px);
                 transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(var(--primary-rgb), 0.1);
             }
         
             .confirm-modal.active .confirm-content {
@@ -1888,7 +1902,7 @@
         
             .nav-btn {
                 background: rgba(10, 10, 10, 0.8);
-                border: 1px solid #333;
+                border: 1px solid rgba(var(--primary-rgb), 0.5);
                 color: #888;
                 width: 40px;
                 height: 40px;
@@ -1937,7 +1951,7 @@
         
             .redirect-content {
                 background: #111;
-                border: 1px solid #333;
+                border: 1px solid rgba(var(--primary-rgb), 0.5);
                 border-radius: 20px;
                 padding: 30px;
                 width: 90%;
@@ -1948,6 +1962,11 @@
                 box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
             }
         
+            #btn-close-settings:hover {
+                transform: scale(1.05) !important;
+                background: #333 !important;
+            }
+
             #redirect-modal.active .redirect-content {
                 transform: scale(1);
             }
@@ -2345,6 +2364,47 @@
                 }
             }
 
+            :root {
+                --primary: #00ff88;
+                --primary-rgb: 0, 255, 136;
+                --theme-bg: #00ff88; 
+            }
+
+            .glitch-text { text-shadow: 0 0 20px var(--primary), 0 0 40px var(--primary) !important; }
+            .progress-bar { background: var(--theme-bg) !important; }
+            .api-link-btn { color: var(--primary) !important; border-color: rgba(var(--primary-rgb), 0.3) !important; background: rgba(var(--primary-rgb), 0.05) !important; }
+            .api-link-btn:hover { background: rgba(var(--primary-rgb), 0.15) !important; border-color: var(--primary) !important; box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.2) !important; }
+            textarea:focus, .search-input:focus, #api-key:focus { border-color: var(--primary) !important; }
+            /*#magic-wand-btn:hover, #toggle-api-key:hover { color: var(--primary) !important; border-color: var(--primary) !important; }*/
+            #api-key.decrypt-effect { color: var(--primary) !important; }
+            .model-info-icon-wrapper:hover { color: var(--primary) !important; background: rgba(var(--primary-rgb), 0.15) !important; border-color: var(--primary) !important; }
+            .model-card.active { border-color: var(--primary) !important; background: rgba(var(--primary-rgb), 0.05) !important; }
+            .model-card.active .model-name { color: var(--primary) !important; text-shadow: 0 0 15px rgba(var(--primary-rgb), 0.8) !important; }
+            .aspect-btn.active, .extra-btn.active { background: rgba(var(--primary-rgb), 0.05) !important; border-color: var(--primary) !important; color: var(--primary) !important; }
+            .generate-btn.ready { background: rgba(var(--primary-rgb), 0.05) !important; border-color: var(--primary) !important; color: var(--primary) !important; box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.1) !important; }
+            .gallery-btn:hover, .nav-btn:hover { border-color: var(--primary) !important; color: var(--primary) !important; }
+            .gallery-title, .info-meta, .lightbox-meta { color: var(--primary) !important; }
+            #gallery-progress-bar { background: var(--primary) !important; box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.5) !important; }
+            .control-btn:hover, .control-btn.active { border-color: var(--primary) !important; color: var(--primary) !important; background: rgba(var(--primary-rgb), 0.05) !important; }
+            .lightbox-download-btn:hover, .lightbox-share-btn:hover, .lightbox-copy-btn:hover { background: var(--primary) !important; color: #000 !important; border-color: var(--primary) !important; }
+            .share-icon-large { color: var(--primary) !important; background: rgba(var(--primary-rgb), 0.1) !important; border-color: rgba(var(--primary-rgb), 0.3) !important; }
+            .share-copy-btn-inner:hover { background: var(--primary) !important; color: #000 !important; border-color: var(--primary) !important; }
+            .share-view-btn { color: var(--primary) !important; background: rgba(var(--primary-rgb), 0.05) !important; }
+            .share-view-btn:hover { background: rgba(var(--primary-rgb), 0.15) !important; border-color: rgba(var(--primary-rgb), 0.3) !important; }
+
+            .theme-btn {
+                width: 40px; 
+                height: 40px; 
+                border-radius: 50%; 
+                border: 2px solid #333;
+                cursor: pointer; 
+                transition: transform 0.2s, border-color 0.2s;
+                background-size: cover;
+            }
+            .theme-btn:hover { transform: scale(1.1); }
+            .theme-btn.active { border-color: #fff; box-shadow: 0 0 15px currentColor; transform: scale(1.1); }
+            #btn-hard-reset:hover { background: #ff4444 !important; color: #fff !important; }
+                
         </style>
     </head>
     <body>
@@ -2366,6 +2426,12 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                         <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </button>
+                <button class="nav-btn" id="btn-open-settings" title="Settings">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                     </svg>
                 </button>
             </div>
@@ -2686,6 +2752,22 @@
                 </div>
             </div>
         </div>
+        <div id="hard-reset-modal" class="confirm-modal" style="z-index: 99999999 !important;">
+            <div class="confirm-content">
+                <div class="confirm-icon" style="background: rgba(255, 0, 0, 0.1); color: #ff0000;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                        <line x1="12" y1="2" x2="12" y2="12"></line>
+                    </svg>
+                </div>
+                <h3 style="color: #ff4444;">Reset Application</h3>
+                <p>This action will permanently delete ALL images in your gallery, your API key, and all settings. This action is irreversible.</p>
+                <div class="confirm-actions">
+                    <button id="btn-cancel-reset" style="background: #1a1a1a; color: #fff; border: 1px solid #333;">Cancel</button>
+                    <button id="btn-confirm-reset" style="background: #ff4444; color: #fff; border: none; box-shadow: 0 4px 15px rgba(255, 68, 68, 0.4);">Yes, Delete Everything</button>
+                </div>
+            </div>
+        </div>
         <div id="redirect-modal">
             <div class="redirect-content">
                 <div class="redirect-icon">
@@ -2735,6 +2817,74 @@
                 </div>
                 </div>
         </div>
+
+        <div id="settings-modal" class="confirm-modal">
+            <div class="confirm-content settings-content" style="max-width: 400px;">
+                <div class="confirm-icon" style="background: rgba(255, 255, 255, 0.1); color: #fff;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                </div>
+                <h3 style="color: #fff; margin-bottom: 20px;">Settings</h3>
+                
+                <div class="setting-group" style="margin-bottom: 25px; text-align: left;">
+                    <label style="display:block; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">SOLID COLORS</label>
+                    <div class="theme-selector" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+                        <button class="theme-btn active" data-color="#00ff88" data-rgb="0, 255, 136" style="background:#00ff88;"></button>
+                        <button class="theme-btn" data-color="#00ccff" data-rgb="0, 204, 255" style="background:#00ccff;"></button>
+                        <button class="theme-btn" data-color="#ff0088" data-rgb="255, 0, 136" style="background:#ff0088;"></button>
+                        <button class="theme-btn" data-color="#ffaa00" data-rgb="255, 170, 0" style="background:#ffaa00;"></button>
+                        <button class="theme-btn" data-color="#bd00ff" data-rgb="189, 0, 255" style="background:#bd00ff;"></button>
+                    </div>
+                </div>
+
+                <div class="setting-group" style="margin-bottom: 25px; text-align: left;">
+                    <label style="display:block; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">GRADIENT THEMES</label>
+                    <div class="theme-selector" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+                        <button class="theme-btn" 
+                            data-color="#bd00ff" 
+                            data-rgb="189, 0, 255" 
+                            data-gradient="linear-gradient(135deg, #ff0088 0%, #bd00ff 100%)"
+                            style="background: linear-gradient(135deg, #ff0088 0%, #bd00ff 100%);">
+                        </button>
+
+                        <button class="theme-btn" 
+                            data-color="#00ccff" 
+                            data-rgb="0, 204, 255" 
+                            data-gradient="linear-gradient(135deg, #00ff88 0%, #00ccff 100%)"
+                            style="background: linear-gradient(135deg, #00ff88 0%, #00ccff 100%);">
+                        </button>
+
+                        <button class="theme-btn" 
+                            data-color="#ffaa00" 
+                            data-rgb="255, 170, 0" 
+                            data-gradient="linear-gradient(135deg, #ff4444 0%, #ffaa00 100%)"
+                            style="background: linear-gradient(135deg, #ff4444 0%, #ffaa00 100%);">
+                        </button>
+
+                        <button class="theme-btn" 
+                            data-color="#00ff88" 
+                            data-rgb="0, 255, 136" 
+                            data-gradient="linear-gradient(135deg, #a8ff78 0%, #78ffd6 100%)"
+                            style="background: linear-gradient(135deg, #a8ff78 0%, #78ffd6 100%);">
+                        </button>
+                    </div>
+                </div>
+
+                <div class="setting-group" style="margin-bottom: 25px; text-align: left;">
+                    <label style="display:block; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">DATA MANAGEMENT</label>
+                    <p style="font-size:12px; color:#666; margin-bottom:10px;">Clear all local data including API key, settings, and image gallery.</p>
+                    <button id="btn-hard-reset" style="width:100%; padding:12px; background:rgba(255,68,68,0.1); color:#ff4444; border:1px solid rgba(255,68,68,0.3); border-radius:8px; cursor:pointer; font-size:13px; font-weight:600; transition:all 0.2s;">
+                        Reset Application Data
+                    </button>
+                </div>
+
+                <button id="btn-close-settings" style="transition: transform 0.2s ease-in-out, background 0.2s ease !important; width:100%; padding:12px; background:#222; color:#fff; border:1px solid #333; border-radius:8px; cursor:pointer; font-weight:600;">Close</button>
+            </div>
+        </div>
+
+
         <script>
             const audioCtx = new(window.AudioContext || window.webkitAudioContext)();
 
@@ -3258,24 +3408,47 @@ if (moderationBtn) {
                 setTimeout(() => {
                     autoResize(promptInput);
                 }, 100);
-                fetch('https://create.thena.workers.dev/models', {
-                    mode: 'cors'
-                }).then(response => response.json()).then(data => {
+                async function fetchModelsWithRetry() {
+                    while (true) {
+                        const controller = new AbortController();
+                        const timeoutId = setTimeout(() => controller.abort(), 1000);
+
+                        try {
+                            const response = await fetch('https://create.thena.workers.dev/models', {
+                                mode: 'cors',
+                                signal: controller.signal
+                            });
+                            
+                            clearTimeout(timeoutId);
+
+                            if (!response.ok) {
+                                showNotification("While fetching models, an error occurred. Trying again...", "info");
+                                playInformationSound();
+                                continue;
+                            }
+                            
+                            return await response.json();
+                        } catch (error) {
+                            showNotification("While fetching models, an error occurred. Trying again...", "info");
+                            playInformationSound();
+                            continue;
+                        }
+                    }
+                }
+
+                // 2. Fonksiyonu çağır ve mevcut mantığı devam ettir
+                fetchModelsWithRetry().then(data => {
                     models = data;
                     const imagePromises = models.map(model => {
                         var imgUrl = model.examples?.portraits?.[0];
-                        // Thena Photoreal
+                        
                         if (model.id == "754019 b5df2e e606f1 a7600b 96b0c8 94") imgUrl = "https://api.apidog.com/api/v1/projects/743905/resources/369883/image-preview"
-                        // Thena Movie
                         if (model.id == "8gg12 61812 6628 19729 6b4a5 5060") imgUrl = "https://api.apidog.com/api/v1/projects/743905/resources/369760/image-preview"
-                        // Thena V6
                         if (model.id == "77h621 yy5271 gga166 hhau22 882hha 1a 3090") imgUrl = "https://api.apidog.com/api/v1/projects/743905/resources/369761/image-preview"
-                        // Thena Anime Core
                         if (model.id == "5g72h1 y661hp k771ns 33bb21 77bagl 6b 3090") imgUrl = "https://api.apidog.com/api/v1/projects/743905/resources/369762/image-preview"
-                        // Thena Max
                         if (model.id == "551ks 8g6g8 16gga 1h8h8 6b4a5 5060") imgUrl = "https://api.apidog.com/api/v1/projects/743905/resources/369763/image-preview"
-                        // Thena Anime Fast
                         if (model.id == "6781x 66189 00m162 16g61 00y71 6000") imgUrl = "https://api.apidog.com/api/v1/projects/743905/resources/369882/image-preview"
+                        
                         if (!imgUrl) return Promise.resolve();
                         return new Promise((resolve) => {
                             const img = new Image();
@@ -3285,13 +3458,6 @@ if (moderationBtn) {
                         });
                     });
                     return Promise.all(imagePromises);
-                }).catch(error => {
-                    console.warn('Model fetch failed, using fallback');
-                    models = [{
-                        model: "Thena Max",
-                        description: "Cache Model",
-                        id: "551ks 8g6g8 16gga 1h8h8 6b4a5 5060"
-                    }];
                 }).finally(() => {
                     modelsLoaded = true;
                 });
@@ -3391,10 +3557,7 @@ if (moderationBtn) {
                     const modelName = card.querySelector('.model-name').innerText;
                     if (previewImage) {
                         card.style.setProperty('--bg-image', `url(${previewImage})`);
-                        card.style.backgroundImage = `var(--bg-image)`;
-                        card.style.backgroundSize = 'cover';
-                        card.style.backgroundPosition = 'center';
-                        card.style.filter = 'saturate(0.3)'
+                        card.style.filter = 'saturate(0.3)';
                     }
                     const infoBtn = card.querySelector('.model-info-icon-wrapper');
                     infoBtn.addEventListener('click', (e) => {
@@ -4495,7 +4658,7 @@ if (moderationBtn) {
 
                             if(typeof playSuccessSound === "function") {
                                 playSuccessSound();
-                                showNotification("Image uploaded successfully!", "success", data.image);
+                                showNotification("Image uploaded successfully!", "success", base64Data);
                             }
 
                         } else {
@@ -4558,6 +4721,137 @@ if (moderationBtn) {
                         copyShareLinkBtn.style.color = "#fff";
                     }, 2000);
                 });
+            });
+        }
+
+        const settingsBtn = document.getElementById('btn-open-settings');
+        const settingsModal = document.getElementById('settings-modal');
+        const closeSettingsBtn = document.getElementById('btn-close-settings');
+        const themeBtns = document.querySelectorAll('.theme-btn');
+        const btnHardReset = document.getElementById('btn-hard-reset');
+        const root = document.documentElement;
+
+        settingsBtn.addEventListener('click', () => settingsModal.classList.add('active'));
+        closeSettingsBtn.addEventListener('click', () => settingsModal.classList.remove('active'));
+        settingsModal.addEventListener('click', (e) => {
+            if (e.target === settingsModal) settingsModal.classList.remove('active');
+        });
+
+        function setTheme(color, rgb, gradient = null, notify = true) { 
+            root.style.setProperty('--primary', color);
+            root.style.setProperty('--primary-rgb', rgb);
+            
+            const themeBg = gradient ? gradient : color;
+            root.style.setProperty('--theme-bg', themeBg);
+            
+            const logoText = document.querySelector('.glitch-text');
+            if (logoText) {
+                if (gradient) {
+                    logoText.classList.add('gradient-active');
+                } else {
+                    logoText.classList.remove('gradient-active');
+                }
+            }
+
+            themeBtns.forEach(btn => {
+                const btnGradient = btn.dataset.gradient || null;
+                const btnColor = btn.dataset.color;
+                
+                if(gradient && btnGradient === gradient) {
+                    btn.classList.add('active');
+                    btn.style.borderColor = '#fff';
+                } else if (!gradient && !btnGradient && btnColor === color) {
+                    btn.classList.add('active');
+                    btn.style.borderColor = '#fff';
+                } else {
+                    btn.classList.remove('active');
+                    btn.style.borderColor = 'transparent';
+                }
+            });
+
+            localStorage.setItem('thena-theme-color', color);
+            localStorage.setItem('thena-theme-rgb', rgb);
+            if (gradient) {
+                localStorage.setItem('thena-theme-gradient', gradient);
+            } else {
+                localStorage.removeItem('thena-theme-gradient');
+            }
+            
+            if (notify) {
+                if(typeof playSuccessSound === "function") playModelSelectSound(true);
+                showNotification("Theme updated successfully!", "info");
+            }
+        }
+
+        themeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const color = btn.dataset.color;
+                const rgb = btn.dataset.rgb;
+                const gradient = btn.dataset.gradient || null;
+                setTheme(color, rgb, gradient);
+            });
+        });
+
+        const savedColor = localStorage.getItem('thena-theme-color');
+        const savedRgb = localStorage.getItem('thena-theme-rgb');
+        const savedGradient = localStorage.getItem('thena-theme-gradient');
+
+        if (savedColor && savedRgb) {
+            setTheme(savedColor, savedRgb, savedGradient, false);
+        }
+
+        const hardResetModal = document.getElementById('hard-reset-modal');
+        const btnCancelReset = document.getElementById('btn-cancel-reset');
+        const btnConfirmReset = document.getElementById('btn-confirm-reset');
+
+        btnHardReset.addEventListener('click', () => {
+            if (typeof playDeleteAllWarningSound === "function") playDeleteAllWarningSound();
+            
+            hardResetModal.classList.add('active');
+        });
+
+        if (btnCancelReset) {
+            btnCancelReset.addEventListener('click', () => {
+                hardResetModal.classList.remove('active');
+            });
+        }
+
+        if (hardResetModal) {
+            hardResetModal.addEventListener('click', (e) => {
+                if (e.target === hardResetModal) hardResetModal.classList.remove('active');
+            });
+        }
+
+        if (btnConfirmReset) {
+            btnConfirmReset.addEventListener('click', async () => {
+                const originalText = btnConfirmReset.innerText;
+                btnConfirmReset.innerText = "Resetting...";
+                btnConfirmReset.disabled = true;
+
+                try {
+                    await dbHelper.clear();
+                    localStorage.clear();
+                    hardResetModal.classList.remove('active');
+                    settingsModal.classList.remove('active');
+
+                    if (typeof playSuccessSound === "function") playSuccessSound();
+                    
+                    showNotification("Application successfully reset. Page reloading...", "success");
+
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+
+                } catch (e) {
+                    console.error(e);
+                    
+                    if (typeof playErrorSound === "function") playErrorSound();
+                    showNotification("Error occurred during reset: " + e.message, "error");
+                    
+                    btnConfirmReset.innerText = originalText;
+                    btnConfirmReset.disabled = false;
+                    hardResetModal.classList.remove('active');
+                }
             });
         }
 

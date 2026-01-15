@@ -9,10 +9,10 @@
   **Futuristic Interface • Local Gallery • Advanced Prompt Engineering**
 
   <p>
-    <a href="https://github.com/YOUR_USERNAME/YOUR_REPO/issues">
+    <a href="https://github.com/phaticusthiccy/Thena-Web/issues">
       <img src="https://img.shields.io/github/issues/phaticusthiccy/Thena-Web?style=for-the-badge&logo=github&color=00ff88" alt="Issues" />
     </a>
-    <a href="https://github.com/YOUR_USERNAME/YOUR_REPO/stargazers">
+    <a href="https://github.com/phaticusthiccy/Thena-Web/stargazers">
       <img src="https://img.shields.io/github/stars/phaticusthiccy/Thena-Web?style=for-the-badge&logo=github&color=ffe600" alt="Stars" />
     </a>
     <a href="https://github.com/phaticusthiccy/Thena-Web/blob/main/LICENSE">
