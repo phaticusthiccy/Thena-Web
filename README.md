@@ -53,6 +53,7 @@ To maximize user experience, it utilizes **IndexedDB** for local gallery managem
 
 ## 📸 Screenshots
 
+
 <div align="center">
   <table>
     <tr>
@@ -60,8 +61,8 @@ To maximize user experience, it utilizes **IndexedDB** for local gallery managem
       <td align="center"><b>Gallery View</b></td>
     </tr>
     <tr>
-      <td><img src="https://github.com/user-attachments/assets/9b0fa4ba-2882-4e9f-9ebc-7757162b708f" alt="UI" /></td>
-      <td><img src="https://github.com/user-attachments/assets/567dbb93-b11a-4075-9aeb-f1ce67b1ad16" alt="Gallery" /></td>
+      <td><img src="https://github.com/user-attachments/assets/bea58bfb-23d9-4a90-8bed-96f885ccc4da" alt="UI" /></td>
+      <td><img src="https://github.com/user-attachments/assets/087a3620-1758-4f9d-a6a4-5d2a270cd217" alt="Gallery" /></td>
     </tr>
   </table>
 </div>
