@@ -10,7 +10,7 @@
 
   <p>
     <a href="https://github.com/phaticusthiccy/Thena-Web/issues">
-      <img src="https://img.shields.io/github/issues/phaticusthiccy/Thena-Web?style=for-the-badge&logo=github&color=00ff88" alt="Issues" />
+      <img src="https://img.shields.io/github/issues/phaticusthiccy/Thena-Web?style=for-the-badge&logo=github" alt="Issues" />
     </a>
     <a href="https://github.com/phaticusthiccy/Thena-Web/stargazers">
       <img src="https://img.shields.io/github/stars/phaticusthiccy/Thena-Web?style=for-the-badge&logo=github&color=ffe600" alt="Stars" />
@@ -23,6 +23,10 @@
   <p>
     <i>Turn your imagination into real.</i>
   </p>
+  
+  <a href="https://phaticusthiccy.github.io/Thena-Web/">
+    <img src="https://img.shields.io/badge/Launch_Web_App-3b82f6?style=for-the-badge&logo=rocket&logoColor=white" alt="Launch Web App" />
+  </a>
   
   <br />
 </div>
