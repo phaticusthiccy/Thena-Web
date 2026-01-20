@@ -1392,6 +1392,9 @@
                     top: 10px !important;
                     left: 10px !important;
                 }
+                .info-meta {
+                    font-size: 0.7rem !important;
+                }
             }
 
             .lightbox-content {
@@ -1982,7 +1985,7 @@
                 opacity: 1;
                 visibility: visible;
             }
-        
+            
             .redirect-content {
                 background: #111;
                 border: 1px solid rgba(var(--primary-rgb), 0.5);
@@ -2598,6 +2601,152 @@
                 }
             }
 
+
+            #img2prompt-btn {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: rgba(10, 10, 10, 0.8);
+                border: 1px solid #333;
+                color: #888;
+                width: 32px;
+                height: 32px;
+                border-radius: 6px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s ease;
+                backdrop-filter: blur(4px);
+                z-index: 10;
+            }
+
+            #img2prompt-btn:hover {
+                border-color: rgba(var(--primary-rgb), 0.5);
+                color: rgb(var(--primary-rgb));
+                background: rgba(var(--primary-rgb), 0.1);
+                transform: scale(1.05);
+            }
+
+            .upload-area {
+                border: 2px dashed rgb(var(--primary-rgb));
+                border-radius: 12px;
+                padding: 20px;
+                text-align: center;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                background: #0f0f0f;
+                position: relative;
+                min-height: 150px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+            }
+
+            .upload-area:hover, .upload-area.dragover {
+                border-color: rgba(var(--primary-rgb), 0.5);
+                background: rgba(var(--primary-rgb), 0.05);
+            }
+
+            .upload-area span {
+                color: #666;
+                font-size: 14px;
+                font-weight: 500;
+            }
+
+            #preview-img {
+                max-width: 100%;
+                max-height: 200px;
+                border-radius: 8px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+                object-fit: contain;
+            }
+
+            #preview-img.hidden, #clear-img-btn.hidden {
+                display: none;
+            }
+
+            #upload-placeholder.hidden {
+                display: none;
+            }
+
+            #clear-img-btn {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                width: 24px;
+                height: 24px;
+                background: rgba(0,0,0,0.8);
+                color: #fff;
+                border: 1px solid #444;
+                border-radius: 50%;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px;
+                transition: all 0.2s;
+            }
+
+            #clear-img-btn:hover {
+                background: #ff4444;
+                border-color: #ff4444;
+            }
+
+            .generate-btn-small {
+                background: rgba(var(--primary-rgb), 0.1);
+                color: rgb(var(--primary-rgb));
+                border: 1px solid rgba(var(--primary-rgb), 0.3);
+                padding: 10px 20px;
+                border-radius: 8px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+            }
+
+            .generate-btn-small:hover:not(:disabled) {
+                background: rgb(var(--primary-rgb));
+                color: #000;
+                box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.4);
+            }
+
+            #btn-img2prompt-cancel {
+                background: #1a1a1a !important;
+                color: #fff !important;
+                border: 1px solid #333 !important;
+            }
+
+            #btn-img2prompt-cancel:hover {
+                background: #333 !important;
+                transform: scale(1.05) !important;
+            }
+
+            .generate-btn-small:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+                filter: grayscale(1);
+                background: #1a1a1a;
+                border-color: #333;
+                color: #666;
+            }
+
+            .sparkle-icon {
+                transition: transform 0.3s ease;
+            }
+
+            .generate-btn-small:hover .sparkle-icon {
+                transform: rotate(15deg) scale(1.2);
+            }
+
+            .generate-btn-small.loading svg {
+                animation: spin 1s linear infinite;
+            }
+
         </style>
     </head>
     <body>
@@ -2670,6 +2819,14 @@
     <div style="position: relative;">
         <textarea id="prompt" maxlength="1150" placeholder="Describe your image... (Min 10 chars, Max 1150 chars)" style="padding-right: 90px;"></textarea>
         
+        <button id="img2prompt-btn" title="Image to Prompt">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+        </button>
+
         <button id="moderation-btn" title="Moderation: High" data-level="high">
             <svg class="mod-icon icon-high" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
@@ -3149,6 +3306,43 @@
                     </div>
             </div>
         </div>
+
+        <div id="img2prompt-modal" class="confirm-modal">
+            <div class="confirm-content" style="max-width: 450px;">
+                <h3 style="color: #fff; margin-bottom: 15px;">Image to Prompt</h3>
+                <p style="color: #888; font-size: 13px; margin-bottom: 20px;">
+                    Upload an image or paste from clipboard (Ctrl+V) to generate a prompt.
+                </p>
+
+                <div id="img-upload-area" class="upload-area">
+                    <input type="file" id="img-file-input" accept="image/*" hidden>
+                    <div id="upload-placeholder">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 10px;">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <span>Click to Upload or Paste Image</span>
+                    </div>
+                    <img id="preview-img" class="hidden">
+                    <button id="clear-img-btn" class="hidden" title="Remove Image">&times;</button>
+                </div>
+
+                <div class="confirm-actions" style="margin-top: 20px;">
+                    <button id="btn-img2prompt-cancel">Cancel</button>
+                    <button id="btn-img2prompt-generate" class="generate-btn-small" disabled>
+                        <span>Generate Prompt</span>
+                        <svg class="sparkle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+
+
         <script>
             const audioCtx = new(window.AudioContext || window.webkitAudioContext)();
 
@@ -3421,6 +3615,12 @@
                 checkFormReady();
             });
 
+            ['click', 'focus'].forEach(evt => {
+                promptInput.addEventListener(evt, () => {
+                    autoResize(promptInput);
+                });
+            });
+
             function typeWriterEffect(text, element) {
                 let i = 0;
                 element.value = "";
@@ -3440,6 +3640,7 @@
             magicWandBtn.addEventListener('click', async () => {
                 const currentPrompt = promptInput.value.trim();
                 const apiKey = apiKeyInput.value.trim();
+                
                 if (!currentPrompt) {
                     playErrorSound()
                     showNotification("The prompt field is empty! Please type something.");
@@ -3450,10 +3651,14 @@
                     showNotification("Please enter the API key first.");
                     return;
                 }
+                
                 playInformationSound()
-                showNotification("Prompt is being improved...", "loading");
+                
+                const removeLoading = showNotification("Prompt is being improved...", "loading");
+                
                 magicWandBtn.classList.add('loading');
                 generateBtn.disabled = true;
+                
                 try {
                     const response = await fetch(`https://create.thena.workers.dev/promptGen?prompt=${encodeURIComponent(currentPrompt)}`, {
                         method: 'GET',
@@ -3462,6 +3667,9 @@
                         }
                     });
                     const data = await response.json();
+                    
+                    if (removeLoading) removeLoading(); 
+
                     if (data.status === 200) {
                         lastEnhancedPrompt = data.content;
                         isPromptEnhancedByWand = true;
@@ -3474,10 +3682,13 @@
                         showNotification("The prompt could not be created. An error occurred.", "error");
                     }
                 } catch (error) {
+                    if (removeLoading) removeLoading();
+                    
                     playErrorSound()
                     showNotification("An error occurred:" + error.message, "error");
                 } finally {
                     magicWandBtn.classList.remove('loading');
+                    checkFormReady(); 
                 }
             });
             const toggleApiKeyBtn = document.getElementById('toggle-api-key');
@@ -4083,6 +4294,10 @@
                 });
             });
 
+            var uploadHeaders = {
+                "origin2": "https://create.thena.workers.dev"
+            };
+
             function checkFormReady() {
                 const promptLength = promptInput.value.trim().length;
                 if (promptLength >= 10 && promptLength <= 1150 && apiKeyInput.value.trim() && selectedModel && selectedAspectRatio) {
@@ -4111,6 +4326,7 @@
                 const prompt = promptInput.value.trim();
                 const apiKey = apiKeyInput.value.trim();
                 const [width, height] = selectedSize.split('x').map(Number);
+                
                 isGeneratingImage = true;
                 currentGenParams = {
                     width,
@@ -4121,7 +4337,7 @@
                     if (galleryGrid.querySelector('.empty-gallery')) galleryGrid.innerHTML = '';
                     galleryGrid.insertAdjacentHTML('afterbegin', getPlaceholderHTML(width, height));
                 }
-                showNotification('Image is being processed...', 'loading');
+                const removeLoading = showNotification('Image is being processed...', 'loading');
                 generateBtn.disabled = true;
                 generateBtn.innerHTML = 'Processing<span class="loading-spinner"></span>';
                 generateBtn.classList.add('generating');
@@ -4182,6 +4398,9 @@
                         })
                     });
                     const data = await response.json();
+
+                    if (removeLoading) removeLoading();
+
                     if (response.ok && data.image) {
                         playSuccessSound();
                         const modelData = models.find(m => m.id === selectedModel);
@@ -4251,6 +4470,7 @@
                         showNotification(`Error: ${data.content || 'Unknown Error'}`, 'error');
                     }
                 } catch (error) {
+                    if (removeLoading) removeLoading();
                     playErrorSound();
                     showNotification("There was an error generating the image. Please try again.", 'error');
                     isGeneratingImage = false;
@@ -4262,6 +4482,7 @@
                 } finally {
 		            isGeneratingImage = false;
                     clearTimeout(busyTimer);
+                    await loadGallery();
                     if (busyNotification && busyNotification.parentNode) {
                         busyNotification.remove();
                     }
@@ -4912,7 +5133,7 @@
                     }, duration);
                 }
                 
-                return removeNotification;
+                return () => removeNotification(notification);
             }
             const redirectModal = document.getElementById('redirect-modal');
             const redirectTitle = document.getElementById('redirect-title');
@@ -5121,22 +5342,29 @@
 
                         var infometa = document.querySelector(".lightbox-meta").textContent
                         infometa = infometa.replace(/\n/g, ' ').trim().toLocaleLowerCase()
-                        // THENA MAX • 768x1024                     15.01.2026 • 03:18                                                               High                                     🎬 Movie
-
                         let infoModel = infometa.split("•")[0].trim();
                         let infoRatio = infometa.split("•")[1].trim().split(" ")[0];
                         let infoModeration = infometa.split("•")[2].trim().includes("high") ? "high" : (infometa.split("•")[2].trim().includes("medium") ? "medium" : "low");
 
+                        let infoModel2 = infoModel.split(" ");
+
+                        for (let i = 0; i < infoModel2.length; i++) {
+                            infoModel2[i] = infoModel2[i][0].toUpperCase() + infoModel2[i].substr(1);
+                        }
+
+                        infoModel2 = infoModel2.join(" ");
+
                         const response = await fetch('https://create.thena.workers.dev/showcaseUpload', {
                             method: 'POST',
                             headers: {
-                                'Content-Type': 'application/json'
+                                'Content-Type': 'application/json',
+                                ...uploadHeaders
                             },
                             body: JSON.stringify({
                                 image: rawBase64,
                                 apikey: apiKeyInput ? apiKeyInput.value.trim() : "",
                                 prompt: document.querySelector(".lightbox-prompt").textContent,
-                                model: infoModel ? infoModel : "",
+                                model: infoModel2 ? infoModel2 : "",
                                 ratio: infoRatio ? infoRatio : "",
                                 moderation: infoModeration ? infoModeration : "high",
                                 features: [
@@ -5177,6 +5405,7 @@
                             }
 
                         } else {
+                            console.error("Upload failed:", data);
                             shareUrlDisplay.value = "Upload failed. Please try again.";
                             copyShareLinkBtn.textContent = "Error";
                             if(typeof playErrorSound === "function") playErrorSound();
@@ -5197,6 +5426,7 @@
                     }
 
                 } catch (error) {
+                    console.error("Upload error:", error);
                     shareUrlDisplay.value = "Upload failed. Please try again.";
                     copyShareLinkBtn.textContent = "Error";
                     if(typeof playErrorSound === "function") playErrorSound();
@@ -5575,7 +5805,7 @@
             uniqueModels.forEach(model => {
                 const opt = document.createElement('option');
                 opt.value = model;
-                opt.textContent = model;
+                opt.textContent = model.replace(/ı/g, 'i');
                 showcaseFilterModel.appendChild(opt);
             });
         }
@@ -5664,6 +5894,306 @@
             });
         }
 
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    const featModal = document.getElementById('feature-info-modal');
+                    if (featModal && featModal.classList.contains('active')) {
+                        featModal.classList.remove('active');
+                    }
+
+
+                    const lightbox = document.getElementById('lightbox');
+                    const lightboxImg = document.getElementById('lightbox-img');
+                    if (lightbox && lightbox.classList.contains('active')) {
+                        lightbox.classList.remove('active');
+                        setTimeout(() => {
+                            if (lightboxImg) lightboxImg.src = '';
+                        }, 300);
+                    }
+
+                    const galleryModal = document.getElementById('gallery-modal');
+                    if (galleryModal && galleryModal.classList.contains('active')) {
+                        galleryModal.classList.remove('active');
+                        document.body.classList.remove('no-scroll');
+                    }
+
+                    const openOwner = document.getElementById('redirect-modal');
+                    if (openOwner && openOwner.classList.contains('active')) {
+                        openOwner.classList.remove('active');
+                    }
+
+
+                    const settingsModal = document.getElementById('settings-modal');
+                    if (settingsModal && settingsModal.classList.contains('active')) {
+                        settingsModal.classList.remove('active');
+                    }
+
+                    const showcaseModal = document.getElementById('showcase-modal');
+                    if (showcaseModal && showcaseModal.classList.contains('active')) {
+                        showcaseModal.classList.remove('active');
+                        document.body.classList.remove('no-scroll');
+                    }
+
+                    const shareModal = document.getElementById('share-modal');
+                    if (shareModal && shareModal.classList.contains('active')) {
+                        shareModal.classList.remove('active');
+                    }
+                }
+            });
+
+
+
+            const img2PromptBtn = document.getElementById('img2prompt-btn');
+            const img2PromptModal = document.getElementById('img2prompt-modal');
+            const btnImg2PromptCancel = document.getElementById('btn-img2prompt-cancel');
+            const btnImg2PromptGenerate = document.getElementById('btn-img2prompt-generate');
+            const uploadArea = document.getElementById('img-upload-area');
+            const fileInput = document.getElementById('img-file-input');
+            const previewImg = document.getElementById('preview-img');
+            const uploadPlaceholder = document.getElementById('upload-placeholder');
+            const clearImgBtn = document.getElementById('clear-img-btn');
+
+            let currentBase64Image = null;
+
+            img2PromptBtn.addEventListener('click', () => {
+                img2PromptModal.classList.add('active');
+                if(typeof playInformationSound === "function") playInformationSound();
+            });
+
+            btnImg2PromptCancel.addEventListener('click', () => {
+                if (btnImg2PromptGenerate.classList.contains('loading')) return; 
+                closeImg2PromptModal();
+            });
+
+            img2PromptModal.addEventListener('click', (e) => {
+                if (btnImg2PromptGenerate.classList.contains('loading')) return;
+                if (e.target === img2PromptModal) closeImg2PromptModal();
+            });
+
+            function closeImg2PromptModal() {
+                img2PromptModal.classList.remove('active');
+                clearImageSelection();
+            }
+
+            uploadArea.addEventListener('click', (e) => {
+                if(e.target !== clearImgBtn) {
+                    fileInput.click();
+                }
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                handleImageFile(file);
+            });
+
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const file = e.dataTransfer.files[0];
+                handleImageFile(file);
+            });
+
+            document.addEventListener('paste', (e) => {
+                if (!img2PromptModal.classList.contains('active')) return;
+                
+                const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+                for (let index in items) {
+                    const item = items[index];
+                    if (item.kind === 'file' && item.type.startsWith('image/')) {
+                        const blob = item.getAsFile();
+                        handleImageFile(blob);
+                        break;
+                    }
+                }
+            });
+
+            clearImgBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                clearImageSelection();
+            });
+
+            function clearImageSelection() {
+                currentBase64Image = null;
+                previewImg.src = '';
+                previewImg.classList.add('hidden');
+                clearImgBtn.classList.add('hidden');
+                uploadPlaceholder.classList.remove('hidden');
+                fileInput.value = '';
+                btnImg2PromptGenerate.disabled = true;
+            }
+
+            function handleImageFile(file) {
+                if (!file || !file.type.startsWith('image/')) {
+                    if(typeof showNotification === "function") showNotification("Please select a valid image file.", "error");
+                    return;
+                }
+
+                if (file.size > 5 * 1024 * 1024) {
+                    if(typeof showNotification === "function") showNotification("Image is too large (Max 5MB).", "error");
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const base64 = e.target.result;
+                    currentBase64Image = base64;
+                    
+                    previewImg.src = base64;
+                    previewImg.classList.remove('hidden');
+                    clearImgBtn.classList.remove('hidden');
+                    uploadPlaceholder.classList.add('hidden');
+                    btnImg2PromptGenerate.disabled = false;
+                    
+                    if(typeof playSuccessSound === "function") playModelSelectSound(true);
+                };
+                reader.readAsDataURL(file);
+            }
+
+            btnImg2PromptGenerate.addEventListener('click', async () => {
+                const apiKey = document.getElementById('api-key').value.trim();
+                
+                if (!apiKey) {
+                    if(typeof showNotification === "function") showNotification("Please enter your API Key first.", "error");
+                    if(typeof playErrorSound === "function") playErrorSound();
+                    return;
+                }
+
+                if (!currentBase64Image) return;
+
+                const originalBtnContent = btnImg2PromptGenerate.innerHTML;
+                btnImg2PromptGenerate.innerHTML = `<span>Analyzing...</span><svg class="sparkle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>`;
+                var clipnotif = showNotification("Generating prompt from image. This may take a moment...", "loading");
+                playInformationSound();
+                btnImg2PromptGenerate.classList.add('loading');
+                btnImg2PromptGenerate.disabled = true;
+
+                btnImg2PromptCancel.disabled = true;
+                btnImg2PromptCancel.style.opacity = "0.5";
+                btnImg2PromptCancel.style.cursor = "not-allowed";
+
+                try {                    
+                    const img = new Image();
+                    img.src = currentBase64Image;
+                    await new Promise(resolve => img.onload = resolve);
+                    const scaleFactor = 0.6; 
+                    const newWidth = Math.floor(img.width * scaleFactor);
+                    const newHeight = Math.floor(img.height * scaleFactor);
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = newWidth;
+                    canvas.height = newHeight;
+                    const ctx = canvas.getContext('2d');
+                    
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
+                    
+                    ctx.drawImage(img, 0, 0, newWidth, newHeight);
+
+                    const resizedDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+                    
+                    const rawBase64 = resizedDataUrl.split(',')[1];
+                    
+
+                    const response = await fetch('https://create.thena.workers.dev/clipPrior', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            apikey: apiKey,
+                            image: rawBase64
+                        })
+                    });
+
+                    const data = await response.json();
+                    if (clipnotif) clipnotif();
+                    
+                    if (data.status === 200 && data.content) {
+                        if(typeof playSuccessSound === "function") playSuccessSound();
+                        closeImg2PromptModal();
+                        
+                        const incomingPrompt = data.content.prompt || ""; 
+                        const promptInput = document.getElementById('prompt');
+                        if (typeof typeWriterEffect === "function") {
+                            typeWriterEffect(incomingPrompt, promptInput);
+                        } else {
+                            promptInput.value = incomingPrompt;
+                            if(typeof autoResize === "function") autoResize(promptInput);
+                        }
+                        
+                        if (data.content.model) {
+                            const targetModelName = data.content.model.trim();
+                            const modelCards = document.querySelectorAll('.model-card');
+                            
+                            modelCards.forEach(card => {
+                                const nameEl = card.querySelector('.model-name');
+                                if (nameEl && nameEl.innerText.trim().toLowerCase() === targetModelName.toLowerCase()) {
+                                    if (!card.classList.contains('active')) {
+                                        card.click();
+                                        if(typeof showNotification === "function") {
+                                            setTimeout(() => {
+                                                showNotification(`Model switched to: ${targetModelName}`, "info");
+                                            }, 800); 
+                                        }
+                                    }
+                                }
+                            });
+                        }
+
+                        if (data.content.aspect_ratio) {
+                            const targetRatio = data.content.aspect_ratio.trim();
+                            const ratioBtn = document.querySelector(`.aspect-btn[data-ratio="${targetRatio}"]`);
+                            if (ratioBtn) {
+                                if (!ratioBtn.classList.contains('active')) {
+                                    ratioBtn.click();
+                                }
+                            }
+                        }
+
+                        allExtraBtns.forEach(b => b.classList.remove('active'));
+
+                        if (Array.isArray(data.content.extra_features)) {
+                            const features = data.content.extra_features;
+                            
+                            if (features.includes('fast') && btnFast && !btnFast.disabled) btnFast.classList.add('active');
+                            if (features.includes('creative') && btnCreative) btnCreative.classList.add('active');
+                            
+                            if (features.includes('dense') && btnDense) {
+                                btnDense.classList.add('active');
+                                if(btnCreative) btnCreative.classList.remove('active');
+                            }
+                            if (features.includes('movie') && btnMovie && !btnMovie.disabled) btnMovie.classList.add('active');
+                            if (features.includes('highRes') && btnHighRes) btnHighRes.classList.add('active');
+                        }
+                        
+                        checkFormReady();
+                        if(typeof showNotification === "function") showNotification("Prompt and settings applied successfully!", "success");
+
+                    } else {
+                        showNotification("Failed to generate prompt. Please try different image.", "error");
+                        if(typeof playErrorSound === "function") playErrorSound();
+                    }
+
+                } catch (error) {
+                    console.error(error);
+                    if(typeof playErrorSound === "function") playErrorSound();
+                    showNotification("Failed to generate prompt. Please try different image.", "error");
+                } finally {
+                    btnImg2PromptGenerate.innerHTML = originalBtnContent;
+                    btnImg2PromptGenerate.classList.remove('loading');
+                    btnImg2PromptGenerate.disabled = false;
+                    btnImg2PromptCancel.disabled = false;
+                    btnImg2PromptCancel.style.opacity = "";
+                    btnImg2PromptCancel.style.cursor = "";
+                }
+            });
         </script>
         <div id="feature-info-modal" class="feature-modal">
             <div class="feature-info-card">
