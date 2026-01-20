@@ -5119,6 +5119,14 @@
                     if (base64Data.startsWith('data:image')) {
                         const rawBase64 = base64Data.split(',')[1];
 
+                        var infometa = document.querySelector(".lightbox-meta").textContent
+                        infometa = infometa.replace(/\n/g, ' ').trim().toLocaleLowerCase()
+                        // THENA MAX • 768x1024                     15.01.2026 • 03:18                                                               High                                     🎬 Movie
+
+                        let infoModel = infometa.split("•")[0].trim();
+                        let infoRatio = infometa.split("•")[1].trim().split(" ")[0];
+                        let infoModeration = infometa.split("•")[2].trim().includes("high") ? "high" : (infometa.split("•")[2].trim().includes("medium") ? "medium" : "low");
+
                         const response = await fetch('https://create.thena.workers.dev/showcaseUpload', {
                             method: 'POST',
                             headers: {
@@ -5127,10 +5135,10 @@
                             body: JSON.stringify({
                                 image: rawBase64,
                                 apikey: apiKeyInput ? apiKeyInput.value.trim() : "",
-                                prompt: promptInput ? promptInput.value.trim() : "",
-                                model: selectedModel ? selectedModel : "",
-                                ratio: selectedAspectRatio ? selectedAspectRatio : "",
-                                moderation: moderationLevel ? moderationLevel : "high",
+                                prompt: document.querySelector(".lightbox-prompt").textContent,
+                                model: infoModel ? infoModel : "",
+                                ratio: infoRatio ? infoRatio : "",
+                                moderation: infoModeration ? infoModeration : "high",
                                 features: [
                                     btnFast.classList.contains('active') ? "fast" : "",
                                     btnCreative.classList.contains('active') ? "creative" : "",
