@@ -4,9 +4,9 @@
     <img src="https://github.com/user-attachments/assets/175c0d76-b146-460f-bb34-d0ae7e2b57cc" alt="Thena Logo" width="200" />
   </a>
 
-  # THENA - AI Image Generator
+  # THENA - Next-Gen AI Image Generator
 
-  **Futuristic Interface • Local Gallery • Advanced Prompt Engineering**
+  **Futuristic Interface • Local Gallery • Advanced Prompt Engineering • Community Showcase**
 
   <p>
     <a href="https://github.com/phaticusthiccy/Thena-Web/issues">
@@ -18,10 +18,11 @@
     <a href="https://github.com/phaticusthiccy/Thena-Web/blob/main/LICENSE">
       <img src="https://img.shields.io/badge/LICENSE-MIT-red?style=for-the-badge" alt="License" />
     </a>
+    <img src="https://img.shields.io/badge/Platform-Web-blue?style=for-the-badge&logo=googlechrome" alt="Platform" />
   </p>
 
   <p>
-    <i>Turn your imagination into real.</i>
+    <i>Turn your imagination into reality in seconds. No installation, no backend, entirely client-side.</i>
   </p>
   
   <a href="https://phaticusthiccy.github.io/Thena-Web/">
@@ -35,34 +36,61 @@
 
 ## 🚀 About The Project
 
-**Thena** is a browser-based, modern, aesthetic AI image generation interface. It is developed entirely with **Vanilla JavaScript, HTML, and CSS**, without relying on any frontend frameworks (like React or Vue).
+**Thena** is a browser-based, modern, and aesthetic AI image generation interface built entirely with **Vanilla JavaScript, HTML, and CSS**. It pushes the boundaries of browser technologies (IndexedDB, Web Audio API, Canvas API) without relying on heavy frameworks like React or Vue.
 
-To maximize user experience, it utilizes **IndexedDB** for local gallery management and the **Web Audio API** for dynamic, interactive sound effects and model selection feedback.
+It is not just an image generator; it is a full-featured suite including Image-to-Prompt capabilities, local gallery management, and customizable themes.
 
-### ✨ Key Features
+---
 
-* **🎨 Futuristic UI/UX:** Glitch effects, neon glows, and smooth animations tailored for a dark-mode experience.
-* **💾 Local Gallery (IndexedDB):** Generated images are stored locally in your browser. Includes filtering, searching, and sorting capabilities.
-* **🔊 Auditory Feedback:** Custom synthesized sound effects for clicks, selections, and processes using the Web Audio API.
-* **🪄 Magic Wand (Prompt Wizard):** Automatically enhances and details short prompts using AI assistance.
-* **📐 Flexible Aspect Ratios:** Supports popular formats like 1:1, 3:4, 16:9, and mobile vertical.
-* **🛡️ Moderation Tools:** Toggle between Low, Medium, and High safety levels.
-* **⚡ Advanced Modes:** Includes Fast Mode, Creative, Dense (High Detail), and Movie Filter options.
+## ✨ Key Features
+
+### 🎨 Generation & Models
+* **Multi-Model Support:** Access various models like Thena Movie, Max, V6, Photoreal, Anime Core, and more.
+* **Flexible Aspect Ratios:** Support for Square (1:1), Portrait (3:4, 9:16), and Cinematic (16:9, 4:3) formats.
+* **Advanced Parameters:**
+    * **Fast Mode:** Optimized for speed.
+    * **Creative & Dense:** Boosts AI imagination and detail.
+    * **Movie Filter & HighRes:** Cinematic color grading and upscaling.
+
+### 🛠️ Smart Tools
+* **🖼️ Image to Prompt (New):** Upload an image to analyze its content and generate a prompt automatically using CLIP technology.
+* **🪄 Magic Wand:** Enhances short, simple prompts into detailed, professional descriptions with a single click.
+* **🛡️ Moderation Tools:** Toggle between Low, Medium, and High safety moderation levels.
+
+### 💾 Gallery & Experience
+* **Local Gallery (IndexedDB):** Generated images are stored locally in your browser. Filter by date, model, or aspect ratio.
+* **Community Showcase:** Explore images shared by the community and copy their settings/prompts instantly.
+* **Audio Feedback (Web Audio API):** Dynamic, synthesized sound effects for interactions, success, and errors.
+* **Lightbox Mode:** View images in full screen, download, delete, or check generation metadata.
+
+### ⚙️ Personalization
+* **Theme Engine:** Switch between solid colors or gradient themes to match your style.
+* **Performance Mode:** Disables heavy animations and blur effects for smoother performance on low-end devices.
+* **Privacy:** Your API key and images remain on your local device.
 
 ---
 
 ## 📸 Screenshots
 
-
 <div align="center">
   <table>
     <tr>
       <td align="center"><b>Main Interface</b></td>
-      <td align="center"><b>Gallery View</b></td>
+      <td align="center"><b>Local Gallery & Filters</b></td>
     </tr>
     <tr>
-      <td><img src="https://github.com/user-attachments/assets/bea58bfb-23d9-4a90-8bed-96f885ccc4da" alt="UI" /></td>
-      <td><img src="https://github.com/user-attachments/assets/087a3620-1758-4f9d-a6a4-5d2a270cd217" alt="Gallery" /></td>
+      <td><img src="https://github.com/user-attachments/assets/0afcacf4-dc93-4e65-8de9-8ae3a9d12c74" alt="UI" /></td>
+      <td><img src="https://github.com/user-attachments/assets/1665dfda-6e4d-4c34-b452-afd7448a508d" alt="Gallery" /></td>
+    </tr>
+  </table>
+  <table>
+     <tr>
+      <td align="center"><b>Image to Prompt Tool</b></td>
+      <td align="center"><b>Settings & Themes</b></td>
+    </tr>
+    <tr>
+      <td><img src="https://github.com/user-attachments/assets/74718463-e7be-4438-bd56-61958a24344c" alt="Img2Prompt" /></td>
+      <td><img src="https://github.com/user-attachments/assets/e9b2b18e-b926-464e-8be4-b308b6e17608" /></td>
     </tr>
   </table>
 </div>
@@ -71,59 +99,45 @@ To maximize user experience, it utilizes **IndexedDB** for local gallery managem
 
 ## 🛠️ Installation & Usage
 
-This project is client-side only. You don't need complex build steps or backend servers to run it.
+This project runs client-side. No backend server installation is required.
 
 ### Method 1: Direct Open
-1. Download or clone this repository:
-   ```bash
-   git clone https://github.com/phaticusthiccy/Thena-Web.git
-
-2. Simply double-click `index.html` to open it in your browser.
+1.  Download or clone the repository:
+    ```bash
+    git clone [https://github.com/phaticusthiccy/Thena-Web.git](https://github.com/phaticusthiccy/Thena-Web.git)
+    ```
+2.  Simply double-click `index.html` to open it in your web browser.
 
 ### Method 2: Local Server (Recommended)
-
-For better performance and to avoid CORS policies with some assets, using a live server is recommended.
-
-* **VS Code Live Server:** Open the folder in VS Code and click "Go Live".
+To avoid CORS issues with some assets or features, running a local server is recommended.
+* **VS Code:** Use the "Live Server" extension and click "Go Live".
 * **Python:**
-```bash
-python -m http.server 8000
-
-```
-
-
+    ```bash
+    python -m http.server 8000
+    ```
 
 ---
 
-## ⚙️ Configuration
+## 🔑 Configuration (API Key)
 
 To generate images, you need a free API Key.
 
-1. Click the **"Get Your Free API Key"** link in the app interface to open the Telegram Bot.
-2. Paste the key provided by the bot into the `API Key` input field.
-3. Your key is safely stored in your browser's `LocalStorage`.
+1.  Click the **"Get Your Free API Key"** link in the app interface (redirects to the Telegram Bot).
+2.  Paste the key provided by the bot into the `API Key` input field.
+3.  Your key is safely stored in your browser's `LocalStorage` and is not sent to any third-party analytics.
 
 ---
 
 ## 🧩 Tech Stack
 
-This project was built from scratch using the following technologies:
-
-| Technology | Description |
+| Technology | Usage |
 | --- | --- |
 | **HTML5** | Semantic structure and DOM layout |
-| **CSS3** | Animations, Flexbox/Grid, Responsive Design |
-| **JavaScript (ES6+)** | Async operations, API fetch, DOM manipulation |
-| **IndexedDB** | Storing large Base64 image data locally |
-| **Web Audio API** | Real-time audio synthesis (Oscillators) |
-
----
-
-## ⌨️ Shortcuts & Tips
-
-* **Prompt Enhancer:** Click the `Magic Wand` icon next to the text area to let AI expand your short ideas into detailed prompts.
-* **Gallery Management:** Use the top filter panel in the gallery to sort by "Model", "Aspect Ratio", or "Date".
-* **Privacy:** You can toggle the visibility of your API key using the "Eye" icon.
+| **CSS3** | Animations, Flexbox/Grid, Gradients, Glitch Effects |
+| **JavaScript (ES6+)** | Core logic, API communication, DOM manipulation |
+| **IndexedDB** | Persistent local storage for the image gallery |
+| **Web Audio API** | Real-time audio synthesis (Oscillators) for UI sounds |
+| **Canvas API** | Image processing and resizing for the "Image to Prompt" feature |
 
 ---
 
@@ -131,17 +145,17 @@ This project was built from scratch using the following technologies:
 
 Contributions are welcome! Please follow these steps:
 
-1. Fork the Project.
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`).
-4. Push to the Branch (`git push origin feature/AmazingFeature`).
-5. Open a Pull Request.
+1.  Fork the Project.
+2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
+3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`).
+4.  Push to the Branch (`git push origin feature/AmazingFeature`).
+5.  Open a Pull Request.
 
 ---
 
 ## 📝 License
 
-This project is licensed under the [MIT](https://www.google.com/search?q=LICENSE) License.
+This project is licensed under the [MIT](LICENSE) License.
 
 <div align="center">
 <br />
