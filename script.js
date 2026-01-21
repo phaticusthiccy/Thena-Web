@@ -1459,6 +1459,7 @@
                 currentFilteredItems = filtered;
                 currentPage = 1;
                 galleryGrid.innerHTML = '';
+                isGalleryLoading = true; 
 
                 if (isGeneratingImage && currentGenParams && sortNewestFirst) {
                     galleryGrid.insertAdjacentHTML('beforeend', getPlaceholderHTML(currentGenParams.width, currentGenParams.height));
@@ -1468,6 +1469,7 @@
                 if (currentFilteredItems.length === 0 && !isGeneratingImage) {
                     galleryGrid.innerHTML = '<div class="empty-gallery">No images matching the filters were found.</div>';
                     hideLoaderAndShowGrid();
+                    isGalleryLoading = false;
                     return;
                 }
                 if (withAnimation) {
@@ -1484,10 +1486,13 @@
                 let loadedCount = 0;
                 const batchSize = itemsToPreload.length;
                 const totalGalleryCount = currentFilteredItems.length;
+                
                 if (batchSize === 0) {
                     hideLoaderAndShowGrid();
+                    isGalleryLoading = false;
                     return;
                 }
+                
                 loaderStatus.innerText = `Images are being processed (${totalGalleryCount} images)...`;
                 itemsToPreload.forEach((item) => {
                     const img = new Image();
@@ -1702,54 +1707,96 @@
                 lightboxDownload.onclick = async (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-
                     const originalText = lightboxDownload.innerHTML;
-                    
-                    lightboxDownload.innerHTML = `<span class="loading-spinner" style="border-top-color:#000; margin:0;"></span> Processing...`;
+                    const isTelegram = /Telegram/i.test(navigator.userAgent) || window.TelegramWebviewProxy;
+                    lightboxDownload.innerHTML = `<span class="loading-spinner" style="border-top-color:#fff; margin:0;"></span> ${isTelegram ? 'Preparing Link...' : 'Processing...'}`;
+                    lightboxDownload.style.pointerEvents = "none";
 
                     try {
                         let blob;
-                        if (data.url.startsWith('data:')) {
-                            blob = base64ToBlob(data.url, 'image/png');
-                        } else {
-                            const response = await fetch(data.url);
-                            blob = await response.blob();
-                        }
-
-                        const fileName = `thena-image-${Date.now()}.png`;
-                        const file = new File([blob], fileName, { type: blob.type });
-                        const isTelegram = /Telegram/i.test(navigator.userAgent) || window.TelegramWebviewProxy;
+                        const img = document.getElementById('lightbox-img');
+                        let base64Data = img.src;
 
                         if (isTelegram) {
-                            try {
-                                await navigator.share({
-                                    files: [file],
-                                    title: 'Thena AI Image',
-                                    text: data.prompt || 'Generated with Thena AI'
-                                });
+                            if (base64Data.startsWith('data:image')) {
+                                const rawBase64 = base64Data.split(',')[1];
+
+                                var infometa = document.querySelector(".lightbox-meta").textContent;
+                                infometa = infometa.replace(/\n/g, ' ').trim().toLocaleLowerCase();
                                 
-                                showNotification("Image shared successfully.", "success");
-                                if(typeof playSuccessSound === "function") playSuccessSound();
-                            } catch (shareError) {
-                                if (shareError.name !== 'AbortError') {
-                                    console.error('Share failed:', shareError);
-                                    forceDownload(blob, fileName); 
+                                let infoModel = infometa.split("•")[0].trim();
+                                let infoRatio = infometa.split("•")[1].trim().split(" ")[0];
+                                let infoModeration = infometa.split("•")[2].trim().includes("high") ? "high" : (infometa.split("•")[2].trim().includes("medium") ? "medium" : "low");
+
+                                let infoModel2 = infoModel.split(" ");
+                                for (let i = 0; i < infoModel2.length; i++) {
+                                    if(infoModel2[i]) infoModel2[i] = infoModel2[i][0].toUpperCase() + infoModel2[i].substr(1);
                                 }
+                                infoModel2 = infoModel2.join(" ");
+
+                                const featuresList = [
+                                    btnFast && btnFast.classList.contains('active') ? "fast" : "",
+                                    btnCreative && btnCreative.classList.contains('active') ? "creative" : "",
+                                    btnDense && btnDense.classList.contains('active') ? "dense" : "",
+                                    btnMovie && btnMovie.classList.contains('active') ? "movie" : "",
+                                    btnHighRes && btnHighRes.classList.contains('active') ? "highRes" : "",
+                                    btnEnhance && btnEnhance.classList.contains('active') ? "enhance" : ""
+                                ].filter(f => f !== "");
+
+                                const response = await fetch('https://create.thena.workers.dev/temproryUpload', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        ...uploadHeaders
+                                    },
+                                    body: JSON.stringify({
+                                        image: rawBase64,
+                                        apikey: apiKeyInput ? apiKeyInput.value.trim() : "",
+                                        prompt: document.querySelector(".lightbox-prompt").textContent,
+                                        model: infoModel2 ? infoModel2 : "",
+                                        ratio: infoRatio ? infoRatio : "",
+                                        moderation: infoModeration ? infoModeration : "high",
+                                        features: featuresList
+                                    })
+                                });
+
+                                const data = await response.json();
+
+                                if (data.status === 200 && data.image) {
+                                    window.location.href = data.image;
+                                    
+                                    if(typeof showNotification === "function") showNotification("Download started...", "success");
+                                    if(typeof playSuccessSound === "function") playSuccessSound();
+                                } else {
+                                    if(typeof showNotification === "function") showNotification("Download failed. Please try again.", "error");
+                                    if(typeof playErrorSound === "function") playErrorSound();
+                                }
+
+                            } else {
+                                window.location.href = base64Data;
                             }
+                            
                         } else {
+                            if (base64Data.startsWith('data:')) {
+                                blob = base64ToBlob(base64Data, 'image/png');
+                            } else {
+                                const response = await fetch(base64Data);
+                                blob = await response.blob();
+                            }
+
+                            const fileName = `thena-image-${Date.now()}.png`;
                             forceDownload(blob, fileName);
-                            showNotification("Download completed.", "success");
+                            if(typeof showNotification === "function") showNotification("Download completed.", "success");
                             if(typeof playSuccessSound === "function") playSuccessSound();
                         }
 
                     } catch (error) {
                         console.error("Download action failed:", error);
                         if(typeof playErrorSound === "function") playErrorSound();
-                        showNotification("An error occurred. Please try retrieving the image using the 'Share' button.", "error");
+                        if(typeof showNotification === "function") showNotification("Download failed. Please try again.", "error");
                     } finally {
-                        setTimeout(() => {
-                            lightboxDownload.innerHTML = originalText;
-                        }, 1000);
+                        lightboxDownload.innerHTML = originalText;
+                        lightboxDownload.style.pointerEvents = "auto";
                     }
                 };
 
