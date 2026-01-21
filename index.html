@@ -2747,6 +2747,41 @@
                 animation: spin 1s linear infinite;
             }
 
+
+        @media (max-width: 767px) {
+            #notification-container {
+                top: 75px !important; 
+                right: auto !important;
+                left: 55% !important;
+                transform: translateX(-50%) !important; 
+                width: 90% !important;
+                max-width: 400px !important;
+                align-items: center !important;
+            }
+
+            .notification {
+                width: 100% !important;
+                max-width: 100% !important;
+                justify-content: flex-start !important;
+                backdrop-filter: blur(16px) !important;
+                -webkit-backdrop-filter: blur(16px) !important;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.8) !important;
+            }
+            
+            .notification.busy-alert {
+                top: 0 !important;
+            }
+
+            .progress-container {
+                width: 80% !important;
+            }
+
+            .glitch-text {
+                width: 80% !important;
+                font-size: 50px !important;
+                text-align: center !important;
+            }
+        }
         </style>
     </head>
     <body>
