@@ -18,7 +18,7 @@
     <a href="https://github.com/phaticusthiccy/Thena-Web/blob/main/LICENSE">
       <img src="https://img.shields.io/badge/LICENSE-MIT-red?style=for-the-badge" alt="License" />
     </a>
-    <img src="https://img.shields.io/badge/Platform-Web-blue?style=for-the-badge&logo=googlechrome" alt="Platform" />
+    <img src="https://img.shields.io/badge/Platform-Web%20%26%20PWA-blue?style=for-the-badge&logo=googlechrome" alt="Platform" />
   </p>
 
   <p>
@@ -38,14 +38,14 @@
 
 **Thena** is a browser-based, modern, and aesthetic AI image generation interface built entirely with **Vanilla JavaScript, HTML, and CSS**. It pushes the boundaries of browser technologies (IndexedDB, Web Audio API, Canvas API) without relying on heavy frameworks like React or Vue.
 
-It is not just an image generator; it is a full-featured suite including Image-to-Prompt capabilities, local gallery management, and customizable themes.
+It is not just an image generator; it is a full-featured suite including Image-to-Prompt capabilities, local gallery management, PWA support, and customizable themes.
 
 ---
 
 ## ✨ Key Features
 
 ### 🎨 Generation & Models
-* **Multi-Model Support:** Access various models like Thena Movie, Max, V6, Photoreal, Anime Core, and more.
+* **Multi-Model Support:** Access various models like Thena Movie, Max, V6, Photoreal, Anime Core, and Anime Fast.
 * **Flexible Aspect Ratios:** Support for Square (1:1), Portrait (3:4, 9:16), and Cinematic (16:9, 4:3) formats.
 * **Advanced Parameters:**
     * **Fast Mode:** Optimized for speed.
@@ -53,19 +53,22 @@ It is not just an image generator; it is a full-featured suite including Image-t
     * **Movie Filter & HighRes:** Cinematic color grading and upscaling.
 
 ### 🛠️ Smart Tools
-* **🖼️ Image to Prompt (New):** Upload an image to analyze its content and generate a prompt automatically using CLIP technology.
+* **🖼️ Image to Prompt:** Upload an image to analyze its content and generate a prompt automatically using CLIP technology.
 * **🪄 Magic Wand:** Enhances short, simple prompts into detailed, professional descriptions with a single click.
+* **📜 Prompt History:** Automatically saves your recently used prompts for quick reuse.
 * **🛡️ Moderation Tools:** Toggle between Low, Medium, and High safety moderation levels.
 
 ### 💾 Gallery & Experience
 * **Local Gallery (IndexedDB):** Generated images are stored locally in your browser. Filter by date, model, or aspect ratio.
 * **Community Showcase:** Explore images shared by the community and copy their settings/prompts instantly.
-* **Audio Feedback (Web Audio API):** Dynamic, synthesized sound effects for interactions, success, and errors.
+* **🔗 Instant Sharing:** Generate public links for your creations directly from the lightbox to share with friends.
+* **Audio Feedback:** Dynamic, synthesized sound effects for interactions. (Includes **Silent Mode**).
 * **Lightbox Mode:** View images in full screen, download, delete, or check generation metadata.
 
-### ⚙️ Personalization
-* **Theme Engine:** Switch between solid colors or gradient themes to match your style.
+### ⚙️ Personalization & Performance
+* **Theme Engine:** Switch between solid colors or stunning gradient themes to match your style.
 * **Performance Mode:** Disables heavy animations and blur effects for smoother performance on low-end devices.
+* **PWA Support:** Installable as a native-like app on mobile and desktop devices.
 * **Privacy:** Your API key and images remain on your local device.
 
 ---
@@ -79,8 +82,8 @@ It is not just an image generator; it is a full-featured suite including Image-t
       <td align="center"><b>Local Gallery & Filters</b></td>
     </tr>
     <tr>
-      <td><img src="https://github.com/user-attachments/assets/0afcacf4-dc93-4e65-8de9-8ae3a9d12c74" alt="UI" /></td>
-      <td><img src="https://github.com/user-attachments/assets/1665dfda-6e4d-4c34-b452-afd7448a508d" alt="Gallery" /></td>
+      <td><img src="https://github.com/user-attachments/assets/f25ce55a-6471-4bcd-97e3-8abdaf5f9424" alt="UI" /></td>
+      <td><img src="https://github.com/user-attachments/assets/3134e2d4-e829-4c2a-8da7-6154bba752b8" alt="Gallery" /></td>
     </tr>
   </table>
   <table>
@@ -90,12 +93,23 @@ It is not just an image generator; it is a full-featured suite including Image-t
     </tr>
     <tr>
       <td><img src="https://github.com/user-attachments/assets/74718463-e7be-4438-bd56-61958a24344c" alt="Img2Prompt" /></td>
-      <td><img src="https://github.com/user-attachments/assets/e9b2b18e-b926-464e-8be4-b308b6e17608" /></td>
+      <td><img src="https://github.com/user-attachments/assets/114b7c32-a8da-44aa-9b81-ad00ecb68650" alt="Settings"/></td>
+    </tr>
+  </table>
+  <table>
+     <tr>
+      <td align="center"><b>Prompt Enhancement</b></td>
+      <td align="center"><b>Community Showcase</b></td>
+    </tr>
+    <tr>
+      <td><img src="https://github.com/user-attachments/assets/be17a761-4066-47e5-8f05-973448acc1bd" alt="Prompt Enhancement" /></td>
+      <td><img src="https://github.com/user-attachments/assets/a80df5aa-b78d-4912-ad77-b06a5353fcfd" alt="Community Showcase" /></td>
     </tr>
   </table>
 </div>
 
 ---
+
 
 ## 🛠️ Installation & Usage
 
@@ -138,6 +152,7 @@ To generate images, you need a free API Key.
 | **IndexedDB** | Persistent local storage for the image gallery |
 | **Web Audio API** | Real-time audio synthesis (Oscillators) for UI sounds |
 | **Canvas API** | Image processing and resizing for the "Image to Prompt" feature |
+| **Service Workers** | PWA functionality for offline capabilities and installation |
 
 ---
 

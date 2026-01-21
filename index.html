@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="tr">
     <head>
+        <link rel="manifest" href="manifest.json">
+        <meta name="theme-color" content="#000000">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="apple-mobile-web-app-title" content="Thena">
+        <link rel="apple-touch-icon" href="icon-192.png">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Thena - AI Image Generator</title>
@@ -126,12 +132,19 @@
                 transform: translate(-50%, -50%);
                 font-size: 200px;
                 font-weight: 900;
-                color: rgba(255, 255, 255, 0.01);
+                color: rgba(var(--primary-rgb), 0.07);
+
                 z-index: 0;
                 user-select: none;
                 pointer-events: none;
             }
         
+            @media (max-width: 768px) {
+                .background-text {
+                    visibility: hidden;
+                }
+            }
+
             .container {
                 max-width: 700px;
                 margin: 0 auto;
@@ -814,7 +827,7 @@
                 background: rgba(var(--primary-rgb), 0.05) !important; 
                 border-color: var(--primary) !important; 
                 color: var(--primary) !important; 
-                box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.1) !important;
+                box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.1); 
             }
 
             .glitch-text.gradient-active {
@@ -841,15 +854,15 @@
         
             @keyframes pulse {
                 0% {
-                    box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+                    box-shadow: 0 0 10px var(--pulse0) !important;
                 }
         
                 50% {
-                    box-shadow: 0 0 50px rgba(0, 255, 136, 0.75);
+                    box-shadow: 0 0 50px var(--pulse50) !important;
                 }
         
                 100% {
-                    box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+                    box-shadow: 0 0 10px var(--pulse100) !important;
                 }
             }
         
@@ -860,7 +873,7 @@
                 left: -100%;
                 width: 100%;
                 height: calc(100% + 2px);
-                background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.4), transparent);
+                background: linear-gradient(90deg, transparent, rgba(var(--primary-rgb), 0.1), transparent);
             }
         
             @keyframes outline-move {
@@ -1847,6 +1860,37 @@
                 transform: scale(1) translateY(0);
             }
         
+            /* Settings Modal Fix - Mobil Taşma Çözümü */
+            .settings-content {
+                max-height: 85vh;     
+                overflow-y: auto;      
+                overflow-x: hidden;    
+                display: flex;          
+                flex-direction: column; 
+                scrollbar-width: thin;  
+            }
+
+            .settings-content .confirm-icon {
+                flex-shrink: 0 !important; 
+                min-height: 60px !important; 
+                width: 60px !important;      
+            }
+
+            @media (max-width: 768px) {
+                .settings-content {
+                    padding: 20px !important; 
+                    width: 90% !important;    
+                    max-height: 80vh;         
+                }
+                
+                .settings-content .setting-group {
+                    margin-bottom: 15px !important;
+                }
+                
+                .settings-content h3 {
+                    margin-bottom: 15px !important;
+                }
+            }
             .confirm-icon {
                 width: 60px;
                 height: 60px;
@@ -2416,7 +2460,11 @@
                 --placeholderPulse-50-box-shadow: #00ff8833;
                 --placeholderPulse-100-border: #00ff881a;
                 --placeholderPulse-100-box-shadow: #00ff880d;
+                --pulse0: #00ff8856;
+                --pulse50: #00ff8888;
+                --pulse100: #00ff8833;
             }
+            
 
             .glitch-text { text-shadow: 0 0 20px var(--primary), 0 0 40px var(--primary) !important; }
             .progress-bar { background: var(--theme-bg) !important; }
@@ -2428,7 +2476,7 @@
             .model-card.active { border-color: var(--primary) !important; background: rgba(var(--primary-rgb), 0.05) !important; }
             .model-card.active .model-name { color: var(--primary) !important; text-shadow: 0 0 15px rgba(var(--primary-rgb), 0.8) !important; }
             .aspect-btn.active, .extra-btn.active { background: rgba(var(--primary-rgb), 0.05) !important; border-color: var(--primary) !important; color: var(--primary) !important; }
-            .generate-btn.ready { background: rgba(var(--primary-rgb), 0.05) !important; border-color: var(--primary) !important; color: var(--primary) !important; box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.1) !important; }
+            .generate-btn.ready { background: rgba(var(--primary-rgb), 0.05) !important; border-color: var(--primary) !important; color: var(--primary) !important; box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.1); }
             .gallery-btn:hover, .nav-btn:hover { border-color: var(--primary) !important; color: var(--primary) !important; }
             .gallery-title, .info-meta, .lightbox-meta { color: var(--primary) !important; }
             #gallery-progress-bar { background: var(--primary) !important; box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.5) !important; }
@@ -2782,6 +2830,220 @@
                 text-align: center !important;
             }
         }
+
+
+
+        #prompt-history-btn {
+            position: absolute;
+            top: 10px;
+            right: 50px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid #333;
+            color: #888;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+            z-index: 15;
+        }
+
+        #prompt-history-btn:hover, #prompt-history-btn.active {
+            border-color: rgba(var(--primary-rgb), 0.5);
+            color: rgb(var(--primary-rgb));
+            background: rgba(var(--primary-rgb), 0.1);
+            transform: scale(1.05);
+        }
+
+        .history-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            max-height: 0;
+            background: #0f0f0f;
+            border: 1px solid #222;
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .history-dropdown.open {
+            max-height: 170px; 
+            opacity: 1;
+            visibility: visible;
+            border-color: #333;
+            overflow-y: auto;
+        }
+
+        .history-dropdown::-webkit-scrollbar { width: 5px; }
+        .history-dropdown::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: #111;
+            border-bottom: 1px solid #222;
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+
+        .clear-history-btn {
+            background: none;
+            border: none;
+            color: #ff4444;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 600;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .clear-history-btn:hover { opacity: 1; text-decoration: underline; }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            border-bottom: 1px solid #1a1a1a;
+            transition: background 0.2s;
+            gap: 10px;
+        }
+
+        .history-item:hover {
+            background: rgba(var(--primary-rgb), 0.05);
+        }
+
+        .history-text {
+            font-size: 13px;
+            color: #ccc;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            flex: 1;
+        }
+        .history-text:hover { color: rgb(var(--primary-rgb)); }
+
+        .history-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .history-action-btn {
+            background: #222;
+            border: 1px solid #333;
+            color: #888;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .history-action-btn:hover {
+            border-color: rgba(var(--primary-rgb), 0.5);
+            color: rgb(var(--primary-rgb));
+            background: rgba(var(--primary-rgb), 0.1);
+        }
+
+
+        .diff-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .diff-box {
+            flex: 1;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 15px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #btn-wand-confirm:hover {
+            scale: 1.05 !important;
+            background: rgba(var(--primary-rgb), 0.1) !important;
+            border-color: rgba(var(--primary-rgb), 0.5) !important;
+        }
+
+        #btn-wand-cancel:hover {
+            scale: 1.05 !important;
+            background: #1a1a1a !important;
+        }
+
+        .diff-box.enhanced {
+            border-color: rgba(var(--primary-rgb), 0.5);
+            background: rgba(var(--primary-rgb), 0.02);
+            box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.05) inset;
+        }
+
+        .diff-box h6 {
+            color: #666;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .diff-box.enhanced h6 {
+            color: rgb(var(--primary-rgb));
+        }
+
+        .diff-text {
+            font-size: 13px;
+            line-height: 1.5;
+            color: #ccc;
+            overflow-y: auto;
+            flex: 1;
+            white-space: pre-wrap;
+            scrollbar-width: thin;
+        }
+
+        .diff-arrow {
+            color: #444;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .diff-container {
+                flex-direction: column;
+            }
+            .diff-arrow {
+                transform: rotate(90deg);
+            }
+            .diff-box {
+                width: 100%;
+                height: 150px;
+            }
+        }
+
         </style>
     </head>
     <body>
@@ -2850,48 +3112,44 @@
                     </div>
                 </div>
                 <div class="input-group">
-    <label>Prompt</label>
-    <div style="position: relative;">
-        <textarea id="prompt" maxlength="1150" placeholder="Describe your image... (Min 10 chars, Max 1150 chars)" style="padding-right: 90px;"></textarea>
-        
-        <button id="img2prompt-btn" title="Image to Prompt">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                <polyline points="21 15 16 10 5 21"></polyline>
-            </svg>
-        </button>
+                    <label>Prompt</label>
+                    <div style="position: relative;">
+                        <textarea id="prompt" maxlength="1150" placeholder="Describe your image... (Min 10 chars, Max 1150 chars)" style="padding-right: 90px;"></textarea>
+                        
+                        <button id="prompt-history-btn" title="Prompt History">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </button>
 
-        <button id="moderation-btn" title="Moderation: High" data-level="high">
-            <svg class="mod-icon icon-high" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-            </svg>
-            <svg class="mod-icon icon-medium" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                <line x1="12" y1="8" x2="12" y2="12"></line>
-                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-            </svg>
-            <svg class="mod-icon icon-low" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.1.2-2.2.5-3.3.3-1.1.8-2.2 1.5-3.1v-.1z"></path>
-            </svg>
-        </button>
+                        <button id="img2prompt-btn" title="Image to Prompt">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                        </button>
 
-        <button id="magic-wand-btn" title="Enhance Prompt" style="border-color: rgba(0, 255, 136, 0.3);">
-            <svg fill="#26d96b" width="64px" height="64px" viewBox="0 0 64.00 64.00" xmlns="http://www.w3.org/2000/svg" stroke="#26d96b" stroke-width="0.00064">
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.384"></g>
-                <g id="SVGRepo_iconCarrier">
-                    <g data-name="Magic Wand" id="Magic_Wand">
-                        <path d="M10.89,57a3.89,3.89,0,0,0,2.76-1.14l26.7-26.7.26.78a3,3,0,0,0,1.07,1.45,3,3,0,0,0,4.13-.66l3-4.13,5.28-.05A2.86,2.86,0,0,0,55.82,26a2.93,2.93,0,0,0,.6-4.1l-3.09-4.15,1.66-5h0a3,3,0,0,0,0-1.83,2.9,2.9,0,0,0-1.46-1.69A3,3,0,0,0,51.31,9l-5,1.66L42.13,7.58A3,3,0,0,0,40.4,7h0a2.92,2.92,0,0,0-2.93,2.91l0,5.28-4.14,3a3,3,0,0,0,.79,5.2l.78.26L8.14,50.35A3.9,3.9,0,0,0,10.89,57ZM32.13,32.5a1,1,0,0,0-.63-.63L30,31.36,32.3,29l2,.67.67,2L32.64,34Zm2-11.49a1,1,0,0,1,0-.73.9.9,0,0,1,.34-.47L39,16.52a1,1,0,0,0,.41-.81l.05-5.79a.9.9,0,0,1,.28-.65A.91.91,0,0,1,40.38,9a.84.84,0,0,1,.55.19l4.58,3.39a1,1,0,0,0,.91.15l5.52-1.82a.91.91,0,0,1,1.15.58,1,1,0,0,1,0,.58l-1.82,5.51a1,1,0,0,0,.15.91l3.39,4.58a.94.94,0,0,1,.18.69,1,1,0,0,1-.37.61.9.9,0,0,1-.54.18l-5.79.05a1,1,0,0,0-.81.41l-3.29,4.55a1,1,0,0,1-1.33.21.9.9,0,0,1-.35-.47L40.7,23.93a1,1,0,0,0-.63-.63L34.7,21.49A.93.93,0,0,1,34.15,21ZM39,25l.68,2-3.09,3.09L36,28.59a1,1,0,0,0-.63-.62l-1.54-.52L37,24.36ZM9.56,51.77,28.39,32.94l2,.67.67,2L12.23,54.45a1.89,1.89,0,1,1-2.67-2.68Z"></path>
-                        <path d="M26,16.79c-.45-.79-1.38-.74-2.79-.66a9.44,9.44,0,0,1-5.68-1.52c-1.18-.77-2-1.28-2.75-.83s-.74,1.39-.66,2.79a9.39,9.39,0,0,1-1.52,5.69c-.77,1.18-1.28,1.95-.82,2.74s1.37.74,2.79.66a9.45,9.45,0,0,1,5.68,1.53c.93.6,1.88,1.32,2.75.82s.74-1.39.65-2.79a9.43,9.43,0,0,1,1.53-5.68C25.92,18.36,26.43,17.58,26,16.79Zm-2.49,1.65a11.43,11.43,0,0,0-1.85,6.9c0,.11,0,.24,0,.39l-.33-.22a11.5,11.5,0,0,0-6.26-1.86c-.21,0-.43,0-.64,0l-.39,0,.21-.33a11.47,11.47,0,0,0,1.85-6.9c0-.11,0-.25,0-.39l.33.21a11.47,11.47,0,0,0,6.9,1.85l.39,0Z"></path>
-                        <path d="M55.06,36.42c-.6-.6-1.36-.35-2.41,0a6.84,6.84,0,0,1-4.29,0c-1.06-.35-1.82-.6-2.42,0s-.34,1.35,0,2.41a6.84,6.84,0,0,1,0,4.29c-.35,1.05-.6,1.81,0,2.41a1.18,1.18,0,0,0,.89.36,5.32,5.32,0,0,0,1.53-.37,7,7,0,0,1,4.29,0c1.05.35,1.81.6,2.41,0s.34-1.36,0-2.41a6.84,6.84,0,0,1,0-4.29C55.4,37.77,55.65,37,55.06,36.42Zm-2,7.15a8.83,8.83,0,0,0-5.19,0,9,9,0,0,0,0-5.19,9,9,0,0,0,5.19,0A8.83,8.83,0,0,0,53.1,43.57Z"></path>
-                        <path d="M36.6,44.21a6.93,6.93,0,0,1-3.7-2.14c-.74-.83-1.27-1.43-2.08-1.21s-1,1-1.2,2.09a6.93,6.93,0,0,1-2.14,3.7c-.83.74-1.43,1.27-1.21,2.08s1,1,2.09,1.21a6.82,6.82,0,0,1,3.7,2.13c.64.72,1.24,1.44,2.09,1.21s1-1,1.2-2.09a6.85,6.85,0,0,1,2.13-3.7c.83-.74,1.43-1.27,1.21-2.08S37.69,44.43,36.6,44.21ZM33.43,50.6A8.88,8.88,0,0,0,29,48a9,9,0,0,0,2.59-4.48A8.85,8.85,0,0,0,36,46.12,8.92,8.92,0,0,0,33.43,50.6Z"></path>
-                    </g>
-                </g>
-            </svg>
-        </button>
-    </div>
-</div>
+                        <button id="moderation-btn" title="Moderation: High" data-level="high">
+                        <svg class="mod-icon icon-high" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                        </button>
+
+                        <button id="magic-wand-btn" title="Enhance Prompt" style="border-color: rgba(0, 255, 136, 0.3);">
+                            <svg fill="#26d96b" width="64px" height="64px" viewBox="0 0 64.00 64.00" xmlns="http://www.w3.org/2000/svg" stroke="#26d96b" stroke-width="0.00064"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.384"></g><g id="SVGRepo_iconCarrier"> <g data-name="Magic Wand" id="Magic_Wand"> <path d="M10.89,57a3.89,3.89,0,0,0,2.76-1.14l26.7-26.7.26.78a3,3,0,0,0,1.07,1.45,3,3,0,0,0,4.13-.66l3-4.13,5.28-.05A2.86,2.86,0,0,0,55.82,26a2.93,2.93,0,0,0,.6-4.1l-3.09-4.15,1.66-5h0a3,3,0,0,0,0-1.83,2.9,2.9,0,0,0-1.46-1.69A3,3,0,0,0,51.31,9l-5,1.66L42.13,7.58A3,3,0,0,0,40.4,7h0a2.92,2.92,0,0,0-2.93,2.91l0,5.28-4.14,3a3,3,0,0,0,.79,5.2l.78.26L8.14,50.35A3.9,3.9,0,0,0,10.89,57ZM32.13,32.5a1,1,0,0,0-.63-.63L30,31.36,32.3,29l2,.67.67,2L32.64,34Zm2-11.49a1,1,0,0,1,0-.73.9.9,0,0,1,.34-.47L39,16.52a1,1,0,0,0,.41-.81l.05-5.79a.9.9,0,0,1,.28-.65A.91.91,0,0,1,40.38,9a.84.84,0,0,1,.55.19l4.58,3.39a1,1,0,0,0,.91.15l5.52-1.82a.91.91,0,0,1,1.15.58,1,1,0,0,1,0,.58l-1.82,5.51a1,1,0,0,0,.15.91l3.39,4.58a.94.94,0,0,1,.18.69,1,1,0,0,1-.37.61.9.9,0,0,1-.54.18l-5.79.05a1,1,0,0,0-.81.41l-3.29,4.55a1,1,0,0,1-1.33.21.9.9,0,0,1-.35-.47L40.7,23.93a1,1,0,0,0-.63-.63L34.7,21.49A.93.93,0,0,1,34.15,21ZM39,25l.68,2-3.09,3.09L36,28.59a1,1,0,0,0-.63-.62l-1.54-.52L37,24.36ZM9.56,51.77,28.39,32.94l2,.67.67,2L12.23,54.45a1.89,1.89,0,1,1-2.67-2.68Z"></path> <path d="M26,16.79c-.45-.79-1.38-.74-2.79-.66a9.44,9.44,0,0,1-5.68-1.52c-1.18-.77-2-1.28-2.75-.83s-.74,1.39-.66,2.79a9.39,9.39,0,0,1-1.52,5.69c-.77,1.18-1.28,1.95-.82,2.74s1.37.74,2.79.66a9.45,9.45,0,0,1,5.68,1.53c.93.6,1.88,1.32,2.75.82s.74-1.39.65-2.79a9.43,9.43,0,0,1,1.53-5.68C25.92,18.36,26.43,17.58,26,16.79Zm-2.49,1.65a11.43,11.43,0,0,0-1.85,6.9c0,.11,0,.24,0,.39l-.33-.22a11.5,11.5,0,0,0-6.26-1.86c-.21,0-.43,0-.64,0l-.39,0,.21-.33a11.47,11.47,0,0,0,1.85-6.9c0-.11,0-.25,0-.39l.33.21a11.47,11.47,0,0,0,6.9,1.85l.39,0Z"></path> <path d="M55.06,36.42c-.6-.6-1.36-.35-2.41,0a6.84,6.84,0,0,1-4.29,0c-1.06-.35-1.82-.6-2.42,0s-.34,1.35,0,2.41a6.84,6.84,0,0,1,0,4.29c-.35,1.05-.6,1.81,0,2.41a1.18,1.18,0,0,0,.89.36,5.32,5.32,0,0,0,1.53-.37,7,7,0,0,1,4.29,0c1.05.35,1.81.6,2.41,0s.34-1.36,0-2.41a6.84,6.84,0,0,1,0-4.29C55.4,37.77,55.65,37,55.06,36.42Zm-2,7.15a8.83,8.83,0,0,0-5.19,0,9,9,0,0,0,0-5.19,9,9,0,0,0,5.19,0A8.83,8.83,0,0,0,53.1,43.57Z"></path> <path d="M36.6,44.21a6.93,6.93,0,0,1-3.7-2.14c-.74-.83-1.27-1.43-2.08-1.21s-1,1-1.2,2.09a6.93,6.93,0,0,1-2.14,3.7c-.83.74-1.43,1.27-1.21,2.08s1,1,2.09,1.21a6.82,6.82,0,0,1,3.7,2.13c.64.72,1.24,1.44,2.09,1.21s1-1,1.2-2.09a6.85,6.85,0,0,1,2.13-3.7c.83-.74,1.43-1.27,1.21-2.08S37.69,44.43,36.6,44.21ZM33.43,50.6A8.88,8.88,0,0,0,29,48a9,9,0,0,0,2.59-4.48A8.85,8.85,0,0,0,36,46.12,8.92,8.92,0,0,0,33.43,50.6Z"></path> </g> </g></svg>
+                        </button>
+                        
+                        <div id="prompt-history-dropdown" class="history-dropdown">
+                            <div class="history-header">
+                                <span>Recent Prompts</span>
+                                <button id="clear-history-btn" class="clear-history-btn">Clear All</button>
+                            </div>
+                            <div id="history-list-container">
+                                <div style="padding:15px; text-align:center; color:#444; font-size:12px;">No history yet.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="input-group">
                     <label>Model</label>
                     <div class="model-selector" id="model-selector">
@@ -3294,6 +3552,17 @@
                     <p style="font-size:12px; color:#666; margin-bottom:10px;">Reduces animations, blur effects and shadows for faster experience.</p>
                 </div>
 
+                <div class="setting-group" style="margin-bottom: 25px; text-align: left;">
+                    <label style="display:flex; justify-content:space-between; align-items:center; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">
+                        SILENT MODE
+                        <label class="switch">
+                            <input type="checkbox" id="mute-mode-toggle">
+                            <span class="slider round"></span>
+                        </label>
+                    </label>
+                    <p style="font-size:12px; color:#666; margin-bottom:10px;">Disable all sound effects and interface tones.</p>
+                </div>
+
 
                 <div class="setting-group" style="margin-bottom: 25px; text-align: left;">
                     <label style="display:block; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">DATA MANAGEMENT</label>
@@ -3376,12 +3645,75 @@
         </div>
 
 
+        <div id="history-clear-modal" class="confirm-modal">
+            <div class="confirm-content">
+                <div class="confirm-icon" style="background: rgba(255, 68, 68, 0.1); color: #ff4444;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                </div>
+                <h3 style="color: #ff4444;">Clear History?</h3>
+                <p>All saved prompts will be permanently deleted. This action cannot be undone.</p>
+                <div class="confirm-actions">
+                    <button id="btn-history-cancel" style="background: #1a1a1a; color: #fff; border: 1px solid #333;">Cancel</button>
+                    <button id="btn-history-confirm" style="background: #ff4444; color: #fff; border: none; box-shadow: 0 4px 15px rgba(255, 68, 68, 0.4);">Yes, Clear All</button>
+                </div>
+            </div>
+        </div>
 
+
+        <div id="wand-modal" class="confirm-modal">
+            <div class="confirm-content" style="max-width: 650px; width: 95%;">
+                <div class="confirm-icon" style="color: var(--primary); background: rgba(var(--primary-rgb), 0.1);">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                    </svg>
+                </div>
+                <h3 style="color: #fff; margin-bottom: 15px;">Prompt Enhancement Preview</h3>
+                
+                <div class="diff-container">
+                    <div class="diff-box original">
+                        <h6>Original Prompt</h6>
+                        <div class="diff-text" id="wand-orig-text"></div>
+                    </div>
+                    <div class="diff-arrow">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </div>
+                    <div class="diff-box enhanced">
+                        <h6>Enhanced Prompt</h6>
+                        <div class="diff-text" id="wand-new-text"></div>
+                    </div>
+                </div>
+
+                <div class="confirm-actions" style="margin-top: 25px;">
+                    <button id="btn-wand-cancel" style="background: #1a1a1a; color: #fff; border: 1px solid #333;">Keep Original</button>
+                    <button id="btn-wand-confirm" style="background: rgba(var(--primary-rgb), 0.1); color: rgb(var(--primary-rgb)); border: 1px solid rgba(var(--primary-rgb), 0.3);">
+                        Apply Changes
+                    </button>
+                </div>
+            </div>
+        </div>
 
         <script>
+
+            function base64ToBlob(base64, mimeType) {
+                const byteCharacters = atob(base64.split(',')[1]);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                return new Blob([byteArray], { type: mimeType });
+            }
+
             const audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+            let isMuted = localStorage.getItem('thena-mute-mode') === 'true';
 
             function playTone(type, freqStart, freqEnd, duration, delay = 0, volume = 0.1) {
+                if (isMuted) return;
                 if (audioCtx.state === 'suspended') audioCtx.resume();
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
@@ -3476,6 +3808,7 @@
             const STORE_NAME = 'images';
             let isGeneratingImage = false;
             let currentGenParams = null;
+            let pendingEnhancedPrompt = "";
 
             function createDots(count, type) {
                 const icons = {
@@ -3670,26 +4003,26 @@
                         localStorage.setItem(LS_KEYS.PROMPT, element.value);
                         checkFormReady();
                     }
-                }, 10);
+                }, 7);
             }
             magicWandBtn.addEventListener('click', async () => {
                 const currentPrompt = promptInput.value.trim();
                 const apiKey = apiKeyInput.value.trim();
                 
                 if (!currentPrompt) {
-                    playErrorSound()
-                    showNotification("The prompt field is empty! Please type something.");
+                    if(typeof playErrorSound === "function") playErrorSound();
+                    showNotification("The prompt field is empty! Please type something.", "error");
                     return;
                 }
                 if (!apiKey) {
-                    playErrorSound()
-                    showNotification("Please enter the API key first.");
+                    if(typeof playErrorSound === "function") playErrorSound();
+                    showNotification("Please enter the API key first.", "error");
                     return;
                 }
                 
-                playInformationSound()
+                if(typeof playInformationSound === "function") playInformationSound();
                 
-                const removeLoading = showNotification("Prompt is being improved...", "loading");
+                const removeLoading = showNotification("Prompt is being analyzed and enhanced...", "loading");
                 
                 magicWandBtn.classList.add('loading');
                 generateBtn.disabled = true;
@@ -3706,26 +4039,65 @@
                     if (removeLoading) removeLoading(); 
 
                     if (data.status === 200) {
-                        lastEnhancedPrompt = data.content;
-                        isPromptEnhancedByWand = true;
-                        magicWandBtn.classList.add('disabled');
-                        typeWriterEffect(data.content, promptInput);
-                        playSuccessSound()
-                        showNotification("Prompt has been successfully improved!", "success");
+                        pendingEnhancedPrompt = data.content;
+                        openWandModal(currentPrompt, data.content);
+                        
+                        if(typeof playSuccessSound === "function") playSuccessSound();
                     } else {
-                        playErrorSound()
+                        if(typeof playErrorSound === "function") playErrorSound();
                         showNotification("The prompt could not be created. An error occurred.", "error");
                     }
                 } catch (error) {
                     if (removeLoading) removeLoading();
                     
-                    playErrorSound()
+                    if(typeof playErrorSound === "function") playErrorSound();
                     showNotification("An error occurred:" + error.message, "error");
                 } finally {
                     magicWandBtn.classList.remove('loading');
-                    checkFormReady(); 
                 }
             });
+
+
+            const wandModal = document.getElementById('wand-modal');
+            const wandOrigText = document.getElementById('wand-orig-text');
+            const wandNewText = document.getElementById('wand-new-text');
+            const btnWandCancel = document.getElementById('btn-wand-cancel');
+            const btnWandConfirm = document.getElementById('btn-wand-confirm');
+
+
+            function openWandModal(original, enhanced) {
+                wandOrigText.textContent = original;
+                wandNewText.textContent = enhanced;
+                wandModal.classList.add('active');
+            }
+
+            btnWandCancel.addEventListener('click', () => {
+                wandModal.classList.remove('active');
+                pendingEnhancedPrompt = "";
+                checkFormReady();
+            });
+
+            btnWandConfirm.addEventListener('click', () => {
+                wandModal.classList.remove('active');
+                
+                if (pendingEnhancedPrompt) {
+                    lastEnhancedPrompt = pendingEnhancedPrompt;
+                    isPromptEnhancedByWand = true;
+                    magicWandBtn.classList.add('disabled');
+                    
+                    typeWriterEffect(pendingEnhancedPrompt, promptInput);
+                    
+                    showNotification("Prompt updated successfully!", "success");
+                }
+            });
+
+            wandModal.addEventListener('click', (e) => {
+                if (e.target === wandModal) {
+                    wandModal.classList.remove('active');
+                    checkFormReady();
+                }
+            });
+
             const toggleApiKeyBtn = document.getElementById('toggle-api-key');
             const eyeSlash = document.getElementById('eye-slash');
             const eyePath = document.getElementById('eye-path');
@@ -4337,9 +4709,11 @@
                 const promptLength = promptInput.value.trim().length;
                 if (promptLength >= 10 && promptLength <= 1150 && apiKeyInput.value.trim() && selectedModel && selectedAspectRatio) {
                     generateBtn.classList.add('ready');
+                    document.querySelector(".generate-btn").style.cursor = "pointer";
                     generateBtn.disabled = false;
                 } else {
                     generateBtn.classList.remove('ready');
+                    document.querySelector(".generate-btn").style.cursor = "not-allowed";
                     generateBtn.disabled = true;
                 }
             }
@@ -4867,7 +5241,8 @@
                 `;
 
                 const sizeStr = getFileSize(data.url);
-                lightboxDownload.href = data.url;
+                lightboxDownload.removeAttribute('href'); 
+                lightboxDownload.style.cursor = "pointer";
                 lightboxDownload.innerHTML = `
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -4877,6 +5252,47 @@
                     Download ${sizeStr ? `(${sizeStr})` : ''}
                 `;
                 
+                lightboxDownload.onclick = async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const originalText = lightboxDownload.innerHTML;
+                    lightboxDownload.innerHTML = `<span class="loading-spinner" style="border-top-color:#000; margin:0;"></span> Downloading...`;
+                    try {
+                        let blobUrl;
+                        let fileName = `thena-image-${Date.now()}.png`;
+
+                        if (data.url.startsWith('data:')) {
+                            const blob = base64ToBlob(data.url, 'image/png');
+                            blobUrl = URL.createObjectURL(blob);
+                        } else {
+                            const response = await fetch(data.url);
+                            const blob = await response.blob();
+                            blobUrl = URL.createObjectURL(blob);
+                        }
+
+                        const tempLink = document.createElement('a');
+                        tempLink.href = blobUrl;
+                        tempLink.download = fileName;
+                        document.body.appendChild(tempLink);
+                        tempLink.click();
+                        
+                        document.body.removeChild(tempLink);
+                        setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
+                        
+
+                    } catch (error) {
+                        console.error("Download failed:", error);
+                        if(typeof showNotification === "function") showNotification("Download blocked by browser. Opening in new tab...", "info");
+                        window.open(data.url, '_blank');
+                    } finally {
+                        showNotification("Download completed.", "success");
+                        playSuccessSound();
+                        setTimeout(() => {
+                            lightboxDownload.innerHTML = originalText;
+                        }, 1000);
+                    }
+                };
     
                 const copyBtn = document.getElementById('lightbox-copy-btn');
                 if (copyBtn) {
@@ -5543,6 +5959,25 @@
             togglePerformanceMode(true);
         }
 
+
+        const muteToggle = document.getElementById('mute-mode-toggle');
+        if (muteToggle) {
+            muteToggle.checked = isMuted;
+
+            muteToggle.addEventListener('change', (e) => {
+                isMuted = e.target.checked;
+                localStorage.setItem('thena-mute-mode', isMuted);
+                
+                if(typeof showNotification === "function") {
+                    showNotification(isMuted ? "Silent Mode Enabled" : "Silent Mode Disabled", "info");
+                }
+                
+                if (!isMuted && typeof playInformationSound === "function") {
+                    playInformationSound();
+                }
+            });
+        }
+
         function setTheme(color, rgb, gradient = null, notify = true) { 
             root.style.setProperty('--primary', color);
             root.style.setProperty('--primary-rgb', rgb);
@@ -5563,6 +5998,9 @@
                 root.style.setProperty('--placeholderPulse-50-box-shadow', '#00ff8833');
                 root.style.setProperty('--placeholderPulse-100-border', '#00ff881a');
                 root.style.setProperty('--placeholderPulse-100-box-shadow', '#00ff880d');
+                root.style.setProperty('--pulse0', '#00ff8856');
+                root.style.setProperty('--pulse50', '#00ff8888');
+                root.style.setProperty('--pulse100', '#00ff8833');
             } else if (color == "#00ccff") {
                 // blue theme
                 root.style.setProperty('--dot-filled-1', '#e0e0e0');
@@ -5576,6 +6014,9 @@
                 root.style.setProperty('--placeholderPulse-50-box-shadow', '#00ccff33');
                 root.style.setProperty('--placeholderPulse-100-border', '#00ccff1a');
                 root.style.setProperty('--placeholderPulse-100-box-shadow', '#00ccff0d');
+                root.style.setProperty('--pulse0', '#00ccff56');
+                root.style.setProperty('--pulse50', '#00ccff88');
+                root.style.setProperty('--pulse100', '#00ccff33');
             } else if (color == "#ff0088") {
                 // pink/magenta theme
                 root.style.setProperty('--dot-filled-1', '#ffe0f0'); 
@@ -5589,6 +6030,9 @@
                 root.style.setProperty('--placeholderPulse-50-box-shadow', '#ff008833'); 
                 root.style.setProperty('--placeholderPulse-100-border', '#ff00881a');   
                 root.style.setProperty('--placeholderPulse-100-box-shadow', '#ff00880d');
+                root.style.setProperty('--pulse0', '#ff008856');
+                root.style.setProperty('--pulse50', '#ff008888');
+                root.style.setProperty('--pulse100', '#ff008833');
             } else if (color == "#ffaa00") {
                 // orange/amber theme
                 root.style.setProperty('--dot-filled-1', '#fff5e6');
@@ -5602,6 +6046,9 @@
                 root.style.setProperty('--placeholderPulse-50-box-shadow', '#ffaa0033');
                 root.style.setProperty('--placeholderPulse-100-border', '#ffaa001a');   
                 root.style.setProperty('--placeholderPulse-100-box-shadow', '#ffaa000d');
+                root.style.setProperty('--pulse0', '#ffaa0056');
+                root.style.setProperty('--pulse50', '#ffaa0088');
+                root.style.setProperty('--pulse100', '#ffaa0033');
             } else if (color == "#bd00ff") {
                 // purple/violet theme
                 root.style.setProperty('--dot-filled-1', '#f6e0ff'); 
@@ -5615,6 +6062,9 @@
                 root.style.setProperty('--placeholderPulse-50-box-shadow', '#bd00ff33');
                 root.style.setProperty('--placeholderPulse-100-border', '#bd00ff1a');   
                 root.style.setProperty('--placeholderPulse-100-box-shadow', '#bd00ff0d');
+                root.style.setProperty('--pulse0', '#bd00ff56');
+                root.style.setProperty('--pulse50', '#bd00ff88');
+                root.style.setProperty('--pulse100', '#bd00ff33');
             } else {
                 // default blue theme
                 root.style.setProperty('--dot-filled-1', '#e0e0e0');
@@ -5628,6 +6078,9 @@
                 root.style.setProperty('--placeholderPulse-50-box-shadow', '#00ccff33');
                 root.style.setProperty('--placeholderPulse-100-border', '#00ccff1a');
                 root.style.setProperty('--placeholderPulse-100-box-shadow', '#00ccff0d');
+                root.style.setProperty('--pulse0', '#00ccff56');
+                root.style.setProperty('--pulse50', '#00ccff88');
+                root.style.setProperty('--pulse100', '#00ccff33');
             }
 
             const logoText = document.querySelector('.glitch-text');
@@ -6229,6 +6682,146 @@
                     btnImg2PromptCancel.style.cursor = "";
                 }
             });
+
+
+            const promptHistoryBtn = document.getElementById('prompt-history-btn');
+            const promptHistoryDropdown = document.getElementById('prompt-history-dropdown');
+            const historyListContainer = document.getElementById('history-list-container');
+            const clearHistoryBtn = document.getElementById('clear-history-btn');
+            const HISTORY_KEY = 'thena-prompt-history-list';
+
+            function getPromptHistory() {
+                try {
+                    return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+                } catch {
+                    return [];
+                }
+            }
+
+            function savePromptToHistory(promptText) {
+                if (!promptText || promptText.length < 5) return;
+                let history = getPromptHistory();
+                history = history.filter(p => p !== promptText);
+                history.unshift(promptText);
+                if (history.length > 30) history = history.slice(0, 30);
+                localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+                renderPromptHistory();
+            }
+
+            function renderPromptHistory() {
+                playInformationSound();
+                const history = getPromptHistory();
+                
+                if (history.length === 0) {
+                    historyListContainer.innerHTML = '<div style="padding:15px; text-align:center; color:#444; font-size:12px;">No history yet. Generate images to build history.</div>';
+                    return;
+                }
+
+                historyListContainer.innerHTML = '';
+                
+                history.forEach(text => {
+                    const item = document.createElement('div');
+                    item.className = 'history-item';
+                    
+                    const safeText = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+                    
+                    item.innerHTML = `
+                        <div class="history-text" title="${safeText}">${safeText}</div>
+                        <div class="history-actions">
+                            <button class="history-action-btn copy-hist-btn" title="Copy">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            </button>
+                        </div>
+                    `;
+                    
+                    item.querySelector('.history-text').addEventListener('click', () => {
+                        const promptInput = document.getElementById('prompt');
+                        promptInput.value = text;
+                        localStorage.setItem('thena-last-prompt', text); 
+                        
+                        if(typeof autoResize === 'function') autoResize(promptInput);
+                        if(typeof checkFormReady === 'function') checkFormReady();
+                        
+                        promptHistoryDropdown.classList.remove('open');
+                        promptHistoryBtn.classList.remove('active');
+                    });
+
+                    item.querySelector('.copy-hist-btn').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        navigator.clipboard.writeText(text).then(() => {
+                            if(typeof showNotification === 'function') showNotification("Prompt copied to clipboard!", "success");
+                        });
+                    });
+
+                    historyListContainer.appendChild(item);
+                });
+            }
+
+            promptHistoryBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                renderPromptHistory();
+                promptHistoryDropdown.classList.toggle('open');
+                promptHistoryBtn.classList.toggle('active');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!promptHistoryDropdown.contains(e.target) && e.target !== promptHistoryBtn && !promptHistoryBtn.contains(e.target)) {
+                    promptHistoryDropdown.classList.remove('open');
+                    promptHistoryBtn.classList.remove('active');
+                }
+            });
+
+            const historyClearModal = document.getElementById('history-clear-modal');
+            const btnHistoryCancel = document.getElementById('btn-history-cancel');
+            const btnHistoryConfirm = document.getElementById('btn-history-confirm');
+
+            clearHistoryBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                
+                if(typeof playDeleteAllWarningSound === "function") playDeleteAllWarningSound();
+                
+                historyClearModal.classList.add('active');
+                
+                promptHistoryDropdown.classList.remove('open');
+                promptHistoryBtn.classList.remove('active');
+            });
+
+            btnHistoryCancel.addEventListener('click', () => {
+                historyClearModal.classList.remove('active');
+            });
+
+            btnHistoryConfirm.addEventListener('click', () => {
+                localStorage.removeItem(HISTORY_KEY); 
+                renderPromptHistory();
+                
+                historyClearModal.classList.remove('active'); 
+
+                if(typeof playSuccessSound === "function") playSuccessSound();
+                if(typeof showNotification === "function") showNotification("Prompt history cleared successfully.", "success");
+            });
+
+            historyClearModal.addEventListener('click', (e) => {
+                if (e.target === historyClearModal) {
+                    historyClearModal.classList.remove('active');
+                }
+            });
+
+            const genBtnRef = document.getElementById('generate-btn');
+            if(genBtnRef) {
+                genBtnRef.addEventListener('click', () => {
+                    const pText = document.getElementById('prompt').value.trim();
+                    savePromptToHistory(pText);
+                });
+            }
+
+            document.querySelectorAll('textarea, .search-input, #api-key').forEach(element => {
+                ['click', 'focus'].forEach(evtType => {
+                    element.addEventListener(evtType, (e) => {
+                        e.stopPropagation(); 
+                    });
+                });
+            });
+
         </script>
         <div id="feature-info-modal" class="feature-modal">
             <div class="feature-info-card">
@@ -6249,5 +6842,26 @@
                 </div>
             </div>
         </div>
+
+        <script>
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('./sw.js')
+                        .then((registration) => {
+                            console.log('sw registered', registration.scope);
+                        })
+                        .catch((error) => {
+                            console.log('sw registration failed', error);
+                        });
+                });
+            }
+
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+            });
+        </script>
+
     </body>
 </html>
