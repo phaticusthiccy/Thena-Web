@@ -5256,8 +5256,17 @@
                     e.preventDefault();
                     e.stopPropagation();
 
+                    const isTelegram = /Telegram/i.test(navigator.userAgent) || window.TelegramWebviewProxy;
+
+                    if (isTelegram) {
+                        if(typeof playInformationSound === "function") playInformationSound();
+                        showNotification("To download an image on Telegram, press and hold the image and select 'Save to Gallery'.", "info", null, 5000);
+                        return;
+                    }
+
                     const originalText = lightboxDownload.innerHTML;
                     lightboxDownload.innerHTML = `<span class="loading-spinner" style="border-top-color:#000; margin:0;"></span> Downloading...`;
+                    
                     try {
                         let blobUrl;
                         let fileName = `thena-image-${Date.now()}.png`;
@@ -5279,15 +5288,15 @@
                         
                         document.body.removeChild(tempLink);
                         setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
-                        
+
+                        showNotification("Download completed.", "success");
+                        if(typeof playSuccessSound === "function") playSuccessSound();
 
                     } catch (error) {
                         console.error("Download failed:", error);
                         if(typeof showNotification === "function") showNotification("Download blocked by browser. Opening in new tab...", "info");
                         window.open(data.url, '_blank');
                     } finally {
-                        showNotification("Download completed.", "success");
-                        playSuccessSound();
                         setTimeout(() => {
                             lightboxDownload.innerHTML = originalText;
                         }, 1000);
