@@ -82,8 +82,8 @@ It is not just an image generator; it is a full-featured suite including Image-t
       <td align="center"><b>Local Gallery & Filters</b></td>
     </tr>
     <tr>
-      <td><img src="https://github.com/user-attachments/assets/f25ce55a-6471-4bcd-97e3-8abdaf5f9424" alt="UI" /></td>
-      <td><img src="https://github.com/user-attachments/assets/3134e2d4-e829-4c2a-8da7-6154bba752b8" alt="Gallery" /></td>
+      <td><img src="https://github.com/user-attachments/assets/d9a5e7ed-76c8-4e05-a525-9bb97f153768" alt="UI" /></td>
+      <td><img src="https://github.com/user-attachments/assets/c57d0300-acd0-4bf7-8e53-2daefae9ee99" alt="Gallery" /></td>
     </tr>
   </table>
   <table>
@@ -92,8 +92,8 @@ It is not just an image generator; it is a full-featured suite including Image-t
       <td align="center"><b>Settings & Themes</b></td>
     </tr>
     <tr>
-      <td><img src="https://github.com/user-attachments/assets/74718463-e7be-4438-bd56-61958a24344c" alt="Img2Prompt" /></td>
-      <td><img src="https://github.com/user-attachments/assets/114b7c32-a8da-44aa-9b81-ad00ecb68650" alt="Settings"/></td>
+      <td><img src="https://github.com/user-attachments/assets/ad806d93-1755-4952-b109-e3b58ba8ba4d" alt="Img2Prompt" /></td>
+      <td><img src="https://github.com/user-attachments/assets/27dc4439-8c5b-4624-8d5f-02ef965695ae" alt="Settings"/></td>
     </tr>
   </table>
   <table>
@@ -102,8 +102,8 @@ It is not just an image generator; it is a full-featured suite including Image-t
       <td align="center"><b>Community Showcase</b></td>
     </tr>
     <tr>
-      <td><img src="https://github.com/user-attachments/assets/be17a761-4066-47e5-8f05-973448acc1bd" alt="Prompt Enhancement" /></td>
-      <td><img src="https://github.com/user-attachments/assets/a80df5aa-b78d-4912-ad77-b06a5353fcfd" alt="Community Showcase" /></td>
+      <td><img src="https://github.com/user-attachments/assets/801cf8c8-c9d9-4da6-93aa-a56d16c42d2e" alt="Prompt Enhancement" /></td>
+      <td><img src="https://github.com/user-attachments/assets/fcf913be-2c95-4d79-bc7e-0477f989dc46" alt="Community Showcase" /></td>
     </tr>
   </table>
 </div>
@@ -118,7 +118,7 @@ This project runs client-side. No backend server installation is required.
 ### Method 1: Direct Open
 1.  Download or clone the repository:
     ```bash
-    git clone [https://github.com/phaticusthiccy/Thena-Web.git](https://github.com/phaticusthiccy/Thena-Web.git)
+    git clone https://github.com/phaticusthiccy/Thena-Web.git
     ```
 2.  Simply double-click `index.html` to open it in your web browser.
 
