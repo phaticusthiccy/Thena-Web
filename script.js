@@ -95,6 +95,7 @@
             let selectedSize = null;
 	        let isGalleryLoading = false;
             let models = [];
+            let lastRenderId = 0;
             let apiKeyVisible = false;
             let lastEnhancedPrompt = "";
             let isPromptEnhancedByWand = false;
@@ -1440,6 +1441,8 @@
             });
 
             function applyFilters(withAnimation = false) {
+                lastRenderId++;
+                const currentRenderId = lastRenderId;
                 let filtered = [...allGalleryImages];
 
                 const uniqueMap = new Map();
@@ -1476,7 +1479,7 @@
                 currentFilteredItems = filtered;
                 currentPage = 1;
                 galleryGrid.innerHTML = '';
-                isGalleryLoading = true; 
+                isGalleryLoading = true;
 
                 if (isGeneratingImage && currentGenParams && sortNewestFirst) {
                     galleryGrid.insertAdjacentHTML('beforeend', getPlaceholderHTML(currentGenParams.width, currentGenParams.height));
@@ -1490,14 +1493,14 @@
                     return;
                 }
                 if (withAnimation) {
-                    preloadImagesAndRender();
+                    preloadImagesAndRender(currentRenderId);
                 } else {
                     loadMoreItems();
                     hideLoaderAndShowGrid();
                 }
             }
 
-            function preloadImagesAndRender() {
+            function preloadImagesAndRender(renderId) {
                 const initialBatchCount = 12;
                 const itemsToPreload = currentFilteredItems.slice(0, initialBatchCount);
                 let loadedCount = 0;
@@ -1510,19 +1513,27 @@
                     return;
                 }
                 
+                if (renderId !== lastRenderId) return;
+
                 loaderStatus.innerText = `Images are being processed (${totalGalleryCount} images)...`;
                 itemsToPreload.forEach((item) => {
                     const img = new Image();
                     const updateProgress = () => {
+                        if (renderId !== lastRenderId) return;
+
                         loadedCount++;
                         const percentage = Math.round((loadedCount / batchSize) * 100);
                         galleryProgressBar.style.width = percentage + '%';
                         loaderStatus.innerText = `Images are being processed (${totalGalleryCount} images)... %${percentage}`;
                         if (loadedCount === batchSize) {
                             setTimeout(() => {
+                                if (renderId !== lastRenderId) return;
+
                                 loadMoreItems();
                                 hideLoaderAndShowGrid();
                                 setTimeout(() => {
+                                    if (renderId !== lastRenderId) return;
+
                                     if (galleryGrid.scrollHeight <= galleryGrid.clientHeight + 100) {
                                         currentPage++;
                                         loadMoreItems();
@@ -1781,8 +1792,6 @@
                                 const data = await response.json();
 
                                 if (data.status === 200 && data.image) {
-                                    window.location.href = data.image;
-                                    
                                     if(typeof showNotification === "function") showNotification("Image has been sent to Telegram.", "success");
                                     if(typeof playSuccessSound === "function") playSuccessSound();
                                 } else {
