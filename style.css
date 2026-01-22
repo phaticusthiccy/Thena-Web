@@ -3367,3 +3367,39 @@ body.performance-mode .magic-star {
     border-color: rgba(255, 170, 0, 0.2);
     margin-top: 2px;
 }
+
+.gallery-grid,
+.lightbox-content,
+.lightbox-details {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+    padding-right: 4px;
+}
+
+.gallery-grid::-webkit-scrollbar,
+.lightbox-content::-webkit-scrollbar,
+.lightbox-details::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.gallery-grid::-webkit-scrollbar-track,
+.lightbox-content::-webkit-scrollbar-track,
+.lightbox-details::-webkit-scrollbar-track {
+    background: transparent;
+    margin-block: 4px;
+}
+
+.gallery-grid::-webkit-scrollbar-thumb,
+.lightbox-content::-webkit-scrollbar-thumb,
+.lightbox-details::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.gallery-grid::-webkit-scrollbar-thumb:hover,
+.lightbox-content::-webkit-scrollbar-thumb:hover,
+.lightbox-details::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+}

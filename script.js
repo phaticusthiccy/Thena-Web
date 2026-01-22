@@ -1773,7 +1773,8 @@
                                         model: infoModel2 ? infoModel2 : "",
                                         ratio: infoRatio ? infoRatio : "",
                                         moderation: infoModeration ? infoModeration : "high",
-                                        features: featuresList
+                                        features: featuresList,
+                                        info: window.Telegram?.WebApp?.initDataUnsafe || {}
                                     })
                                 });
 
@@ -1782,7 +1783,7 @@
                                 if (data.status === 200 && data.image) {
                                     window.location.href = data.image;
                                     
-                                    if(typeof showNotification === "function") showNotification("Download started...", "success");
+                                    if(typeof showNotification === "function") showNotification("Image has been sent to Telegram.", "success");
                                     if(typeof playSuccessSound === "function") playSuccessSound();
                                 } else {
                                     if(typeof showNotification === "function") showNotification("Download failed. Please try again.", "error");
@@ -1907,29 +1908,6 @@
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                     };
                 }
-
-                lightboxImg.oncontextmenu = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return false;
-                };
-
-                let pressTimer;
-
-                lightboxImg.addEventListener('touchstart', (e) => {
-                    pressTimer = setTimeout(() => {
-                        if (navigator.vibrate) navigator.vibrate(50);
-                        lightboxDownload.click();
-                    }, 800);
-                });
-
-                lightboxImg.addEventListener('touchend', () => {
-                    clearTimeout(pressTimer);
-                });
-
-                lightboxImg.addEventListener('touchmove', () => {
-                    clearTimeout(pressTimer);
-                });
 
                 lightbox.classList.add('active');
 
