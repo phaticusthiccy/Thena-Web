@@ -1284,6 +1284,7 @@
                             if(placeholder) placeholder.remove();
                     
                             await loadGallery();
+                            await applyFilters();
                         }
                         showNotification('The image has been saved to the gallery.', 'success', finalImageUrl);
                     } else {
