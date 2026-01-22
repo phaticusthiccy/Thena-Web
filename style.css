@@ -1890,7 +1890,28 @@ textarea:focus {
     overflow-x: hidden;
     display: flex;
     flex-direction: column;
-    scrollbar-width: thin;
+    scrollbar-width: thin; 
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+    padding-right: 5px; 
+}
+
+.settings-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.settings-content::-webkit-scrollbar-track {
+    background: transparent;
+    margin-block: 5px;
+}
+
+.settings-content::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.15);
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.settings-content::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.055);
 }
 
 .settings-content .confirm-icon {
@@ -2381,6 +2402,10 @@ textarea:focus {
         max-width: 100% !important;
         object-fit: contain;
         border-radius: 12px;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+        pointer-events: auto;
     }
 
     .lightbox-download-btn {
@@ -3308,4 +3333,37 @@ body.performance-mode .magic-star {
 .adv-info-icon svg {
     width: 10px;
     height: 10px;
+}
+
+@keyframes busyGlow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 170, 0, 0.4);
+        border-color: #ffaa00;
+        background: rgba(255, 170, 0, 0.05);
+    }
+    50% {
+        box-shadow: 0 0 15px 0 rgba(255, 170, 0, 0.6);
+        border-color: #ffcc00;
+        background: rgba(255, 170, 0, 0.15);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 170, 0, 0);
+        border-color: #ffaa00;
+        background: rgba(255, 170, 0, 0.05);
+    }
+}
+
+.notification.busy-state {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+    animation: busyGlow 2s infinite ease-in-out !important;
+    align-items: flex-start !important;
+    padding-top: 14px !important;
+    padding-bottom: 14px !important;
+}
+
+.notification.busy-state .notification-spinner {
+    border-top-color: #ffaa00 !important;
+    border-color: rgba(255, 170, 0, 0.2);
+    margin-top: 2px;
 }

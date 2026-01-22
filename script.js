@@ -1127,7 +1127,7 @@
                 const prompt = promptInput.value.trim();
                 const apiKey = apiKeyInput.value.trim();
                 const [width, height] = selectedSize.split('x').map(Number);
-                
+                let generationSuccess = false;
                 isGeneratingImage = true;
                 currentGenParams = {
                     width,
@@ -1146,29 +1146,25 @@
                 const BUSY_THRESHOLD = 25000;
                 const busyTimer = setTimeout(() => {
                     playBusySound();
-                    busyNotification = document.createElement('div');
-                    busyNotification.className = 'notification busy-alert';
-                    busyNotification.innerHTML = `
                     
-									<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffaa00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-										<circle cx="12" cy="12" r="10"></circle>
-										<line x1="12" y1="8" x2="12" y2="12"></line>
-										<line x1="12" y1="16" x2="12.01" y2="16"></line>
-									</svg>
-									<div style="display:flex; flex-direction:column;">
-										<span style="font-weight:600; color:#ffaa00;">Server Busy</span>
-										<span style="font-size:12px; opacity:0.9;">Thena is very busy right now, the process may take a while.</span>
-									</div>
-                `;
-                    document.body.appendChild(busyNotification);
-                    setTimeout(() => {
-                        if (busyNotification && busyNotification.parentNode) {
-                            busyNotification.style.animation = 'slideIn 0.4s ease reverse';
-                            setTimeout(() => {
-                                if (busyNotification && busyNotification.parentNode) busyNotification.remove();
-                            }, 400);
-                        }
-                    }, 8000);
+                    const container = document.getElementById('notification-container');
+                    
+                    if (!container || container.children.length === 0) return;
+
+                    const activeLoader = container.lastElementChild;
+
+                    if (activeLoader && !activeLoader.classList.contains('notification-exit')) {
+                        
+                        activeLoader.classList.add('busy-state');
+
+                        activeLoader.innerHTML = `
+                            <div class="notification-spinner"></div>
+                            <div style="display:flex; flex-direction:column; gap:2px;">
+                                <span style="font-weight:700; color:#ffaa00; font-size:13px; letter-spacing:0.5px;">Server Busy</span>
+                                <span style="font-size:12px; opacity:0.9;">Thena is very busy right now. Image generation may take a while.</span>
+                            </div>
+                        `;
+                    }
                 }, BUSY_THRESHOLD);
                 const isFast = btnFast.classList.contains('active');
                 const isCreative = btnCreative.classList.contains('active');
@@ -1257,7 +1253,8 @@
 
                     if (removeLoading) removeLoading();
 
-                    if (response.ok && data.image) {
+                    if (response.ok && data.image && data.status === 200) {
+                        generationSuccess = true;
                         playSuccessSound();
                         const modelData = models.find(m => m.id === selectedModel);
                         let finalImageUrl = data.image;
@@ -1336,9 +1333,29 @@
                         setTimeout(() => placeholder.remove(), 300);
                     }
                 } finally {
-		            isGeneratingImage = false;
+                    isGeneratingImage = false;
                     clearTimeout(busyTimer);
-                    await loadGallery();
+                    
+                    if (generationSuccess) {
+                        await loadGallery();
+                    } else {
+                        const placeholder = document.getElementById('active-generation-placeholder');
+                        if (placeholder) {
+                            placeholder.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                            
+                            requestAnimationFrame(() => {
+                                placeholder.style.opacity = '0';
+                                placeholder.style.transform = 'scale(0.95)';
+                            });
+
+                            setTimeout(() => {
+                                if (placeholder && placeholder.parentNode) {
+                                    placeholder.remove();
+                                }
+                            }, 500);
+                        }
+                    }
+
                     if (busyNotification && busyNotification.parentNode) {
                         busyNotification.remove();
                     }
@@ -1890,6 +1907,29 @@
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                     };
                 }
+
+                lightboxImg.oncontextmenu = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                };
+
+                let pressTimer;
+
+                lightboxImg.addEventListener('touchstart', (e) => {
+                    pressTimer = setTimeout(() => {
+                        if (navigator.vibrate) navigator.vibrate(50);
+                        lightboxDownload.click();
+                    }, 800);
+                });
+
+                lightboxImg.addEventListener('touchend', () => {
+                    clearTimeout(pressTimer);
+                });
+
+                lightboxImg.addEventListener('touchmove', () => {
+                    clearTimeout(pressTimer);
+                });
 
                 lightbox.classList.add('active');
 
@@ -2886,7 +2926,7 @@
                     }
                 }
 
-                if (item.moderation === 'medium' || item.moderation === 'low') {
+                if (item.moderation !== 'high') {
                     spanClass += ' sensitive-medium';
                 }
 
