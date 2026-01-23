@@ -83,7 +83,7 @@
                     <label>Prompt</label>
                     <div style="position: relative;">
                         <textarea id="prompt" maxlength="1150" placeholder="Describe your image... (Min 10 chars, Max 1150 chars)" style="padding-right: 90px;"></textarea>
-                        
+                        <div id="autocomplete-list" class="autocomplete-dropdown"></div>
                         <button id="prompt-history-btn" title="Prompt History">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="12" cy="12" r="10"></circle>
@@ -577,7 +577,7 @@
                     <p style="font-size:12px; color:#666; margin-bottom:10px;">Disable all sound effects and interface tones.</p>
                 </div>
 
-                <div class="setting-group" style="margin-bottom: 25px; text-align: left;">
+                <div class="setting-group" style="text-align: left;">
                     <label style="display:flex; justify-content:space-between; align-items:center; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">
                         ADVANCED MODE
                         <label class="switch">
@@ -586,6 +586,17 @@
                         </label>
                     </label>
                     <p style="font-size:12px; color:#666; margin-bottom:10px;">Enable manual control for Seed, CFG Scale, and Steps. Disables presets.</p>
+                </div>
+                
+                <div class="setting-group" style="margin-bottom: 25px; text-align: left;">
+                    <label style="display:flex; justify-content:space-between; align-items:center; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">
+                        PROMPT AUTOCOMPLETE
+                        <label class="switch">
+                            <input type="checkbox" id="autocomplete-toggle" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </label>
+                    <p style="font-size:12px; color:#666; margin-bottom:10px;">Enable intelligent tag suggestions while typing prompts.</p>
                 </div>
 
                 <div class="setting-group" style="margin-bottom: 25px; text-align: left;">
@@ -761,5 +772,6 @@
         </script>
 
         <script src="script.js"></script>
+        <script src="promptexpansion.js"></script>
     </body>
 </html>

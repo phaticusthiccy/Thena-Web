@@ -406,7 +406,7 @@
             const eyeSlash = document.getElementById('eye-slash');
             const eyePath = document.getElementById('eye-path');
             const eyeCircle = document.getElementById('eye-circle');
-
+            var firsload = true
 
             const moderationBtn = document.getElementById('moderation-btn');
             let moderationLevel = 'high';
@@ -673,10 +673,10 @@
                     'feat-enhance': {
                         title: 'Prompt Magic',
                         icon: '✨',
-                        desc: 'Automatically enhances your prompt with more details and stylistic improvements before generation.',
+                        desc: 'Automatically enhances your prompt with more details and stylistic improvements before generation. It causes a significant delay in long prompts.',
                         intelligence: 5,
                         quality: 4,
-                        speed: 3
+                        speed: 2
                     }
                 };
                 const featModal = document.getElementById('feature-info-modal');
@@ -791,9 +791,21 @@
                     autoResize(promptInput);
                 }, 100);
                 async function fetchModelsWithRetry() {
+                    let attempt = 0; // Deneme sayacı
                     while (true) {
+                        attempt++;
                         const controller = new AbortController();
-                        const timeoutId = setTimeout(() => controller.abort(), 1500);
+                        let timeoutId = null;
+
+                        if (attempt <= 3) {
+                            timeoutId = setTimeout(() => controller.abort(), 1000);
+                        } else if (attempt <= 8) {
+                            if (firsload === true) {
+                                showNotification("Your internet connection is unstable. Please wait a moment.", "warning");
+                                firsload = false;
+                            }
+                            timeoutId = setTimeout(() => controller.abort(), 2000);
+                        } 
 
                         try {
                             const response = await fetch('https://create.thena.workers.dev/models', {
@@ -801,7 +813,7 @@
                                 signal: controller.signal
                             });
                             
-                            clearTimeout(timeoutId);
+                            if (timeoutId) clearTimeout(timeoutId);
 
                             if (!response.ok) {
                                 continue;
