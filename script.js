@@ -710,11 +710,31 @@
                         const isActive = btn.classList.toggle('active');
                         playFeatureToggleSound(isActive)
                         if (isActive) createConfetti(btn);
+                        
                         if (btn === btnCreative && btn.classList.contains('active')) {
                             btnDense.classList.remove('active');
                         }
                         if (btn === btnDense && btn.classList.contains('active')) {
                             btnCreative.classList.remove('active');
+                        }
+
+                        if (btn === btnEnhance) {
+                            const promptInput = document.getElementById('prompt');
+                            if (isActive) {
+                                promptInput.maxLength = 1150;
+                                promptInput.placeholder = "Describe your image... (Min 10 chars, Max 1150 chars)";
+                                showNotification("Prompt length reduced to fit Prompt Magic limit (1150 chars).", "info");
+                                if (promptInput.value.length > 1150) {
+                                    showNotification("Prompt shortened to fit Prompt Magic limit (1150 chars).", "info");
+                                    promptInput.value = promptInput.value.substring(0, 1150);
+                                    autoResize(promptInput);
+                                }
+                            } else {
+                                showNotification("Prompt length restored to 5000 chars.", "info");
+                                promptInput.maxLength = 5000;
+                                promptInput.placeholder = "Describe your image... (Min 10 chars, Max 5000 chars)";
+                            }
+                            checkFormReady();
                         }
                     });
                 });
@@ -791,7 +811,7 @@
                     autoResize(promptInput);
                 }, 100);
                 async function fetchModelsWithRetry() {
-                    let attempt = 0; // Deneme sayacı
+                    let attempt = 0;
                     while (true) {
                         attempt++;
                         const controller = new AbortController();
@@ -1112,7 +1132,9 @@
 
             function checkFormReady() {
                 const promptLength = promptInput.value.trim().length;
-                if (promptLength >= 10 && promptLength <= 1150 && apiKeyInput.value.trim() && selectedModel && selectedAspectRatio) {
+                const currentMax = btnEnhance && btnEnhance.classList.contains('active') ? 1150 : 5000;
+
+                if (promptLength >= 10 && promptLength <= currentMax && apiKeyInput.value.trim() && selectedModel && selectedAspectRatio) {
                     generateBtn.classList.add('ready');
                     document.querySelector(".generate-btn").style.cursor = "pointer";
                     generateBtn.disabled = false;
@@ -1131,9 +1153,11 @@
                     showNotification("Prompt is too short! Please enter at least 10 characters.", "error");
                     return;
                 }
-                if (currentLength > 1150) {
+                const maxAllowed = btnEnhance.classList.contains('active') ? 1150 : 5000;
+
+                if (currentLength > maxAllowed) {
                     playErrorSound();
-                    showNotification("Prompt is too long! Max 1150 characters allowed.", "error");
+                    showNotification(`Prompt is too long! Max ${maxAllowed} characters allowed.`, "error");
                     return;
                 }
                 playStartSound();
