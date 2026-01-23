@@ -3522,3 +3522,15 @@ body.performance-mode .magic-star {
         padding: 15px;
     }
 }
+
+#prompt::placeholder {
+    color: rgba(var(--primary-rgb), 0.6);
+    opacity: 1; 
+    transition: color 0.3s ease;
+}
+
+#api-key::placeholder {
+    color: rgba(var(--primary-rgb), 0.6);
+    opacity: 1;
+    transition: color 0.3s ease;
+}
