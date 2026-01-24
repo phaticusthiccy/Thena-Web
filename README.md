@@ -82,7 +82,7 @@ It is not just an image generator; it is a full-featured suite including Image-t
       <td align="center"><b>Local Gallery & Filters</b></td>
     </tr>
     <tr>
-      <td><img src="https://github.com/user-attachments/assets/d9a5e7ed-76c8-4e05-a525-9bb97f153768" alt="UI" /></td>
+      <td><img src="https://github.com/user-attachments/assets/dd18609f-35cb-4f5d-9326-cc2ae1c39bc3" alt="UI" /></td>
       <td><img src="https://github.com/user-attachments/assets/c57d0300-acd0-4bf7-8e53-2daefae9ee99" alt="Gallery" /></td>
     </tr>
   </table>
@@ -93,7 +93,7 @@ It is not just an image generator; it is a full-featured suite including Image-t
     </tr>
     <tr>
       <td><img src="https://github.com/user-attachments/assets/ad806d93-1755-4952-b109-e3b58ba8ba4d" alt="Img2Prompt" /></td>
-      <td><img src="https://github.com/user-attachments/assets/27dc4439-8c5b-4624-8d5f-02ef965695ae" alt="Settings"/></td>
+      <td><img src="https://github.com/user-attachments/assets/d3b0bf0c-3518-4f61-b3f3-19dbc415c964" alt="Settings"/></td>
     </tr>
   </table>
   <table>
