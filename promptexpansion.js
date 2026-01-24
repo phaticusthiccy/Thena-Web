@@ -402,10 +402,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!isAutocompleteEnabled) {
                 closeAllLists();
                 playInformationSound();
-                showNotification("Autocomplete Disabled", "info");
+                showNotification(currentLang == "tr" ? "Autocomplete Deaktif Edildi" : "Autocomplete Disabled", "info");
             } else {
                 playInformationSound();
-                showNotification("Autocomplete Enabled", "info");
+                showNotification(currentLang == "tr" ? "Autocomplete Aktif Edildi" : "Autocomplete Enabled", "info");
             }
         });
     }

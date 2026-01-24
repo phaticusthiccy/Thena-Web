@@ -328,7 +328,11 @@ textarea:focus {
 }
 
 #api-key {
-    transition: filter 0.2s ease, letter-spacing 0.2s ease, color 0.2s ease;
+    transition: color 0.2s ease-in-out !important;
+}
+
+#api-key.text-hidden {
+    color: transparent !important;
 }
 
 #api-key.decrypt-effect {
@@ -472,6 +476,7 @@ textarea:focus {
     -moz-user-select: none !important;
     -ms-user-select: none !important;
     user-select: none !important;
+    border-color: var(--dot-filled-2) !important;
 }
 
 .model-card:hover::before {
@@ -480,12 +485,13 @@ textarea:focus {
     -moz-user-select: none !important;
     -ms-user-select: none !important;
     user-select: none !important;
+    border-color: var(--dot-filled-2) !important;
 }
 
 .model-card.active {
     border-color: #00ff88;
     background: rgba(0, 255, 136, 0.05);
-    transform: scale(1.1);
+    transform: scale(1.06);
     filter: saturate(1.1) !important;
     -webkit-user-select: none !important;
     -moz-user-select: none !important;
@@ -586,6 +592,10 @@ textarea:focus {
     gap: 6px;
     position: relative;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .extra-btn::before {
@@ -2474,7 +2484,7 @@ textarea:focus {
 
 @media (hover: hover) {
     .model-card:hover {
-        transform: scale(1.1);
+        transform: scale(1.06);
     }
 
     .model-card:hover::before {
@@ -3533,4 +3543,37 @@ body.performance-mode .magic-star {
     color: rgba(var(--primary-rgb), 0.6);
     opacity: 1;
     transition: color 0.3s ease;
+}
+
+#lang-text {
+    pointer-events: none;
+    letter-spacing: 1px;
+}
+
+.char-counter {
+    position: absolute;
+    bottom: 12px;
+    backdrop-filter: blur(9px);
+    box-shadow: 0px 0px 10px var(--dot-filled-3);
+    right: 95px;
+    font-size: 11px;
+    color: rgb(255 255 255 / 99%);
+    pointer-events: none;
+    font-family: monospace;
+    z-index: 10;
+    background: rgb(0 0 0 / 65%);
+    padding: 2px 6px;
+    border-radius: 20px;
+    transition: color 0.3s ease;
+}
+
+.char-counter.limit-near {
+    color: #ffaa00;
+    opacity: 0.9;
+}
+
+.char-counter.limit-reached {
+    color: #ff4444;
+    opacity: 1;
+    font-weight: bold;
 }

@@ -298,6 +298,10 @@
                     if (i < text.length) {
                         element.value += text.charAt(i);
                         autoResize(element);
+                        
+                        const charCountEl = document.getElementById('char-count');
+                        if(charCountEl) charCountEl.textContent = `${element.value.length} / ${element.maxLength}`;
+                        
                         i++;
                     } else {
                         clearInterval(interval);
@@ -312,18 +316,18 @@
                 
                 if (!currentPrompt) {
                     if(typeof playErrorSound === "function") playErrorSound();
-                    showNotification("The prompt field is empty! Please type something.", "error");
+                    showNotification(currentLang == "tr" ? "Prompt alanı boş! Lütfen bir şey yazın." : "The prompt field is empty! Please type something.", "error");
                     return;
                 }
                 if (!apiKey) {
                     if(typeof playErrorSound === "function") playErrorSound();
-                    showNotification("Please enter the API key first.", "error");
+                    showNotification(currentLang == "tr" ? "Lütfen API anahtarı girin." : "Please enter the API key first.", "error");
                     return;
                 }
                 
                 if(typeof playInformationSound === "function") playInformationSound();
                 
-                const removeLoading = showNotification("Prompt is being analyzed and enhanced...", "loading");
+                const removeLoading = showNotification(currentLang == "tr" ? "Prompt analiz ediliyor ve iyileştiriliyor..." : "Prompt is being analyzed and enhanced...", "loading");
                 
                 magicWandBtn.classList.add('loading');
                 generateBtn.disabled = true;
@@ -347,14 +351,14 @@
                         if(typeof playSuccessSound === "function") playSuccessSound();
                     } else {
                         if(typeof playErrorSound === "function") playErrorSound();
-                        showNotification("The prompt could not be created. An error occurred.", "error");
+                        showNotification(currentLang == "tr" ? "Prompt oluşturulamadı. Bir hata oluştu." : "The prompt could not be created. An error occurred.", "error");
                         checkFormReady();
                     }
                 } catch (error) {
                     if (removeLoading) removeLoading();
                     
                     if(typeof playErrorSound === "function") playErrorSound();
-                    showNotification("An error occurred:" + error.message, "error");
+                    showNotification(currentLang == "tr" ? "Bir hata oluştu: " + error.message : "An error occurred:" + error.message, "error");
                     checkFormReady();
                 } finally {
                     magicWandBtn.classList.remove('loading');
@@ -391,7 +395,7 @@
                     
                     typeWriterEffect(pendingEnhancedPrompt, promptInput);
                     
-                    showNotification("Prompt updated successfully!", "success");
+                    showNotification(currentLang == "tr" ? "Prompt başarıyla güncellendi!" : "Prompt updated successfully!", "success");
                 }
             });
 
@@ -415,21 +419,21 @@
                 moderationBtn.addEventListener('click', () => {
                     if (moderationLevel === 'high') {
                         moderationLevel = 'medium';
-                        showNotification('Moderation set to medium.', 'info');
+                        showNotification(currentLang == "tr" ? "Moderasyon düzeyi normal olarak ayarlandı." : 'Moderation set to medium.', 'info');
                     } else if (moderationLevel === 'medium') {
                         moderationLevel = 'low';
-                        showNotification('Moderation set to low.', 'info');
+                        showNotification(currentLang == "tr" ? "Moderasyon düzeyi düşük olarak ayarlandı." : 'Moderation set to low.', 'info');
                     } else {
                         moderationLevel = 'high';
-                        showNotification('Moderation set to high.', 'info');
+                        showNotification(currentLang == "tr" ? "Moderasyon düzeyi yüksek olarak ayarlandı." : 'Moderation set to high.', 'info');
                     }
 
                     moderationBtn.setAttribute('data-level', moderationLevel);
                     
                     const titles = {
-                        high: "Moderation: High (Strict)",
-                        medium: "Moderation: Medium (Balanced)",
-                        low: "Moderation: Low (Permissive)"
+                        high: currentLang == "tr" ? "Moderasyon: Yüksek" : "Moderation: High (Strict)",
+                        medium: currentLang == "tr" ? "Moderasyon: Ortalama" : "Moderation: Medium (Balanced)",
+                        low: currentLang == "tr" ? "Moderasyon: Düşük" : "Moderation: Low (Permissive)"
                     };
                     moderationBtn.title = titles[moderationLevel];
 
@@ -447,68 +451,34 @@
                 
                 if (!originalValue) {
                     playInformationSound();
-                    showNotification("Enter an API Key first", "info");
+                    showNotification(currentLang == "tr" ? "API Anahtarını giriniz" : "Enter an API Key first", "info");
                     return;
                 }
-
                 if(typeof playFeatureToggleSound === "function") playFeatureToggleSound(true);
-
-                if (currentType === 'password') {
-                    
-                    apiKeyInput.type = 'text';
-                    apiKeyInput.classList.add('hacker-active');
-                    
-                    eyeSlash.style.opacity = '1';
-                    eyePath.style.opacity = '0.3';
-                    eyeCircle.style.opacity = '0.3';
-                    
-                    apiKeyVisible = true;
-
-                    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*";
-                    let iterations = 0;
-                    
-                    if (window.hackerInterval) clearInterval(window.hackerInterval);
-
-                    window.hackerInterval = setInterval(() => {
-                        apiKeyInput.value = originalValue
-                            .split("")
-                            .map((letter, index) => {
-                                if (index < iterations) {
-                                    return originalValue[index];
-                                }
-                                return characters[Math.floor(Math.random() * characters.length)];
-                            })
-                            .join("");
-
-                        if (iterations >= originalValue.length) {
-                            clearInterval(window.hackerInterval);
-                            apiKeyInput.value = originalValue;
-                            
-                            setTimeout(() => {
-                                apiKeyInput.classList.remove('hacker-active');
-                            }, 200); 
-                        }
-
-                        iterations += 1 / 2;
-                    }, 10); 
-
-                } else {
-                    
-                    apiKeyInput.classList.add('hacker-active');
-                    
-                    setTimeout(() => {
+                apiKeyInput.classList.add('text-hidden');
+                setTimeout(() => {
+                    if (currentType === 'password') {
+                        apiKeyInput.type = 'text';
+                        
+                        eyeSlash.style.opacity = '1';
+                        eyePath.style.opacity = '0.3';
+                        eyeCircle.style.opacity = '0.3';
+                        
+                        apiKeyVisible = true;
+                    } else {
                         apiKeyInput.type = 'password';
-                        apiKeyInput.value = originalValue; 
-                        apiKeyInput.style.letterSpacing = '';
-                        apiKeyInput.classList.remove('hacker-active');
                         
                         eyeSlash.style.opacity = '0';
                         eyePath.style.opacity = '1';
                         eyeCircle.style.opacity = '1';
                         
                         apiKeyVisible = false;
-                    }, 150);
-                }
+                    }
+                    requestAnimationFrame(() => {
+                        apiKeyInput.classList.remove('text-hidden');
+                    });
+
+                }, 200);
             });
             const MOVIE_FILTER_SUPPORTED_MODELS = ["8gg12 61812 6628 19729 6b4a5 5060", "551ks 8g6g8 16gga 1h8h8 6b4a5 5060"];
             function checkMovieFilterAvailability(modelId) {
@@ -558,7 +528,7 @@
                     if (parseInt(advSteps.value) < 2) advSteps.value = 8;
 
                     if (localStorage.getItem('thena-advanced-mode') === 'true') {
-                        showNotification("Limits updated for Anime Fast model.", "info");
+                        showNotification(currentLang == "tr" ? "Anime Fast modeli için limitler güncelledi." : "Limits updated for Anime Fast model.", "info");
                     }
 
                 } else {
@@ -595,9 +565,11 @@
                 if (infoCfgBtn) {
                     infoCfgBtn.addEventListener('click', (e) => {
                         e.stopPropagation();
+                        const t = translations[currentLang];
+                        
                         openAdvInfoModal(
-                            '🎚️ CFG Scale',
-                            '<b>Classifier Free Guidance Scale.</b><br><br>Controls how strictly the AI follows your prompt.<br>• <b>Low (1-6):</b> More creative freedom, softer look.<br>• <b>Standard (7):</b> Balanced.<br>• <b>High (8-20):</b> Strictly follows prompt, but too high can burn the image.',
+                            t.cfgTitle, 
+                            t.cfgDesc,  
                             2, 
                             4, 
                             5
@@ -608,9 +580,11 @@
                 if (infoStepsBtn) {
                     infoStepsBtn.addEventListener('click', (e) => {
                         e.stopPropagation();
+                        const t = translations[currentLang];
+
                         openAdvInfoModal(
-                            '👣 Sampling Steps',
-                            '<b>Generation Steps.</b><br><br>The number of iterations the AI takes to refine the image.<br>• <b>Low (10-15):</b> Faster generation, rougher details.<br>• <b>High (25-30):</b> High quality and detail, but slower generation.<br>• <b>Default:</b> 20 is the sweet spot.',
+                            t.stepsTitle, 
+                            t.stepsDesc,
                             4, 
                             5, 
                             2
@@ -692,11 +666,24 @@
                     if (infoIcon) {
                         infoIcon.addEventListener('click', (e) => {
                             e.stopPropagation();
+                            
                             const data = featureData[btn.id];
                             if (!data) return;
                             
-                            featModalTitle.innerHTML = `${data.icon} ${data.title}`;
-                            featModalDesc.textContent = data.desc;
+                            const t = translations[currentLang];
+                            
+                            let titleText = "";
+                            let descText = "";
+
+                            if(btn.id === 'feat-fast') { titleText = t.featFast; descText = t.featDescFast; }
+                            else if(btn.id === 'feat-creative') { titleText = t.featCreative; descText = t.featDescCreative; }
+                            else if(btn.id === 'feat-dense') { titleText = t.featDense; descText = t.featDescDense; }
+                            else if(btn.id === 'feat-movie') { titleText = t.featMovie; descText = t.featDescMovie; }
+                            else if(btn.id === 'feat-highres') { titleText = t.featHighRes; descText = t.featDescHighRes; }
+                            else if(btn.id === 'feat-enhance') { titleText = t.featEnhance; descText = t.featDescEnhance; }
+                            
+                            featModalTitle.innerHTML = `${data.icon} ${titleText}`;
+                            featModalDesc.textContent = descText;
 
                             metricIntel.innerHTML = createDots(data.intelligence, 'intelligence');
                             metricQual.innerHTML = createDots(data.quality, 'quality');
@@ -723,14 +710,13 @@
                             if (isActive) {
                                 promptInput.maxLength = 1150;
                                 promptInput.placeholder = "Describe your image... (Min 10 chars, Max 1150 chars)";
-                                showNotification("Prompt length reduced to fit Prompt Magic limit (1150 chars).", "info");
+                                showNotification(currentLang == "tr" ? "Prompt uzunluğu Prompt Magic sınırına uygun hale getirildi (1150 karakter)." : "Prompt length reduced to fit Prompt Magic limit (1150 chars).", "info");
                                 if (promptInput.value.length > 1150) {
-                                    showNotification("Prompt shortened to fit Prompt Magic limit (1150 chars).", "info");
                                     promptInput.value = promptInput.value.substring(0, 1150);
                                     autoResize(promptInput);
                                 }
                             } else {
-                                showNotification("Prompt length restored to 5000 chars.", "info");
+                                showNotification(currentLang == "tr" ? "Prompt uzunluğu 5000 karaktere geri döndü." : "Prompt length restored to 5000 chars.", "info");
                                 promptInput.maxLength = 5000;
                                 promptInput.placeholder = "Describe your image... (Min 10 chars, Max 5000 chars)";
                             }
@@ -779,12 +765,23 @@
                 aspectBtns.forEach(btn => {
                     const infoIcon = btn.querySelector('.info-icon-wrapper');
                     const ratio = btn.dataset.ratio;
+                    
                     if (infoIcon && aspectRatioData[ratio]) {
                         infoIcon.addEventListener('click', (e) => {
                             e.stopPropagation(); 
                             const data = aspectRatioData[ratio];
+                            const t = translations[currentLang];
+                            let descText = "";
+                            switch(ratio) {
+                                case '1:1': descText = t.ratioDescSquare; break;
+                                case '3:4': descText = t.ratioDescPortrait; break;
+                                case '4:3': descText = t.ratioDescLandscape; break;
+                                case '9:16': descText = t.ratioDescMobile; break;
+                                case '16:9': descText = t.ratioDescCinematic; break;
+                                default: descText = data.desc;
+                            }
                             featModalTitle.innerHTML = `📐 ${data.title}`;
-                            featModalDesc.textContent = data.desc;
+                            featModalDesc.textContent = descText;
                             metricIntel.innerHTML = createDots(data.intelligence, 'intelligence');
                             metricQual.innerHTML = createDots(data.quality, 'quality');
                             metricSpeed.innerHTML = createDots(data.speed, 'speed');
@@ -821,7 +818,7 @@
                             timeoutId = setTimeout(() => controller.abort(), 1000);
                         } else if (attempt <= 8) {
                             if (firsload === true) {
-                                showNotification("Your internet connection is unstable. Please wait a moment.", "warning");
+                                showNotification(currentLang == "tr" ? "İnternet bağlantınız stabil değil. Lütfen biraz bekleyiniz." : "Your internet connection is unstable. Please wait a moment.", "warning");
                                 firsload = false;
                             }
                             timeoutId = setTimeout(() => controller.abort(), 2000);
@@ -893,50 +890,33 @@
                         models = await r.json();
                     } catch (e) {}
                 }
+
+                const modelTranslationsTR = {
+                    "8gg12 61812 6628 19729 6b4a5 5060": "Yüksek çözünürlüklü görüntüler üretebilen kapsamlı işlem sonrası teknolojisine sahip ilk modeldir. Gürültü giderme işleminden sonra gerçek LUT filtreleri ekleyerek inanılmaz görseller yaratabiliyor.",
+                    "551ks 8g6g8 16gga 1h8h8 6b4a5 5060": "Flux2 kaynak verileri kullanılarak Thena V6 temel modeliyle ince ayar yapılmış, damıtılmış bir model. Güçlü, hızlı, çok yönlü.",
+                    "77h621 yy5271 gga166 hhau22 882hha 1a 3090": "Yüksek çözünürlüklü görüntüler, illüstrasyonlar ve genel kullanım için özel olarak tasarlanmış güçlü bir model.",
+                    "754019 b5df2e e606f1 a7600b 96b0c8 94": "Thena Photoreal, son derece gerçekçi görüntüler üretmek için özel olarak tasarlanmış bir modeldir. Profesyonelce hazırlanmış komut dosyalarıyla harika sonuçlar verir.",
+                    "5g72h1 y661hp k771ns 33bb21 77bagl 6b 3090": "Thena'nın anime görselleri oluşturmak için titizlikle eğitilmiş temel modeli. Son derece stilize, güçlü ve tutarlı.",
+                    "6781x 66189 00m162 16g61 00y71 6000": "Thena, anime görsellerini hızlı ve düşük maliyetle oluşturmak için özel olarak eğitilmiş temel bir aydınlatma modelidir."
+                };
+
                 const MODEL_STATS = {
                     // Thena Movie
-                    "8gg12 61812 6628 19729 6b4a5 5060": {
-                        intel: 5,
-                        qual: 5,
-                        speed: 3
-                    },
+                    "8gg12 61812 6628 19729 6b4a5 5060": { intel: 5, qual: 5, speed: 3 },
                     // Thena Max
-                    "551ks 8g6g8 16gga 1h8h8 6b4a5 5060": {
-                        intel: 4,
-                        qual: 5,
-                        speed: 2
-                    },
+                    "551ks 8g6g8 16gga 1h8h8 6b4a5 5060": { intel: 4, qual: 5, speed: 2 },
                     // Thena V6
-                    "77h621 yy5271 gga166 hhau22 882hha 1a 3090": {
-                        intel: 4,
-                        qual: 4,
-                        speed: 3
-                    },
+                    "77h621 yy5271 gga166 hhau22 882hha 1a 3090": { intel: 4, qual: 4, speed: 3 },
                     // Thena Photoreal
-                    "754019 b5df2e e606f1 a7600b 96b0c8 94": {
-                        intel: 2,
-                        qual: 2,
-                        speed: 1
-                    },
+                    "754019 b5df2e e606f1 a7600b 96b0c8 94": { intel: 2, qual: 2, speed: 1 },
                     // Thena Anime Core
-                    "5g72h1 y661hp k771ns 33bb21 77bagl 6b 3090": {
-                        intel: 4,
-                        qual: 4,
-                        speed: 2
-                    },
+                    "5g72h1 y661hp k771ns 33bb21 77bagl 6b 3090": { intel: 4, qual: 4, speed: 2 },
                     // Thena Anime Fast
-                    "6781x 66189 00m162 16g61 00y71 6000": {
-                        intel: 2,
-                        qual: 3,
-                        speed: 5
-                    },
+                    "6781x 66189 00m162 16g61 00y71 6000": { intel: 2, qual: 3, speed: 5 },
                     // Default 
-                    "default": {
-                        intel: 3,
-                        qual: 3,
-                        speed: 3
-                    }
+                    "default": { intel: 3, qual: 3, speed: 3 }
                 };
+
                 const modelSelector = document.getElementById('model-selector');
                 modelSelector.innerHTML = models.map(model => {
                     var previewImage = model.examples?.portraits?.[0] || '';
@@ -946,49 +926,77 @@
                     if (model.id == "5g72h1 y661hp k771ns 33bb21 77bagl 6b 3090") previewImage = "https://api.apidog.com/api/v1/projects/743905/resources/369762/image-preview"
                     if (model.id == "551ks 8g6g8 16gga 1h8h8 6b4a5 5060") previewImage = "https://api.apidog.com/api/v1/projects/743905/resources/369763/image-preview"
                     if (model.id == "6781x 66189 00m162 16g61 00y71 6000") previewImage = "https://api.apidog.com/api/v1/projects/743905/resources/370236/image-preview"
+
                     return `
-                    
-									<div class="model-card" data-model-id="${model.id}" data-preview="${previewImage}">
-										<div class="model-info-icon-wrapper" title="Model Details">
-											<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-												<circle cx="12" cy="12" r="10"></circle>
-												<line x1="12" y1="16" x2="12" y2="12"></line>
-												<line x1="12" y1="8" x2="12.01" y2="8"></line>
-											</svg>
-										</div>
-										<div class="model-name">${model.model}</div>
-									</div>
-                `;
+                        <div class="model-card" data-model-id="${model.id}" data-preview="${previewImage}">
+                            <div class="model-info-icon-wrapper" title="Model Details">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                            </div>
+                            <div class="model-name">${model.model}</div>
+                        </div>
+                    `;
                 }).join('');
+
                 document.querySelectorAll('.model-card').forEach(card => {
                     const previewImage = card.dataset.preview;
                     const modelId = card.dataset.modelId;
                     const modelName = card.querySelector('.model-name').innerText;
+                    
                     if (previewImage) {
                         card.style.setProperty('--bg-image', `url(${previewImage})`);
                         card.style.filter = 'saturate(0.3)';
                     }
+
                     const infoBtn = card.querySelector('.model-info-icon-wrapper');
                     infoBtn.addEventListener('click', (e) => {
                         e.stopPropagation();
+                        
                         const featModal = document.getElementById('feature-info-modal');
                         const featModalTitle = document.getElementById('feat-modal-title');
                         const featModalDesc = document.getElementById('feat-modal-desc');
+                        
                         const metricIntel = document.getElementById('metric-intelligence');
                         const metricQual = document.getElementById('metric-quality');
                         const metricSpeed = document.getElementById('metric-speed');
+                        
+                        const lblIntel = document.getElementById('lbl-intel');
+                        const lblQual = document.getElementById('lbl-qual');
+                        const lblSpeed = document.getElementById('lbl-speed');
+
                         const currentModelData = models.find(m => m.id === modelId);
-                        const modelDesc = currentModelData ? currentModelData.description : "No description available.";
+                        
+                        let descriptionToShow = currentModelData ? currentModelData.description : "No description available.";
+
+                        if (typeof currentLang !== 'undefined' && currentLang === 'tr') {
+                            if (modelTranslationsTR[modelId]) {
+                                descriptionToShow = modelTranslationsTR[modelId];
+                            }
+                            if(lblIntel) lblIntel.textContent = "Yapay Zeka";
+                            if(lblQual) lblQual.textContent = "Kalite";
+                            if(lblSpeed) lblSpeed.textContent = "Hız";
+                        } else {
+                            if(lblIntel) lblIntel.textContent = "Intelligence";
+                            if(lblQual) lblQual.textContent = "Quality";
+                            if(lblSpeed) lblSpeed.textContent = "Speed";
+                        }
+
                         featModalTitle.innerHTML = `🔮 ${modelName}`;
-                        featModalDesc.textContent = modelDesc;
+                        featModalDesc.textContent = descriptionToShow;
+                        
                         const cleanId = modelId.replace(/\s/g, '');
                         let stats = MODEL_STATS[modelId] || MODEL_STATS[cleanId] || MODEL_STATS["default"];
                         
                         metricIntel.innerHTML = createDots(stats.intel, 'intelligence');
                         metricQual.innerHTML = createDots(stats.qual, 'quality');
                         metricSpeed.innerHTML = createDots(stats.speed, 'speed');
+                        
                         featModal.classList.add('active');
                     });
+
                     card.addEventListener('click', () => {
                         if (selectedModel === modelId) {
                             playModelSelectSound(false);
@@ -1012,6 +1020,7 @@
                         checkFormReady();
                     });
                 });
+
                 const lastModelId = localStorage.getItem(LS_KEYS.MODEL);
                 if (lastModelId) {
                     const targetCard = document.querySelector(`.model-card[data-model-id="${lastModelId}"]`);
@@ -1131,6 +1140,20 @@
             };
 
             function checkFormReady() {
+                const charCountEl = document.getElementById('char-count');
+                if (charCountEl && promptInput) {
+                    const currentLength = promptInput.value.length;
+                    const currentMax = promptInput.maxLength;
+                    
+                    charCountEl.textContent = `${currentLength} / ${currentMax}`;
+                    
+                    charCountEl.classList.remove('limit-near', 'limit-reached');
+                    if (currentLength >= currentMax) {
+                        charCountEl.classList.add('limit-reached');
+                    } else if (currentLength > currentMax * 0.7) {
+                        charCountEl.classList.add('limit-near');
+                    }
+                }
                 const promptLength = promptInput.value.trim().length;
                 const currentMax = btnEnhance && btnEnhance.classList.contains('active') ? 1150 : 5000;
 
@@ -1150,14 +1173,14 @@
                 const currentLength = promptInput.value.trim().length;
                 if (currentLength < 10) {
                     playErrorSound();
-                    showNotification("Prompt is too short! Please enter at least 10 characters.", "error");
+                    showNotification(currentLang == "tr" ? "Prompt çok kısa! En az 10 karakter girmelisin." : "Prompt is too short! Please enter at least 10 characters.", "error");
                     return;
                 }
                 const maxAllowed = btnEnhance.classList.contains('active') ? 1150 : 5000;
 
                 if (currentLength > maxAllowed) {
                     playErrorSound();
-                    showNotification(`Prompt is too long! Max ${maxAllowed} characters allowed.`, "error");
+                    showNotification(currentLang == "tr" ? "Prompt çok uzun! Maksimum " + maxAllowed + " karakter girebilirsin." : `Prompt is too long! Max ${maxAllowed} characters allowed.`, "error");
                     return;
                 }
                 playStartSound();
@@ -1175,7 +1198,7 @@
                     if (galleryGrid.querySelector('.empty-gallery')) galleryGrid.innerHTML = '';
                     galleryGrid.insertAdjacentHTML('afterbegin', getPlaceholderHTML(width, height));
                 }
-                const removeLoading = showNotification('Image is being processed...', 'loading');
+                const removeLoading = showNotification(currentLang == "tr" ? "Görüntü oluşturuluyor..." : 'Image is being processed...', 'loading');
                 generateBtn.disabled = true;
                 generateBtn.innerHTML = 'Processing<span class="loading-spinner"></span>';
                 generateBtn.classList.add('generating');
@@ -1225,34 +1248,34 @@
                     if (stepsVal < 10) {
                         stepsVal = 10;
                         document.getElementById('adv-steps').value = 10; 
-                        showNotification("Minimum steps is 10. Value updated.", "info");
+                        showNotification(currentLang == "tr" ? "Minimum adım sayısı 10. Değer güncellendi." : "Minimum steps is 10. Value updated.", "info");
                     } 
                     else if (stepsVal > 30) {
                         stepsVal = 30;
                         document.getElementById('adv-steps').value = 30;
-                        showNotification("Maximum steps is 30. Value updated.", "info");
+                        showNotification(currentLang == "tr" ? "Maximum adım sayısı 30. Değer güncellendi." : "Maximum steps is 30. Value updated.", "info");
                     }
 
                     if (cfgVal < 1) {
                         cfgVal = 1;
                         document.getElementById('adv-cfg').value = 1; 
-                        showNotification("Minimum CFG Scale is 1. Value updated.", "info");
+                        showNotification(currentLang == "tr" ? "Minimum CFG Scale 1. Değer güncellendi." : "Minimum CFG Scale is 1. Value updated.", "info");
                     } 
                     else if (cfgVal > 20) {
                         cfgVal = 20;
                         document.getElementById('adv-cfg').value = 20;
-                        showNotification("Maximum CFG Scale is 20. Value updated.", "info");
+                        showNotification(currentLang == "tr" ? "Maximum CFG Scale 20. Değer güncellendi." : "Maximum CFG Scale is 20. Value updated.", "info");
                     }
 
                     if (seedVal < -1) {
                         seedVal = -1;
                         document.getElementById('adv-seed').value = -1; 
-                        showNotification("Minimum Seed is -1. Value updated.", "info");
+                        showNotification(currentLang == "tr" ? "Minimum Seed -1. Değer güncellendi." : "Minimum Seed is -1. Value updated.", "info");
                     } 
                     else if (seedVal > 900000000) {
                         seedVal = 900000000;
                         document.getElementById('adv-seed').value = 900000000;
-                        showNotification("Maximum Seed is 900000000. Value updated.", "info");
+                        showNotification(currentLang == "tr" ? "Maximum Seed 900000000. Değer güncellendi." : "Maximum Seed is 900000000. Value updated.", "info");
                     }
 
                     apiBody.advanced = {
@@ -1322,13 +1345,13 @@
                             await loadGallery();
                             await applyFilters();
                         }
-                        showNotification('The image has been saved to the gallery.', 'success', finalImageUrl);
+                        showNotification(currentLang == "tr" ? "Resim galeriye kaydedildi." : 'The image has been saved to the gallery.', 'success', finalImageUrl);
                     } else {
                         playErrorSound();
 
 
                         if (data.status == 429) {
-                            showNotification('Limit Exceeded! Please wait a few seconds and try again.', 'error');
+                            showNotification(currentLang == "tr" ? "Limit tükendi! Lütfen biraz bekleyin ve tekrar deneyin." : 'Limit Exceeded! Please wait a few seconds and try again.', 'error');
                             isGeneratingImage = false;
                             const placeholder = document.getElementById('active-generation-placeholder');
                             if (placeholder) {
@@ -1338,7 +1361,7 @@
                             return;
                         }
                         if (data.status == 401 && data.content.includes('not allowed')) {
-                            showNotification('Please set moderation level to medium or low.', 'error');
+                            showNotification(currentLang == "tr" ? "Lütfen moderation seviyesini medium veya low olarak ayarlayın." : 'Please set moderation level to medium or low.', 'error');
                             isGeneratingImage = false;
                             const placeholder = document.getElementById('active-generation-placeholder');
                             if (placeholder) {
@@ -1348,7 +1371,7 @@
                             return;
                         }
                         if (data.status == 423) {
-                            showNotification('Thena is currently overloaded. Please try again later.', 'error');
+                            showNotification(currentLang == "tr" ? "Thena şuanda çok yoğun. Lütfen daha sonra tekrar deneyin." : 'Thena is currently overloaded. Please try again later.', 'error');
                             isGeneratingImage = false;
                             const placeholder = document.getElementById('active-generation-placeholder');
                             if (placeholder) {
@@ -1363,7 +1386,7 @@
                 } catch (error) {
                     if (removeLoading) removeLoading();
                     playErrorSound();
-                    showNotification("There was an error generating the image. Please try again.", 'error');
+                    showNotification(currentLang == "tr" ? "Resim oluşturulamadı! Lütfen tekrar deneyin." : "There was an error generating the image. Please try again.", 'error');
                     isGeneratingImage = false;
                     const placeholder = document.getElementById('active-generation-placeholder');
                     if (placeholder) {
@@ -1673,7 +1696,7 @@
             });
             toggleSortBtn.addEventListener('click', () => {
                 sortNewestFirst = !sortNewestFirst;
-                sortText.textContent = sortNewestFirst ? "Newest" : "Oldest";
+                sortText.textContent = sortNewestFirst ? currentLang == "tr" ? "En Yeni" : "Newest" : currentLang == "tr" ? "En Eski" : "Oldest";
                 sortIcon.style.transform = sortNewestFirst ? "rotate(0deg)" : "rotate(180deg)";
                 sortIcon.style.transition = "transform 0.3s ease";
                 applyFilters();
@@ -1760,13 +1783,14 @@
                 const sizeStr = getFileSize(data.url);
                 lightboxDownload.removeAttribute('href'); 
                 lightboxDownload.style.cursor = "pointer";
+                const t = translations[currentLang];
                 lightboxDownload.innerHTML = `
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="7 10 12 15 17 10"></polyline>
                         <line x1="12" y1="15" x2="12" y2="3"></line>
                     </svg>
-                    Download ${sizeStr ? `(${sizeStr})` : ''}
+                    ${t.btnDownload} ${sizeStr ? `(${sizeStr})` : ''}
                 `;
                 
                 lightboxDownload.onclick = async (e) => {
@@ -1774,7 +1798,7 @@
                     e.stopPropagation();
                     const originalText = lightboxDownload.innerHTML;
                     const isTelegram = /Telegram/i.test(navigator.userAgent) || window.TelegramWebviewProxy;
-                    lightboxDownload.innerHTML = `<span class="loading-spinner" style="border-top-color:#fff; margin:0;"></span> ${isTelegram ? 'Preparing Link...' : 'Processing...'}`;
+                    lightboxDownload.innerHTML = `<span class="loading-spinner" style="border-top-color:#fff; margin:0;"></span> ${isTelegram ? t.msgPreparingLink : t.msgProcessing}`;
                     lightboxDownload.style.pointerEvents = "none";
 
                     try {
@@ -1829,10 +1853,10 @@
                                 const data = await response.json();
 
                                 if (data.status === 200 && data.image) {
-                                    if(typeof showNotification === "function") showNotification("Image has been sent to Telegram.", "success");
+                                    if(typeof showNotification === "function") showNotification(currentLang == "tr" ? "Resim Telegram'a gönderildi." : "Image has been sent to Telegram.", "success");
                                     if(typeof playSuccessSound === "function") playSuccessSound();
                                 } else {
-                                    if(typeof showNotification === "function") showNotification("Download failed. Please try again.", "error");
+                                    if(typeof showNotification === "function") showNotification(currentLang == "tr" ? "Resim Telegram'a gönderilemedi. Lütfen yeniden deneyin." : "Download failed. Please try again.", "error");
                                     if(typeof playErrorSound === "function") playErrorSound();
                                 }
 
@@ -1850,14 +1874,14 @@
 
                             const fileName = `thena-image-${Date.now()}.png`;
                             forceDownload(blob, fileName);
-                            if(typeof showNotification === "function") showNotification("Download completed.", "success");
+                            if(typeof showNotification === "function") showNotification(currentLang == "tr" ? "Resim indirildi." : "Download completed.", "success");
                             if(typeof playSuccessSound === "function") playSuccessSound();
                         }
 
                     } catch (error) {
                         console.error("Download action failed:", error);
                         if(typeof playErrorSound === "function") playErrorSound();
-                        if(typeof showNotification === "function") showNotification("Download failed. Please try again.", "error");
+                        if(typeof showNotification === "function") showNotification(currentLang == "tr" ? "Resim indirilemedi. Lütfen yeniden deneyin." : "Download failed. Please try again.", "error");
                     } finally {
                         lightboxDownload.innerHTML = originalText;
                         lightboxDownload.style.pointerEvents = "auto";
@@ -1949,7 +1973,7 @@
                         }, 100);
 
                         playSuccessSound();
-                        showNotification("Settings applied successfully!", "success", data.url);
+                        showNotification(currentLang == "tr" ? "Ayarlar başarıyla uygulandı!" : "Settings applied successfully!", "success", data.url);
                         
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                     };
@@ -2003,12 +2027,12 @@
                         lightbox.classList.remove('active');
                         await loadGallery(); 
                         playSuccessSound()
-                        showNotification("The image has been successfully deleted.");
+                        showNotification(currentLang == "tr" ? "Resim başarıyla silindi." : "The image has been successfully deleted.");
                     }
                 } catch (error) {
                     confirmModal.classList.remove('active');
                     playErrorSound()
-                    showNotification("An error occurred during the deletion process.");
+                    showNotification(currentLang == "tr" ? "Silme işleminde bir hata olustu." : "An error occurred during the deletion process.");
                 }
             });
             let activeNotification = null;
@@ -2175,16 +2199,7 @@
             let targetUrl = "";
 
             function openRedirectModal(type) {
-                const t = {
-                    redirectBotTitle: "Open Telegram Bot",
-                    redirectBotDesc: "You are being redirected to Thena AI Bot on Telegram.",
-                    redirectOwnerTitle: "Contact Developer",
-                    redirectOwnerDesc: "You are being redirected to the developer's profile.",
-                    redirectDonateTitle: "Support Thena AI",
-                    redirectDonateDesc: "You are being redirected to our donation page. Thank you for your support!",
-                    btnGo: "Go",
-                    btnCancel: "Cancel"
-                }
+                const t = translations[currentLang]; 
                 if (type === 'bot') {
                     targetUrl = "https://t.me/ThenaAIBot";
                     redirectTitle.textContent = t.redirectBotTitle;
@@ -2199,7 +2214,6 @@
                     redirectTitle.textContent = t.redirectDonateTitle;
                     redirectDesc.textContent = t.redirectDonateDesc;
                 }
-
                 btnRedirectConfirm.textContent = t.btnGo;
                 btnRedirectCancel.textContent = t.btnCancel;
                 redirectModal.classList.add('active');
@@ -2228,7 +2242,7 @@
                 deleteAllBtn.addEventListener('click', () => {
                     if (!allGalleryImages || allGalleryImages.length === 0) {
                         playInformationSound();
-                        showNotification("The gallery is already empty.", "info");
+                        showNotification(currentLang == "tr" ? "Galeri halihazırda boş." : "The gallery is already empty.", "info");
                         return;
                     }
                     playDeleteAllWarningSound();
@@ -2253,11 +2267,11 @@
                         galleryGrid.innerHTML = '<div class="empty-gallery">No images yet. Start generating!</div>';
                         deleteAllModal.classList.remove('active');
                         playSuccessSound()
-                        showNotification("The entire gallery has been successfully cleaned.", "success");
+                        showNotification(currentLang == "tr" ? "Tüm galeri temizlendi." : "The entire gallery has been successfully cleaned.", "success");
                     } catch (error) {
                         console.error("Error deleting all images:", error);
                         playErrorSound()
-                        showNotification("An error occurred during the deletion process.", "error");
+                        showNotification(currentLang == "tr" ? "Galeri temizlenirken bir hata oluştu." : "An error occurred during the deletion process.", "error");
                         deleteAllModal.classList.remove('active');
                     }
                 });
@@ -2336,7 +2350,7 @@
 
                 playSuccessSound();
                 showNotification(
-                    "Settings loaded from this image!", 
+                    currentLang == "tr" ? "Ayarlar bu resimden yüklendi!" : "Settings loaded from this image!", 
                     "success", 
                     data.url
                 );
@@ -2356,6 +2370,19 @@
             shareBtn.addEventListener('click', async (e) => {
                 e.stopPropagation();
                 
+                const t = translations[currentLang]; 
+
+                shareModal.classList.add('active');
+                if(viewShareWrapper) viewShareWrapper.classList.remove('open');
+                if(viewShareBtn) viewShareBtn.classList.remove('visible');
+                
+                shareUrlDisplay.value = t.msgUploading; 
+                copyShareLinkBtn.textContent = t.btnShareWait;
+                
+                copyShareLinkBtn.disabled = true;
+                copyShareLinkBtn.style.background = "#222";
+                copyShareLinkBtn.style.cursor = "not-allowed";
+
                 shareModal.classList.add('active');
                 if(viewShareWrapper) viewShareWrapper.classList.remove('open');
                 if(viewShareBtn) viewShareBtn.classList.remove('visible');
@@ -2420,6 +2447,8 @@
 
                             shareUrlDisplay.value = myShowcaseUrl;
                             copyShareLinkBtn.textContent = "Copy Link";
+                            copyShareLinkBtn.textContent = t.btnShareCopy;
+                        
                             copyShareLinkBtn.disabled = false;
                             copyShareLinkBtn.style.cursor = "pointer";
                             
@@ -2433,36 +2462,36 @@
 
                             if(typeof playSuccessSound === "function") {
                                 playSuccessSound();
-                                showNotification("Image uploaded successfully!", "success", base64Data);
+                                showNotification(currentLang == "tr" ? "Resim yüklendi!" : "Image uploaded successfully!", "success", base64Data);
                             }
 
                         } else {
                             console.error("Upload failed:", data);
-                            shareUrlDisplay.value = "Upload failed. Please try again.";
-                            copyShareLinkBtn.textContent = "Error";
+                            shareUrlDisplay.value = t.msgUploadFail;
+                            copyShareLinkBtn.textContent = t.btnShareError;
                             if(typeof playErrorSound === "function") playErrorSound();
 
                             if (data.status == 401) {
-                                showNotification("Invalid API Key provided.", "error");
+                                showNotification(currentLang == "tr" ? "API anahtarınız geçerli değil." : "Invalid API Key provided.", "error");
                             } else if (data.status == 429) {
-                                showNotification("Upload limit exceeded. Max 10 uploads per day.", "error");
+                                showNotification(currentLang == "tr" ? "Limit aşıldı. Günlük 10 yükleme yapabilirsiniz." : "Upload limit exceeded. Max 10 uploads per day.", "error");
                             } else if (data.status == 502) {
-                                showNotification("Server error. Please try again later.", "error");
+                                showNotification(currentLang == "tr" ? "Sunucu hatası. Lütfen daha sonra tekrar deneyiniz." : "Server error. Please try again later.", "error");
                             }
                         }
                     } else {
                         shareUrlDisplay.value = "Error: Image source is not base64.";
-                        copyShareLinkBtn.textContent = "Error";
-                        if(typeof playErrorSound === "function") playErrorSound();
+                        shareUrlDisplay.value = t.msgUploadFail;
+                        copyShareLinkBtn.textContent = t.btnShareError;
                         showNotification("Image source is not base64.", "error");
                     }
 
                 } catch (error) {
                     console.error("Upload error:", error);
-                    shareUrlDisplay.value = "Upload failed. Please try again.";
+                    shareUrlDisplay.value = currentLang == "tr" ? "Yükleme hatası. Lütfen daha sonra tekrar deneyiniz." : "Upload failed. Please try again.";
                     copyShareLinkBtn.textContent = "Error";
                     if(typeof playErrorSound === "function") playErrorSound();
-                    showNotification("Image upload failed.", "error");
+                    showNotification(currentLang == "tr" ? "Resim yükleme hatası." : "Image upload failed.", "error");
                 }
             });
         }
@@ -2485,14 +2514,19 @@
             copyShareLinkBtn.addEventListener('click', () => {
                 if (copyShareLinkBtn.disabled) return;
                 
+                const t = translations[currentLang];
+
                 const urlToCopy = shareUrlDisplay.value;
                 navigator.clipboard.writeText(urlToCopy).then(() => {
-                    copyShareLinkBtn.textContent = "Copied!";
-                    copyShareLinkBtn.style.background = "#00ff88";
+                    
+                    copyShareLinkBtn.textContent = t.btnShareCopied;
+                    
+                    copyShareLinkBtn.style.background = "rgb(var(--primary-rgb))";
                     copyShareLinkBtn.style.color = "#000";
                     
                     setTimeout(() => {
-                        copyShareLinkBtn.textContent = "Copy Link";
+                        copyShareLinkBtn.textContent = t.btnShareCopy;
+                        
                         copyShareLinkBtn.style.background = "#222";
                         copyShareLinkBtn.style.color = "#fff";
                     }, 2000);
@@ -2531,7 +2565,7 @@
                 const isChecked = e.target.checked;
                 togglePerformanceMode(isChecked);
                 if(typeof playInformationSound === "function") playInformationSound();
-                const msg = isChecked ? "Performance Mode Enabled" : "Performance Mode Disabled";
+                const msg = isChecked ? currentLang == "tr" ? "Performans Modü Aktif Edildi" : "Performance Mode Enabled" : currentLang == "tr" ? "Performans Modü Deaktif Edildi" : "Performance Mode Disabled";
                 if(typeof showNotification === "function") showNotification(msg, "info");
             });
         }
@@ -2550,7 +2584,7 @@
                 localStorage.setItem('thena-mute-mode', isMuted);
                 
                 if(typeof showNotification === "function") {
-                    showNotification(isMuted ? "Silent Mode Enabled" : "Silent Mode Disabled", "info");
+                    showNotification(isMuted ? currentLang == "tr" ? "Sessiz Mod Aktif Edildi" : "Silent Mode Enabled" : currentLang == "tr" ? "Sessiz Mod Deaktif Edildi" : "Silent Mode Disabled", "info");
                 }
                 
                 if (!isMuted && typeof playInformationSound === "function") {
@@ -2590,7 +2624,7 @@
             advToggle.addEventListener('change', (e) => {
                 toggleAdvancedMode(e.target.checked);
                 if(typeof playInformationSound === "function") playInformationSound();
-                const msg = e.target.checked ? "Advanced Mode Enabled" : "Advanced Mode Disabled";
+                const msg = e.target.checked ? currentLang == "tr" ? "Gelişmiş Mod Aktif Edildi" : "Advanced Mode Enabled" : currentLang == "tr" ? "Gelişmiş Mod Deaktif Edildi" : "Advanced Mode Disabled";
                 if(typeof showNotification === "function") showNotification(msg, "info");
             });
         }
@@ -2735,7 +2769,7 @@
             
             if (notify) {
                 if(typeof playSuccessSound === "function") playModelSelectSound(true);
-                showNotification("Theme updated successfully!", "info");
+                showNotification(currentLang == "tr" ? "Tema güncellendi" : "Theme updated successfully!", "info");
             }
         }
 
@@ -2793,7 +2827,7 @@
 
                     if (typeof playSuccessSound === "function") playSuccessSound();
                     
-                    showNotification("Application successfully reset. Page reloading...", "success");
+                    showNotification(currentLang == "tr" ? "Uygulama başarıyla sıfırlandı. Sayfa yenileniyor..." : "Application successfully reset. Page reloading...", "success");
 
                     setTimeout(() => {
                         window.location.reload();
@@ -2802,7 +2836,7 @@
                 } catch (e) {
                     
                     if (typeof playErrorSound === "function") playErrorSound();
-                    showNotification("Error occurred during reset: " + e.message, "error");
+                    showNotification(currentLang == "tr" ? "Reset hatası: " + e.message : "Error occurred during reset: " + e.message, "error");
                     
                     btnConfirmReset.innerText = originalText;
                     btnConfirmReset.disabled = false;
@@ -2867,7 +2901,7 @@
                 const response = await fetch('https://create.thena.workers.dev/showcaseImages');
                 if (!response.ok) {
                     playErrorSound();
-                    showNotification("Failed to fetch showcase images. Please try again later.", "error");
+                    showNotification(currentLang == "tr" ? "Showcase resmi alınamadı. Lütfen daha sonra tekrar deneyin." : "Failed to fetch showcase images. Please try again later.", "error");
                     return [];
                 }
                 
@@ -3166,12 +3200,12 @@
 
             function handleImageFile(file) {
                 if (!file || !file.type.startsWith('image/')) {
-                    if(typeof showNotification === "function") showNotification("Please select a valid image file.", "error");
+                    if(typeof showNotification === "function") showNotification(currentLang == "tr" ? "Lütfen geçerli bir resim dosyası seçin." : "Please select a valid image file.", "error");
                     return;
                 }
 
                 if (file.size > 5 * 1024 * 1024) {
-                    if(typeof showNotification === "function") showNotification("Image is too large (Max 5MB).", "error");
+                    if(typeof showNotification === "function") showNotification(currentLang == "tr" ? "Resim dosyası 5MB'dan fazla olamaz." : "Image is too large (Max 5MB).", "error");
                     return;
                 }
 
@@ -3195,16 +3229,17 @@
                 const apiKey = document.getElementById('api-key').value.trim();
                 
                 if (!apiKey) {
-                    if(typeof showNotification === "function") showNotification("Please enter your API Key first.", "error");
+                    if(typeof showNotification === "function") showNotification(currentLang == "tr" ? "Lütfen API Anahtarını girin." : "Please enter your API Key first.", "error");
                     if(typeof playErrorSound === "function") playErrorSound();
                     return;
                 }
 
                 if (!currentBase64Image) return;
-
+                const t = translations[currentLang] || translations['en'];
                 const originalBtnContent = btnImg2PromptGenerate.innerHTML;
-                btnImg2PromptGenerate.innerHTML = `<span>Analyzing...</span><svg class="sparkle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>`;
-                var clipnotif = showNotification("Generating prompt from image. This may take a moment...", "loading");
+
+                btnImg2PromptGenerate.innerHTML = `<span>${t.lblAnalyzing}</span><svg class="sparkle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>`;
+                var clipnotif = showNotification(currentLang === 'tr' ? "Görselden prompt oluşturuluyor. Bu işlem biraz sürebilir..." : "Generating prompt from image. This may take a moment...", "loading");
                 playInformationSound();
                 btnImg2PromptGenerate.classList.add('loading');
                 btnImg2PromptGenerate.disabled = true;
@@ -3274,7 +3309,7 @@
                                         card.click();
                                         if(typeof showNotification === "function") {
                                             setTimeout(() => {
-                                                showNotification(`Model switched to: ${targetModelName}`, "info");
+                                                showNotification(currentLang == "tr" ? "Model güncellendi: " + targetModelName : `Model switched to: ${targetModelName}`, "info");
                                             }, 800); 
                                         }
                                     }
@@ -3309,17 +3344,17 @@
                         }
                         
                         checkFormReady();
-                        if(typeof showNotification === "function") showNotification("Prompt and settings applied successfully!", "success");
+                        if(typeof showNotification === "function") showNotification(currentLang == "tr" ? "Prompt ve ayarlar başarıyla uygulandı!" : "Prompt and settings applied successfully!", "success");
 
                     } else {
-                        showNotification("Failed to generate prompt. Please try different image.", "error");
+                        showNotification(currentLang == "tr" ? "Prompt oluşturulamadı. Lütfen farklı bir resimle tekrar deneyin." : "Failed to generate prompt. Please try different image.", "error");
                         if(typeof playErrorSound === "function") playErrorSound();
                     }
 
                 } catch (error) {
                     console.error(error);
                     if(typeof playErrorSound === "function") playErrorSound();
-                    showNotification("Failed to generate prompt. Please try different image.", "error");
+                    showNotification(currentLang == "tr" ? "Prompt oluşturulamadı. Lütfen farklı bir resimle tekrar deneyin." : "Failed to generate prompt. Please try different image.", "error");
                 } finally {
                     btnImg2PromptGenerate.innerHTML = originalBtnContent;
                     btnImg2PromptGenerate.classList.remove('loading');
@@ -3396,7 +3431,7 @@
                     item.querySelector('.copy-hist-btn').addEventListener('click', (e) => {
                         e.stopPropagation();
                         navigator.clipboard.writeText(text).then(() => {
-                            if(typeof showNotification === 'function') showNotification("Prompt copied to clipboard!", "success");
+                            if(typeof showNotification === 'function') showNotification(currentLang == "tr" ? "Prompt kopyalandı!" : "Prompt copied to clipboard!", "success");
                         });
                     });
 
@@ -3444,7 +3479,7 @@
                 historyClearModal.classList.remove('active'); 
 
                 if(typeof playSuccessSound === "function") playSuccessSound();
-                if(typeof showNotification === "function") showNotification("Prompt history cleared successfully.", "success");
+                if(typeof showNotification === "function") showNotification(currentLang == "tr" ? "Prompt geçmişi temizlendi." : "Prompt history cleared successfully.", "success");
             });
 
             historyClearModal.addEventListener('click', (e) => {

@@ -4,7 +4,11 @@ const ASSETS_TO_CACHE = [
     './index.html',
     './manifest.json',
     './src/icon-192.png',
-    './src/icon-512.png'
+    './src/icon-512.png',
+    './style.css',
+    './script.js',
+    './promptexpansion.js',
+    './lang.js'
 ];
 
 self.addEventListener('install', (event) => {

@@ -57,11 +57,17 @@
                         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                     </svg>
                 </button>
+                <button class="nav-btn" id="btn-language" title="Switch Language">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 15H3.5A2.502 2.502 0 0 1 1 12.5v-9A2.502 2.502 0 0 1 3.5 1h9A2.502 2.502 0 0 1 15 3.5V8h-1V3.5A1.502 1.502 0 0 0 12.5 2h-9A1.502 1.502 0 0 0 2 3.5v9A1.502 1.502 0 0 0 3.5 14H8zm-.038-4.811a9.77 9.77 0 0 1-3.766 1.796l-.242-.97a8.816 8.816 0 0 0 3.282-1.532A9.264 9.264 0 0 1 4.888 5H4V4h3.279l-.544-.544.707-.707L8.692 4H12v1h-.914A9.836 9.836 0 0 1 9.78 8.152a3.853 3.853 0 0 0-1.82 2.037zm.032-1.383A8.167 8.167 0 0 0 10.058 5H5.922a8.18 8.18 0 0 0 2.072 3.806zM23 20.447v-8.894A2.525 2.525 0 0 0 20.484 9h-8.931A2.556 2.556 0 0 0 9 11.553v8.894A2.556 2.556 0 0 0 11.553 23h8.894A2.556 2.556 0 0 0 23 20.447zM20.484 10A1.517 1.517 0 0 1 22 11.516v8.968A1.517 1.517 0 0 1 20.484 22h-8.968A1.517 1.517 0 0 1 10 20.484v-8.968A1.517 1.517 0 0 1 11.516 10zm-2.086 8h-4.796l-1.159 2.23-.886-.46L16 11.215l4.443 8.555-.886.46zm-.52-1L16 13.385 14.122 17zM6 22.01a2.003 2.003 0 0 1-2-2v-2.303l1.646 1.646.707-.707L3.506 15.8.659 18.646l.707.707L3 17.72v2.292a3.003 3.003 0 0 0 3 3h2.058v-1zM22.646 4.647L21 6.293V4a3.003 3.003 0 0 0-3-3h-2v1h2a2.003 2.003 0 0 1 2 2v2.281l-1.634-1.635-.707.707 2.847 2.848 2.848-2.848z"/>
+                        <path fill="none" d="M0 0h24v24H0z"/>
+                    </svg>
+                </button>
             </div>
             <div class="background-text">THENA</div>
             <div class="container">
                 <div class="input-group">
-                    <label> API Key <a href="https://t.me/ThenaAIBot?start=refAPI" target="_blank" class="api-link-btn"> Get Your Free API Key <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <label id="label-api-key"> API Key <a href="https://t.me/ThenaAIBot?start=refAPI" target="_blank" class="api-link-btn"> Get Your Free API Key <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                                 <polyline points="15 3 21 3 21 9"></polyline>
                                 <line x1="10" y1="14" x2="21" y2="3"></line>
@@ -83,6 +89,7 @@
                     <label>Prompt</label>
                     <div style="position: relative;">
                         <textarea id="prompt" maxlength="5000" placeholder="Describe your image... (Min 10 chars, Max 5000 chars)" style="padding-right: 90px;"></textarea>
+                        <div id="char-count" class="char-counter">0 / 5000</div>
                         <div id="autocomplete-list" class="autocomplete-dropdown"></div>
                         <button id="prompt-history-btn" title="Prompt History">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -119,9 +126,10 @@
                         
                         <div id="prompt-history-dropdown" class="history-dropdown">
                             <div class="history-header">
-                                <span>Recent Prompts</span>
+                                <span id="prompt-history-title">Recent Prompts</span>
                                 <button id="clear-history-btn" class="clear-history-btn">Clear All</button>
                             </div>
+                            
                             <div id="history-list-container">
                                 <div style="padding:15px; text-align:center; color:#444; font-size:12px;">No history yet.</div>
                             </div>
@@ -220,51 +228,42 @@
                 <div class="input-group">
                     <label>Extra Features</label>
                     <div class="extras-selector">
+                        
                         <button class="extra-btn active" id="feat-fast" data-feat="fastMode">
                             <span class="info-icon-wrapper" title="Info">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <line x1="12" y1="16" x2="12" y2="12"></line>
-                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                                </svg>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                             </span>
-                            <span>⚡</span> Fast Mode </button>
+                            <span>⚡</span> <span id="txt-fast">Fast Mode</span>
+                        </button>
+
                         <button class="extra-btn" id="feat-creative" data-feat="creative">
                             <span class="info-icon-wrapper" title="Info">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <line x1="12" y1="16" x2="12" y2="12"></line>
-                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                                </svg>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                             </span>
-                            <span>🎨</span> Creative </button>
+                            <span>🎨</span> <span id="txt-creative">Creative</span>
+                        </button>
+
                         <button class="extra-btn" id="feat-dense" data-feat="denseMode">
                             <span class="info-icon-wrapper" title="Info">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <line x1="12" y1="16" x2="12" y2="12"></line>
-                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                                </svg>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                             </span>
-                            <span>💠</span> Dense </button>
+                            <span>💠</span> <span id="txt-dense">Dense</span>
+                        </button>
+
                         <button class="extra-btn" id="feat-movie" data-feat="movieFilter" disabled>
                             <span class="info-icon-wrapper" title="Info">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <line x1="12" y1="16" x2="12" y2="12"></line>
-                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                                </svg>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                             </span>
-                            <span>🎬</span> Movie Filter </button>
+                            <span>🎬</span> <span id="txt-movie">Movie Filter</span>
+                        </button>
+
                         <button class="extra-btn" id="feat-highres" data-feat="highRes">
                             <span class="info-icon-wrapper" title="Info">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <line x1="12" y1="16" x2="12" y2="12"></line>
-                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                                </svg>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                             </span>
-                            <span>💎</span> HighRes </button>
+                            <span>💎</span> <span id="txt-highres">HighRes</span>
+                        </button>
+
                         <button class="extra-btn" id="feat-enhance" data-feat="enhance">
                             <span class="info-icon-wrapper" title="Info">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -273,8 +272,9 @@
                                     <line x1="12" y1="8" x2="12.01" y2="8"></line>
                                 </svg>
                             </span>
-                            <span>✨</span> Prompt Magic
+                            <span>✨</span> <span id="txt-enhance">Prompt Magic</span>
                         </button>
+
                     </div>
                 </div>
                 <button class="generate-btn" id="generate-btn">Generate Image</button>
@@ -299,7 +299,7 @@
                     <button class="control-btn" id="toggle-filter-btn">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-                        </svg> Filter </button>
+                        </svg> <span id="txt-filter">Filter</span> </button>
                     <button class="control-btn" id="toggle-sort-btn">
                         <svg id="sort-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -313,7 +313,7 @@
                             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                             <line x1="10" y1="11" x2="10" y2="17"></line>
                             <line x1="14" y1="11" x2="14" y2="17"></line>
-                        </svg> Delete All </button>
+                        </svg> <span id="txt-delete-all">Delete All</span> </button>
                 </div>
                 <div class="filter-panel" id="filter-panel">
                     <div class="filter-group">
@@ -478,8 +478,10 @@
                         <line x1="12" y1="2" x2="12" y2="15"></line>
                     </svg>
                 </div>
-                <h3 style="color:#fff; margin-bottom:10px;">Public Share Link</h3>
-                <p style="color:#888; font-size:14px; line-height:1.5;">
+                
+                <h3 id="share-title" style="color:#fff; margin-bottom:10px;">Public Share Link</h3>
+                
+                <p id="share-desc" style="color:#888; font-size:14px; line-height:1.5;">
                     Your image is now publicly accessible via this link. Anyone with this URL can view the image.
                 </p>
                 
@@ -490,7 +492,7 @@
 
                 <div class="share-view-wrapper" id="share-view-wrapper">
                     <a href="#" target="_blank" class="share-view-btn" id="btn-share-view">
-                        <span>View Image</span>
+                        <span id="txt-share-view">View Image</span>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                             <polyline points="15 3 21 3 21 9"></polyline>
@@ -498,7 +500,7 @@
                         </svg>
                     </a>
                 </div>
-                </div>
+            </div>
         </div>
 
         <div id="settings-modal" class="confirm-modal">
@@ -509,10 +511,10 @@
                         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                     </svg>
                 </div>
-                <h3 style="color: #fff; margin-bottom: 20px;">Settings</h3>
+                <h3>Settings</h3>
                 
                 <div class="setting-group" style="margin-bottom: 25px; text-align: left;">
-                    <label style="display:block; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">SOLID COLORS</label>
+                    <label id="lbl-solid-colors" style="display:block; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">SOLID COLORS</label>
                     <div class="theme-selector" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
                         <button class="theme-btn active" data-color="#00ff88" data-rgb="0, 255, 136" style="background:#00ff88;"></button>
                         <button class="theme-btn" data-color="#00ccff" data-rgb="0, 204, 255" style="background:#00ccff;"></button>
@@ -523,85 +525,62 @@
                 </div>
 
                 <div class="setting-group" style="margin-bottom: 25px; text-align: left;">
-                    <label style="display:block; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">GRADIENT THEMES</label>
+                    <label id="lbl-gradient-themes" style="display:block; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">GRADIENT THEMES</label>
                     <div class="theme-selector" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-                        <button class="theme-btn" 
-                            data-color="#bd00ff" 
-                            data-rgb="189, 0, 255" 
-                            data-gradient="linear-gradient(135deg, #ff0088 0%, #bd00ff 100%)"
-                            style="background: linear-gradient(135deg, #ff0088 0%, #bd00ff 100%);">
-                        </button>
-
-                        <button class="theme-btn" 
-                            data-color="#00ccff" 
-                            data-rgb="0, 204, 255" 
-                            data-gradient="linear-gradient(135deg, #00ff88 0%, #00ccff 100%)"
-                            style="background: linear-gradient(135deg, #00ff88 0%, #00ccff 100%);">
-                        </button>
-
-                        <button class="theme-btn" 
-                            data-color="#ffaa00" 
-                            data-rgb="255, 170, 0" 
-                            data-gradient="linear-gradient(135deg, #ff4444 0%, #ffaa00 100%)"
-                            style="background: linear-gradient(135deg, #ff4444 0%, #ffaa00 100%);">
-                        </button>
-
-                        <button class="theme-btn" 
-                            data-color="#00ff88" 
-                            data-rgb="0, 255, 136" 
-                            data-gradient="linear-gradient(135deg, #a8ff78 0%, #78ffd6 100%)"
-                            style="background: linear-gradient(135deg, #a8ff78 0%, #78ffd6 100%);">
-                        </button>
+                        <button class="theme-btn" data-color="#bd00ff" data-rgb="189, 0, 255" data-gradient="linear-gradient(135deg, #ff0088 0%, #bd00ff 100%)" style="background: linear-gradient(135deg, #ff0088 0%, #bd00ff 100%);"></button>
+                        <button class="theme-btn" data-color="#00ccff" data-rgb="0, 204, 255" data-gradient="linear-gradient(135deg, #00ff88 0%, #00ccff 100%)" style="background: linear-gradient(135deg, #00ff88 0%, #00ccff 100%);"></button>
+                        <button class="theme-btn" data-color="#ffaa00" data-rgb="255, 170, 0" data-gradient="linear-gradient(135deg, #ff4444 0%, #ffaa00 100%)" style="background: linear-gradient(135deg, #ff4444 0%, #ffaa00 100%);"></button>
+                        <button class="theme-btn" data-color="#00ff88" data-rgb="0, 255, 136" data-gradient="linear-gradient(135deg, #a8ff78 0%, #78ffd6 100%)" style="background: linear-gradient(135deg, #a8ff78 0%, #78ffd6 100%);"></button>
                     </div>
                 </div>
 
                 <div class="setting-group" style="text-align: left;">
                     <label style="display:flex; justify-content:space-between; align-items:center; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">
-                        PERFORMANCE MODE
+                        <span id="lbl-perf-mode">PERFORMANCE MODE</span>
                         <label class="switch">
                             <input type="checkbox" id="perf-mode-toggle">
                             <span class="slider round"></span>
                         </label>
                     </label>
-                    <p style="font-size:12px; color:#666; margin-bottom:10px;">Reduces animations, blur effects and shadows for faster experience.</p>
+                    <p id="desc-perf-mode" style="font-size:12px; color:#666; margin-bottom:10px;">Reduces animations, blur effects and shadows for faster experience.</p>
                 </div>
 
                 <div class="setting-group" style="text-align: left;">
                     <label style="display:flex; justify-content:space-between; align-items:center; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">
-                        SILENT MODE
+                        <span id="lbl-silent-mode">SILENT MODE</span>
                         <label class="switch">
                             <input type="checkbox" id="mute-mode-toggle">
                             <span class="slider round"></span>
                         </label>
                     </label>
-                    <p style="font-size:12px; color:#666; margin-bottom:10px;">Disable all sound effects and interface tones.</p>
+                    <p id="desc-silent-mode" style="font-size:12px; color:#666; margin-bottom:10px;">Disable all sound effects and interface tones.</p>
                 </div>
 
                 <div class="setting-group" style="text-align: left;">
                     <label style="display:flex; justify-content:space-between; align-items:center; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">
-                        ADVANCED MODE
+                        <span id="lbl-adv-mode">ADVANCED MODE</span>
                         <label class="switch">
                             <input type="checkbox" id="advanced-mode-toggle">
                             <span class="slider round"></span>
                         </label>
                     </label>
-                    <p style="font-size:12px; color:#666; margin-bottom:10px;">Enable manual control for Seed, CFG Scale, and Steps. Disables presets.</p>
+                    <p id="desc-adv-mode" style="font-size:12px; color:#666; margin-bottom:10px;">Enable manual control for Seed, CFG Scale, and Steps. Disables presets.</p>
                 </div>
                 
                 <div class="setting-group" style="margin-bottom: 25px; text-align: left;">
                     <label style="display:flex; justify-content:space-between; align-items:center; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">
-                        PROMPT AUTOCOMPLETE
+                        <span id="lbl-auto-mode">PROMPT AUTOCOMPLETE</span>
                         <label class="switch">
                             <input type="checkbox" id="autocomplete-toggle" checked>
                             <span class="slider round"></span>
                         </label>
                     </label>
-                    <p style="font-size:12px; color:#666; margin-bottom:10px;">Enable intelligent tag suggestions while typing prompts.</p>
+                    <p id="desc-auto-mode" style="font-size:12px; color:#666; margin-bottom:10px;">Enable intelligent tag suggestions while typing prompts.</p>
                 </div>
 
                 <div class="setting-group" style="margin-bottom: 25px; text-align: left;">
-                    <label style="display:block; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">DATA MANAGEMENT</label>
-                    <p style="font-size:12px; color:#666; margin-bottom:10px;">Clear all local data including API key, settings, and image gallery.</p>
+                    <label id="lbl-data-mgmt" style="display:block; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">DATA MANAGEMENT</label>
+                    <p id="desc-data-mgmt" style="font-size:12px; color:#666; margin-bottom:10px;">Clear all local data including API key, settings, and image gallery.</p>
                     <button id="btn-hard-reset" style="width:100%; padding:12px; background:rgba(255,68,68,0.1); color:#ff4444; border:1px solid rgba(255,68,68,0.3); border-radius:8px; cursor:pointer; font-size:13px; font-weight:600; transition:all 0.2s;">
                         Reset Application Data
                     </button>
@@ -737,15 +716,15 @@
                 <div class="feat-title" id="feat-modal-title"></div>
                 <div class="feat-desc" id="feat-modal-desc"></div>
                 <div class="metric-row">
-                    <span>Intelligence</span>
+                    <span id="lbl-intel">Intelligence</span>
                     <div class="metric-dots" id="metric-intelligence"></div>
                 </div>
                 <div class="metric-row">
-                    <span>Quality</span>
+                    <span id="lbl-qual">Quality</span>
                     <div class="metric-dots" id="metric-quality"></div>
                 </div>
                 <div class="metric-row">
-                    <span>Speed</span>
+                    <span id="lbl-speed">Speed</span>
                     <div class="metric-dots" id="metric-speed"></div>
                 </div>
             </div>
@@ -756,10 +735,10 @@
                 window.addEventListener('load', () => {
                     navigator.serviceWorker.register('./sw.js')
                         .then((registration) => {
-                            console.log('sw registered', registration.scope);
+                            //console.log('sw registered', registration.scope);
                         })
                         .catch((error) => {
-                            console.log('sw registration failed', error);
+                            //console.log('sw registration failed', error);
                         });
                 });
             }
@@ -773,5 +752,6 @@
 
         <script src="script.js"></script>
         <script src="promptexpansion.js"></script>
+        <script src="lang.js"></script>
     </body>
 </html>
