@@ -246,7 +246,20 @@ function updateLanguage(lang) {
         const txt = lbl.innerText.trim();
         if(txt.includes("API Key")) lbl.innerHTML = `${t.apiKeyLabel} <a href="https://t.me/ThenaAIBot?start=refAPI" target="_blank" class="api-link-btn"> Get Your Free API Key <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>`;
         else if(txt.startsWith("Prompt")) lbl.textContent = t.promptLabel;
-        else if(txt === "Model") lbl.textContent = t.modelLabel;
+        else if(txt.includes("Model")) {
+            const spanText = document.getElementById('lbl-model-text');
+            if(spanText) spanText.textContent = t.modelLabel;
+            const btnText = document.getElementById('txt-show-all');
+            const btn = document.getElementById('btn-show-all-models');
+            
+            if(btnText && btn) {
+                if (btn.classList.contains('active')) {
+                    btnText.textContent = lang === 'tr' ? "Normal" : "Base";
+                } else {
+                    btnText.textContent = lang === 'tr' ? "Tümü" : "All";
+                }
+            }
+        }
         else if(txt === "Aspect Ratio") lbl.textContent = t.ratioLabel;
         else if(txt === "Extra Features") lbl.textContent = t.extraLabel;
         else if(txt.includes("Advanced Settings")) lbl.textContent = t.advLabel;

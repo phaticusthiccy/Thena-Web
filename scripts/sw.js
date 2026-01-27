@@ -6,9 +6,10 @@ const ASSETS_TO_CACHE = [
     './src/icon-192.png',
     './src/icon-512.png',
     './style.css',
-    './script.js',
-    './promptexpansion.js',
-    './lang.js'
+    './scripts/script.js',
+    './scripts/promptexpansion.js',
+    './scripts/lang.js',
+    './scripts/loadAllModels.js'
 ];
 
 self.addEventListener('install', (event) => {
