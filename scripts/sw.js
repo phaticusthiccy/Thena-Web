@@ -5,11 +5,12 @@ const ASSETS_TO_CACHE = [
     './manifest.json',
     './src/icon-192.png',
     './src/icon-512.png',
-    './style.css',
+    './css/style.css',
     './scripts/script.js',
     './scripts/promptexpansion.js',
     './scripts/lang.js',
-    './scripts/loadAllModels.js'
+    './scripts/loadAllModels.js',
+    './scripts/favorites-backups.js'
 ];
 
 self.addEventListener('install', (event) => {

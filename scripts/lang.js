@@ -100,8 +100,47 @@ const translations = {
         btnDownload: "Download",
         msgProcessing: "Processing...",
         msgPreparingLink: "Preparing Link...",
+        btnBackup: "📥 Backup",
+        btnRestore: "📤 Restore",
+        msgBackupDownloaded: "Backup file downloaded successfully.",
+        msgBackupRestoring: "Restoring backup...",
+        msgBackupSuccess: "images restored successfully!",
+        msgBackupError: "File is corrupted or invalid.",
+        msgExportError: "Export error!",
+        btnConfirmBackup: "Confirm Backup",
+        restoreModalTitle: "Restore Options",
+        lblSelectData: "Select data to process:",
+        optGallery: "Gallery Images",
+        btnConfirm2: "Confirm",
+        dataModalTitle: "Backup Options",
+        dataModalDesc: "Choose which data you want to backup or restore.",
+        lblChkSettings: "Settings (API Key, Theme, etc.)",
+        lblChkGallery: "Gallery",
+        btnDataCancel: "Cancel",
+        btnDataConfirm: "Confirm",
+        btnBackup: "Backup Data",
+        btnRestore: "Restore Data"
     },
     tr: {
+        dataModalTitle: "Yedekleme Seçenekleri",
+        dataModalDesc: "Yedeklemek veya geri yüklemek istediğiniz verileri seçin.",
+        lblChkSettings: "Ayarlar (API Anahtarı, Tema vb.)",
+        lblChkGallery: "Galeri",
+        btnDataCancel: "İptal",
+        btnDataConfirm: "Onayla",
+        btnBackup: "Verileri Yedekle",
+        btnRestore: "Verileri Geri Yükle",
+        backupModalTitle: "Yedekleme Seçenekleri",
+        restoreModalTitle: "Geri Yükleme Seçenekleri",
+        lblSelectData: "İşlenecek verileri seçin:",
+        optSettings: "Ayarlar (API Anahtarı, Tema vb.)",
+        optGallery: "Galeri Görselleri",
+        btnConfirm2: "Onayla",
+        msgBackupDownloaded: "Yedek dosyası başarıyla indirildi.",
+        msgBackupRestoring: "Yedek geri yükleniyor...",
+        msgBackupSuccess: "resim başarıyla geri yüklendi!",
+        msgBackupError: "Dosya bozuk veya geçersiz.",
+        msgExportError: "Yedekleme hatası!",
         btnDownload: "İndir",
         msgProcessing: "İşleniyor...",
         msgPreparingLink: "Bağlantı Hazırlanıyor...",
@@ -175,6 +214,7 @@ const translations = {
         img2promptDesc: "Bir prompt oluşturmak için resim yükleyin veya yapıştırın (Ctrl+V).",
         btnCancel: "İptal",
         btnConfirm: "Evet, Sil",
+        btnConfirmBackup: "Evet, Yedekle",
         btnConfirmAll: "Evet, Hepsini Sil",
         btnConfirmReset: "Evet, Her Şeyi Sil",
         btnClose: "Kapat",
@@ -214,10 +254,15 @@ function updateLanguage(lang) {
     const lblIntel = document.getElementById('lbl-intel');
     const lblQual = document.getElementById('lbl-qual');
     const lblSpeed = document.getElementById('lbl-speed');
+    const exportData = document.querySelector("#btn-export-data");
+    const importData = document.querySelector("#btn-import-data");
 
     if (lblIntel) lblIntel.textContent = t.lblIntel;
     if (lblQual) lblQual.textContent = t.lblQual;
     if (lblSpeed) lblSpeed.textContent = t.lblSpeed;
+    if (exportData) exportData.textContent = t.btnBackup;
+    if (importData) importData.textContent = t.btnRestore;
+
     const langBtn = document.getElementById('btn-language');
     if (langBtn) {
         langBtn.title = lang === 'en' ? "Language: English" : "Dil: Türkçe";
@@ -244,8 +289,7 @@ function updateLanguage(lang) {
     const labels = document.querySelectorAll('label');
     labels.forEach(lbl => {
         const txt = lbl.innerText.trim();
-        if(txt.includes("API Key")) lbl.innerHTML = `${t.apiKeyLabel} <a href="https://t.me/ThenaAIBot?start=refAPI" target="_blank" class="api-link-btn"> Get Your Free API Key <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>`;
-        else if(txt.startsWith("Prompt")) lbl.textContent = t.promptLabel;
+        if(txt.startsWith("Prompt")) lbl.textContent = t.promptLabel;
         else if(txt.includes("Model")) {
             const spanText = document.getElementById('lbl-model-text');
             if(spanText) spanText.textContent = t.modelLabel;
@@ -401,6 +445,10 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('thena-language', currentLang);
             updateLanguage(currentLang);
             
+            if (typeof window.updateDataManagementLanguage === 'function') {
+                window.updateDataManagementLanguage();
+            }
+
             if(typeof playInformationSound === "function") playInformationSound();
             
             if(typeof showNotification === "function") {

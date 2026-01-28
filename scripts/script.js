@@ -278,6 +278,16 @@ const dbHelper = {
             request.onsuccess = () => resolve(request.result);
             request.onerror = () => reject(request.error);
         });
+    },
+    update: async (data) => {
+        const db = await dbHelper.open();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction([STORE_NAME], 'readwrite');
+            const store = transaction.objectStore(STORE_NAME);
+            const request = store.put(data);
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
     }
 };
 const LS_KEYS = {
@@ -1239,12 +1249,18 @@ generateBtn.addEventListener('click', async () => {
     const isMovie = btnMovie.classList.contains('active') && !btnMovie.disabled;
     const isHighRes = btnHighRes.classList.contains('active');
     const isEnhance = btnEnhance.classList.contains('active');
-
+    var ratio = "1:1";
+    if (height == width) ratio = "1:1";
+    else if (height == 1024 && width == 768) ratio = "4:3";
+    else if (height == 768 && width == 1024) ratio = "3:4";
+    else if ((height == 576 || height == 512) && width == 1024) ratio = "16:9";
+    else if (height == 1024 && (width == 576 || width == 512)) ratio = "9:16";
+    else ratio = "1:1";
+    
     let apiBody = {
         prompt,
         model: selectedModel,
-        width,
-        height,
+        ratio: ratio,
         moderation: moderationLevel
     };
     if (isAdvancedMode) {
@@ -1512,6 +1528,11 @@ function applyFilters(withAnimation = false) {
     const currentRenderId = lastRenderId;
     let filtered = [...allGalleryImages];
 
+    const showFavsOnly = document.getElementById('filter-favorites')?.checked;
+    if (showFavsOnly) {
+        filtered = filtered.filter(item => item.isFavorite === true);
+    }
+
     const uniqueMap = new Map();
     filtered.forEach(item => {
         if (!uniqueMap.has(item.timestamp)) {
@@ -1648,6 +1669,10 @@ function loadMoreItems() {
             spanClass += ' sensitive';
         }
 
+        if (item.isFavorite) {
+            spanClass += ' is-favorite';
+        }
+
         const itemData = encodeURIComponent(JSON.stringify(item));
 
         return `
@@ -1693,6 +1718,12 @@ searchInput.addEventListener('input', () => {
         applyFilters(false);
     }, 300);
 });
+const filterFavorites = document.getElementById('filter-favorites');
+if (filterFavorites) {
+    filterFavorites.addEventListener('change', () => {
+        applyFilters();
+    });
+}
 filterModel.addEventListener('change', applyFilters);
 filterRatio.addEventListener('change', applyFilters);
 filterDateStart.addEventListener('change', applyFilters);
@@ -1743,7 +1774,24 @@ galleryGrid.addEventListener('click', (e) => {
 });
 let currentImageTimestamp = null;
 
+function updateFavBtnUI(isFav) {
+    const favBtn = document.querySelector('.lightbox-fav-btn');
+    if (!favBtn) return;
+
+    if (isFav) {
+        favBtn.classList.add('active');
+        favBtn.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="#ff4444" stroke="none"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+    } else {
+        favBtn.classList.remove('active');
+        favBtn.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>`;
+    }
+}
+
 function openLightbox(data) {
+
+    currentImageData = data; 
+    updateFavBtnUI(data.isFavorite === true);
+
     currentImageTimestamp = data.timestamp;
     lightboxImg.src = data.url;
 
@@ -1992,6 +2040,7 @@ function openLightbox(data) {
         document.querySelector(".lightbox-delete-btn").style.display = "none"
         document.querySelector(".lightbox-share-btn").style.display = "none"
         document.querySelector(".lightbox-copy-btn").style.display = "none"
+        document.querySelector(".lightbox-fav-btn").style.display = "none"
         const infoMeta = document.querySelector('.lightbox-meta');
         if (infoMeta) infoMeta.textContent = data.model.replace(/i/gi, 'I')
         infoMeta.style.marginBottom = "8px"

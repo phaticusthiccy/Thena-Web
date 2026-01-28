@@ -534,7 +534,7 @@ textarea:focus {
     height: 8px;
     background: #00ff88;
     pointer-events: none;
-    z-index: 9999;
+    z-index: 99999;
     will-change: transform, opacity;
 }
 
@@ -924,7 +924,7 @@ textarea:focus {
     display: flex;
     align-items: center;
     gap: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0px 30px rgba(var(--primary-rgb), 0.5);
     max-width: 350px;
     backdrop-filter: blur(10px);
 }
@@ -1426,6 +1426,11 @@ textarea:focus {
 @media (max-width: 768px) {
     .lightbox-close-btn {
         top: 10px !important;
+        left: 10px !important;
+    }
+
+    .lightbox-fav-btn {
+        top: 50px !important;
         left: 10px !important;
     }
 
@@ -3743,4 +3748,236 @@ body.performance-mode .model-card.animate-filter-in {
 body.performance-mode .model-filter-container {
     transition: none !important;
     transform: none !important;
+}
+
+.lightbox-fav-btn {
+    position: absolute;
+    top: 60px;
+    left: 15px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.lightbox-fav-btn:hover {
+    background: rgb(var(--primary-rgb));
+    border-color: var(--primary);
+    transform: scale(1.1);
+    box-shadow: 0px 0px 30px var(--dot-filled-4);
+}
+
+.lightbox-fav-btn.active svg {
+    fill: #ff4444;
+    stroke: #ff4444;
+}
+
+.gallery-item.is-favorite::before {
+    content: '♥';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: #ff4444;
+    font-size: 18px;
+    text-shadow: 0 0px 20px rgb(255 0 0);
+    z-index: 2;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 99999;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+    z-index: 20001;
+}
+
+.modal-box {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    padding: 25px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-box {
+    transform: translateY(0);
+}
+
+.modal-box h3 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    color: #fff;
+}
+
+.checkbox-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 20px 0;
+    background: #252525;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 35px;
+    cursor: pointer;
+    user-select: none;
+    color: #ddd;
+}
+
+.custom-checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    
+}
+
+.checkmark {
+    position: absolute;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #333;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.custom-checkbox:hover input ~ .checkmark {
+    background-color: #444;
+    box-shadow: 0px 0px 20px var(--dot-filled-2);
+}
+
+.custom-checkbox input:checked ~ .checkmark {
+    background-color: rgb(var(--primary-rgb));
+    box-shadow: 0px 0px 30px var(--dot-filled-4);
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.custom-checkbox input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.custom-checkbox .checkmark:after {
+    left: 7px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.modal-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: none;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.modal-btn.cancel {
+    background: transparent;
+    color: #aaa;
+    border: 1px solid #444;
+}
+
+.modal-btn.cancel:hover {
+    background: #333;
+    color: #fff;
+}
+
+.modal-btn.confirm {
+    background: rgba(var(--primary-rgb), 0.3);
+    color: white;
+}
+
+.modal-btn.confirm:hover {
+    background: rgba(var(--primary-rgb), 0.5);
+    color: white;
+    box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.4);
+    transform: scale(1.05);
+    transition: all 0.2s;
+}
+
+.custom-checkbox span[id^="lbl-chk"] {
+    margin-top: 2px;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    display: inline-block;
+}
+
+.checkbox-container {
+    gap: 15px !important; 
+    padding: 15px 20px !important;
+}
+
+#btn-import-data, #btn-export-data {    
+    transition: all 0.2s ease-in-out !important; 
+}
+
+#btn-import-data:hover {
+    transform: scale(1.05) !important;
+    background: rgba(var(--primary-rgb), 0.1) !important;
+    border-color: rgba(var(--primary-rgb), 0.5) !important;
+    box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.4) !important;
+}
+
+#btn-export-data:hover {
+    transform: scale(1.05) !important;
+    background: rgba(var(--primary-rgb), 0.1) !important;
+    border-color: rgba(var(--primary-rgb), 0.5) !important;
+    box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.4) !important;
+}
+
+.slider:hover {
+    box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.6) !important;
 }
