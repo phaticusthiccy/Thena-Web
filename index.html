@@ -1,179 +1,822 @@
-<div align="center">
+<!DOCTYPE html>
+<html lang="tr">
+    <head>
+        <link rel="manifest" href="manifest.json">
+        <meta name="theme-color" content="#000000">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="apple-mobile-web-app-title" content="Thena">
+        <link rel="apple-touch-icon" href="icon-192.png">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Thena - AI Image Generator</title>
+        <link rel="icon" type="image/png" href="data:image/png;base64,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">
+        <link rel="stylesheet" href="css/style.css">
+        <script src="https://telegram.org/js/telegram-web-app.js?59"></script>
+    </head>
+    <body>
+        <div id="loading-screen">
+            <div class="glitch-text">THENA</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+        </div>
+        <div id="app">
+            <div class="top-nav">
+                <button class="nav-btn" id="btn-donate" title="Buy us a coffee">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                        <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                        <line x1="6" y1="1" x2="6" y2="4"></line>
+                        <line x1="10" y1="1" x2="10" y2="4"></line>
+                        <line x1="14" y1="1" x2="14" y2="4"></line>
+                    </svg>
+                </button>
+                <button class="nav-btn" id="btn-showcase" title="Community Showcase">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                    </svg>
+                </button>
+                <button class="nav-btn" id="btn-open-bot" title="Telegram Bot">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+                <button class="nav-btn" id="btn-open-owner" title="Developer">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </button>
+                <button class="nav-btn" id="btn-open-settings" title="Settings">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                </button>
+                <button class="nav-btn" id="btn-language" title="Switch Language">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 15H3.5A2.502 2.502 0 0 1 1 12.5v-9A2.502 2.502 0 0 1 3.5 1h9A2.502 2.502 0 0 1 15 3.5V8h-1V3.5A1.502 1.502 0 0 0 12.5 2h-9A1.502 1.502 0 0 0 2 3.5v9A1.502 1.502 0 0 0 3.5 14H8zm-.038-4.811a9.77 9.77 0 0 1-3.766 1.796l-.242-.97a8.816 8.816 0 0 0 3.282-1.532A9.264 9.264 0 0 1 4.888 5H4V4h3.279l-.544-.544.707-.707L8.692 4H12v1h-.914A9.836 9.836 0 0 1 9.78 8.152a3.853 3.853 0 0 0-1.82 2.037zm.032-1.383A8.167 8.167 0 0 0 10.058 5H5.922a8.18 8.18 0 0 0 2.072 3.806zM23 20.447v-8.894A2.525 2.525 0 0 0 20.484 9h-8.931A2.556 2.556 0 0 0 9 11.553v8.894A2.556 2.556 0 0 0 11.553 23h8.894A2.556 2.556 0 0 0 23 20.447zM20.484 10A1.517 1.517 0 0 1 22 11.516v8.968A1.517 1.517 0 0 1 20.484 22h-8.968A1.517 1.517 0 0 1 10 20.484v-8.968A1.517 1.517 0 0 1 11.516 10zm-2.086 8h-4.796l-1.159 2.23-.886-.46L16 11.215l4.443 8.555-.886.46zm-.52-1L16 13.385 14.122 17zM6 22.01a2.003 2.003 0 0 1-2-2v-2.303l1.646 1.646.707-.707L3.506 15.8.659 18.646l.707.707L3 17.72v2.292a3.003 3.003 0 0 0 3 3h2.058v-1zM22.646 4.647L21 6.293V4a3.003 3.003 0 0 0-3-3h-2v1h2a2.003 2.003 0 0 1 2 2v2.281l-1.634-1.635-.707.707 2.847 2.848 2.848-2.848z"/>
+                        <path fill="none" d="M0 0h24v24H0z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="background-text">THENA</div>
+            <div class="container">
+                <div class="input-group">
+                    <label id="label-api-key"> API Key <a href="https://t.me/ThenaAIBot?start=refAPI" target="_blank" class="api-link-btn"> Get Your Free API Key <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </a>
+                    </label>
+                    <div style="position: relative;">
+                        <input type="password" id="api-key" placeholder="Enter your Thena API key..." style="width: 100%; background: #0a0a0a; border: 1px solid #222; border-radius: 8px; padding: 14px 45px 14px 14px; color: #fff; font-size: 15px; outline: none;" />
+                        <button id="toggle-api-key" aria-label="Toggle API key visibility">
+                            <svg id="eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path id="eye-path" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle id="eye-circle" cx="12" cy="12" r="3"></circle>
+                                <line id="eye-slash" x1="3" y1="3" x2="21" y2="21" stroke-width="2" opacity="0"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Prompt</label>
+                    <div style="position: relative;">
+                        <textarea id="prompt" maxlength="5000" placeholder="Describe your image... (Min 10 chars, Max 5000 chars)" style="padding-right: 90px;"></textarea>
+                        <div id="char-count" class="char-counter">0 / 5000</div>
+                        <div id="autocomplete-list" class="autocomplete-dropdown"></div>
+                        <button id="prompt-history-btn" title="Prompt History">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </button>
 
-  <a href="https://phaticusthiccy.github.io/Thena-Web/">
-    <img src="https://github.com/user-attachments/assets/175c0d76-b146-460f-bb34-d0ae7e2b57cc" alt="Thena Logo" width="200" />
-  </a>
+                        <button id="img2prompt-btn" title="Image to Prompt">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                        </button>
 
-  # THENA - Next-Gen AI Image Generator
+                        <button id="moderation-btn" title="Moderation: High" data-level="high">
+                            <svg class="mod-icon icon-high" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                            <svg class="mod-icon icon-medium" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                            <svg class="mod-icon icon-low" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.1.2-2.2.5-3.3.3-1.1.8-2.2 1.5-3.1v-.1z"></path>
+                            </svg>
+                        </button>
 
-  **Futuristic Interface • Local Gallery • Advanced Prompt Engineering • Community Showcase**
+                        <button id="magic-wand-btn" title="Enhance Prompt" style="border-color: rgba(0, 255, 136, 0.3);">
+                            <svg fill="#26d96b" width="64px" height="64px" viewBox="0 0 64.00 64.00" xmlns="http://www.w3.org/2000/svg" stroke="#26d96b" stroke-width="0.00064"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.384"></g><g id="SVGRepo_iconCarrier"> <g data-name="Magic Wand" id="Magic_Wand"> <path d="M10.89,57a3.89,3.89,0,0,0,2.76-1.14l26.7-26.7.26.78a3,3,0,0,0,1.07,1.45,3,3,0,0,0,4.13-.66l3-4.13,5.28-.05A2.86,2.86,0,0,0,55.82,26a2.93,2.93,0,0,0,.6-4.1l-3.09-4.15,1.66-5h0a3,3,0,0,0,0-1.83,2.9,2.9,0,0,0-1.46-1.69A3,3,0,0,0,51.31,9l-5,1.66L42.13,7.58A3,3,0,0,0,40.4,7h0a2.92,2.92,0,0,0-2.93,2.91l0,5.28-4.14,3a3,3,0,0,0,.79,5.2l.78.26L8.14,50.35A3.9,3.9,0,0,0,10.89,57ZM32.13,32.5a1,1,0,0,0-.63-.63L30,31.36,32.3,29l2,.67.67,2L32.64,34Zm2-11.49a1,1,0,0,1,0-.73.9.9,0,0,1,.34-.47L39,16.52a1,1,0,0,0,.41-.81l.05-5.79a.9.9,0,0,1,.28-.65A.91.91,0,0,1,40.38,9a.84.84,0,0,1,.55.19l4.58,3.39a1,1,0,0,0,.91.15l5.52-1.82a.91.91,0,0,1,1.15.58,1,1,0,0,1,0,.58l-1.82,5.51a1,1,0,0,0,.15.91l3.39,4.58a.94.94,0,0,1,.18.69,1,1,0,0,1-.37.61.9.9,0,0,1-.54.18l-5.79.05a1,1,0,0,0-.81.41l-3.29,4.55a1,1,0,0,1-1.33.21.9.9,0,0,1-.35-.47L40.7,23.93a1,1,0,0,0-.63-.63L34.7,21.49A.93.93,0,0,1,34.15,21ZM39,25l.68,2-3.09,3.09L36,28.59a1,1,0,0,0-.63-.62l-1.54-.52L37,24.36ZM9.56,51.77,28.39,32.94l2,.67.67,2L12.23,54.45a1.89,1.89,0,1,1-2.67-2.68Z"></path> <path d="M26,16.79c-.45-.79-1.38-.74-2.79-.66a9.44,9.44,0,0,1-5.68-1.52c-1.18-.77-2-1.28-2.75-.83s-.74,1.39-.66,2.79a9.39,9.39,0,0,1-1.52,5.69c-.77,1.18-1.28,1.95-.82,2.74s1.37.74,2.79.66a9.45,9.45,0,0,1,5.68,1.53c.93.6,1.88,1.32,2.75.82s.74-1.39.65-2.79a9.43,9.43,0,0,1,1.53-5.68C25.92,18.36,26.43,17.58,26,16.79Zm-2.49,1.65a11.43,11.43,0,0,0-1.85,6.9c0,.11,0,.24,0,.39l-.33-.22a11.5,11.5,0,0,0-6.26-1.86c-.21,0-.43,0-.64,0l-.39,0,.21-.33a11.47,11.47,0,0,0,1.85-6.9c0-.11,0-.25,0-.39l.33.21a11.47,11.47,0,0,0,6.9,1.85l.39,0Z"></path> <path d="M55.06,36.42c-.6-.6-1.36-.35-2.41,0a6.84,6.84,0,0,1-4.29,0c-1.06-.35-1.82-.6-2.42,0s-.34,1.35,0,2.41a6.84,6.84,0,0,1,0,4.29c-.35,1.05-.6,1.81,0,2.41a1.18,1.18,0,0,0,.89.36,5.32,5.32,0,0,0,1.53-.37,7,7,0,0,1,4.29,0c1.05.35,1.81.6,2.41,0s.34-1.36,0-2.41a6.84,6.84,0,0,1,0-4.29C55.4,37.77,55.65,37,55.06,36.42Zm-2,7.15a8.83,8.83,0,0,0-5.19,0,9,9,0,0,0,0-5.19,9,9,0,0,0,5.19,0A8.83,8.83,0,0,0,53.1,43.57Z"></path> <path d="M36.6,44.21a6.93,6.93,0,0,1-3.7-2.14c-.74-.83-1.27-1.43-2.08-1.21s-1,1-1.2,2.09a6.93,6.93,0,0,1-2.14,3.7c-.83.74-1.43,1.27-1.21,2.08s1,1,2.09,1.21a6.82,6.82,0,0,1,3.7,2.13c.64.72,1.24,1.44,2.09,1.21s1-1,1.2-2.09a6.85,6.85,0,0,1,2.13-3.7c.83-.74,1.43-1.27,1.21-2.08S37.69,44.43,36.6,44.21ZM33.43,50.6A8.88,8.88,0,0,0,29,48a9,9,0,0,0,2.59-4.48A8.85,8.85,0,0,0,36,46.12,8.92,8.92,0,0,0,33.43,50.6Z"></path> </g> </g></svg>
+                        </button>
+                        
+                        <div id="prompt-history-dropdown" class="history-dropdown">
+                            <div class="history-header">
+                                <span id="prompt-history-title">Recent Prompts</span>
+                                <button id="clear-history-btn" class="clear-history-btn">Clear All</button>
+                            </div>
+                            
+                            <div id="history-list-container">
+                                <div style="padding:15px; text-align:center; color:#444; font-size:12px;">No history yet.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group hidden" id="advanced-panel">
+                    <label class="section-title-glow">Advanced Settings</label>
+                    <div class="advanced-grid">
+                        <div class="adv-input-wrapper">
+                            <span class="adv-label">Seed (-1 for random)</span>
+                            <input type="number" id="adv-seed" value="-1" placeholder="-1" max="900000000" min="-1" class="adv-input">
+                        </div>
+                        <div class="adv-input-wrapper">
+                            <span class="adv-label" style="display:flex; align-items:center; gap:6px;">
+                                <span id="label-cfg-text">CFG Scale (1-20)</span>
+                                <div class="adv-info-icon" id="info-cfg" title="What is CFG Scale?">
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                    </svg>
+                                </div>
+                            </span>
+                            <input type="number" id="adv-cfg" value="7" min="1" max="20" step="0.1" class="adv-input">
+                        </div>
 
-  <p>
-    <a href="https://github.com/phaticusthiccy/Thena-Web/issues">
-      <img src="https://img.shields.io/github/issues/phaticusthiccy/Thena-Web?style=for-the-badge&logo=github" alt="Issues" />
-    </a>
-    <a href="https://github.com/phaticusthiccy/Thena-Web/stargazers">
-      <img src="https://img.shields.io/github/stars/phaticusthiccy/Thena-Web?style=for-the-badge&logo=github&color=ffe600" alt="Stars" />
-    </a>
-    <a href="https://github.com/phaticusthiccy/Thena-Web/blob/main/LICENSE">
-      <img src="https://img.shields.io/badge/LICENSE-MIT-red?style=for-the-badge" alt="License" />
-    </a>
-    <img src="https://img.shields.io/badge/Platform-Web%20%26%20PWA-blue?style=for-the-badge&logo=googlechrome" alt="Platform" />
-  </p>
+                        <div class="adv-input-wrapper">
+                            <span class="adv-label" style="display:flex; align-items:center; gap:6px;">
+                                <span id="label-steps-text">Steps (10-30)</span>
+                                <div class="adv-info-icon" id="info-steps" title="What are Steps?">
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                    </svg>
+                                </div>
+                            </span>
+                            <input type="number" id="adv-steps" value="20" min="10" max="30" class="adv-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div class="model-header-wrapper">
+                        <label for="model-selector" style="margin-bottom: 0; width: auto;">Model</label>
+                        <button id="btn-show-all-models" class="tiny-action-btn" title="Load All Models">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                            </svg>
+                            <span id="txt-show-all">All</span>
+                        </button>
+                        <div id="model-filters" class="model-filter-container">
+                            <button class="filter-chip active" data-filter="all">All</button>
+                            <button class="filter-chip" data-filter="Anime">Anime</button>
+                            <button class="filter-chip" data-filter="Photorealism">Real</button>
+                            <button class="filter-chip" data-filter="General">General</button>
+                            <button class="filter-chip" data-filter="Movie">Movie</button>
+                            <button class="filter-chip" data-filter="NSFW">NSFW</button>
+                        </div>
+                    </div>
+                    <div class="model-selector" id="model-selector">
+                        <div class="model-skeleton"></div>
+                        <div class="model-skeleton"></div>
+                        <div class="model-skeleton"></div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Aspect Ratio</label>
+                    <div class="aspect-ratio-selector">
+                        <button class="aspect-btn" data-ratio="1:1" data-size="1024x1024">
+                            <span class="info-icon-wrapper" title="Info">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                            </span> 1:1 </button>
+                        <button class="aspect-btn" data-ratio="3:4" data-size="768x1024">
+                            <span class="info-icon-wrapper" title="Info">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                            </span> 3:4 </button>
+                        <button class="aspect-btn" data-ratio="4:3" data-size="1024x768">
+                            <span class="info-icon-wrapper" title="Info">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                            </span> 4:3 </button>
+                        <button class="aspect-btn" data-ratio="9:16" data-size="576x1024">
+                            <span class="info-icon-wrapper" title="Info">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                            </span> 9:16 </button>
+                        <button class="aspect-btn" data-ratio="16:9" data-size="1024x576">
+                            <span class="info-icon-wrapper" title="Info">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                            </span> 16:9 </button>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Extra Features</label>
+                    <div class="extras-selector">
+                        
+                        <button class="extra-btn active" id="feat-fast" data-feat="fastMode">
+                            <span class="info-icon-wrapper" title="Info">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                            </span>
+                            <span>⚡</span> <span id="txt-fast">Fast Mode</span>
+                        </button>
 
-  <p>
-    <i>Turn your imagination into reality in seconds. No installation, no backend, entirely client-side.</i>
-  </p>
-  
-  <a href="https://phaticusthiccy.github.io/Thena-Web/">
-    <img src="https://img.shields.io/badge/Launch_Web_App-3b82f6?style=for-the-badge&logo=rocket&logoColor=white" alt="Launch Web App" />
-  </a>
-  
-  <br />
-</div>
+                        <button class="extra-btn" id="feat-creative" data-feat="creative">
+                            <span class="info-icon-wrapper" title="Info">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                            </span>
+                            <span>🎨</span> <span id="txt-creative">Creative</span>
+                        </button>
 
----
+                        <button class="extra-btn" id="feat-dense" data-feat="denseMode">
+                            <span class="info-icon-wrapper" title="Info">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                            </span>
+                            <span>💠</span> <span id="txt-dense">Dense</span>
+                        </button>
 
-## 🚀 About The Project
+                        <button class="extra-btn" id="feat-movie" data-feat="movieFilter" disabled>
+                            <span class="info-icon-wrapper" title="Info">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                            </span>
+                            <span>🎬</span> <span id="txt-movie">Movie Filter</span>
+                        </button>
 
-**Thena** is a browser-based, modern, and aesthetic AI image generation interface built entirely with **Vanilla JavaScript, HTML, and CSS**. It pushes the boundaries of browser technologies (IndexedDB, Web Audio API, Canvas API) without relying on heavy frameworks like React or Vue.
+                        <button class="extra-btn" id="feat-highres" data-feat="highRes">
+                            <span class="info-icon-wrapper" title="Info">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                            </span>
+                            <span>💎</span> <span id="txt-highres">HighRes</span>
+                        </button>
 
-It is not just an image generator; it is a full-featured suite including Image-to-Prompt capabilities, local gallery management, PWA support, and customizable themes.
+                        <button class="extra-btn" id="feat-enhance" data-feat="enhance">
+                            <span class="info-icon-wrapper" title="Info">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                            </span>
+                            <span>✨</span> <span id="txt-enhance">Prompt Magic</span>
+                        </button>
 
----
+                    </div>
+                </div>
+                <button class="generate-btn" id="generate-btn">Generate Image</button>
+            </div>
+            <button class="gallery-btn" id="gallery-btn">Gallery</button>
+        </div>
+        <div class="gallery-modal" id="gallery-modal">
+            <div class="gallery-content">
+                <div class="modal-handle"></div>
+                <div class="gallery-header">
+                    <h2 class="gallery-title">Gallery</h2>
+                    <button class="close-btn" id="close-gallery" style="margin-left: auto;">&times;</button>
+                </div>
+                <div class="gallery-controls">
+                    <div class="search-container">
+                        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" id="search-input" class="search-input" placeholder="Search prompts...">
+                    </div>
+                    <button class="control-btn" id="toggle-filter-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                        </svg> <span id="txt-filter">Filter</span> </button>
+                    <button class="control-btn" id="toggle-sort-btn">
+                        <svg id="sort-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <polyline points="19 12 12 19 5 12"></polyline>
+                        </svg>
+                        <span id="sort-text">Newest</span>
+                    </button>
+                    <button class="control-btn" id="delete-all-btn" style="color: #ff4444; border-color: rgba(255, 68, 68, 0.3);">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            <line x1="10" y1="11" x2="10" y2="17"></line>
+                            <line x1="14" y1="11" x2="14" y2="17"></line>
+                        </svg> <span id="txt-delete-all">Delete All</span> </button>
+                </div>
+                <div class="filter-panel" id="filter-panel">
+                    <div class="filter-group" style="flex-direction:row; align-items:center; justify-content:space-between;">
+                        <label class="filter-label" style="margin:0;">Show Favorites Only</label>
+                        <label class="switch">
+                            <input type="checkbox" id="filter-favorites">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Model</label>
+                        <select id="filter-model" class="filter-select">
+                            <option value="">All Models</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Ratio / Size</label>
+                        <select id="filter-ratio" class="filter-select">
+                            <option value="">All Sizes</option>
+                            <option value="1024x1024">1:1 (Square)</option>
+                            <option value="768x1024">3:4 (Portrait)</option>
+                            <option value="1024x768">4:3 (Landscape)</option>
+                            <option value="576x1024">9:16 (Mobile)</option>
+                            <option value="1024x576">16:9 (Cinematic)</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Start Date</label>
+                        <input type="date" id="filter-date-start" class="filter-date">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">End Date</label>
+                        <input type="date" id="filter-date-end" class="filter-date">
+                    </div>
+                    <div class="reset-filters-btn" id="reset-filters"> Reset All Filters </div>
+                </div>
+                <div id="gallery-loader">
+                    <div class="loader-text">Galeri Yükleniyor...</div>
+                    <div class="loader-track">
+                        <div id="gallery-progress-bar"></div>
+                    </div>
+                    <div id="loader-status">0%</div>
+                </div>
+                <div class="gallery-grid" id="gallery-grid">
+                    <div class="empty-gallery">No images yet. Start generating!</div>
+                </div>
+            </div>
+        </div>
+        <div id="lightbox">
+            <div class="lightbox-content">
+                <div class="lightbox-image-wrapper">
+                    <div class="lightbox-visual-area">
+                        <button class="lightbox-close-btn" id="lightbox-close" title="Close">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        </button>
 
-## ✨ Key Features
+                        <button class="lightbox-delete-btn" id="lightbox-delete" title="Delete Image">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                        </button>
 
-### 🎨 Generation & Models
-* **Multi-Model Support:** Access various models like Thena Movie, Max, V6, Photoreal, Anime Core, and Anime Fast.
-* **Flexible Aspect Ratios:** Support for Square (1:1), Portrait (3:4, 9:16), and Cinematic (16:9, 4:3) formats.
-* **Advanced Parameters:**
-    * **Fast Mode:** Optimized for speed.
-    * **Creative & Dense:** Boosts AI imagination and detail.
-    * **Movie Filter & HighRes:** Cinematic color grading and upscaling.
+                        <button class="lightbox-copy-btn" id="lightbox-copy-btn" title="Copy Settings">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </button>
 
-### 🛠️ Smart Tools
-* **🖼️ Image to Prompt:** Upload an image to analyze its content and generate a prompt automatically using CLIP technology.
-* **🪄 Magic Wand:** Enhances short, simple prompts into detailed, professional descriptions with a single click.
-* **📜 Prompt History:** Automatically saves your recently used prompts for quick reuse.
-* **🛡️ Moderation Tools:** Toggle between Low, Medium, and High safety moderation levels.
+                        <button class="lightbox-share-btn" id="lightbox-share-btn" title="Share Image">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="18" cy="5" r="3"></circle>
+                                <circle cx="6" cy="12" r="3"></circle>
+                                <circle cx="18" cy="19" r="3"></circle>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                            </svg>
+                        </button>
 
-### 💾 Gallery & Experience
-* **Local Gallery (IndexedDB):** Generated images are stored locally in your browser. Filter by date, model, or aspect ratio.
-* **Community Showcase:** Explore images shared by the community and copy their settings/prompts instantly.
-* **🔗 Instant Sharing:** Generate public links for your creations directly from the lightbox to share with friends.
-* **Audio Feedback:** Dynamic, synthesized sound effects for interactions. (Includes **Silent Mode**).
-* **Lightbox Mode:** View images in full screen, download, delete, or check generation metadata.
+                        <button class="lightbox-fav-btn" id="lightbox-fav-btn" title="Add to Favorites">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                        </button>
 
-### ⚙️ Personalization & Performance
-* **Theme Engine:** Switch between solid colors or stunning gradient themes to match your style.
-* **Performance Mode:** Disables heavy animations and blur effects for smoother performance on low-end devices.
-* **PWA Support:** Installable as a native-like app on mobile and desktop devices.
-* **Privacy:** Your API key and images remain on your local device.
+                        <img src="" alt="" class="lightbox-image" id="lightbox-img">
+                    </div>
+                    
+                    <a href="#" class="lightbox-download-btn" id="lightbox-download" download="thena-image.png">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        Download
+                    </a>
+                </div>
+                
+                <div class="lightbox-details">
+                    <div class="lightbox-prompt" id="lightbox-prompt"></div>
+                    <div class="lightbox-meta" id="lightbox-meta"></div>
+                </div>
+            </div>
+        </div>
+        <div id="confirm-modal" class="confirm-modal">
+            <div class="confirm-content">
+                <div class="confirm-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 6h18"></path>
+                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                </div>
+                <h3>Delete the image?</h3>
+                <p>Are you sure you want to permanently delete this image? This action is irreversible.</p>
+                <div class="confirm-actions">
+                    <button id="btn-cancel">Cancel</button>
+                    <button id="btn-confirm">Yes, Delete</button>
+                </div>
+            </div>
+        </div>
+        <div id="delete-all-modal" class="confirm-modal">
+            <div class="confirm-content">
+                <div class="confirm-icon" style="background: rgba(255, 0, 0, 0.1); color: #ff0000;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                </div>
+                <h3 style="color: #ff4444;">Delete All Gallery Images?</h3>
+                <p>All images in the gallery will be permanently deleted. This action is irreversible. Do you want to proceed?</p>
+                <div class="confirm-actions">
+                    <button id="btn-cancel-all" style="background: #1a1a1a; color: #fff; border: 1px solid #333;">Cancel</button>
+                    <button id="btn-confirm-all" style="background: #ff4444; color: #fff; border: none; box-shadow: 0 4px 15px rgba(255, 68, 68, 0.4);">Yes, Delete All</button>
+                </div>
+            </div>
+        </div>
+        <div id="hard-reset-modal" class="confirm-modal" style="z-index: 99999999 !important;">
+            <div class="confirm-content">
+                <div class="confirm-icon" style="background: rgba(255, 0, 0, 0.1); color: #ff0000;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                        <line x1="12" y1="2" x2="12" y2="12"></line>
+                    </svg>
+                </div>
+                <h3 style="color: #ff4444;">Reset Application</h3>
+                <p>This action will permanently delete ALL images in your gallery, your API key, and all settings. This action is irreversible.</p>
+                <div class="confirm-actions">
+                    <button id="btn-cancel-reset" style="background: #1a1a1a; color: #fff; border: 1px solid #333;">Cancel</button>
+                    <button id="btn-confirm-reset" style="background: #ff4444; color: #fff; border: none; box-shadow: 0 4px 15px rgba(255, 68, 68, 0.4);">Yes, Delete Everything</button>
+                </div>
+            </div>
+        </div>
+        <div id="redirect-modal">
+            <div class="redirect-content">
+                <div class="redirect-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                </div>
+                <h3 id="redirect-title" style="color:#fff; margin-bottom:10px;">Redirecting...</h3>
+                <p id="redirect-desc" style="color:#888; font-size:14px; margin-bottom:20px;">You are about to go to the Telegram bot.</p>
+                <div class="redirect-actions">
+                    <button class="redirect-btn btn-stay" id="btn-redirect-cancel">Cancel</button>
+                    <button class="redirect-btn btn-go" id="btn-redirect-confirm">Go</button>
+                </div>
+            </div>
+        </div>
+        <div id="share-modal">
+            <div class="share-content">
+                <button class="share-close-modal" id="btn-share-close">&times;</button>
+                <div class="share-icon-large">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                        <polyline points="16 6 12 2 8 6"></polyline>
+                        <line x1="12" y1="2" x2="12" y2="15"></line>
+                    </svg>
+                </div>
+                
+                <h3 id="share-title" style="color:#fff; margin-bottom:10px;">Public Share Link</h3>
+                
+                <p id="share-desc" style="color:#888; font-size:14px; line-height:1.5;">
+                    Your image is now publicly accessible via this link. Anyone with this URL can view the image.
+                </p>
+                
+                <div class="share-input-group">
+                    <input type="text" class="share-url-input" id="share-url-display" readonly value="Generating link...">
+                    <button class="share-copy-btn-inner" id="btn-share-copy">Copy</button>
+                </div>
 
----
+                <div class="share-view-wrapper" id="share-view-wrapper">
+                    <a href="#" target="_blank" class="share-view-btn" id="btn-share-view">
+                        <span id="txt-share-view">View Image</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
 
-## 📸 Screenshots
+        <div id="settings-modal" class="confirm-modal">
+            <div class="confirm-content settings-content" style="max-width: 400px;">
+                <div class="confirm-icon" style="background: rgba(255, 255, 255, 0.1); color: rgba(var(--primary-rgb), 1);">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                </div>
+                <h3>Settings</h3>
+                
+                <div class="setting-group" style="margin-bottom: 25px; text-align: left;">
+                    <label id="lbl-solid-colors" style="display:block; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">SOLID COLORS</label>
+                    <div class="theme-selector" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+                        <button class="theme-btn active" data-color="#00ff88" data-rgb="0, 255, 136" style="background:#00ff88;"></button>
+                        <button class="theme-btn" data-color="#00ccff" data-rgb="0, 204, 255" style="background:#00ccff;"></button>
+                        <button class="theme-btn" data-color="#ff0088" data-rgb="255, 0, 136" style="background:#ff0088;"></button>
+                        <button class="theme-btn" data-color="#ffaa00" data-rgb="255, 170, 0" style="background:#ffaa00;"></button>
+                        <button class="theme-btn" data-color="#bd00ff" data-rgb="189, 0, 255" style="background:#bd00ff;"></button>
+                    </div>
+                </div>
 
-<div align="center">
-  <table>
-    <tr>
-      <td align="center"><b>Main Interface</b></td>
-      <td align="center"><b>Local Gallery & Filters</b></td>
-    </tr>
-    <tr>
-      <td><img src="https://github.com/user-attachments/assets/e8a53ee4-367a-4ba0-828b-659bae1bc372" alt="UI" /></td>
-      <td><img src="https://github.com/user-attachments/assets/c57d0300-acd0-4bf7-8e53-2daefae9ee99" alt="Gallery" /></td>
-    </tr>
-  </table>
-  <table>
-     <tr>
-      <td align="center"><b>Image to Prompt Tool</b></td>
-      <td align="center"><b>Settings & Themes</b></td>
-    </tr>
-    <tr>
-      <td><img src="https://github.com/user-attachments/assets/ad806d93-1755-4952-b109-e3b58ba8ba4d" alt="Img2Prompt" /></td>
-      <td><img src="https://github.com/user-attachments/assets/641a89aa-21f3-4184-97bf-3d991a75e02a" alt="Settings"/></td>
-    </tr>
-  </table>
-  <table>
-     <tr>
-      <td align="center"><b>Prompt Enhancement</b></td>
-      <td align="center"><b>Community Showcase</b></td>
-    </tr>
-    <tr>
-      <td><img src="https://github.com/user-attachments/assets/801cf8c8-c9d9-4da6-93aa-a56d16c42d2e" alt="Prompt Enhancement" /></td>
-      <td><img src="https://github.com/user-attachments/assets/fcf913be-2c95-4d79-bc7e-0477f989dc46" alt="Community Showcase" /></td>
-    </tr>
-  </table>
-</div>
+                <div class="setting-group" style="margin-bottom: 25px; text-align: left;">
+                    <label id="lbl-gradient-themes" style="display:block; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">GRADIENT THEMES</label>
+                    <div class="theme-selector" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+                        <button class="theme-btn" data-color="#bd00ff" data-rgb="189, 0, 255" data-gradient="linear-gradient(135deg, #ff0088 0%, #bd00ff 100%)" style="background: linear-gradient(135deg, #ff0088 0%, #bd00ff 100%);"></button>
+                        <button class="theme-btn" data-color="#00ccff" data-rgb="0, 204, 255" data-gradient="linear-gradient(135deg, #00ff88 0%, #00ccff 100%)" style="background: linear-gradient(135deg, #00ff88 0%, #00ccff 100%);"></button>
+                        <button class="theme-btn" data-color="#ffaa00" data-rgb="255, 170, 0" data-gradient="linear-gradient(135deg, #ff4444 0%, #ffaa00 100%)" style="background: linear-gradient(135deg, #ff4444 0%, #ffaa00 100%);"></button>
+                        <button class="theme-btn" data-color="#00ff88" data-rgb="0, 255, 136" data-gradient="linear-gradient(135deg, #a8ff78 0%, #78ffd6 100%)" style="background: linear-gradient(135deg, #a8ff78 0%, #78ffd6 100%);"></button>
+                    </div>
+                </div>
 
----
+                <div class="setting-group" style="text-align: left;">
+                    <label style="display:flex; justify-content:space-between; align-items:center; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">
+                        <span id="lbl-perf-mode">PERFORMANCE MODE</span>
+                        <label class="switch">
+                            <input type="checkbox" id="perf-mode-toggle">
+                            <span class="slider round"></span>
+                        </label>
+                    </label>
+                    <p id="desc-perf-mode" style="font-size:12px; color:#666; margin-bottom:10px;">Reduces animations, blur effects and shadows for faster experience.</p>
+                </div>
+
+                <div class="setting-group" style="text-align: left;">
+                    <label style="display:flex; justify-content:space-between; align-items:center; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">
+                        <span id="lbl-silent-mode">SILENT MODE</span>
+                        <label class="switch">
+                            <input type="checkbox" id="mute-mode-toggle">
+                            <span class="slider round"></span>
+                        </label>
+                    </label>
+                    <p id="desc-silent-mode" style="font-size:12px; color:#666; margin-bottom:10px;">Disable all sound effects and interface tones.</p>
+                </div>
+
+                <div class="setting-group" style="text-align: left;">
+                    <label style="display:flex; justify-content:space-between; align-items:center; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">
+                        <span id="lbl-adv-mode">ADVANCED MODE</span>
+                        <label class="switch">
+                            <input type="checkbox" id="advanced-mode-toggle">
+                            <span class="slider round"></span>
+                        </label>
+                    </label>
+                    <p id="desc-adv-mode" style="font-size:12px; color:#666; margin-bottom:10px;">Enable manual control for Seed, CFG Scale, and Steps. Disables presets.</p>
+                </div>
+                
+                <div class="setting-group" style="margin-bottom: 25px; text-align: left;">
+                    <label style="display:flex; justify-content:space-between; align-items:center; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">
+                        <span id="lbl-auto-mode">PROMPT AUTOCOMPLETE</span>
+                        <label class="switch">
+                            <input type="checkbox" id="autocomplete-toggle" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </label>
+                    <p id="desc-auto-mode" style="font-size:12px; color:#666; margin-bottom:10px;">Enable intelligent tag suggestions while typing prompts.</p>
+                </div>
+
+                <div class="setting-group" style="margin-bottom: 25px; text-align: left;">
+                    <label id="lbl-data-mgmt" style="display:block; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">DATA MANAGEMENT</label>
+                    <div style="display:flex; gap:10px; margin-bottom:10px;">
+                        <button id="btn-export-data" style="flex:1; padding:10px; background:#333; color:#fff; border:1px solid #444; border-radius:8px; cursor:pointer;">
+                            </button>
+                        <button id="btn-import-data" style="flex:1; padding:10px; background:#333; color:#fff; border:1px solid #444; border-radius:8px; cursor:pointer;">
+                            </button>
+                        <input type="file" id="import-file-input" accept=".json" style="display:none;">
+                    </div>
+                    
+                    <p id="desc-data-mgmt" style="font-size:12px; color:#666; margin-bottom:10px;">Clear all local data including API key, settings, and image gallery.</p>
+                    <button id="btn-hard-reset" style="width:100%; padding:12px; background:rgba(255,68,68,0.1); color:#ff4444; border:1px solid rgba(255,68,68,0.3); border-radius:8px; cursor:pointer; font-size:13px; font-weight:600; transition:all 0.2s;">
+                        Reset Application Data
+                    </button>
+                </div>
+
+                <button id="btn-close-settings" style="transition: transform 0.2s ease-in-out, background 0.2s ease !important; width:100%; padding:12px; background:#222; color:#fff; border:1px solid #333; border-radius:8px; cursor:pointer; font-weight:600;">Close</button>
+            </div>
+        </div>
+
+        <div id="showcase-modal" class="gallery-modal showcase-mode">
+            <div class="gallery-content showcase-content-wrapper">
+                <div class="gallery-header">
+                    <h2 class="gallery-title">Community Showcase</h2>
+                    <button class="close-btn" id="close-showcase" style="margin-left: auto;">&times;</button>
+                </div>
+                
+                <div class="gallery-controls">
+                    <div class="search-container">
+                        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" id="showcase-search" class="search-input" placeholder="Search showcase prompts...">
+                    </div>
+                    
+                    <div class="search-container" style="flex: 0 0 200px;">
+                        <select id="showcase-filter-model" class="filter-select" style="height: 100%; border-radius: 12px;">
+                            <option value="">All Models</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="showcase-loader">
+                    <div class="loader-text">Loading Showcase...</div>
+                    <div class="loader-track">
+                        <div id="showcase-progress-bar" class="progress-bar" style="width: 100%;"></div>
+                    </div>
+                </div>
+
+                <div class="gallery-grid" id="showcase-grid">
+                    </div>
+            </div>
+        </div>
+
+        <div id="img2prompt-modal" class="confirm-modal">
+            <div class="confirm-content" style="max-width: 450px;">
+                <h3 style="color: #fff; margin-bottom: 15px;">Image to Prompt</h3>
+                <p style="color: #888; font-size: 13px; margin-bottom: 20px;">
+                    Upload an image or paste from clipboard (Ctrl+V) to generate a prompt.
+                </p>
+
+                <div id="img-upload-area" class="upload-area">
+                    <input type="file" id="img-file-input" accept="image/*" hidden>
+                    <div id="upload-placeholder">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 10px;">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <span>Click to Upload or Paste Image</span>
+                    </div>
+                    <img id="preview-img" class="hidden">
+                    <button id="clear-img-btn" class="hidden" title="Remove Image">&times;</button>
+                </div>
+
+                <div class="confirm-actions" style="margin-top: 20px;">
+                    <button id="btn-img2prompt-cancel">Cancel</button>
+                    <button id="btn-img2prompt-generate" class="generate-btn-small" disabled>
+                        <span>Generate Prompt</span>
+                        <svg class="sparkle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
 
 
-## 🛠️ Installation & Usage
+        <div id="history-clear-modal" class="confirm-modal">
+            <div class="confirm-content">
+                <div class="confirm-icon" style="background: rgba(255, 68, 68, 0.1); color: #ff4444;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                </div>
+                <h3 style="color: #ff4444;">Clear History?</h3>
+                <p>All saved prompts will be permanently deleted. This action cannot be undone.</p>
+                <div class="confirm-actions">
+                    <button id="btn-history-cancel" style="background: #1a1a1a; color: #fff; border: 1px solid #333;">Cancel</button>
+                    <button id="btn-history-confirm" style="background: #ff4444; color: #fff; border: none; box-shadow: 0 4px 15px rgba(255, 68, 68, 0.4);">Yes, Clear All</button>
+                </div>
+            </div>
+        </div>
 
-This project runs client-side. No backend server installation is required.
 
-### Method 1: Direct Open
-1.  Download or clone the repository:
-    ```bash
-    git clone https://github.com/phaticusthiccy/Thena-Web.git
-    ```
-2.  Simply double-click `index.html` to open it in your web browser.
+        <div id="wand-modal" class="confirm-modal">
+            <div class="confirm-content" style="max-width: 650px; width: 95%;">
+                <div class="confirm-icon" style="color: var(--primary); background: rgba(var(--primary-rgb), 0.1);">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                    </svg>
+                </div>
+                <h3 style="color: #fff; margin-bottom: 15px;">Prompt Enhancement Preview</h3>
+                
+                <div class="diff-container">
+                    <div class="diff-box original" style="box-shadow: 0 0 20px rgb(66 73 75 / 40%) inset;">
+                        <h6>Original Prompt</h6>
+                        <div class="diff-text" id="wand-orig-text"></div>
+                    </div>
+                    <div class="diff-arrow">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </div>
+                    <div class="diff-box enhanced">
+                        <h6>Enhanced Prompt</h6>
+                        <div class="diff-text" id="wand-new-text"></div>
+                    </div>
+                </div>
 
-### Method 2: Local Server (Recommended)
-To avoid CORS issues with some assets or features, running a local server is recommended.
-* **VS Code:** Use the "Live Server" extension and click "Go Live".
-* **Python:**
-    ```bash
-    python -m http.server 8000
-    ```
+                <div class="confirm-actions" style="margin-top: 25px;">
+                    <button id="btn-wand-cancel" style="background: #1a1a1a; color: #fff; border: 1px solid #333;">Keep Original</button>
+                    <button id="btn-wand-confirm" style="background: rgba(var(--primary-rgb), 0.1); color: rgb(var(--primary-rgb)); border: 1px solid rgba(var(--primary-rgb), 0.3);">
+                        Apply Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="feature-info-modal" class="feature-modal">
+            <div class="feature-info-card">
+                <button id="close-feat-modal" style="position:absolute; right:15px; top:15px; background:none; border:none; color:#666; cursor:pointer; font-size:20px;">&times;</button>
+                <div class="feat-title" id="feat-modal-title"></div>
+                <div class="feat-desc" id="feat-modal-desc"></div>
+                <div class="metric-row">
+                    <span id="lbl-intel">Intelligence</span>
+                    <div class="metric-dots" id="metric-intelligence"></div>
+                </div>
+                <div class="metric-row">
+                    <span id="lbl-qual">Quality</span>
+                    <div class="metric-dots" id="metric-quality"></div>
+                </div>
+                <div class="metric-row">
+                    <span id="lbl-speed">Speed</span>
+                    <div class="metric-dots" id="metric-speed"></div>
+                </div>
+            </div>
+        </div>
 
----
+        <div id="data-selection-modal" class="modal-overlay">
+            <div class="modal-box">
+                <h3 id="data-modal-title">Yedekleme Seçenekleri</h3>
+                <p id="data-modal-desc" style="margin-bottom: 15px; color: #aaa; font-size: 0.9rem;">İşlenecek verileri seçin:
+                </p>
+        
+                <div class="checkbox-container">
+                    <label class="custom-checkbox">
+                        <input type="checkbox" id="chk-settings" checked>
+                        <span class="checkmark"></span>
+                        <span id="lbl-chk-settings">Ayarlar</span>
+                    </label>
+        
+                    <label class="custom-checkbox">
+                        <input type="checkbox" id="chk-gallery" checked>
+                        <span class="checkmark"></span>
+                        <span id="lbl-chk-gallery">Galeri</span>
+                    </label>
+                </div>
+        
+                <div class="modal-actions">
+                    <button id="btn-data-cancel" class="modal-btn cancel">İptal</button>
+                    <button id="btn-data-confirm" class="modal-btn confirm">Onayla</button>
+                </div>
+            </div>
+        </div>
+        <script>
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('scripts/sw.js')
+                        .then((registration) => {
+                            //console.log('sw registered', registration.scope);
+                        })
+                        .catch((error) => {
+                            //console.log('sw registration failed', error);
+                        });
+                });
+            }
 
-## 🔑 Configuration (API Key)
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+            });
+        </script>
 
-To generate images, you need a free API Key.
-
-1.  Click the **"Get Your Free API Key"** link in the app interface (redirects to the Telegram Bot).
-2.  Paste the key provided by the bot into the `API Key` input field.
-3.  Your key is safely stored in your browser's `LocalStorage` and is not sent to any third-party analytics.
-
----
-
-## 🧩 Tech Stack
-
-| Technology | Usage |
-| --- | --- |
-| **HTML5** | Semantic structure and DOM layout |
-| **CSS3** | Animations, Flexbox/Grid, Gradients, Glitch Effects |
-| **JavaScript (ES6+)** | Core logic, API communication, DOM manipulation |
-| **IndexedDB** | Persistent local storage for the image gallery |
-| **Web Audio API** | Real-time audio synthesis (Oscillators) for UI sounds |
-| **Canvas API** | Image processing and resizing for the "Image to Prompt" feature |
-| **Service Workers** | PWA functionality for offline capabilities and installation |
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1.  Fork the Project.
-2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
-3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`).
-4.  Push to the Branch (`git push origin feature/AmazingFeature`).
-5.  Open a Pull Request.
-
----
-
-## 📝 License
-
-This project is licensed under the [MIT](LICENSE) License.
-
-<div align="center">
-<br />
-<p>Developed by <a href="https://t.me/phaticusthiccy">@phaticusthiccy</a></p>
-<p><i>Made with ❤️ and lots of ☕</i></p>
-</div>
+        <script src="scripts/script.js"></script>
+        <script src="scripts/promptexpansion.js"></script>
+        <script src="scripts/lang.js"></script>
+        <script src="scripts/loadAllModels.js"></script>
+        <script src="scripts/favorites-backups.js"></script>
+    </body>
+</html>
