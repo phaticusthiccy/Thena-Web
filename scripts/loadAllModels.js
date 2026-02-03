@@ -28,6 +28,9 @@ const modelSpecs = {
     },
     "911ks fdg6g8 66h8h8 900a5 zxb4a5 9000": {
         usedTechniques: ["NSFW"]
+    },
+    "524ks ffs6g8 091h8h 660a5 1dn55 1000": {
+        usedTechniques: ["General", "NSFW"]
     }
 };
 

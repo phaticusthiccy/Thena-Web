@@ -7,9 +7,10 @@ const modelTranslationsTR = {
     "6781x 66189 00m162 16g61 00y71 6000": "Thena Anime Fast, anime görsellerini hızlı ve düşük maliyetle oluşturmak için özel olarak eğitilmiş temel bir aydınlatma modelidir.",
     "4c3e77 uy8g8 16gga 54h8h 999a5 5060": "Thena MiniWa, animasyon stili ve anime görsellerini birleştiren, hızlı, çok yönlü ve stilize edilmiş bir modeldir.",
     "771ks 71g6g8 hlh8h8 6b4a5 77b4a5 5060": "Thena'nın son derece canlı ve parlak anime görselleri oluşturmak için kullandığı model. Basitleştirilmiş bir Anime Core modeli ve son işlem teknikleri kullanır.",
-    "911ks fdg6g8 66h8h8 900a5 zxb4a5 9000": "Müstehçen veya NSFW içerik oluşturmak için mutlak doğrulukta bir model. Thena Movie temel modeline dayanmaktadır. İnsanların ve sahnelerin gerçekçi görüntülerini oluşturabilir."
+    "911ks fdg6g8 66h8h8 900a5 zxb4a5 9000": "Müstehçen veya NSFW içerik oluşturmak için mutlak doğrulukta bir model. Thena Movie temel modeline dayanmaktadır. İnsanların ve sahnelerin gerçekçi görüntülerini oluşturabilir.",
+    "524ks ffs6g8 091h8h 660a5 1dn55 1000": "Yeni difüzyon mimarisi ile oluşturulan 7. versiyon. Her resim türünde başarılı sonuçlar çıkaran, güçlü ve aşırı hızlı model.",
 };
-const THENA_MAX_ID = "551ks 8g6g8 16gga 1h8h8 6b4a5 5060";
+const UNSUPPORTED_FAST_MODELS = ["551ks 8g6g8 16gga 1h8h8 6b4a5 5060"];
 const MOVIE_FILTER_SUPPORTED_MODELS = ["8gg12 61812 6628 19729 6b4a5 5060", "551ks 8g6g8 16gga 1h8h8 6b4a5 5060", "771ks 71g6g8 hlh8h8 6b4a5 77b4a5 5060"];
 const MODEL_STATS = {
     // Thena Movie
@@ -30,6 +31,8 @@ const MODEL_STATS = {
     "771ks 71g6g8 hlh8h8 6b4a5 77b4a5 5060": { intel: 4, qual: 4, speed: 4 },
     // Thena Bloomlight
     "911ks fdg6g8 66h8h8 900a5 zxb4a5 9000": { intel: 3, qual: 4, speed: 3 },
+    // Thena V7
+    "524ks ffs6g8 091h8h 660a5 1dn55 1000": { intel: 4, qual: 3, speed: 5 },
     // Default 
     "default": { intel: 3, qual: 3, speed: 3 }
 };
@@ -537,7 +540,7 @@ function checkMovieFilterAvailability(modelId) {
 function checkFastModeAvailability(modelId) {
     if (!btnFast) return;
 
-    if (modelId === THENA_MAX_ID) {
+    if (UNSUPPORTED_FAST_MODELS.includes(modelId)) {
         btnFast.disabled = true;
         btnFast.classList.remove('active');
     } else {
