@@ -3345,6 +3345,7 @@ btnImg2PromptGenerate.addEventListener('click', async () => {
         if (data.status === 200 && data.content) {
             if (typeof playSuccessSound === "function") playSuccessSound();
             closeImg2PromptModal();
+            document.getElementById("btn-show-all-models").click()
 
             const incomingPrompt = data.content.prompt || "";
             const promptInput = document.getElementById('prompt');
