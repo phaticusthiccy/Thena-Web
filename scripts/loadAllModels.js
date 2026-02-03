@@ -172,6 +172,11 @@ if (btnShowAllModels) {
             }
 
             document.querySelectorAll('.model-card').forEach(card => {
+                const modelId = card.dataset.modelId;
+                if (typeof selectedModel !== 'undefined' && selectedModel === modelId) {
+                    card.classList.add('active');
+                    createConfetti(card);
+                }
                 const previewImage = card.dataset.preview;
                 if (previewImage) card.style.filter = 'saturate(0.3)';
                 const infoBtn = card.querySelector('.model-info-icon-wrapper');
@@ -184,7 +189,6 @@ if (btnShowAllModels) {
                     const metricQual = document.getElementById('metric-quality');
                     const metricSpeed = document.getElementById('metric-speed');
                     
-                    const modelId = card.dataset.modelId;
                     const modelName = card.querySelector('.model-name').innerText;
                     
                     const currentModelData = fetchedModels.find(m => m.id === modelId);
@@ -210,9 +214,9 @@ if (btnShowAllModels) {
                     
                     featModal.classList.add('active');
                 });
-                var modelId = card.dataset.modelId;
                 card.addEventListener('click', () => {
-                    if (selectedModel === modelId) {
+                    const clickedId = card.dataset.modelId;
+                    if (selectedModel === clickedId) {
                         playModelSelectSound(false);
                         selectedModel = null;
                         localStorage.removeItem(LS_KEYS.MODEL);
@@ -222,14 +226,14 @@ if (btnShowAllModels) {
                         updateAdvancedSettingsConstraints(null);
                     } else {
                         playModelSelectSound(true);
-                        localStorage.setItem(LS_KEYS.MODEL, modelId);
+                        localStorage.setItem(LS_KEYS.MODEL, clickedId);
                         document.querySelectorAll('.model-card').forEach(c => c.classList.remove('active'));
                         card.classList.add('active');
-                        selectedModel = modelId;
+                        selectedModel = clickedId;
                         createConfetti(card);
-                        checkMovieFilterAvailability(modelId);
-                        checkFastModeAvailability(modelId);
-                        updateAdvancedSettingsConstraints(modelId);
+                        checkMovieFilterAvailability(clickedId);
+                        checkFastModeAvailability(clickedId);
+                        updateAdvancedSettingsConstraints(clickedId);
                     }
                     checkFormReady();
                 });
