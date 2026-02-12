@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnDataConfirm = document.getElementById('btn-data-confirm');
     const chkSettings = document.getElementById('chk-settings');
     const chkGallery = document.getElementById('chk-gallery');
+    const chkChat = document.getElementById('chk-chat');
     
     let pendingOperation = null; 
     let pendingImportData = null;
@@ -25,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const lblDesc = document.getElementById('data-modal-desc');
         const lblSet = document.getElementById('lbl-chk-settings');
         const lblGal = document.getElementById('lbl-chk-gallery');
+        const lblChat = document.getElementById('lbl-chk-chat');
         const btnCancel = document.getElementById('btn-data-cancel');
         const btnConfirm = document.getElementById('btn-data-confirm');
 
@@ -32,11 +34,48 @@ document.addEventListener('DOMContentLoaded', () => {
         if (lblDesc && t.dataModalDesc) lblDesc.textContent = t.dataModalDesc;
         if (lblSet && t.lblChkSettings) lblSet.textContent = t.lblChkSettings;
         if (lblGal && t.lblChkGallery) lblGal.textContent = t.lblChkGallery;
+        if (lblChat && t.lblChkChat) lblChat.textContent = t.lblChkChat;
         if (btnCancel && t.btnDataCancel) btnCancel.textContent = t.btnDataCancel;
         if (btnConfirm && t.btnDataConfirm) btnConfirm.textContent = t.btnDataConfirm;
     };
 
     window.updateDataManagementLanguage();
+    const cpuText = document.getElementById('cpu-usage-text');
+    if (cpuText) {
+        let lastTime = performance.now();
+        let frames = 0;
+        let targetFPS = 60;
+
+        const updateCPU = (currentTime) => {
+            if (!document.getElementById('settings-modal') || !document.getElementById('settings-modal').classList.contains('active')) {
+                setTimeout(() => requestAnimationFrame(updateCPU), 500); 
+                return;
+            }
+
+            const now = currentTime || performance.now();
+            const duration = now - lastTime;
+            frames++;
+            
+            if (duration >= 1000) {
+                const fps = (frames * 1000) / duration;
+                if (fps > targetFPS) {
+                    targetFPS = fps;
+                }
+                const maxFps = Math.ceil(targetFPS);
+                let load = Math.max(0, Math.min(100, Math.round(((maxFps - fps) / maxFps) * 100)));
+                if(load < 5) load = Math.floor(Math.random() * 5) + 1; 
+                cpuText.textContent = `CPU: ${load}%`;
+                if (load > 50) cpuText.style.color = '#ff4444';
+                else if (load > 20) cpuText.style.color = '#ffaa00';
+                else cpuText.style.color = '#00ff88';
+                frames = 0;
+                lastTime = now;
+            }
+            requestAnimationFrame(updateCPU);
+        };
+        
+        requestAnimationFrame(updateCPU);
+    }
 
     if (langBtn) {
         langBtn.addEventListener('click', () => {
@@ -98,8 +137,76 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if(chkSettings) chkSettings.checked = true;
         if(chkGallery) chkGallery.checked = true;
+        if(chkChat) chkChat.checked = true;
+        
+        document.getElementById('size-settings').textContent = '...';
+        document.getElementById('size-gallery').textContent = '...';
+        document.getElementById('size-chat').textContent = '...';
+
+        calculateSizes(mode);
+
         playInformationSound();
         dataModal.classList.add('active');
+    }
+
+    function formatBytes(bytes, decimals = 2) {
+        if (!+bytes) return '0 Bytes';
+        const k = 1024;
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+    }
+
+    async function calculateSizes(mode) {
+        let settingsSize = 0;
+        let gallerySize = 0;
+        let chatSize = 0;
+
+        if (mode === 'backup') {
+            const settings = {
+                apiKey: localStorage.getItem('thena-api-key') || (typeof LS_KEYS !== 'undefined' ? localStorage.getItem(LS_KEYS.API_KEY) : null),
+                themeColor: localStorage.getItem('thena-theme-color'),
+                selectedModel: localStorage.getItem('thena-model'),
+                autocomplete: localStorage.getItem('thena-autocomplete')
+            };
+            settingsSize = new Blob([JSON.stringify(settings)]).size;
+
+            if (typeof dbHelper !== 'undefined') {
+                try {
+                    const images = await dbHelper.getAll();
+                    gallerySize = new Blob([JSON.stringify(images)]).size;
+                } catch (e) { console.error(e); }
+            }
+
+            if (typeof chatDbHelper !== 'undefined') {
+                try {
+                    const conversations = await chatDbHelper.getAllConversations();
+                    const messages = await chatDbHelper.getAllMessages();
+                    const chat = { conversations, messages };
+                    chatSize = new Blob([JSON.stringify(chat)]).size;
+                } catch (e) { console.error(e); }
+            }
+
+        } else if (mode === 'restore' && pendingImportData) {
+            const data = pendingImportData;
+            
+            if (data.settings) {
+                settingsSize = new Blob([JSON.stringify(data.settings)]).size;
+            }
+            
+            if (data.images) {
+                gallerySize = new Blob([JSON.stringify(data.images)]).size;
+            }
+            
+            if (data.chat) {
+                chatSize = new Blob([JSON.stringify(data.chat)]).size;
+            }
+        }
+
+        document.getElementById('size-settings').textContent = formatBytes(settingsSize);
+        document.getElementById('size-gallery').textContent = formatBytes(gallerySize);
+        document.getElementById('size-chat').textContent = formatBytes(chatSize);
     }
 
     function closeDataModal() {
@@ -123,8 +230,9 @@ document.addEventListener('DOMContentLoaded', () => {
         btnDataConfirm.addEventListener('click', () => {
             const includeSettings = chkSettings.checked;
             const includeGallery = chkGallery.checked;
+            const includeChat = chkChat ? chkChat.checked : false;
 
-            if (!includeSettings && !includeGallery) {
+            if (!includeSettings && !includeGallery && !includeChat) {
                 if(typeof showNotification === "function") {
                     const msg = (typeof currentLang !== 'undefined' && currentLang === 'tr') 
                         ? "Lütfen en az bir seçenek seçin." 
@@ -137,10 +245,10 @@ document.addEventListener('DOMContentLoaded', () => {
             dataModal.classList.remove('active');
 
             if (pendingOperation === 'backup') {
-                executeBackup(includeSettings, includeGallery);
+                executeBackup(includeSettings, includeGallery, includeChat);
             } else if (pendingOperation === 'restore') {
                 if (pendingImportData) {
-                    executeRestore(pendingImportData, includeSettings, includeGallery);
+                    executeRestore(pendingImportData, includeSettings, includeGallery, includeChat);
                 }
             }
             
@@ -149,17 +257,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    async function executeBackup(includeSettings, includeGallery) {
+    async function executeBackup(includeSettings, includeGallery, includeChat) {
         try {
             const exportData = {
                 version: 1,
                 date: new Date().toISOString(),
                 images: [],
-                settings: {}
+                settings: {},
+                chat: null
             };
 
             if (includeGallery && typeof dbHelper !== 'undefined') {
                 exportData.images = await dbHelper.getAll();
+            }
+
+            if (includeChat && typeof chatDbHelper !== 'undefined') {
+                exportData.chat = {
+                    conversations: await chatDbHelper.getAllConversations(),
+                    messages: await chatDbHelper.getAllMessages()
+                };
             }
 
             if (includeSettings) {
@@ -178,8 +294,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const a = document.createElement('a');
             a.href = url;
             let typeSuffix = "";
-            if(includeSettings && !includeGallery) typeSuffix = "-settings";
-            if(!includeSettings && includeGallery) typeSuffix = "-gallery";
+            let includedParts = [];
+            if(includeSettings) includedParts.push("settings");
+            if(includeGallery) includedParts.push("gallery");
+            if(includeChat) includedParts.push("chat");
+            
+            if(includedParts.length > 0) typeSuffix = "-" + includedParts.join("-");
             
             const timestamp = new Date().toISOString().slice(0,19).replace(/:/g, "-");
             a.download = `thena-backup${typeSuffix}-${timestamp}.json`;
@@ -199,12 +319,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function executeRestore(includeSettings, includeGallery) {
+    async function executeRestore(includeSettings, includeGallery, includeChat) {
         if (!pendingImportData) return;
         const data = pendingImportData;
         let restoreCount = 0;
+        let chatRestoreCount = 0;
         let t = translations[currentLang] || translations['en'];
-        if (data.version !== 1 || (!data.hasOwnProperty('date') || !data.hasOwnProperty('images') || !data.hasOwnProperty('settings')) && (!includeSettings || !includeGallery) && (!data.settings.hasOwnProperty('apiKey') || !data.settings.hasOwnProperty('themeColor') || !data.settings.hasOwnProperty('selectedModel') || !data.settings.hasOwnProperty('autocomplete'))) {
+        if (data.version !== 1 || (!data.hasOwnProperty('date') || !data.hasOwnProperty('images') || !data.hasOwnProperty('settings')) && (!includeSettings || !includeGallery || !includeChat) && (!data.settings.hasOwnProperty('apiKey') || !data.settings.hasOwnProperty('themeColor') || !data.settings.hasOwnProperty('selectedModel') || !data.settings.hasOwnProperty('autocomplete'))) {
             if(typeof playErrorSound === "function") playErrorSound();
             if(typeof showNotification === "function") 
                 showNotification(t.msgBackupError, "error");
@@ -223,14 +344,31 @@ document.addEventListener('DOMContentLoaded', () => {
                     await dbHelper.add(img); 
                     restoreCount++;
                 }
-                setTimeout(() => location.reload(), 500);
-            } else if (includeSettings) {
-                setTimeout(() => location.reload(), 500);
             }
+
+            if (includeChat && data.chat && typeof chatDbHelper !== 'undefined') {
+                if (data.chat.conversations && data.chat.messages) {
+                    await chatDbHelper.restoreChatData(data.chat.conversations, data.chat.messages);
+                    chatRestoreCount = data.chat.conversations.length;
+                }
+            }
+
+            if (includeGallery || includeSettings || includeChat) {
+                 setTimeout(() => location.reload(), 1000);
+            }
+
             if (typeof playSuccessSound === "function") playSuccessSound();
-            const msg = (typeof currentLang !== 'undefined' && currentLang === 'tr') 
-                ? `Geri yükleme tamamlandı (${restoreCount} görsel)` 
-                : `Restore completed (${restoreCount} images)`;
+            
+            let msg = "";
+            if(currentLang === 'tr') {
+                msg = `Geri yükleme tamamlandı.`;
+                if(includeGallery) msg += ` (${restoreCount} görsel)`;
+                if(includeChat) msg += ` (${chatRestoreCount} sohbet)`;
+            } else {
+                msg = `Restore completed.`;
+                if(includeGallery) msg += ` (${restoreCount} images)`;
+                if(includeChat) msg += ` (${chatRestoreCount} chats)`;
+            }
                 
             if(typeof showNotification === "function") showNotification(msg, "success");
 

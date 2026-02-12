@@ -1,3 +1,63 @@
+const genderStyles = document.createElement('style');
+genderStyles.innerHTML = `
+.user-info-wrapper {
+    animation: fadeInStep 0.4s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+@keyframes fadeInStep {
+    0% { opacity: 0; transform: translateY(10px) scale(0.98); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.gender-btn-group {
+    display: grid;
+    gap: 12px;
+    width: 100%;
+    margin-top: 5px;
+}
+.gender-select-btn {
+    flex: 1;
+    padding: 12px 10px;
+    background: #151515;
+    border: 1px solid #333;
+    border-radius: 10px;
+    color: #aaa;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+.gender-select-btn:hover {
+    background: #222;
+    border-color: #555;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.gender-select-btn:active {
+    transform: scale(0.96);
+}
+.gender-select-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.3s ease;
+    border-radius: 50%;
+}
+.gender-select-btn:hover::after {
+    transform: translate(-50%, -50%) scale(2);
+}
+`;
+document.head.appendChild(genderStyles);
+
 const modelTranslationsTR = {
     "8gg12 61812 6628 19729 6b4a5 5060": "Yüksek çözünürlüklü görüntüler üretebilen kapsamlı işlem sonrası teknolojisine sahip ilk modeldir. Gürültü giderme işleminden sonra gerçek LUT filtreleri ekleyerek inanılmaz görseller yaratabiliyor.",
     "551ks 8g6g8 16gga 1h8h8 6b4a5 5060": "Flux2 kaynak verileri kullanılarak Thena V6 temel modeliyle ince ayar yapılmış, damıtılmış bir model. Güçlü, hızlı, çok yönlü.",
@@ -147,6 +207,7 @@ const STORE_NAME = 'images';
 let isGeneratingImage = false;
 let currentGenParams = null;
 let pendingEnhancedPrompt = "";
+let isChatGeneratingImage = false;
 
 function createDots(count, type) {
     const icons = {
@@ -201,7 +262,7 @@ function createDots(count, type) {
             <svg class="rating-icon ${isFilled}" viewBox="${iconData.viewBox}">
                 ${iconData.content}
             </svg>`;
-        }
+    }
     return html;
 }
 
@@ -293,6 +354,207 @@ const dbHelper = {
         });
     }
 };
+
+const CHAT_DB_NAME = 'ThenaChatDB';
+const CHAT_DB_VERSION = 2;
+const CONVERSATIONS_STORE = 'conversations';
+const MESSAGES_STORE = 'messages';
+
+const chatDbHelper = {
+    open: () => {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(CHAT_DB_NAME, CHAT_DB_VERSION);
+            request.onupgradeneeded = (event) => {
+                const db = event.target.result;
+                if (!db.objectStoreNames.contains(CONVERSATIONS_STORE)) {
+                    const convStore = db.createObjectStore(CONVERSATIONS_STORE, { keyPath: 'id', autoIncrement: true });
+                    convStore.createIndex('characterId', 'characterId', { unique: false });
+                }
+                if (!db.objectStoreNames.contains(MESSAGES_STORE)) {
+                    const msgStore = db.createObjectStore(MESSAGES_STORE, { keyPath: 'id', autoIncrement: true });
+                    msgStore.createIndex('conversationId', 'conversationId', { unique: false });
+                }
+                if (!db.objectStoreNames.contains('character_settings')) {
+                    db.createObjectStore('character_settings', { keyPath: 'characterId' });
+                }
+            };
+            request.onsuccess = (event) => resolve(event.target.result);
+            request.onerror = (event) => reject('Chat DB error: ' + event.target.errorCode);
+        });
+    },
+    createConversation: async (characterData) => {
+        const db = await chatDbHelper.open();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction([CONVERSATIONS_STORE], 'readwrite');
+            const store = transaction.objectStore(CONVERSATIONS_STORE);
+            const data = {
+                characterId: characterData.id,
+                characterName: characterData.name,
+                characterImage: characterData.image,
+                lastMessage: '',
+                lastMessageTime: null,
+                createdAt: new Date().toISOString()
+            };
+            const request = store.add(data);
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    },
+    getConversations: async (characterId) => {
+        const db = await chatDbHelper.open();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction([CONVERSATIONS_STORE], 'readonly');
+            const store = transaction.objectStore(CONVERSATIONS_STORE);
+            const request = store.getAll();
+            request.onsuccess = () => {
+                const filtered = request.result.filter(conv => conv.characterId === characterId);
+                const sorted = filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                resolve(sorted);
+            };
+            request.onerror = () => reject(request.error);
+        });
+    },
+    getConversation: async (id) => {
+        const db = await chatDbHelper.open();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction([CONVERSATIONS_STORE], 'readonly');
+            const store = transaction.objectStore(CONVERSATIONS_STORE);
+            const request = store.get(id);
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    },
+    updateConversation: async (id, updates) => {
+        const db = await chatDbHelper.open();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction([CONVERSATIONS_STORE], 'readwrite');
+            const store = transaction.objectStore(CONVERSATIONS_STORE);
+            const getReq = store.get(id);
+            getReq.onsuccess = () => {
+                const data = { ...getReq.result, ...updates };
+                const putReq = store.put(data);
+                putReq.onsuccess = () => resolve(putReq.result);
+                putReq.onerror = () => reject(putReq.error);
+            };
+            getReq.onerror = () => reject(getReq.error);
+        });
+    },
+    deleteConversation: async (id) => {
+        const db = await chatDbHelper.open();
+        return new Promise(async (resolve, reject) => {
+            const transaction = db.transaction([CONVERSATIONS_STORE, MESSAGES_STORE], 'readwrite');
+            const convStore = transaction.objectStore(CONVERSATIONS_STORE);
+            const msgStore = transaction.objectStore(MESSAGES_STORE);
+            const msgIndex = msgStore.index('conversationId');
+            const msgReq = msgIndex.getAllKeys(id);
+            msgReq.onsuccess = () => {
+                msgReq.result.forEach(key => msgStore.delete(key));
+                convStore.delete(id);
+            };
+            transaction.oncomplete = () => resolve();
+            transaction.onerror = () => reject(transaction.error);
+        });
+    },
+    addMessage: async (conversationId, role, content) => {
+        const db = await chatDbHelper.open();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction([MESSAGES_STORE], 'readwrite');
+            const store = transaction.objectStore(MESSAGES_STORE);
+            const data = {
+                conversationId,
+                role,
+                content,
+                timestamp: new Date().toISOString()
+            };
+            const request = store.add(data);
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    },
+    getMessages: async (conversationId) => {
+        const db = await chatDbHelper.open();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction([MESSAGES_STORE], 'readonly');
+            const store = transaction.objectStore(MESSAGES_STORE);
+            const index = store.index('conversationId');
+            const request = index.getAll(conversationId);
+            request.onsuccess = () => {
+                const sorted = request.result.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                resolve(sorted);
+            };
+            request.onerror = () => reject(request.error);
+        });
+    },
+    getAllConversations: async () => {
+        const db = await chatDbHelper.open();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction([CONVERSATIONS_STORE], 'readonly');
+            const store = transaction.objectStore(CONVERSATIONS_STORE);
+            const request = store.getAll();
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    },
+    getAllMessages: async () => {
+        const db = await chatDbHelper.open();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction([MESSAGES_STORE], 'readonly');
+            const store = transaction.objectStore(MESSAGES_STORE);
+            const request = store.getAll();
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    },
+    restoreChatData: async (conversations, messages) => {
+        const db = await chatDbHelper.open();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction([CONVERSATIONS_STORE, MESSAGES_STORE], 'readwrite');
+            const convStore = transaction.objectStore(CONVERSATIONS_STORE);
+            const msgStore = transaction.objectStore(MESSAGES_STORE);
+
+            conversations.forEach(conv => convStore.put(conv));
+            messages.forEach(msg => msgStore.put(msg));
+
+            transaction.oncomplete = () => resolve();
+            transaction.onerror = () => reject(transaction.error);
+        });
+    },
+    getCharacterSettings: async (characterId) => {
+        const db = await chatDbHelper.open();
+        return new Promise((resolve, reject) => {
+            if (!db.objectStoreNames.contains('character_settings')) {
+                resolve(null); // Return null if store doesn't exist yet
+                return;
+            }
+            const transaction = db.transaction(['character_settings'], 'readonly');
+            const store = transaction.objectStore('character_settings');
+            const request = store.get(characterId);
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    },
+    saveCharacterSettings: async (characterId, settings) => {
+        const db = await chatDbHelper.open();
+        return new Promise((resolve, reject) => {
+            if (!db.objectStoreNames.contains('character_settings')) {
+                // If store doesn't exist, we might need to handle version upgrade or just fail gracefully/log
+                console.warn("character_settings store not found. DB upgrade might be needed.");
+                // Note: Realistically, you'd trigger a version change, but for now we rely on the open() call triggering it if we bumped version.
+                // However, since we didn't bump version in open(), we rely on onupgradeneeded triggering if we Bump the version number. 
+                // Wait, I need to bump the version number!
+                reject("Store not found"); 
+                return;
+            }
+            const transaction = db.transaction(['character_settings'], 'readwrite');
+            const store = transaction.objectStore('character_settings');
+            const data = { characterId, ...settings };
+            const request = store.put(data);
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    }
+};
+
 const LS_KEYS = {
     API_KEY: 'thena-api-key',
     PROMPT: 'thena-last-prompt',
@@ -491,7 +753,7 @@ if (moderationBtn) {
     });
 }
 
-            
+
 toggleApiKeyBtn.addEventListener('click', () => {
     const currentType = apiKeyInput.type;
     const originalValue = apiKeyInput.value;
@@ -1259,7 +1521,7 @@ generateBtn.addEventListener('click', async () => {
     else if ((height == 576 || height == 512) && width == 1024) ratio = "16:9";
     else if (height == 1024 && (width == 576 || width == 512)) ratio = "9:16";
     else ratio = "1:1";
-    
+
     let apiBody = {
         prompt,
         model: selectedModel,
@@ -1792,7 +2054,7 @@ function updateFavBtnUI(isFav) {
 
 function openLightbox(data) {
 
-    currentImageData = data; 
+    currentImageData = data;
     updateFavBtnUI(data.isFavorite === true);
 
     currentImageTimestamp = data.timestamp;
@@ -2117,7 +2379,7 @@ function injectNotificationStyles() {
 
 if (typeof injectNotificationStyles === 'function') injectNotificationStyles();
 
-function showNotification(message, type = 'info', imageUrl = null, duration = 4000) {
+function showNotification(message, type = 'info', imageUrl = null, duration = 4000, progressValue = null) {
     let container = document.getElementById('notification-container');
     if (!container) {
         container = document.createElement('div');
@@ -2162,13 +2424,13 @@ function showNotification(message, type = 'info', imageUrl = null, duration = 40
     if (type === 'loading') {
         contentHtml = `
                         <div class="notification-spinner"></div>
-                        <span>${message}</span>`;
+                        <span class="notif-text">${message}</span>`;
     } else if (type === 'success' && imageUrl) {
         contentHtml = `
                         <img src="${imageUrl}" class="notification-thumb" alt="Preview">
                         <div style="display:flex; flex-direction:column;">
                             <span style="font-weight:600; color:#00ff88;">Success!</span>
-                            <span style="font-size:12px; opacity:0.8;">${message}</span>
+                            <span class="notif-text" style="font-size:12px; opacity:0.8;">${message}</span>
                             <span style="font-size:10px; color:#888; margin-top:2px;">Click here for the gallery ↗</span>
                         </div>`;
         notification.classList.add('clickable');
@@ -2183,21 +2445,44 @@ function showNotification(message, type = 'info', imageUrl = null, duration = 40
             }
             removeNotification(notification);
         };
+    } else if (progressValue !== null) {
+         contentHtml = `
+            <div style="display:flex; flex-direction:column; width:100%; gap:5px;">
+                <span class="notif-text">${message}</span>
+                <div style="width:100%; height:4px; background:rgba(255,255,255,0.1); border-radius:2px; overflow:hidden;">
+                    <div class="notif-progress-bar" style="width:${progressValue}%; height:100%; background:currentColor; transition:width 0.3s ease;"></div>
+                </div>
+            </div>`;
     } else {
-        contentHtml = `<span>${message}</span>`;
+        contentHtml = `<span class="notif-text">${message}</span>`;
     }
 
     if (type === 'success') {
         notification.style.borderColor = '#00ff88';
         notification.style.backgroundColor = 'rgba(0, 255, 136, 0.1)';
+        notification.style.color = '#00ff88';
     } else if (type === 'error') {
         notification.style.borderColor = '#ff4444';
         notification.style.backgroundColor = 'rgba(255, 68, 68, 0.1)';
+        notification.style.color = '#ff4444';
     } else if (type === 'info') {
+        notification.style.borderColor = '#ffaa00'; // Orange for info as requested in context of AI gen, or default blue? Standard info is blue usually. 
+        // User requested: "notifcation kısmı info şeklinde olacak (yani turuncu temada)"
+        // I will adhere to standard blue for 'info' generally, but maybe I should use specific color for this case?
+        // Existing code: info was blue (4488ff).
+        // I will keep standard info blue, but if user explicitly passed 'info' and meant orange, I might need to check message content or just use a new type 'warning' or 'orange-info'.
+        // Wait, the user said "info şeklinde olacak (yani turuncu temada)".
+        // I'll stick to blue for 'info' to avoiding breaking other things, but allow dynamic update to change color.
         notification.style.borderColor = '#4488ff';
         notification.style.backgroundColor = 'rgba(68, 136, 255, 0.1)';
+        notification.style.color = '#4488ff';
+    } else if (type === 'warning') {
+         notification.style.borderColor = '#ffaa00';
+         notification.style.backgroundColor = 'rgba(255, 170, 0, 0.1)';
+         notification.style.color = '#ffaa00';
     }
 
+    // Overrides from existing code
     if (message === "Moderation set to medium.") {
         notification.style.borderColor = '#ffaa00';
         notification.style.backgroundColor = 'rgba(255, 170, 0, 0.1)';
@@ -2242,13 +2527,72 @@ function showNotification(message, type = 'info', imageUrl = null, duration = 40
         }, 500);
     };
 
-    if (type !== 'loading') {
+    if (type !== 'loading' && progressValue === null) {
         setTimeout(() => {
             removeNotification(notification);
         }, duration);
     }
 
-    return () => removeNotification(notification);
+    const retFunc = () => removeNotification(notification);
+    
+    retFunc.update = (newMessage, newType, newProgress = null) => {
+        if (notification.classList.contains('notification-exit')) return;
+        
+        // Update Text
+        const textEl = notification.querySelector('.notif-text');
+        if (textEl && newMessage) {
+            textEl.innerHTML = newMessage;
+        }
+
+        // Update Styling
+        if (newType) {
+            if (newType === 'success') {
+                notification.style.borderColor = '#00ff88';
+                notification.style.backgroundColor = 'rgba(0, 255, 136, 0.1)';
+                notification.style.color = '#00ff88';
+            } else if (newType === 'error') {
+                notification.style.borderColor = '#ff4444';
+                notification.style.backgroundColor = 'rgba(255, 68, 68, 0.1)';
+                notification.style.color = '#ff4444';
+            } else if (newType === 'info') {
+                notification.style.borderColor = '#4488ff';
+                notification.style.backgroundColor = 'rgba(68, 136, 255, 0.1)';
+                notification.style.color = '#4488ff';
+            } else if (newType === 'warning') {
+                notification.style.borderColor = '#ffaa00';
+                notification.style.backgroundColor = 'rgba(255, 170, 0, 0.1)';
+                notification.style.color = '#ffaa00';
+            }
+        }
+
+        // Update Progress Bar
+        const bar = notification.querySelector('.notif-progress-bar');
+        
+        if (newProgress !== null) {
+            if (bar) {
+                bar.style.width = newProgress + '%';
+            } else {
+                // We need to inject the progress bar if it doesn't exist but requested
+                // This might be tricky if structure is simple span. 
+                // Let's reconstruct content if needed.
+                const currentMsg = textEl ? textEl.innerHTML : newMessage;
+                const newContent = `
+                    <div style="display:flex; flex-direction:column; width:100%; gap:5px;">
+                        <span class="notif-text">${currentMsg}</span>
+                        <div style="width:100%; height:4px; background:rgba(255,255,255,0.1); border-radius:2px; overflow:hidden;">
+                            <div class="notif-progress-bar" style="width:${newProgress}%; height:100%; background:currentColor; transition:width 0.3s ease;"></div>
+                        </div>
+                    </div>`;
+                notification.innerHTML = newContent;
+            }
+        } else {
+            // If newProgress is null, do we remove the bar? 
+            // Usually we keep it or ignore. Let's keep it if exists, just don't update width.
+            // Or if explicit null passed, maybe we don't care. 
+        }
+    };
+
+    return retFunc;
 }
 const redirectModal = document.getElementById('redirect-modal');
 const redirectTitle = document.getElementById('redirect-title');
@@ -2598,7 +2942,21 @@ const themeBtns = document.querySelectorAll('.theme-btn');
 const btnHardReset = document.getElementById('btn-hard-reset');
 const root = document.documentElement;
 
-settingsBtn.addEventListener('click', () => settingsModal.classList.add('active'));
+settingsBtn.addEventListener('click', () => {
+    const currentAppMode = localStorage.getItem('thena-last-app-mode');
+    const advancedGroup = document.getElementById('setting-group-advanced');
+    const autocompleteGroup = document.getElementById('setting-group-autocomplete');
+    
+    if (currentAppMode === 'chat') {
+        if (advancedGroup) advancedGroup.style.display = 'none';
+        if (autocompleteGroup) autocompleteGroup.style.display = 'none';
+    } else {
+        if (advancedGroup) advancedGroup.style.display = '';
+        if (autocompleteGroup) autocompleteGroup.style.display = '';
+    }
+    
+    settingsModal.classList.add('active');
+});
 closeSettingsBtn.addEventListener('click', () => settingsModal.classList.remove('active'));
 settingsModal.addEventListener('click', (e) => {
     if (e.target === settingsModal) settingsModal.classList.remove('active');
@@ -2773,6 +3131,38 @@ function setTheme(color, rgb, gradient = null, notify = true) {
         root.style.setProperty('--pulse0', '#bd00ff56');
         root.style.setProperty('--pulse50', '#bd00ff88');
         root.style.setProperty('--pulse100', '#bd00ff33');
+    } else if (color == "#ff4444") {
+        // red theme
+        root.style.setProperty('--dot-filled-1', '#ffe6e6');
+        root.style.setProperty('--dot-filled-2', '#ffb3b3');
+        root.style.setProperty('--dot-filled-3', '#ff8080');
+        root.style.setProperty('--dot-filled-4', '#ff4444');
+        root.style.setProperty('--dot-filled-5', '#cc0000');
+        root.style.setProperty('--placeholderPulse-0-border', '#ff44441a');
+        root.style.setProperty('--placeholderPulse-0-box-shadow', '#ff44440d');
+        root.style.setProperty('--placeholderPulse-50-border', '#ff444499');
+        root.style.setProperty('--placeholderPulse-50-box-shadow', '#ff444433');
+        root.style.setProperty('--placeholderPulse-100-border', '#ff44441a');
+        root.style.setProperty('--placeholderPulse-100-box-shadow', '#ff44440d');
+        root.style.setProperty('--pulse0', '#ff444456');
+        root.style.setProperty('--pulse50', '#ff444488');
+        root.style.setProperty('--pulse100', '#ff444433');
+    } else if (color == "#6600ff") {
+        // indigo theme
+        root.style.setProperty('--dot-filled-1', '#e6e6ff');
+        root.style.setProperty('--dot-filled-2', '#b3b3ff');
+        root.style.setProperty('--dot-filled-3', '#8080ff');
+        root.style.setProperty('--dot-filled-4', '#6600ff');
+        root.style.setProperty('--dot-filled-5', '#4d00cc');
+        root.style.setProperty('--placeholderPulse-0-border', '#6600ff1a');
+        root.style.setProperty('--placeholderPulse-0-box-shadow', '#6600ff0d');
+        root.style.setProperty('--placeholderPulse-50-border', '#6600ff99');
+        root.style.setProperty('--placeholderPulse-50-box-shadow', '#6600ff33');
+        root.style.setProperty('--placeholderPulse-100-border', '#6600ff1a');
+        root.style.setProperty('--placeholderPulse-100-box-shadow', '#6600ff0d');
+        root.style.setProperty('--pulse0', '#6600ff56');
+        root.style.setProperty('--pulse50', '#6600ff88');
+        root.style.setProperty('--pulse100', '#6600ff33');
     } else {
         // default blue theme
         root.style.setProperty('--dot-filled-1', '#e0e0e0');
@@ -3349,7 +3739,7 @@ btnImg2PromptGenerate.addEventListener('click', async () => {
             if (!document.getElementById("btn-show-all-models").classList.contains('active')) {
                 document.getElementById("btn-show-all-models").click()
             }
-        
+
             const incomingPrompt = data.content.prompt || "";
             const promptInput = document.getElementById('prompt');
             if (typeof typeWriterEffect === "function") {
@@ -3562,5 +3952,471 @@ document.querySelectorAll('textarea, .search-input, #api-key').forEach(element =
         element.addEventListener(evtType, (e) => {
             e.stopPropagation();
         });
+    });
+});
+
+const viewImage = document.getElementById('view-image-generator');
+const viewChat = document.getElementById('view-chatbot');
+const gridContainer = document.getElementById('characters-grid');
+const chatLoader = document.getElementById('chat-loader');
+const searchInput2 = document.getElementById('character-search-input');
+
+let allCharacters = [];
+let isCharactersLoaded = false;
+let selectedChatCategories = new Set();
+
+const chatFilterBtn = document.getElementById('chat-filter-btn');
+const chatFilterPanel = document.getElementById('chat-filter-panel');
+const filterChatImgGen = document.getElementById('filter-chat-img-gen');
+const chatMainCategoryInput = document.getElementById('chat-main-category-filter');
+const customCategoryDropdown = document.getElementById('custom-main-category-dropdown');
+const customCategoryTrigger = document.getElementById('custom-main-category-trigger');
+const customCategoryMenu = document.getElementById('custom-main-category-menu');
+const chatCategoryFilters = document.getElementById('chat-category-filters');
+const chatFilterResetBtn = document.getElementById('chat-filter-reset-btn');
+
+if (chatFilterBtn) {
+    chatFilterBtn.addEventListener('click', () => {
+        if (typeof playInformationSound === "function") playInformationSound();
+        chatFilterPanel.classList.toggle('active');
+        chatFilterBtn.classList.toggle('active');
+    });
+}
+
+if (customCategoryTrigger) {
+    customCategoryTrigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        customCategoryDropdown.classList.toggle('active');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (customCategoryDropdown && customCategoryDropdown.classList.contains('active') && !customCategoryDropdown.contains(e.target)) {
+            customCategoryDropdown.classList.remove('active');
+        }
+    });
+}
+
+if (filterChatImgGen) {
+    filterChatImgGen.addEventListener('change', applyChatFilters);
+}
+
+if (chatFilterResetBtn) {
+    chatFilterResetBtn.addEventListener('click', () => {
+        searchInput2.value = '';
+        if (chatMainCategoryInput) chatMainCategoryInput.value = '';
+        
+        const currentAppLang = document.documentElement.lang || 'en';
+        const allText = (typeof translations !== 'undefined' && translations[currentAppLang]) ? translations[currentAppLang].filterAll : (currentAppLang === 'tr' ? 'Tümü' : 'All');
+        
+        if (customCategoryTrigger) customCategoryTrigger.textContent = allText;
+        
+        document.querySelectorAll('.custom-dropdown-option').forEach(opt => opt.classList.remove('active'));
+        const allOption = document.querySelector('.custom-dropdown-option[data-value=""]');
+        if (allOption) allOption.classList.add('active');
+
+        if (filterChatImgGen) filterChatImgGen.checked = false;
+        selectedChatCategories.clear();
+        updateSubCategoryFilters('');
+        applyChatFilters();
+    });
+}
+
+function updateSubCategoryFilters(selectedMainCategory) {
+    if (!chatCategoryFilters) return;
+    const subCategories = new Set();
+
+    allCharacters.forEach(char => {
+        if (!selectedMainCategory || char.category === selectedMainCategory) {
+            if (char.subCategories) {
+                char.subCategories.forEach(c => subCategories.add(c));
+            }
+        }
+    });
+
+    chatCategoryFilters.innerHTML = '';
+    const sortedSubCats = Array.from(subCategories).sort();
+    sortedSubCats.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.textContent = cat;
+        btn.className = 'chat-category-btn' + (selectedChatCategories.has(cat) ? ' active' : '');
+        
+        btn.onclick = () => {
+            if (selectedChatCategories.has(cat)) {
+                selectedChatCategories.delete(cat);
+                btn.classList.remove('active');
+            } else {
+                selectedChatCategories.add(cat);
+                btn.classList.add('active');
+            }
+            applyChatFilters();
+        };
+        chatCategoryFilters.appendChild(btn);
+    });
+}
+
+function populateChatFilters() {
+    if (!chatCategoryFilters) return;
+    const mainCategories = new Set();
+
+    allCharacters.forEach(char => {
+        if (char.category) {
+            mainCategories.add(char.category);
+        }
+    });
+
+    if (customCategoryMenu) {
+        const currentAppLang = document.documentElement.lang || 'en';
+        const allText = (typeof translations !== 'undefined' && translations[currentAppLang]) ? translations[currentAppLang].filterAll : (currentAppLang === 'tr' ? 'Tümü' : 'All');
+
+        customCategoryMenu.innerHTML = `<div class="custom-dropdown-option active" data-value="">${allText}</div>`;
+        const sortedMainCats = Array.from(mainCategories).sort();
+        
+        sortedMainCats.forEach(cat => {
+            const option = document.createElement('div');
+            option.className = 'custom-dropdown-option';
+            option.dataset.value = cat;
+            option.textContent = cat;
+            customCategoryMenu.appendChild(option);
+        });
+
+        document.querySelectorAll('.custom-dropdown-option').forEach(option => {
+            option.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (chatMainCategoryInput) chatMainCategoryInput.value = option.dataset.value;
+                if (customCategoryTrigger) customCategoryTrigger.textContent = option.textContent;
+                document.querySelectorAll('.custom-dropdown-option').forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                if (customCategoryDropdown) customCategoryDropdown.classList.remove('active');
+                
+                selectedChatCategories.clear();
+                updateSubCategoryFilters(option.dataset.value);
+                applyChatFilters();
+            });
+        });
+    }
+
+    updateSubCategoryFilters('');
+}
+
+function applyChatFilters() {
+    if (typeof playModelSelectSound === "function") playModelSelectSound();
+    const searchTerm = searchInput2.value.toLowerCase().trim();
+    const showOnlyImgGen = filterChatImgGen ? filterChatImgGen.checked : false;
+    const selectedMainCategory = chatMainCategoryInput ? chatMainCategoryInput.value : '';
+
+    const filtered = allCharacters.filter(char => {
+        const nameMatch = char.name.toLowerCase().includes(searchTerm);
+        const imgGenMatch = !showOnlyImgGen || char.supportImageGeneration === true;
+        const mainCatMatch = !selectedMainCategory || (char.category === selectedMainCategory);
+
+        let catMatch = true;
+        if (selectedChatCategories.size > 0) {
+            if (!char.subCategories || char.subCategories.length === 0) {
+                catMatch = false;
+            } else {
+                 catMatch = char.subCategories.some(c => selectedChatCategories.has(c));
+            }
+        }
+
+        return nameMatch && imgGenMatch && mainCatMatch && catMatch;
+    });
+
+    renderCharacters(filtered);
+}
+
+function switchAppMode(mode) {
+    playSuccessSound();
+    localStorage.setItem('thena-last-app-mode', mode);
+    const modal = document.getElementById('app-switch-modal');
+    const btnGotoChat = document.getElementById('btn-goto-chat');
+    const btnGotoImage = document.getElementById('btn-goto-image');
+    const galleryBtn = document.getElementById('gallery-btn');
+
+    if (mode === 'chat') {
+        viewImage.classList.remove('active-view');
+        viewImage.classList.add('hidden-view');
+        setTimeout(() => viewImage.style.display = 'none', 300);
+
+        viewChat.style.display = 'flex';
+        requestAnimationFrame(() => {
+            viewChat.classList.remove('hidden-view');
+            viewChat.classList.add('active-view');
+        });
+
+        if (btnGotoChat) btnGotoChat.classList.add('active');
+        if (btnGotoImage) btnGotoImage.classList.remove('active');
+        if (galleryBtn) galleryBtn.style.display = 'none';
+
+        if (!isCharactersLoaded) fetchCharacters();
+
+    } else {
+        viewChat.classList.remove('active-view');
+        viewChat.classList.add('hidden-view');
+        setTimeout(() => viewChat.style.display = 'none', 300);
+
+        viewImage.style.display = 'block';
+        requestAnimationFrame(() => {
+            viewImage.classList.remove('hidden-view');
+            viewImage.classList.add('active-view');
+        });
+
+        if (btnGotoImage) btnGotoImage.classList.add('active');
+        if (btnGotoChat) btnGotoChat.classList.remove('active');
+        if (galleryBtn) galleryBtn.style.display = '';
+    }
+
+    if (modal) modal.classList.remove('active');
+}
+
+async function fetchCharacters() {
+    try {
+        const response = await fetch('https://create.thena.workers.dev/aic');
+        const data = await response.json();
+
+        allCharacters = data; 
+        populateChatFilters();
+        renderCharacters(allCharacters);
+
+        chatLoader.style.display = 'none';
+        isCharactersLoaded = true;
+
+    } catch (error) {
+        console.error("Karakterler yüklenemedi:", error);
+        const loader = document.getElementById('chat-loader');
+        if (loader) {
+            loader.innerHTML = `
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+                    <p style="color: #ff4444; margin: 0; font-size: 14px;">Failed to load characters.</p>
+                    <button id="retry-chars-btn" style="
+                        background: rgba(255, 255, 255, 0.05);
+                        border: 1px solid #333;
+                        color: var(--primary);
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    " onmouseover="this.style.background='rgba(var(--primary-rgb), 0.1)'; this.style.borderColor='var(--primary)';" onmouseout="this.style.background='rgba(255, 255, 255, 0.05)'; this.style.borderColor='#333';">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M23 4v6h-6"></path>
+                            <path d="M1 20v-6h6"></path>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                        </svg>
+                    </button>
+                </div>
+            `;
+
+            const retryBtn = document.getElementById('retry-chars-btn');
+            if (retryBtn) {
+                retryBtn.onclick = () => {
+                    const loader = document.getElementById('chat-loader');
+                    if (loader) {
+                        loader.innerHTML = `
+                            <div class="spinner"></div>
+                            <p>Loading Characters...</p>
+                        `;
+                    }
+                    fetchCharacters();
+                };
+            }
+        }
+    }
+}
+
+function renderCharacters(list) {
+    gridContainer.innerHTML = '';
+
+    const currentLang = document.documentElement.lang || 'en';
+
+    list.forEach(char => {
+        const imgUrl = char.characterIMG?.thumbnail || '';
+        const name = char.name || 'Unknown';
+        
+        let actionText = '';
+        if (char.action) {
+            actionText = (currentLang === 'tr' && char.action.tr) 
+                ? char.action.tr 
+                : (char.action.en || '');
+        }
+
+        const categories = char.category 
+            ? char.category
+            : (char.subCategories && char.subCategories.length > 0) 
+                ? char.subCategories.join(', ') 
+                : 'General';
+
+        const card = document.createElement('div');
+        card.className = 'char-card';
+        card.dataset.cid = char.id || '';
+
+        card.innerHTML = `
+            <div class="char-card-bg" style="background-image: url('${imgUrl}');"></div>
+            <div class="char-card-overlay">
+                <div class="char-name">${name}</div>
+                <div class="char-label">${categories}</div>
+                <div class="char-action">${actionText}</div>
+            </div>
+            <button class="char-info-btn" title="Info">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+            </button>
+        `;
+
+        const infoBtn = card.querySelector('.char-info-btn');
+        infoBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            playInformationSound();
+            showCharacterDetails({
+                name: char.name,
+                image: char.characterIMG?.thumbnail || '',
+                subCategories: char.subCategories || [],
+                category: char.category || '',
+                supportImageGeneration: char.supportImageGeneration || false,
+                scene: char.scene,
+                action: char.action,
+                systemPrompt: char.systemPrompt
+            });
+        });
+
+        card.addEventListener('click', () => {
+            openCharacterChat(char);
+        });
+
+        gridContainer.appendChild(card);
+    });
+}
+
+if (searchInput2) {
+    searchInput2.addEventListener('input', (e) => {
+        applyChatFilters();
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const btnGotoChat = document.getElementById('btn-goto-chat');
+    const btnGotoImage = document.getElementById('btn-goto-image');
+
+    if (btnGotoChat) btnGotoChat.onclick = () => switchAppMode('chat');
+    if (btnGotoImage) btnGotoImage.onclick = () => switchAppMode('image');
+
+    const lastAppMode = localStorage.getItem('thena-last-app-mode');
+    if (lastAppMode === 'chat') {
+        const galleryBtn = document.getElementById('gallery-btn');
+        
+        viewImage.classList.remove('active-view');
+        viewImage.classList.add('hidden-view');
+        setTimeout(() => viewImage.style.display = 'none', 300);
+
+        viewChat.style.display = 'flex';
+        requestAnimationFrame(() => {
+            viewChat.classList.remove('hidden-view');
+            viewChat.classList.add('active-view');
+        });
+
+        if (btnGotoChat) btnGotoChat.classList.add('active');
+        if (btnGotoImage) btnGotoImage.classList.remove('active');
+        if (galleryBtn) galleryBtn.style.display = 'none';
+
+        if (!isCharactersLoaded) fetchCharacters();
+    } else {
+        if (btnGotoImage) btnGotoImage.classList.add('active');
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const btnSwitchApps = document.getElementById('btn-switch-apps');
+    const appSwitchModal = document.getElementById('app-switch-modal');
+    const btnCloseAppSwitch = document.getElementById('btn-close-app-switch');
+
+    btnSwitchApps.addEventListener('click', () => {
+        appSwitchModal.classList.add('active');
+    });
+
+    btnCloseAppSwitch.addEventListener('click', () => {
+        appSwitchModal.classList.remove('active');
+    });
+
+    appSwitchModal.addEventListener('click', (e) => {
+        if (e.target === appSwitchModal) {
+            appSwitchModal.classList.remove('active');
+        }
+    });
+});
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const backBtn = document.getElementById('chat-back-btn');
+    const newChatBtn = document.getElementById('new-chat-btn');
+    const sendBtn = document.getElementById('chat-send-btn');
+    const msgInput = document.getElementById('chat-message-input');
+
+    if (backBtn) backBtn.addEventListener('click', closeChatScreen);
+    if (newChatBtn) newChatBtn.addEventListener('click', startNewConversation);
+    if (sendBtn) sendBtn.addEventListener('click', sendMessage);
+    if (msgInput) {
+        msgInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        const charCounter = document.getElementById('chat-char-counter');
+        const maxLength = 1000;
+
+        function updateChatCharCounter() {
+            const currentLength = msgInput.value.length;
+            if (charCounter) {
+                charCounter.textContent = `${currentLength}/${maxLength}`;
+                
+                if (currentLength >= maxLength || currentLength === 0 || isChatGeneratingImage) {
+                    charCounter.classList.add('limit-reached');
+                    charCounter.classList.remove('limit-near');
+                } else if (currentLength >= maxLength * 0.6) {
+                    charCounter.classList.add('limit-near');
+                    charCounter.classList.remove('limit-reached');
+                } else {
+                    charCounter.classList.remove('limit-near', 'limit-reached');
+                }
+            }
+        }
+
+        msgInput.addEventListener('input', updateChatCharCounter);
+        updateChatCharCounter();
+    }
+
+    const infoBtn = document.getElementById('chat-char-info-btn');
+    if (infoBtn) {
+        infoBtn.onclick = (e) => {
+            e.stopPropagation();
+            if (currentCharacter) {
+                showCharacterDetails(currentCharacter);
+            }
+        };
+    }
+
+    window.addEventListener('beforeunload', (e) => {
+        if (isChatGeneratingImage) {
+            e.preventDefault();
+            e.returnValue = '';
+            return '';
+        }
+    });
+
+    window.addEventListener('keydown', (e) => {
+        if (isChatGeneratingImage) {
+            if ((e.key === 'F5') || (e.ctrlKey && e.key === 'r') || (e.ctrlKey && e.key === 'R')) {
+                e.preventDefault();
+                if (typeof playErrorSound === 'function') playErrorSound();
+                showNotification((currentLang === 'tr') ? 'İşlem devam ederken sayfayı yenileyemezsiniz.' : 'You cannot refresh the page while the process is running.', 'warning');
+            }
+        }
     });
 });

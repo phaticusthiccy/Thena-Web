@@ -10,7 +10,10 @@ const ASSETS_TO_CACHE = [
     './scripts/promptexpansion.js',
     './scripts/lang.js',
     './scripts/loadAllModels.js',
-    './scripts/favorites-backups.js'
+    './scripts/favorites-backups.js',
+    './scripts/chatImageDownloader.js',
+    './scripts/chatMessages.js',
+    './scripts/aiChat.js'
 ];
 
 self.addEventListener('install', (event) => {

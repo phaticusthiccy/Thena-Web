@@ -35,7 +35,7 @@ const translations = {
         btnUpload: "Click to Upload or Paste Image",
         btnGenPrompt: "Generate Prompt",
         getApiKey: "Get Your Free API Key ",
-        lblSolid: "SOLID COLORS",
+        lblSolid: "THEME COLORS",
         lblGradient: "GRADIENT THEMES",
         lblPerf: "PERFORMANCE MODE",
         lblPerfDesc: "Reduces animations, blur effects and shadows for faster experience.",
@@ -116,16 +116,86 @@ const translations = {
         dataModalDesc: "Choose which data you want to backup or restore.",
         lblChkSettings: "Settings (API Key, Theme, etc.)",
         lblChkGallery: "Gallery",
+        lblChkChat: "Chat Data",
         btnDataCancel: "Cancel",
         btnDataConfirm: "Confirm",
         btnBackup: "Backup Data",
-        btnRestore: "Restore Data"
+        btnRestore: "Restore Data",
+        chatBackBtn: "Back",
+        chatNewBtn: "New",
+        chatSidebarTitle: "Chat History",
+        chatNoConv: "No chats yet. Start a new conversation.",
+        chatLoading: "Loading...",
+        chatLoadError: "Failed to load chats.",
+        chatNoSelected: "Select a chat or start a new one.",
+        chatNoMessages: "No messages yet. Type something!",
+        chatPlaceholder: "Type your message...",
+        chatPlaceholderReply: "This is a placeholder response. API integration coming soon.",
+        chatSelectFirst: "Select or start a conversation first.",
+        chatNewConv: "New chat",
+        chatDeleteBtn: "Delete",
+        userInfoName: "What is your name?",
+        userInfoAge: "How old are you?",
+        userInfoGender: "What is your gender?",
+        userInfoSubmit: "Start Chat",
+        userInfoNext: "Next",
+        userInfoAgeError: "Age must be between 16 and 70.",
+        userInfoNameError: "Name must be between 3 and 10 characters.",
+        userInfoCharName: "What should the character's name be?",
+        userInfoCharNameError: "Character name must be between 2 and 15 characters.",
+        genderMale: "Male",
+        genderFemale: "Female",
+        genderNonBinary: "Non-Binary",
+        genderGenderqueer: "Genderqueer",
+        genderGenderfluid: "Genderfluid",
+        genderAgender: "Agender",
+        genderOther: "Other",
+        tabScene: "Scene",
+        tabAction: "Action",
+        tabSystem: "System",
+        chatImageGenerated: "[User generated an image of the current scene]",
+        genderFemboy: "Femboy",
+        genderTransgender: "Transgender",
+        genderLesbian: "Lesbian",
+        genderGay: "Gay",
+        genderTomboy: "Tomboy",
+        genderBack: "Back",
+        userInfoModel: "Choose Model",
+        modelFast: "Fast",
+        modelThinking: "Thinking",
+        modelFastDesc: "Quick responses, great for casual chat.",
+        modelThinkingDesc: "Slower, detailed responses with reasoning.",
+        profileTitle: "User Profile",
+        profileName: "Name",
+        profileCharName: "AI Name",
+        profileAge: "Age",
+        profileGender: "Gender",
+        profileModel: "Model",
+        profileCost: "Total Cost",
+        dataBtn: "My Data",
+        chatDataTitle: "Chat Data",
+        chatDataTotalConvos: "Total Conversations",
+        chatDataTotalMessages: "Total Messages",
+        chatDataTotalCost: "Total Cost",
+        chatDataDownload: "Download Copy",
+        chatDataView: "View Logs",
+        chatDataClose: "Close",
+        filterImgGen: "Image Generation Support",
+        filterCategory: "Category",
+        filterSubCategories: "Sub Categories",
+        filterReset: "Reset Filters",
+        filterAll: "All",
+        chatSearchPlaceholder: "Search characters...",
+        unknownCharacter: "Unknown Character",
+        characterNM: " (Default)",
+        toggleThoughts: "Show Thoughts"
     },
     tr: {
         dataModalTitle: "Yedekleme Seçenekleri",
         dataModalDesc: "Yedeklemek veya geri yüklemek istediğiniz verileri seçin.",
         lblChkSettings: "Ayarlar (API Anahtarı, Tema vb.)",
         lblChkGallery: "Galeri",
+        lblChkChat: "Sohbet Verileri",
         btnDataCancel: "İptal",
         btnDataConfirm: "Onayla",
         btnBackup: "Verileri Yedekle",
@@ -221,7 +291,7 @@ const translations = {
         btnUpload: "Resim Yüklemek veya Yapıştırmak için Tıklayın",
         btnGenPrompt: "Prompt Oluştur",
         getApiKey: "Ücretsiz API Anahtarını Al",
-        lblSolid: "DÜZ RENKLER",
+        lblSolid: "TEMA RENKLERİ",
         lblGradient: "GRADYAN TEMALAR",
         lblPerf: "PERFORMANS MODU",
         lblPerfDesc: "Daha hızlı bir deneyim için animasyonları, bulanıklık efektlerini ve gölgeleri azaltır.",
@@ -242,6 +312,76 @@ const translations = {
         redirectDonateTitle: "Thena AI'ye Destek Ol",
         redirectDonateDesc: "Bağış sayfamıza yönlendiriliyorsunuz. Desteğiniz için teşekkürler!",
         btnGo: "Git",
+        chatBackBtn: "Geri",
+        chatNewBtn: "Yeni",
+        chatSidebarTitle: "Sohbet Geçmişi",
+        chatNoConv: "Henüz sohbet yok. Yeni bir konuşma başlatın.",
+        chatLoading: "Yükleniyor...",
+        chatLoadError: "Sohbetler yüklenemedi.",
+        chatNoSelected: "Bir sohbet seçin veya yeni bir tane başlatın.",
+        chatNoMessages: "Henüz mesaj yok. Bir şeyler yazın!",
+        chatPlaceholder: "Mesajınızı yazın...",
+        chatPlaceholderReply: "Bu bir taslak yanıttır. API entegrasyonu yakında eklenecek.",
+        chatSelectFirst: "Önce bir sohbet seçin veya başlatın.",
+        chatNewConv: "Yeni sohbet",
+        chatDeleteBtn: "Sil",
+        userInfoName: "Adınız nedir?",
+        userInfoAge: "Yaşınız kaç?",
+        userInfoGender: "Cinsiyetiniz nedir?",
+        userInfoSubmit: "Sohbeti Başlat",
+        userInfoNext: "İleri",
+        userInfoAgeError: "Yaş 16 ile 70 arasında olmalıdır.",
+        userInfoNameError: "İsim 3 ile 10 karakter arasında olmalıdır.",
+        userInfoCharName: "Karakterin adı ne olsun?",
+        userInfoCharNameError: "Karakter adı 2 ile 15 karakter arasında olmalıdır.",
+        genderMale: "Erkek",
+        genderFemale: "Kadın",
+        genderNonBinary: "Non-Binary",
+        genderGenderqueer: "Genderqueer",
+        genderGenderfluid: "Genderfluid",
+        genderAgender: "Agender",
+        genderOther: "Diğer",
+        tabScene: "Sahne",
+        tabAction: "Aksiyon",
+        tabSystem: "Sistem",
+        chatImageGenerated: "[Kullanıcı mevcut sahnenin bir görselini oluşturdu]",
+        genderFemboy: "Femboy",
+        genderTransgender: "Transgender",
+        genderLesbian: "Lezbiyen",
+        genderGay: "Gay",
+        genderTomboy: "Tomboy",
+        genderBack: "Geri",
+        userInfoModel: "Model Seçimi",
+        modelFast: "Hızlı",
+        modelThinking: "Düşünen",
+        modelFastDesc: "Hızlı yanıtlar, gündelik sohbet için ideal.",
+        modelThinkingDesc: "Daha yavaş, mantıklı ve detaylı yanıtlar.",
+        profileTitle: "Kullanıcı Profili",
+        profileName: "İsim",
+        profileCharName: "AI Adı",
+        profileAge: "Yaş",
+        profileGender: "Cinsiyet",
+        profileModel: "Model",
+        profileCost: "Harcanan Tutar",
+        dataBtn: "Veriler",
+        chatDataTitle: "Sohbet Verileri",
+        chatDataTotalConvos: "Toplam Sohbet",
+        chatDataTotalMessages: "Toplam Mesaj",
+        chatDataTotalCost: "Toplam Maliyet",
+        chatDataDownload: "Kopyayı İndir",
+        chatDataView: "Logları Gör",
+        chatDataDownload: "Kopyayı İndir",
+        chatDataView: "Logları Gör",
+        chatDataClose: "Kapat",
+        filterImgGen: "Görsel Oluşturma Desteği",
+        filterCategory: "Kategori",
+        filterSubCategories: "Alt Kategoriler",
+        filterReset: "Filtreleri Sıfırla",
+        filterAll: "Tümü",
+        chatSearchPlaceholder: "Karakter ara...",
+        unknownCharacter: "Bilinmeyen Karakter",
+        characterNM: " (Varsayılan)",
+        toggleThoughts: "Düşünce Balonlarını Göster"
     }
 };
 
@@ -272,7 +412,7 @@ function updateLanguage(lang) {
     const apiKeyInput = document.getElementById('api-key');
     const genBtn = document.getElementById('generate-btn');
     const galBtn = document.getElementById('gallery-btn');
-    
+
     document.querySelector(".search-input").placeholder = t.searchPlaceholder;
     document.querySelector("#showcase-search").placeholder = t.searchPlaceholder;
 
@@ -289,14 +429,14 @@ function updateLanguage(lang) {
     const labels = document.querySelectorAll('label');
     labels.forEach(lbl => {
         const txt = lbl.innerText.trim();
-        if(txt.startsWith("Prompt")) lbl.textContent = t.promptLabel;
-        else if(txt.includes("Model")) {
+        if (txt.startsWith("Prompt")) lbl.textContent = t.promptLabel;
+        else if (txt.includes("Model")) {
             const spanText = document.getElementById('lbl-model-text');
-            if(spanText) spanText.textContent = t.modelLabel;
+            if (spanText) spanText.textContent = t.modelLabel;
             const btnText = document.getElementById('txt-show-all');
             const btn = document.getElementById('btn-show-all-models');
-            
-            if(btnText && btn) {
+
+            if (btnText && btn) {
                 if (btn.classList.contains('active')) {
                     btnText.textContent = lang === 'tr' ? "Normal" : "Base";
                 } else {
@@ -304,9 +444,9 @@ function updateLanguage(lang) {
                 }
             }
         }
-        else if(txt === "Aspect Ratio") lbl.textContent = t.ratioLabel;
-        else if(txt === "Extra Features") lbl.textContent = t.extraLabel;
-        else if(txt.includes("Advanced Settings")) lbl.textContent = t.advLabel;
+        else if (txt === "Aspect Ratio") lbl.textContent = t.ratioLabel;
+        else if (txt === "Extra Features") lbl.textContent = t.extraLabel;
+        else if (txt.includes("Advanced Settings")) lbl.textContent = t.advLabel;
     });
 
     const setText = (id, text) => {
@@ -325,34 +465,34 @@ function updateLanguage(lang) {
 
     setText('lbl-solid-colors', t.lblSolid);
     setText('lbl-gradient-themes', t.lblGradient);
-    
+
     setText('lbl-perf-mode', t.lblPerf);
     setText('desc-perf-mode', t.lblPerfDesc);
-    
+
     setText('lbl-silent-mode', t.lblSilent);
     setText('desc-silent-mode', t.lblSilentDesc);
-    
+
     setText('lbl-adv-mode', t.lblAdv);
     setText('desc-adv-mode', t.lblAdvDesc);
-    
+
     setText('lbl-auto-mode', t.lblAuto);
     setText('desc-auto-mode', t.lblAutoDesc);
-    
+
     setText('lbl-data-mgmt', t.lblData);
     setText('desc-data-mgmt', t.lblDataDesc);
 
 
-    const setTxt = (sel, txt) => { const el = document.querySelector(sel); if(el) el.textContent = txt; };
-    
+    const setTxt = (sel, txt) => { const el = document.querySelector(sel); if (el) el.textContent = txt; };
+
     setTxt('#gallery-modal .gallery-title', t.galleryTitle);
     setTxt('#showcase-modal .gallery-title', t.showcaseTitle);
     setTxt('#settings-modal h3', t.settingsTitle);
-    
+
     setTxt('#confirm-modal h3', t.deleteTitle);
     setTxt('#confirm-modal p', t.deleteDesc);
     setTxt('#btn-cancel', t.btnCancel);
     setTxt('#btn-confirm', t.btnConfirm);
-    
+
     setTxt('#delete-all-modal h3', t.deleteAllTitle);
     setTxt('#delete-all-modal p', t.deleteAllDesc);
     setTxt('#btn-cancel-all', t.btnCancel);
@@ -362,12 +502,12 @@ function updateLanguage(lang) {
     setTxt('#hard-reset-modal p', t.resetDesc);
     setTxt('#btn-cancel-reset', t.btnCancel);
     setTxt('#btn-confirm-reset', t.btnConfirmReset);
-    
+
     setTxt('#img2prompt-modal h3', t.img2promptTitle);
     setTxt('#img2prompt-modal p', t.img2promptDesc);
     setTxt('#upload-placeholder span', t.btnUpload);
     setTxt('#btn-img2prompt-cancel', t.btnCancel);
-    
+
     setTxt('#prompt-history-title', t.recentPrompts);
     setTxt('#clear-history-btn', t.clearHistory);
 
@@ -378,27 +518,27 @@ function updateLanguage(lang) {
 
     setTxt('#wand-modal h3', t.wandTitle);
     const origTitle = document.querySelector('.diff-box.original h6');
-    if(origTitle) origTitle.textContent = t.wandOriginal;
+    if (origTitle) origTitle.textContent = t.wandOriginal;
     const enhTitle = document.querySelector('.diff-box.enhanced h6');
-    if(enhTitle) enhTitle.textContent = t.wandEnhanced;
+    if (enhTitle) enhTitle.textContent = t.wandEnhanced;
 
     setTxt('#btn-wand-cancel', t.btnKeepOriginal);
     setTxt('#btn-wand-confirm', t.btnApplyChanges);
 
     const resetDataBtn = document.getElementById('btn-hard-reset');
-    if(resetDataBtn) resetDataBtn.textContent = t.btnResetData;
-    
+    if (resetDataBtn) resetDataBtn.textContent = t.btnResetData;
+
     setTxt('#btn-close-settings', t.btnClose);
 
     setTxt('#share-title', t.shareTitle);
     setTxt('#share-desc', t.shareDesc);
     setTxt('#txt-share-view', t.btnShareView);
     const copyBtn = document.getElementById('btn-share-copy');
-    if(copyBtn && !copyBtn.disabled) copyBtn.textContent = t.btnShareCopy;
+    if (copyBtn && !copyBtn.disabled) copyBtn.textContent = t.btnShareCopy;
     const genPromptBtn = document.getElementById('btn-img2prompt-generate');
-    if(genPromptBtn && !genPromptBtn.classList.contains('loading')) {
+    if (genPromptBtn && !genPromptBtn.classList.contains('loading')) {
         const span = genPromptBtn.querySelector('span');
-        if(span) span.textContent = t.btnGenPrompt;
+        if (span) span.textContent = t.btnGenPrompt;
     }
 
     setTxt('#btn-close-settings', t.btnClose);
@@ -406,55 +546,165 @@ function updateLanguage(lang) {
     const settingsLabels = document.querySelectorAll('.settings-content label');
     settingsLabels.forEach(l => {
         const cleanTxt = l.innerText.split('\n')[0].trim();
-        
-        if(cleanTxt.includes("SOLID COLORS")) l.firstChild.textContent = t.lblSolid;
-        if(cleanTxt.includes("GRADIENT THEMES")) l.firstChild.textContent = t.lblGradient;
-        
-        if(cleanTxt.includes("PERFORMANCE MODE")) {
-             l.childNodes[0].textContent = t.lblPerf + "\n";
-             if(l.nextElementSibling && l.nextElementSibling.tagName === 'P') l.nextElementSibling.textContent = t.lblPerfDesc;
+
+        if (cleanTxt.includes("THEME COLORS")) l.firstChild.textContent = t.lblSolid;
+        if (cleanTxt.includes("GRADIENT THEMES")) l.firstChild.textContent = t.lblGradient;
+
+        if (cleanTxt.includes("PERFORMANCE MODE")) {
+            l.childNodes[0].textContent = t.lblPerf + "\n";
+            if (l.nextElementSibling && l.nextElementSibling.tagName === 'P') l.nextElementSibling.textContent = t.lblPerfDesc;
         }
-        if(cleanTxt.includes("SILENT MODE")) {
-             l.childNodes[0].textContent = t.lblSilent + "\n";
-             if(l.nextElementSibling && l.nextElementSibling.tagName === 'P') l.nextElementSibling.textContent = t.lblSilentDesc;
+        if (cleanTxt.includes("SILENT MODE")) {
+            l.childNodes[0].textContent = t.lblSilent + "\n";
+            if (l.nextElementSibling && l.nextElementSibling.tagName === 'P') l.nextElementSibling.textContent = t.lblSilentDesc;
         }
-        if(cleanTxt.includes("ADVANCED MODE")) {
-             l.childNodes[0].textContent = t.lblAdv + "\n";
-             if(l.nextElementSibling && l.nextElementSibling.tagName === 'P') l.nextElementSibling.textContent = t.lblAdvDesc;
+        if (cleanTxt.includes("ADVANCED MODE")) {
+            l.childNodes[0].textContent = t.lblAdv + "\n";
+            if (l.nextElementSibling && l.nextElementSibling.tagName === 'P') l.nextElementSibling.textContent = t.lblAdvDesc;
         }
-        if(cleanTxt.includes("PROMPT AUTOCOMPLETE")) {
-             l.childNodes[0].textContent = t.lblAuto + "\n";
-             if(l.nextElementSibling && l.nextElementSibling.tagName === 'P') l.nextElementSibling.textContent = t.lblAutoDesc;
+        if (cleanTxt.includes("PROMPT AUTOCOMPLETE")) {
+            l.childNodes[0].textContent = t.lblAuto + "\n";
+            if (l.nextElementSibling && l.nextElementSibling.tagName === 'P') l.nextElementSibling.textContent = t.lblAutoDesc;
         }
-        if(cleanTxt.includes("DATA MANAGEMENT")) {
-             l.textContent = t.lblData;
-             if(l.nextElementSibling && l.nextElementSibling.tagName === 'P') l.nextElementSibling.textContent = t.lblDataDesc;
+        if (cleanTxt.includes("DATA MANAGEMENT")) {
+            l.textContent = t.lblData;
+            if (l.nextElementSibling && l.nextElementSibling.tagName === 'P') l.nextElementSibling.textContent = t.lblDataDesc;
         }
     });
+
+    const chatBackBtn = document.getElementById('chat-back-btn');
+    if (chatBackBtn) chatBackBtn.title = t.chatBackBtn;
+
+    const newChatBtnSpan = document.querySelector('#new-chat-btn span');
+    if (newChatBtnSpan) newChatBtnSpan.textContent = t.chatNewBtn;
+
+    const sidebarTitle = document.querySelector('.sidebar-header-title');
+    if (sidebarTitle) sidebarTitle.textContent = t.chatSidebarTitle;
+
+    const characterSearchInput = document.getElementById('character-search-input');
+    if (characterSearchInput) characterSearchInput.placeholder = t.chatSearchPlaceholder;
+
+    const chatMsgInput = document.getElementById('chat-message-input');
+    if (chatMsgInput) chatMsgInput.placeholder = t.chatPlaceholder;
+
+    const noConvSelected = document.querySelector('.no-conv-selected');
+    if (noConvSelected) noConvSelected.textContent = t.chatNoSelected;
+
+    const convEmpty = document.querySelector('.conv-empty');
+    if (convEmpty) convEmpty.textContent = t.chatNoConv;
+
+    setText('txt-tab-scene', t.tabScene);
+    setText('txt-tab-action', t.tabAction);
+    setText('txt-tab-system', t.tabSystem);
+
+    const profileTitle = document.querySelector('#user-profile-modal h3');
+    if (profileTitle) profileTitle.textContent = t.profileTitle;
+    
+    const profileLabels = document.querySelectorAll('.profile-label');
+    if (profileLabels.length > 0) {
+        // 0: Name, 1: CharName, 2: Age, 3: Gender, 4: Model, 5: Cost
+        if (profileLabels[0]) profileLabels[0].textContent = t.profileName;
+        if (profileLabels[1]) profileLabels[1].textContent = t.profileCharName;
+        if (profileLabels[2]) profileLabels[2].textContent = t.profileAge;
+        if (profileLabels[3]) profileLabels[3].textContent = t.profileGender;
+        if (profileLabels[4]) profileLabels[4].textContent = t.profileModel;
+        if (profileLabels[5]) profileLabels[5].textContent = t.profileCost;
+    }
+
+    const chatDataBtn = document.getElementById('chat-data-btn');
+    if (chatDataBtn) chatDataBtn.textContent = t.dataBtn;
+
+    setText('filter-label-img-gen', t.filterImgGen);
+    setText('filter-label-category', t.filterCategory);
+    setText('filter-label-subcategories', t.filterSubCategories);
+    setText('chat-filter-reset-btn', t.filterReset);
+
+    const customDropdownAllOption = document.querySelector('.custom-dropdown-option[data-value=""]');
+    if (customDropdownAllOption) customDropdownAllOption.textContent = t.filterAll;
+
+    const customDropdownTrigger = document.getElementById('custom-main-category-trigger');
+    const customDropdownInput = document.getElementById('chat-main-category-filter');
+    if (customDropdownTrigger && customDropdownInput && customDropdownInput.value === "") {
+        customDropdownTrigger.textContent = t.filterAll;
+    }
+
+    setText('lbl-toggle-thoughts', t.toggleThoughts);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     const langBtn = document.getElementById('btn-language');
-    
+
     updateLanguage(currentLang);
     const sortText = document.getElementById('sort-text');
     sortText.textContent = sortNewestFirst ? currentLang == "tr" ? "En Yeni" : "Newest" : currentLang == "tr" ? "En Eski" : "Oldest";
-    if(langBtn) {
+    if (langBtn) {
         langBtn.addEventListener('click', () => {
             currentLang = currentLang === 'en' ? 'tr' : 'en';
             localStorage.setItem('thena-language', currentLang);
+            document.documentElement.lang = currentLang;
             updateLanguage(currentLang);
-            
+            updateAppSwitcherLang(currentLang);
+
             if (typeof window.updateDataManagementLanguage === 'function') {
                 window.updateDataManagementLanguage();
             }
 
-            if(typeof playInformationSound === "function") playInformationSound();
-            
-            if(typeof showNotification === "function") {
+            if (typeof renderCharacters === 'function' && typeof allCharacters !== 'undefined' && allCharacters.length > 0) {
+                renderCharacters(allCharacters);
+            }
+
+            if (typeof playInformationSound === "function") playInformationSound();
+
+            if (typeof showNotification === "function") {
                 const msg = currentLang === 'en' ? "Language changed to English" : "Dil Türkçe olarak değiştirildi";
                 showNotification(msg, "info");
             }
         });
     }
+});
+
+const appSwitcherTranslations = {
+    en: {
+        title: "Select Application",
+        genTitle: "AI Image Gen",
+        genStatus: "Active",
+        chatTitle: "AI Chat Bots",
+        chatStatus: "Start",
+        close: "Close"
+    },
+    tr: {
+        title: "Uygulama Seçin",
+        genTitle: "AI Görsel Üretim",
+        genStatus: "Aktif",
+        chatTitle: "AI Sohbet Botları",
+        chatStatus: "Başlat",
+        close: "Kapat"
+    }
+};
+
+function updateAppSwitcherLang(lang) {
+    if (!lang) {
+        lang = document.documentElement.lang || 'en';
+    }
+
+    if (!appSwitcherTranslations[lang]) lang = 'en';
+
+    const t = appSwitcherTranslations[lang];
+
+    const safelySetText = (id, text) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = text;
+    };
+
+    safelySetText('txt-app-switch-title', t.title);
+    safelySetText('txt-app-gen-title', t.genTitle);
+    safelySetText('txt-app-gen-status', t.genStatus);
+    safelySetText('txt-app-chat-title', t.chatTitle);
+    safelySetText('txt-app-chat-status', t.chatStatus);
+    safelySetText('txt-app-close', t.close);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.documentElement.lang = currentLang;
+    updateAppSwitcherLang(currentLang);
 });
