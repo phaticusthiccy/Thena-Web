@@ -702,9 +702,12 @@ btnWandConfirm.addEventListener('click', () => {
         isPromptEnhancedByWand = true;
         magicWandBtn.classList.add('disabled');
 
-        typeWriterEffect(pendingEnhancedPrompt, promptInput);
+        promptInput.value = pendingEnhancedPrompt;
+        autoResize(promptInput);
+        localStorage.setItem(LS_KEYS.PROMPT, pendingEnhancedPrompt);
+        checkFormReady();
 
-        showNotification(currentLang == "tr" ? "Prompt başarıyla güncellendi!" : "Prompt updated successfully!", "success");
+        showNotification(currentLang == "tr" ? "Prompt başarıyla güncellendi!" : "Prompt updated successfully!", "success");
     }
 });
 
