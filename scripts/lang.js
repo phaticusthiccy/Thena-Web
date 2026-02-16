@@ -188,7 +188,20 @@ const translations = {
         chatSearchPlaceholder: "Search characters...",
         unknownCharacter: "Unknown Character",
         characterNM: " (Default)",
-        toggleThoughts: "Show Thoughts"
+        toggleThoughts: "Show Thoughts",
+        chatStoryFinished: "This story has reached its conclusion. You can start a new conversation to begin a new adventure.",
+        chatStoryFinishedPlaceholder: "This story has ended.",
+        chatStoryContinued: "The story had actually ended here, but the user wanted to continue.",
+        chatStoryContinuePlaceholder: "Continuing the story...",
+        editorUploadLabel: "Upload Image",
+        editorPresetsLabel: "Presets",
+        editorInstructionsLabel: "Instructions",
+        editorUploadMsg: "Click to Upload or Drag Image",
+        editorPromptPlaceholder: "Describe how you want to change the image...",
+        editorGenerateBtn: "Generate Variation",
+        editorLoadingPresets: "Loading presets...",
+        editorNoPresets: "No presets found.",
+        editorFailedPresets: "Failed to load presets."
     },
     tr: {
         dataModalTitle: "Yedekleme Seçenekleri",
@@ -381,7 +394,20 @@ const translations = {
         chatSearchPlaceholder: "Karakter ara...",
         unknownCharacter: "Bilinmeyen Karakter",
         characterNM: " (Varsayılan)",
-        toggleThoughts: "Düşünce Balonlarını Göster"
+        toggleThoughts: "Düşünce Balonlarını Göster",
+        chatStoryFinished: "Bu hikaye sonuna ulaştı. Yeni bir maceraya başlamak için yeni bir sohbet başlatabilirsiniz.",
+        chatStoryFinishedPlaceholder: "Bu hikaye sona erdi.",
+        chatStoryContinued: "Hikaye aslında burada sona ermişti, ancak kullanıcı devam etmek istedi.",
+        chatStoryContinuePlaceholder: "Hikaye devam ediyor...",
+        editorUploadLabel: "Resim Yükle",
+        editorPresetsLabel: "Hazır Ayarlar",
+        editorInstructionsLabel: "Talimatlar",
+        editorUploadMsg: "Resim Yüklemek veya Sürüklemek için Tıklayın",
+        editorPromptPlaceholder: "Resmi nasıl değiştirmek istediğinizi tarif edin...",
+        editorGenerateBtn: "Varyasyon Oluştur",
+        editorLoadingPresets: "Hazır ayarlar yükleniyor...",
+        editorNoPresets: "Hazır ayar bulunamadı.",
+        editorFailedPresets: "Hazır ayarlar yüklenemedi."
     }
 };
 
@@ -429,6 +455,8 @@ function updateLanguage(lang) {
     const labels = document.querySelectorAll('label');
     labels.forEach(lbl => {
         const txt = lbl.innerText.trim();
+        if (lbl.id && lbl.id.startsWith('label-editor-')) return;
+        
         if (txt.startsWith("Prompt")) lbl.textContent = t.promptLabel;
         else if (txt.includes("Model")) {
             const spanText = document.getElementById('lbl-model-text');
@@ -629,6 +657,16 @@ function updateLanguage(lang) {
     }
 
     setText('lbl-toggle-thoughts', t.toggleThoughts);
+    
+    setText('label-editor-upload', t.editorUploadLabel);
+    setText('label-editor-presets', t.editorPresetsLabel);
+    setText('label-editor-instructions', t.editorInstructionsLabel);
+    setText('txt-editor-upload', t.editorUploadMsg);
+    setText('txt-editor-loading-presets', t.editorLoadingPresets);
+    setText('editor-generate-btn', t.editorGenerateBtn);
+    
+    const editorPrompt = document.getElementById('editor-prompt');
+    if(editorPrompt) editorPrompt.placeholder = t.editorPromptPlaceholder;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -670,6 +708,8 @@ const appSwitcherTranslations = {
         genStatus: "Active",
         chatTitle: "AI Chat Bots",
         chatStatus: "Start",
+        editorTitle: "Image Editor",
+        editorStatus: "Start",
         close: "Close"
     },
     tr: {
@@ -678,6 +718,8 @@ const appSwitcherTranslations = {
         genStatus: "Aktif",
         chatTitle: "AI Sohbet Botları",
         chatStatus: "Başlat",
+        editorTitle: "Resim Editörü",
+        editorStatus: "Başlat",
         close: "Kapat"
     }
 };
@@ -701,6 +743,8 @@ function updateAppSwitcherLang(lang) {
     safelySetText('txt-app-gen-status', t.genStatus);
     safelySetText('txt-app-chat-title', t.chatTitle);
     safelySetText('txt-app-chat-status', t.chatStatus);
+    safelySetText('txt-app-editor-title', t.editorTitle);
+    safelySetText('txt-app-editor-status', t.editorStatus);
     safelySetText('txt-app-close', t.close);
 }
 

@@ -2,233 +2,269 @@ let currentCharacter = null;
 let currentConversationId = null;
 
 async function openCharacterChat(characterData) {
-    currentConversationId = null;
-
-    currentCharacter = {
-        id: characterData.id,
-        name: characterData.name,
-        image: characterData.characterIMG?.thumbnail || '',
-        systemPrompt: characterData.systemPrompt,
-        firstMessage: characterData.firstMessage,
-        action: characterData.action,
-        scene: characterData.scene,
-        subCategories: characterData.subCategories || [],
-        category: characterData.category || '',
-        supportImageGeneration: characterData.supportImageGeneration || false,
-        thenaModel: characterData.thenaModel || '',
-        characterCLIP: characterData.characterCLIP || '',
-        tokenPrice: characterData.tokenPrice || { en: 0.0000002, tr: 0.0000083 }
-    };
-
     try {
-        const settings = await chatDbHelper.getCharacterSettings(currentCharacter.id);
-        const showThoughts = settings && settings.showThoughts !== undefined ? settings.showThoughts : true;
-        applyThoughtVisibility(showThoughts);
-    } catch (e) {
-        console.warn('Failed to load character settings', e);
-        applyThoughtVisibility(true);
-    }
+        currentConversationId = null;
+        disableChatInput();
 
-    const modal = document.getElementById('chat-screen-modal');
-    const charImg = document.getElementById('chat-char-img');
-    const charName = document.getElementById('chat-char-name');
-    const messagesContainer = document.getElementById('messages-container');
-
-    if (charImg) charImg.src = currentCharacter.image;
-    if (charName) charName.textContent = currentCharacter.name || 'Unknown';
-
-    const imgGenBtn = document.getElementById('chat-img-gen-btn');
-    if (imgGenBtn) {
-        if (currentCharacter.supportImageGeneration) {
-            imgGenBtn.disabled = false;
-            imgGenBtn.title = (currentLang === 'tr') ? 'Resim Oluştur' : 'Generate Image';
-        } else {
-            imgGenBtn.disabled = true;
-            imgGenBtn.title = (currentLang === 'tr') ? 'Bu karakter resim oluşturmayı desteklemiyor' : 'This character does not support image generation';
+        if (typeof chatDbHelper === 'undefined') {
+            console.error('chatDbHelper is not defined');
+            alert('Error: Database helper not loaded. Please refresh the page.');
+            return;
         }
 
-        imgGenBtn.onclick = async () => {
-            if (!currentConversationId || !currentCharacter) {
-                showNotification((currentLang === 'tr') ? 'Lütfen önce bir sohbet seçin.' : 'Please select a conversation first.', 'error');
-                return;
+        currentCharacter = {
+            id: characterData.id,
+            name: characterData.name,
+            image: characterData.characterIMG?.thumbnail || '',
+            systemPrompt: characterData.systemPrompt,
+            firstMessage: characterData.firstMessage,
+            action: characterData.action,
+            scene: characterData.scene,
+            subCategories: characterData.subCategories || [],
+            category: characterData.category || '',
+            supportImageGeneration: characterData.supportImageGeneration || false,
+            thenaModel: characterData.thenaModel || '',
+            characterCLIP: characterData.characterCLIP || '',
+            tokenPrice: characterData.tokenPrice || { en: 0.0000002, tr: 0.0000083 }
+        };
+
+        try {
+            const settings = await chatDbHelper.getCharacterSettings(currentCharacter.id);
+            const showThoughts = settings && settings.showThoughts !== undefined ? settings.showThoughts : true;
+            if (typeof applyThoughtVisibility === 'function') {
+                applyThoughtVisibility(showThoughts);
             }
-
-            const apiKey = apiKeyInput ? apiKeyInput.value.trim() : '';
-            if (!apiKey) {
-                showNotification((currentLang === 'tr') ? 'API anahtarı gerekli.' : 'API key is required.', 'error');
-                return;
+        } catch (e) {
+            console.warn('Failed to load character settings', e);
+             if (typeof applyThoughtVisibility === 'function') {
+                applyThoughtVisibility(true);
             }
+        }
 
-            const originalContent = imgGenBtn.innerHTML;
-            try {
-                const allMessages = await chatDbHelper.getMessages(currentConversationId);
-                
-                const assistantMessages = allMessages
-                    .filter(msg => msg.role === 'assistant')
-                    .slice(-3)
-                    .reverse()
-                    .map(msg => msg.content);
+        const modal = document.getElementById('chat-screen-modal');
+        const charImg = document.getElementById('chat-char-img');
+        const charName = document.getElementById('chat-char-name');
+        const messagesContainer = document.getElementById('messages-container');
 
-                if (assistantMessages.length < 3) {
-                    playErrorSound();
-                    showNotification((currentLang === 'tr') ? 'Resim oluşturmak için en az 3 karakter mesajı gerekli.' : 'At least 3 character messages are required to generate an image.', 'error');
-                    return;
-                }
+        if (charImg) charImg.src = currentCharacter.image;
+        if (charName) charName.textContent = currentCharacter.name || 'Unknown';
 
-                const hasGeneratedImage = assistantMessages.some(msg => {
-                    try {
-                        const parsed = JSON.parse(msg);
-                        if (parsed.type === 'generated_image') return true;
-                    } catch (e) {
-                    }
-                    return msg.startsWith('[Generated Image]');
-                });
-                if (hasGeneratedImage) {
-                    playInformationSound();
-                    showNotification((currentLang === 'tr') ? 'Son mesajlarda oluşturulmuş bir görsel var. Lütfen önce sohbete devam edin.' : 'There is a generated image in recent messages. Please continue the conversation first.', 'info');
-                    return;
-                }
-
-                imgGenBtn.disabled = true;
-                isChatGeneratingImage = true;
-                imgGenBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spinning"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>`;
-                const initialLoadingNotif = showNotification((currentLang === 'tr') ? 'Görsel Oluşturuluyor...' : 'Generating Image...', 'info', null, 7000);
-                disableChatInput((currentLang === 'tr') ? 'Görsel Oluşturuluyor...' : 'Generating Image...');
-
-                const messagesContainer = document.getElementById('messages-container');
-                const locale = currentLang === 'tr' ? 'tr-TR' : 'en-US';
-                const timeStr = new Date().toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
-
-                const loadingBubble = document.createElement('div');
-                loadingBubble.className = 'message-bubble assistant';
-                loadingBubble.id = 'img-gen-loading-bubble';
-                loadingBubble.innerHTML = `
-                    <div class="message-content">
-                        <div style="display: flex; flex-direction: column; align-items: center; padding: 30px 40px; background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.1) 0%, rgba(var(--primary-rgb), 0.05) 100%); border-radius: 12px; border: 1px solid rgba(var(--primary-rgb), 0.2); min-width: 200px;">
-                            <div class="img-gen-spinner" style="width: 48px; height: 48px; border: 3px solid rgba(var(--primary-rgb), 0.2); border-top-color: rgb(var(--primary-rgb)); border-radius: 50%; animation: spin 1s linear infinite;"></div>
-                            <p style="margin-top: 16px; font-size: 14px; color: rgb(var(--primary-rgb)); font-weight: 500;">${currentLang === 'tr' ? 'Görsel Oluşturuluyor...' : 'Generating Image...'}</p>
-                            <p style="margin-top: 6px; font-size: 11px; color: #666;">${currentLang === 'tr' ? 'Bu işlem birkaç saniye sürebilir' : 'This may take a few seconds'}</p>
-                        </div>
-                    </div>
-                    <div class="message-time">${timeStr}</div>
-                `;
-                messagesContainer.appendChild(loadingBubble);
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-                const response = await fetch('https://create.thena.workers.dev/genScenePhoto', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'apikey': apiKey
-                    },
-                    body: JSON.stringify({
-                        lastMessages: assistantMessages,
-                        model: currentCharacter.thenaModel || '',
-                        chIMG: currentCharacter.image || ''
-                    })
-                });
-
-                const data = await response.json();
-
-                if (data.status === 200 && data.image) {
-                    if (initialLoadingNotif) initialLoadingNotif(); // Close initial notification
-                    const generationId = data.image;
-                    
-                    let genNotif = showNotification((currentLang === 'tr') ? 'Oluşturuluyor... Sıraya alındı.' : 'Generating... Queued.', 'info', null, 120000, 0);
-
-                    await new Promise((resolve, reject) => {
-                        const checkStatus = async () => {
-                            try {
-                                const statusRes = await fetch(`https://create.thena.workers.dev/status?id=${generationId}`, {
-                                    headers: { 'apikey': apiKey }
-                                });
-                                const statusData = await statusRes.json();
-
-                                if (statusData.status === 202) {
-                                    if (statusData.progress) {
-                                         genNotif.update(
-                                            (currentLang === 'tr') ? `Oluşturuluyor... %${statusData.progress}` : `Generating... ${statusData.progress}%`,
-                                            'info',
-                                            statusData.progress
-                                        );
-                                    }
-                                    // Önceki istek tamamlandıktan sonra bekleme süresi ekleyerek yeni istek yapıyoruz
-                                    setTimeout(checkStatus, 2000);
-
-                                } else if (statusData.status === 200) {
-                                    genNotif(); 
-                                    
-                                     const existingBubble = document.getElementById('img-gen-loading-bubble');
-                                    if (existingBubble) {
-                                        existingBubble.removeAttribute('id');
-                                        const uniqueId = 'gen-img-' + Date.now();
-                                        existingBubble.innerHTML = `
-                                            <div class="message-content">
-                                                <div class="generated-image-wrapper">
-                                                    <img src="data:image/png;base64,${statusData.image}" alt="Generated Scene" style="max-width: 100%; border-radius: 8px; cursor: pointer; animation: fadeIn 0.5s ease;" onclick="window.open(this.src, '_blank')">
-                                                    <button class="img-download-btn" data-img-id="${uniqueId}" onclick="downloadGeneratedImage(this, 'thena_${Date.now()}.png')" title="${currentLang === 'tr' ? 'Resmi İndir' : 'Download Image'}">
-                                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                                            <polyline points="7 10 12 15 17 10"></polyline>
-                                                            <line x1="12" y1="15" x2="12" y2="3"></line>
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                                <p style="margin-top: 8px; font-size: 12px; color: #888;">${statusData.content || data.content || 'Imagine With Thena'}</p>
-                                            </div>
-                                            <div class="message-time">${timeStr}</div>
-                                        `;
-                                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                                    }
-
-                                    const imageMessageData = JSON.stringify({
-                                        type: 'generated_image',
-                                        image: statusData.image,
-                                        caption: statusData.content || data.content || 'Imagine With Thena'
-                                    });
-                                    await chatDbHelper.addMessage(currentConversationId, 'assistant', imageMessageData);
-
-                                    playSuccessSound();
-                                    showNotification((currentLang === 'tr') ? 'Resim başarıyla oluşturuldu!' : 'Image generated successfully!', 'success');
-                                    resolve();
-                                } else {
-                                     throw new Error(statusData.content || 'Generation failed');
-                                }
-                            } catch (err) {
-                                genNotif();
-                                reject(err);
-                            }
-                        };
-                        
-                        setTimeout(checkStatus, 2000);
-                    });
-                } else {
-                    const errorMessage = data.error || data.message || 'Image generation failed';
-                    throw new Error(errorMessage);
-                }
-
-            } catch (error) {
-                console.error('Image generation error:', error);
-                const loadingBubble = document.getElementById('img-gen-loading-bubble');
-                if (loadingBubble) {
-                    loadingBubble.remove();
-                }
-                playErrorSound();
-                showNotification(error.message || ((currentLang === 'tr') ? 'Resim oluşturulamadı. Lütfen tekrar deneyin.' : 'Failed to generate image. Please try again.'), 'error');
-            } finally {
+        const imgGenBtn = document.getElementById('chat-img-gen-btn');
+        if (imgGenBtn) {
+            if (currentCharacter.supportImageGeneration) {
                 imgGenBtn.disabled = false;
-                imgGenBtn.innerHTML = originalContent;
-                enableChatInput();
-                isChatGeneratingImage = false;
+                imgGenBtn.title = (typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Resim Oluştur' : 'Generate Image';
+            } else {
+                imgGenBtn.disabled = true;
+                imgGenBtn.title = (typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Bu karakter resim oluşturmayı desteklemiyor' : 'This character does not support image generation';
+            }
+
+            imgGenBtn.onclick = async () => {
+                 if (!currentConversationId || !currentCharacter) {
+                    showNotification((typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Lütfen önce bir sohbet seçin.' : 'Please select a conversation first.', 'error');
+                    return;
+                }
+
+                const apiKey = apiKeyInput ? apiKeyInput.value.trim() : '';
+                if (!apiKey) {
+                    showNotification((typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'API anahtarı gerekli.' : 'API key is required.', 'error');
+                    return;
+                }
+
+                const originalContent = imgGenBtn.innerHTML;
+                try {
+                    const allMessages = await chatDbHelper.getMessages(currentConversationId);
+                    
+                    const assistantMessages = allMessages
+                        .filter(msg => msg.role === 'assistant')
+                        .slice(-3)
+                        .reverse()
+                        .map(msg => msg.content);
+
+                    if (assistantMessages.length < 3) {
+                        playErrorSound();
+                        showNotification((typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Resim oluşturmak için en az 3 karakter mesajı gerekli.' : 'At least 3 character messages are required to generate an image.', 'error');
+                        return;
+                    }
+
+                    const hasGeneratedImage = assistantMessages.some(msg => {
+                        try {
+                            const parsed = JSON.parse(msg);
+                            if (parsed.type === 'generated_image') return true;
+                        } catch (e) {
+                        }
+                        return msg.startsWith('[Generated Image]');
+                    });
+                    if (hasGeneratedImage) {
+                        playInformationSound();
+                        showNotification((typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Son mesajlarda oluşturulmuş bir görsel var. Lütfen önce sohbete devam edin.' : 'There is a generated image in recent messages. Please continue the conversation first.', 'info');
+                        return;
+                    }
+
+                    imgGenBtn.disabled = true;
+                    isChatGeneratingImage = true;
+                    imgGenBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spinning"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>`;
+                    const initialLoadingNotif = showNotification((typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Görsel Oluşturuluyor...' : 'Generating Image...', 'info', null, 7000);
+                    disableChatInput((typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Görsel Oluşturuluyor...' : 'Generating Image...');
+
+                    const messagesContainer = document.getElementById('messages-container');
+                    const locale = (typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'tr-TR' : 'en-US';
+                    const timeStr = new Date().toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
+
+                    const loadingBubble = document.createElement('div');
+                    loadingBubble.className = 'message-bubble assistant';
+                    loadingBubble.id = 'img-gen-loading-bubble';
+                    loadingBubble.innerHTML = `
+                        <div class="message-content">
+                            <div style="display: flex; flex-direction: column; align-items: center; padding: 30px 40px; background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.1) 0%, rgba(var(--primary-rgb), 0.05) 100%); border-radius: 12px; border: 1px solid rgba(var(--primary-rgb), 0.2); min-width: 200px;">
+                                <div class="img-gen-spinner" style="width: 48px; height: 48px; border: 3px solid rgba(var(--primary-rgb), 0.2); border-top-color: rgb(var(--primary-rgb)); border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                                <p style="margin-top: 16px; font-size: 14px; color: rgb(var(--primary-rgb)); font-weight: 500;">${(typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Görsel Oluşturuluyor...' : 'Generating Image...'}</p>
+                                <p style="margin-top: 6px; font-size: 11px; color: #666;">${(typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Bu işlem birkaç saniye sürebilir' : 'This may take a few seconds'}</p>
+                            </div>
+                        </div>
+                        <div class="message-time">${timeStr}</div>
+                    `;
+                    messagesContainer.appendChild(loadingBubble);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                    const response = await fetch('https://create.thena.workers.dev/genScenePhoto', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'apikey': apiKey
+                        },
+                        body: JSON.stringify({
+                            lastMessages: assistantMessages,
+                            model: currentCharacter.thenaModel || '',
+                            chIMG: currentCharacter.image || ''
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.status === 200 && data.image) {
+                        if (initialLoadingNotif) initialLoadingNotif();
+                        await pollImageGeneration(data.image, apiKey, 'img-gen-loading-bubble');
+                    } else {
+                        const errorMessage = data.error || data.message || 'Image generation failed';
+                        throw new Error(errorMessage);
+                    }
+
+                } catch (error) {
+                    console.error('Image generation error:', error);
+                    const loadingBubble = document.getElementById('img-gen-loading-bubble');
+                    if (loadingBubble) {
+                        loadingBubble.remove();
+                    }
+                    playErrorSound();
+                    showNotification(error.message || ((typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Resim oluşturulamadı. Lütfen tekrar deneyin.' : 'Failed to generate image. Please try again.'), 'error');
+                } finally {
+                    imgGenBtn.disabled = false;
+                    imgGenBtn.innerHTML = originalContent;
+                    enableChatInput();
+                    isChatGeneratingImage = false;
+                }
+            };
+        }
+
+        let t = {}; 
+        if (typeof translations !== 'undefined' && typeof currentLang !== 'undefined') {
+             t = translations[currentLang] || translations['en'];
+        }
+
+        if (messagesContainer) {
+            renderCharacterDetailsInChat(messagesContainer, currentCharacter);
+        }
+        
+        await loadConversations(currentCharacter.id);
+
+        if (modal) {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden';
+        }
+
+    } catch (err) {
+        console.error("Critical error in openCharacterChat:", err);
+        alert("An error occurred while opening the chat. Check console for details: " + err.message);
+    }
+}
+
+async function pollImageGeneration(generationId, apiKey, loadingBubbleId) {
+    let genNotif = showNotification((currentLang === 'tr') ? 'Oluşturuluyor... Sıraya alındı.' : 'Generating... Queued.', 'info', null, 120000, 0);
+    const messagesContainer = document.getElementById('messages-container');
+    const locale = currentLang === 'tr' ? 'tr-TR' : 'en-US';
+    const timeStr = new Date().toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
+
+    return new Promise((resolve, reject) => {
+        const checkStatus = async () => {
+            try {
+                const statusRes = await fetch(`https://create.thena.workers.dev/status?id=${generationId}`, {
+                    headers: { 'apikey': apiKey }
+                });
+                const statusData = await statusRes.json();
+
+                if (statusData.status === 202) {
+                    if (statusData.progress) {
+                            genNotif.update(
+                            (currentLang === 'tr') ? `Oluşturuluyor... %${statusData.progress}` : `Generating... ${statusData.progress}%`,
+                            'info',
+                            statusData.progress
+                        );
+                    }
+                    setTimeout(checkStatus, 2000);
+
+                } else if (statusData.status === 200) {
+                    genNotif(); 
+                    
+                    const existingBubble = document.getElementById(loadingBubbleId);
+                    if (existingBubble) {
+                        existingBubble.removeAttribute('id');
+                        const uniqueId = 'gen-img-' + Date.now();
+                        
+                        existingBubble.innerHTML = `
+                            <div class="message-content">
+                                <div class="generated-image-wrapper">
+                                    <img src="data:image/png;base64,${statusData.image}" alt="Generated Scene" style="max-width: 100%; border-radius: 8px; cursor: pointer; animation: fadeIn 0.5s ease;" onclick="window.open(this.src, '_blank')">
+                                    <div class="gen-img-actions" style="position: absolute; bottom: 10px; right: 10px; display: flex; gap: 5px;">
+                                        <button class="img-action-btn img-download-btn" data-img-id="${uniqueId}" onclick="downloadGeneratedImage(this, 'thena_${Date.now()}.png')" title="${currentLang === 'tr' ? 'Resmi İndir' : 'Download Image'}">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                                <polyline points="7 10 12 15 17 10"></polyline>
+                                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <p style="margin-top: 8px; font-size: 12px; color: #888;">${statusData.content || 'Imagine With Thena'}</p>
+                            </div>
+                            <div class="message-time">${timeStr}</div>
+                        `;
+                        
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    }
+
+                    const imageMessageData = JSON.stringify({
+                        type: 'generated_image',
+                        image: statusData.image,
+                        caption: statusData.content || 'Imagine With Thena'
+                    });
+                    await chatDbHelper.addMessage(currentConversationId, 'assistant', imageMessageData);
+
+                    playSuccessSound();
+                    showNotification((currentLang === 'tr') ? 'Resim başarıyla oluşturuldu!' : 'Image generated successfully!', 'success');
+                    resolve();
+                } else {
+                        throw new Error(statusData.content || 'Generation failed');
+                }
+            } catch (err) {
+                genNotif();
+                reject(err);
             }
         };
-    }
-
-    const t = translations[currentLang] || translations['en'];
-    if (messagesContainer) {
-        renderCharacterDetailsInChat(messagesContainer, currentCharacter);
-    }
-
+        
+        setTimeout(checkStatus, 2000);
+    });
     await loadConversations(currentCharacter.id);
 
     if (modal) {
@@ -328,6 +364,13 @@ function disableChatInput(placeholderText) {
         btn.disabled = true;
         btn.style.opacity = '0.5';
         btn.style.cursor = 'not-allowed';
+        btn.removeAttribute('data-continue-mode');
+        btn.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+        `;
     }
 }
 
@@ -346,7 +389,134 @@ function enableChatInput() {
         btn.disabled = false;
         btn.style.opacity = '1';
         btn.style.cursor = 'pointer';
+        btn.removeAttribute('data-continue-mode');
+        btn.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+        `;
     }
+}
+
+function showStoryFinishedState() {
+    const t = translations[currentLang] || translations['en'];
+    const input = document.getElementById('chat-message-input');
+    const btn = document.getElementById('chat-send-btn');
+    
+    if (input) {
+        input.disabled = true;
+        input.placeholder = t.chatStoryFinishedPlaceholder;
+        input.style.opacity = '0.5';
+        input.style.cursor = 'not-allowed';
+    }
+    
+    const imgGenBtn = document.getElementById('chat-img-gen-btn');
+    if (imgGenBtn) {
+        imgGenBtn.disabled = true;
+        imgGenBtn.style.opacity = '0.5';
+        imgGenBtn.style.cursor = 'not-allowed';
+        const t = translations[currentLang] || translations['en'];
+        imgGenBtn.title = (currentLang === 'tr') ? 'Hikaye tamamlandı.' : 'Story finished.';
+    }
+    
+    if (btn) {
+        btn.disabled = false;
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
+        btn.setAttribute('data-continue-mode', 'true');
+        btn.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="1 4 1 10 7 10"></polyline>
+                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+            </svg>
+        `;
+    }
+    
+    const container = document.getElementById('messages-container');
+    if (container && !container.querySelector('.story-finished-banner')) {
+        if (typeof playStoryFinishSound === 'function') playStoryFinishSound();
+
+        const banner = document.createElement('div');
+        banner.className = 'story-finished-banner';
+        banner.innerHTML = `
+            <div class="story-finished-line"></div>
+            <div class="story-finished-content">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    <line x1="12" y1="6" x2="12" y2="12"></line>
+                    <line x1="9" y1="9" x2="15" y2="9"></line>
+                </svg>
+                <span>${t.chatStoryFinished}</span>
+            </div>
+            <div class="story-finished-line"></div>
+        `;
+        container.appendChild(banner);
+        container.scrollTop = container.scrollHeight;
+    }
+}
+
+async function continueStory() {
+    if (!currentConversationId) return;
+    
+    const t = translations[currentLang] || translations['en'];
+    
+    const messages = await chatDbHelper.getMessages(currentConversationId);
+    if (messages.length >= 2) {
+        const lastMsg = messages[messages.length - 1];
+        const secondLastMsg = messages[messages.length - 2];
+        
+        const container = document.getElementById('messages-container');
+        if (container) {
+            const bubbles = container.querySelectorAll('.message-bubble');
+            const finishedBanner = container.querySelector('.story-finished-banner');
+            
+            if (finishedBanner) {
+                finishedBanner.classList.add('msg-deleting');
+            }
+
+            if (bubbles.length >= 2) {
+                const lastBubble = bubbles[bubbles.length - 1];
+                const secondLastBubble = bubbles[bubbles.length - 2];
+                
+                lastBubble.classList.add('msg-deleting');
+                secondLastBubble.classList.add('msg-deleting');
+                
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+        }
+
+        await chatDbHelper.deleteMessage(lastMsg.id);
+        await chatDbHelper.deleteMessage(secondLastMsg.id);
+    }
+    
+    await chatDbHelper.updateConversation(currentConversationId, { isFinished: false });
+    
+    await chatDbHelper.addMessage(currentConversationId, 'system', '[STORY_CONTINUED]');
+    
+    const updatedMessages = await chatDbHelper.getMessages(currentConversationId);
+    renderMessages(updatedMessages);
+    
+    const container = document.getElementById('messages-container');
+    if (container) {
+        container.scrollTop = container.scrollHeight;
+    }
+    
+    enableChatInput();
+
+    const imgGenBtn = document.getElementById('chat-img-gen-btn');
+    if (imgGenBtn && currentCharacter && currentCharacter.supportImageGeneration) {
+        imgGenBtn.disabled = false;
+        imgGenBtn.style.opacity = '1';
+        imgGenBtn.style.cursor = 'pointer';
+        imgGenBtn.title = (currentLang === 'tr') ? 'Resim Oluştur' : 'Generate Image';
+    }
+    
+    if (typeof playSuccessSound === 'function') playSuccessSound();
+    
+    const input = document.getElementById('chat-message-input');
+    if (input) input.focus();
 }
 
 function startUserInfoFlow(conversationId) {
@@ -546,6 +716,11 @@ async function finishUserInfoFlow() {
     if (!currentConversationId) return;
     await chatDbHelper.updateConversation(currentConversationId, { userInfo: tempUserInfo });
     enableChatInput();
+
+    const chatCharNameEl = document.getElementById('chat-char-name');
+    if (chatCharNameEl && tempUserInfo.charName) {
+        chatCharNameEl.textContent = tempUserInfo.charName;
+    }
     
     let firstMsgText = '';
 
@@ -617,8 +792,19 @@ async function selectConversation(conversationId) {
         return;
     }
 
+    const chatCharNameEl = document.getElementById('chat-char-name');
+    if (chatCharNameEl && conv && conv.userInfo && conv.userInfo.charName) {
+        chatCharNameEl.textContent = conv.userInfo.charName;
+    }
+
     const messages = await chatDbHelper.getMessages(conversationId);
     renderMessages(messages);
+
+    if (conv && conv.isFinished) {
+        showStoryFinishedState();
+    } else {
+        enableChatInput();
+    }
 }
 
 async function startNewConversation() {
@@ -663,6 +849,13 @@ async function updateConversationCost(conversationId, text, pricePerToken) {
 async function sendMessage() {
     const t = translations[currentLang] || translations['en'];
 
+    if (currentConversationId) {
+        const convCheck = await chatDbHelper.getConversation(currentConversationId);
+        if (convCheck && convCheck.isFinished) return;
+    }
+
+    document.querySelector(".chat-char-counter").textContent = "0/1000";
+    
     if (!currentConversationId) {
         playErrorSound();
         showNotification(t.chatSelectFirst, 'info');
@@ -751,6 +944,7 @@ async function sendMessage() {
     const contentDiv = assistantBubble.querySelector('.message-content');
     let fullResponse = "";
     let isFirstChunk = true;
+    let storyFinished = false;
 
     try {
         const response = await fetch('https://create.thena.workers.dev/characterChat', {
@@ -761,6 +955,7 @@ async function sendMessage() {
             },
             body: JSON.stringify({
                 messages: apiMessages,
+                scene: currentCharacter.scene,
                 model: (userInfo && userInfo.model) ? userInfo.model : "fast"
             })
         });
@@ -784,6 +979,10 @@ async function sendMessage() {
                     if (line.trim().startsWith('data:')) {
                         const jsonStr = line.replace('data: ', '').trim();
                         if (jsonStr === '[DONE]') break;
+                        if (jsonStr === '[FINISH]') {
+                            storyFinished = true;
+                            break;
+                        }
 
                         try {
                             const data = JSON.parse(jsonStr);
@@ -812,6 +1011,12 @@ async function sendMessage() {
     }
 
     if (fullResponse) {
+        if (fullResponse.trimEnd().endsWith('[FINISH]')) {
+            storyFinished = true;
+            fullResponse = fullResponse.replace(/\[FINISH\]\s*$/, '').trimEnd();
+            contentDiv.innerHTML = parseMarkdown(fullResponse);
+        }
+
         await chatDbHelper.addMessage(currentConversationId, 'assistant', fullResponse);
         await updateConversationCost(currentConversationId, fullResponse, pricePerToken);
         await chatDbHelper.updateConversation(currentConversationId, {
@@ -819,6 +1024,11 @@ async function sendMessage() {
             lastMessageTime: new Date().toISOString()
         });
         await loadConversations(currentCharacter.id);
+
+        if (storyFinished) {
+            await chatDbHelper.updateConversation(currentConversationId, { isFinished: true });
+            showStoryFinishedState();
+        }
     }
 }
 
@@ -1171,7 +1381,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const statsContainer = document.getElementById('chat-data-stats-container');
                 if (statsContainer) {
                     const currencySymbol = currentLang === 'tr' ? '₺' : '$';
-                    const displayCost = currentLang === 'tr' ? (totalCost * 34) : totalCost; // Approx conversion
+                    const displayCost = currentLang === 'tr' ? (totalCost * 34) : totalCost;
 
                     statsContainer.innerHTML = `
                         <div class="data-stat-card">
@@ -1407,7 +1617,7 @@ function adjustAvatarAspectRatio(img) {
     if (!img || !img.naturalWidth || !img.naturalHeight) return;
     
     const ratio = img.naturalWidth / img.naturalHeight;
-    const isSquare = ratio > 0.85 && ratio < 1.15; // Tolerate small deviations
+    const isSquare = ratio > 0.85 && ratio < 1.15; 
     
     if (!isSquare) {
         img.style.height = 'auto';
@@ -1416,16 +1626,10 @@ function adjustAvatarAspectRatio(img) {
         img.style.boxShadow = '0 5px 25px rgba(0,0,0,0.3)';
         
         if (ratio < 1) {
-            // Portrait (Vertical) - e.g. 9:16
             img.style.width = '140px'; 
         } else {
-            // Landscape (Horizontal) - e.g. 16:9
             img.style.width = '220px';
         }
     } else {
-        // Ensure reset if needed (though element is usually fresh)
-        // img.style.width = '100px';
-        // img.style.height = '100px';
-        // img.style.borderRadius = '50%';
     }
 }

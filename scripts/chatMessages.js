@@ -44,6 +44,22 @@ function renderMessages(messages) {
     }
 
     container.innerHTML = messages.map(msg => {
+        if (msg.content === '[STORY_CONTINUED]') {
+            return `
+                <div class="story-continued-info">
+                    <div class="story-finished-line"></div>
+                    <div class="story-continued-content">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="1 4 1 10 7 10"></polyline>
+                            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                        </svg>
+                        <span>${t.chatStoryContinued}</span>
+                    </div>
+                    <div class="story-finished-line"></div>
+                </div>
+            `;
+        }
+
         let timeStr = '--:--';
         try {
             timeStr = new Date(msg.timestamp).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });

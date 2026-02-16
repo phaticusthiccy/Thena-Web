@@ -185,6 +185,13 @@ function playBusySound() {
     playTone('triangle', 440, 400, 0.1, 0, 0.4);
     playTone('triangle', 440, 400, 0.1, 0.15, 0.4);
 }
+
+function playStoryFinishSound() {
+    playTone('sine', 659.25, null, 0.4, 0, 0.3);
+    playTone('sine', 523.25, null, 0.4, 0.2, 0.25);
+    playTone('triangle', 392, null, 0.5, 0.4, 0.2);
+    playTone('sine', 523.25, null, 0.7, 0.7, 0.15);
+}
 let selectedModel = null;
 let selectedAspectRatio = null;
 let btnFast, btnCreative, btnDense, btnMovie, btnHighRes, btnEnhance;
@@ -485,6 +492,16 @@ const chatDbHelper = {
             request.onerror = () => reject(request.error);
         });
     },
+    deleteMessage: async (messageId) => {
+        const db = await chatDbHelper.open();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction([MESSAGES_STORE], 'readwrite');
+            const store = transaction.objectStore(MESSAGES_STORE);
+            const request = store.delete(messageId);
+            request.onsuccess = () => resolve();
+            request.onerror = () => reject(request.error);
+        });
+    },
     getAllConversations: async () => {
         const db = await chatDbHelper.open();
         return new Promise((resolve, reject) => {
@@ -523,7 +540,7 @@ const chatDbHelper = {
         const db = await chatDbHelper.open();
         return new Promise((resolve, reject) => {
             if (!db.objectStoreNames.contains('character_settings')) {
-                resolve(null); // Return null if store doesn't exist yet
+                resolve(null);
                 return;
             }
             const transaction = db.transaction(['character_settings'], 'readonly');
@@ -537,11 +554,7 @@ const chatDbHelper = {
         const db = await chatDbHelper.open();
         return new Promise((resolve, reject) => {
             if (!db.objectStoreNames.contains('character_settings')) {
-                // If store doesn't exist, we might need to handle version upgrade or just fail gracefully/log
                 console.warn("character_settings store not found. DB upgrade might be needed.");
-                // Note: Realistically, you'd trigger a version change, but for now we rely on the open() call triggering it if we bumped version.
-                // However, since we didn't bump version in open(), we rely on onupgradeneeded triggering if we Bump the version number. 
-                // Wait, I need to bump the version number!
                 reject("Store not found"); 
                 return;
             }
@@ -599,7 +612,7 @@ promptInput.addEventListener('input', () => {
     });
 });
 
-function typeWriterEffect(text, element) {
+function typeWriterEffect2(text, element) {
     let i = 0;
     element.value = "";
     element.style.height = 'auto';
@@ -608,14 +621,22 @@ function typeWriterEffect(text, element) {
             element.value += text.charAt(i);
             autoResize(element);
 
-            const charCountEl = document.getElementById('char-count');
-            if (charCountEl) charCountEl.textContent = `${element.value.length} / ${element.maxLength}`;
+            const isEditor = element.id === 'editor-prompt';
+            const charCountId = isEditor ? 'editor-char-count' : 'char-count';
+            const charCountEl = document.getElementById(charCountId);
+            const maxLen = element.maxLength > 0 ? element.maxLength : 5000;
+
+            if (charCountEl) charCountEl.textContent = `${element.value.length} / ${maxLen}`;
 
             i++;
         } else {
             clearInterval(interval);
-            localStorage.setItem(LS_KEYS.PROMPT, element.value);
-            checkFormReady();
+            if (element.id !== 'editor-prompt') {
+                localStorage.setItem(LS_KEYS.PROMPT, element.value);
+                if (typeof checkFormReady === 'function') checkFormReady();
+            } else {
+                if (typeof checkEditorFormReady === 'function') checkEditorFormReady();
+            }
         }
     }, 7);
 }
@@ -702,8 +723,12 @@ btnWandConfirm.addEventListener('click', () => {
         isPromptEnhancedByWand = true;
         magicWandBtn.classList.add('disabled');
 
-        promptInput.value = pendingEnhancedPrompt;
-        autoResize(promptInput);
+        if (typeof typeWriterEffect2 === "function") {
+            typeWriterEffect2(pendingEnhancedPrompt, promptInput);
+        } else {
+            promptInput.value = pendingEnhancedPrompt;
+            if (typeof autoResize === "function") autoResize(promptInput);
+        }
         localStorage.setItem(LS_KEYS.PROMPT, pendingEnhancedPrompt);
         checkFormReady();
 
@@ -2304,6 +2329,20 @@ function openLightbox(data) {
 
     lightbox.classList.add('active');
 
+    const originalPreview = document.getElementById('lightbox-original-preview');
+    if(originalPreview) {
+        if(data.originalImage && data.model && data.model.toUpperCase().includes('IMAGE EDITOR')) {
+             originalPreview.innerHTML = `<img src="${data.originalImage}" alt="Original">`;
+             originalPreview.style.display = 'block';
+             originalPreview.onclick = (e) => {
+                 e.stopPropagation();
+             };
+        } else {
+             originalPreview.style.display = 'none';
+             originalPreview.innerHTML = '';
+        }
+    }
+
     if (data.isShowcase) {
         document.querySelector(".lightbox-delete-btn").style.display = "none"
         document.querySelector(".lightbox-share-btn").style.display = "none"
@@ -2315,8 +2354,14 @@ function openLightbox(data) {
     }
     else {
         document.querySelector(".lightbox-delete-btn").style.display = "flex"
-        document.querySelector(".lightbox-share-btn").style.display = "flex"
-        document.querySelector(".lightbox-copy-btn").style.display = "flex"
+        
+        if (data.model && data.model.toUpperCase().includes("IMAGE EDITOR")) {
+            document.querySelector(".lightbox-share-btn").style.display = "none"
+            document.querySelector(".lightbox-copy-btn").style.display = "none"
+        } else {
+            document.querySelector(".lightbox-share-btn").style.display = "flex"
+            document.querySelector(".lightbox-copy-btn").style.display = "flex"
+        }
     }
 }
 
@@ -2469,13 +2514,7 @@ function showNotification(message, type = 'info', imageUrl = null, duration = 40
         notification.style.backgroundColor = 'rgba(255, 68, 68, 0.1)';
         notification.style.color = '#ff4444';
     } else if (type === 'info') {
-        notification.style.borderColor = '#ffaa00'; // Orange for info as requested in context of AI gen, or default blue? Standard info is blue usually. 
-        // User requested: "notifcation kısmı info şeklinde olacak (yani turuncu temada)"
-        // I will adhere to standard blue for 'info' generally, but maybe I should use specific color for this case?
-        // Existing code: info was blue (4488ff).
-        // I will keep standard info blue, but if user explicitly passed 'info' and meant orange, I might need to check message content or just use a new type 'warning' or 'orange-info'.
-        // Wait, the user said "info şeklinde olacak (yani turuncu temada)".
-        // I'll stick to blue for 'info' to avoiding breaking other things, but allow dynamic update to change color.
+        notification.style.borderColor = '#ffaa00';
         notification.style.borderColor = '#4488ff';
         notification.style.backgroundColor = 'rgba(68, 136, 255, 0.1)';
         notification.style.color = '#4488ff';
@@ -2485,17 +2524,16 @@ function showNotification(message, type = 'info', imageUrl = null, duration = 40
          notification.style.color = '#ffaa00';
     }
 
-    // Overrides from existing code
-    if (message === "Moderation set to medium.") {
+    if (message === "Moderation set to medium." || message === "Moderasyon düzeyi normal olarak ayarlandı.") {
         notification.style.borderColor = '#ffaa00';
         notification.style.backgroundColor = 'rgba(255, 170, 0, 0.1)';
-    } else if (message === "Moderation set to low.") {
+    } else if (message === "Moderation set to low." || message === "Moderasyon düzeyi düşük olarak ayarlandı.") {
         notification.style.borderColor = '#ff55ff';
         notification.style.backgroundColor = 'rgba(255, 85, 255, 0.1)';
-    } else if (message === "Moderation set to high.") {
+    } else if (message === "Moderation set to high." || message === "Moderasyon düzeyi yüksek olarak ayarlandı.") {
         notification.style.borderColor = '#00aaff';
         notification.style.backgroundColor = 'rgba(0, 170, 255, 0.1)';
-    } else if (message === "The image has been successfully deleted.") {
+    } else if (message === "The image has been successfully deleted." || message === "Resim başarıyla silindi.") {
         notification.style.borderColor = '#ff4444';
         notification.style.backgroundColor = 'rgba(255, 68, 68, 0.1)';
     }
@@ -2541,13 +2579,11 @@ function showNotification(message, type = 'info', imageUrl = null, duration = 40
     retFunc.update = (newMessage, newType, newProgress = null) => {
         if (notification.classList.contains('notification-exit')) return;
         
-        // Update Text
         const textEl = notification.querySelector('.notif-text');
         if (textEl && newMessage) {
             textEl.innerHTML = newMessage;
         }
 
-        // Update Styling
         if (newType) {
             if (newType === 'success') {
                 notification.style.borderColor = '#00ff88';
@@ -2568,16 +2604,12 @@ function showNotification(message, type = 'info', imageUrl = null, duration = 40
             }
         }
 
-        // Update Progress Bar
         const bar = notification.querySelector('.notif-progress-bar');
         
         if (newProgress !== null) {
             if (bar) {
                 bar.style.width = newProgress + '%';
             } else {
-                // We need to inject the progress bar if it doesn't exist but requested
-                // This might be tricky if structure is simple span. 
-                // Let's reconstruct content if needed.
                 const currentMsg = textEl ? textEl.innerHTML : newMessage;
                 const newContent = `
                     <div style="display:flex; flex-direction:column; width:100%; gap:5px;">
@@ -2589,9 +2621,6 @@ function showNotification(message, type = 'info', imageUrl = null, duration = 40
                 notification.innerHTML = newContent;
             }
         } else {
-            // If newProgress is null, do we remove the bar? 
-            // Usually we keep it or ignore. Let's keep it if exists, just don't update width.
-            // Or if explicit null passed, maybe we don't care. 
         }
     };
 
@@ -3743,10 +3772,15 @@ btnImg2PromptGenerate.addEventListener('click', async () => {
                 document.getElementById("btn-show-all-models").click()
             }
 
-            const incomingPrompt = data.content.prompt || "";
+            let incomingPrompt = "";
+            if (typeof data.content === 'string') {
+                incomingPrompt = data.content;
+            } else {
+                incomingPrompt = data.content.prompt || "";
+            }
             const promptInput = document.getElementById('prompt');
-            if (typeof typeWriterEffect === "function") {
-                typeWriterEffect(incomingPrompt, promptInput);
+            if (typeof typeWriterEffect2 === "function") {
+                typeWriterEffect2(incomingPrompt, promptInput);
             } else {
                 promptInput.value = incomingPrompt;
                 if (typeof autoResize === "function") autoResize(promptInput);
@@ -3872,7 +3906,8 @@ function renderPromptHistory() {
 
         item.querySelector('.history-text').addEventListener('click', () => {
             const promptInput = document.getElementById('prompt');
-            promptInput.value = text;
+            if (typeof playStartSound === 'function') playStartSound();
+            typeWriterEffect2(text, promptInput)
             localStorage.setItem('thena-last-prompt', text);
 
             if (typeof autoResize === 'function') autoResize(promptInput);
@@ -3885,6 +3920,7 @@ function renderPromptHistory() {
         item.querySelector('.copy-hist-btn').addEventListener('click', (e) => {
             e.stopPropagation();
             navigator.clipboard.writeText(text).then(() => {
+                if (typeof playStartSound === 'function') playStartSound();
                 if (typeof showNotification === 'function') showNotification(currentLang == "tr" ? "Prompt kopyalandı!" : "Prompt copied to clipboard!", "success");
             });
         });
@@ -4127,44 +4163,68 @@ function applyChatFilters() {
     renderCharacters(filtered);
 }
 
+const viewEditor = document.getElementById('view-image-editor');
+
 function switchAppMode(mode) {
     playSuccessSound();
     localStorage.setItem('thena-last-app-mode', mode);
     const modal = document.getElementById('app-switch-modal');
     const btnGotoChat = document.getElementById('btn-goto-chat');
     const btnGotoImage = document.getElementById('btn-goto-image');
+    const btnGotoEditor = document.getElementById('btn-goto-editor');
     const galleryBtn = document.getElementById('gallery-btn');
 
-    if (mode === 'chat') {
-        viewImage.classList.remove('active-view');
-        viewImage.classList.add('hidden-view');
-        setTimeout(() => viewImage.style.display = 'none', 300);
+    [viewImage, viewChat, viewEditor].forEach(view => {
+        if(view) {
+            view.classList.remove('active-view');
+            view.classList.add('hidden-view');
+            setTimeout(() => view.style.display = 'none', 300);
+        }
+    });
+    
+    if (btnGotoChat) btnGotoChat.classList.remove('active');
+    if (btnGotoImage) btnGotoImage.classList.remove('active');
+    if (btnGotoEditor) btnGotoEditor.classList.remove('active');
 
-        viewChat.style.display = 'flex';
-        requestAnimationFrame(() => {
-            viewChat.classList.remove('hidden-view');
-            viewChat.classList.add('active-view');
-        });
+    if (mode === 'chat') {
+        if(viewChat) {
+             viewChat.style.display = 'flex';
+             requestAnimationFrame(() => {
+                viewChat.classList.remove('hidden-view');
+                viewChat.classList.add('active-view');
+            });
+        }
 
         if (btnGotoChat) btnGotoChat.classList.add('active');
-        if (btnGotoImage) btnGotoImage.classList.remove('active');
         if (galleryBtn) galleryBtn.style.display = 'none';
 
         if (!isCharactersLoaded) fetchCharacters();
 
-    } else {
-        viewChat.classList.remove('active-view');
-        viewChat.classList.add('hidden-view');
-        setTimeout(() => viewChat.style.display = 'none', 300);
+    } else if (mode === 'editor') {
+         if(viewEditor) {
+             viewEditor.style.display = 'block';
+             requestAnimationFrame(() => {
+                viewEditor.classList.remove('hidden-view');
+                viewEditor.classList.add('active-view');
+            });
+        }
+        
+        if (btnGotoEditor) btnGotoEditor.classList.add('active');
+        if (galleryBtn) galleryBtn.style.display = '';
+        
+        if(typeof loadEditorPresets === 'function') loadEditorPresets();
+        if(typeof loadEditorGallery === 'function') loadEditorGallery();
 
-        viewImage.style.display = 'block';
-        requestAnimationFrame(() => {
-            viewImage.classList.remove('hidden-view');
-            viewImage.classList.add('active-view');
-        });
+    } else {
+        if(viewImage) {
+            viewImage.style.display = 'block';
+            requestAnimationFrame(() => {
+                viewImage.classList.remove('hidden-view');
+                viewImage.classList.add('active-view');
+            });
+        }
 
         if (btnGotoImage) btnGotoImage.classList.add('active');
-        if (btnGotoChat) btnGotoChat.classList.remove('active');
         if (galleryBtn) galleryBtn.style.display = '';
     }
 
@@ -4304,9 +4364,11 @@ if (searchInput2) {
 document.addEventListener('DOMContentLoaded', () => {
     const btnGotoChat = document.getElementById('btn-goto-chat');
     const btnGotoImage = document.getElementById('btn-goto-image');
+    const btnGotoEditor = document.getElementById('btn-goto-editor');
 
     if (btnGotoChat) btnGotoChat.onclick = () => switchAppMode('chat');
     if (btnGotoImage) btnGotoImage.onclick = () => switchAppMode('image');
+    if (btnGotoEditor) btnGotoEditor.onclick = () => switchAppMode('editor');
 
     const lastAppMode = localStorage.getItem('thena-last-app-mode');
     if (lastAppMode === 'chat') {
@@ -4324,9 +4386,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (btnGotoChat) btnGotoChat.classList.add('active');
         if (btnGotoImage) btnGotoImage.classList.remove('active');
+        if (btnGotoEditor) btnGotoEditor.classList.remove('active');
         if (galleryBtn) galleryBtn.style.display = 'none';
 
         if (!isCharactersLoaded) fetchCharacters();
+    } else if (lastAppMode === 'editor') {
+          const galleryBtn = document.getElementById('gallery-btn');
+         
+        viewImage.classList.remove('active-view');
+        viewImage.classList.add('hidden-view');
+        setTimeout(() => viewImage.style.display = 'none', 300);
+
+        viewEditor.style.display = 'block';
+         requestAnimationFrame(() => {
+            viewEditor.classList.remove('hidden-view');
+            viewEditor.classList.add('active-view');
+        });
+        
+        if (btnGotoEditor) btnGotoEditor.classList.add('active');
+        if (btnGotoImage) btnGotoImage.classList.remove('active');
+        if (btnGotoChat) btnGotoChat.classList.remove('active');
+        if (galleryBtn) galleryBtn.style.display = '';
+         
+        if(typeof loadEditorPresets === 'function') loadEditorPresets();
+        if(typeof loadEditorGallery === 'function') loadEditorGallery();
     } else {
         if (btnGotoImage) btnGotoImage.classList.add('active');
     }
@@ -4362,19 +4445,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (backBtn) backBtn.addEventListener('click', closeChatScreen);
     if (newChatBtn) newChatBtn.addEventListener('click', startNewConversation);
-    if (sendBtn) sendBtn.addEventListener('click', sendMessage);
+    if (sendBtn) sendBtn.addEventListener('click', () => {
+        if (sendBtn.hasAttribute('data-continue-mode')) {
+            continueStory();
+        } else {
+            sendMessage();
+        }
+    });
     if (msgInput) {
         msgInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                sendMessage();
+                if (sendBtn && sendBtn.hasAttribute('data-continue-mode')) {
+                    continueStory();
+                } else {
+                    sendMessage();
+                }
             }
         });
 
         const charCounter = document.getElementById('chat-char-counter');
         const maxLength = 1000;
 
-        function updateChatCharCounter() {
+        window.updateChatCharCounter = function updateChatCharCounter() {
             const currentLength = msgInput.value.length;
             if (charCounter) {
                 charCounter.textContent = `${currentLength}/${maxLength}`;

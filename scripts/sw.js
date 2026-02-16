@@ -1,4 +1,4 @@
-const CACHE_NAME = 'thena-app-v1';
+const CACHE_NAME = 'thena-app-v2';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -13,7 +13,9 @@ const ASSETS_TO_CACHE = [
     './scripts/favorites-backups.js',
     './scripts/chatImageDownloader.js',
     './scripts/chatMessages.js',
-    './scripts/aiChat.js'
+    './scripts/aiChat.js',
+    './.version',
+    './scripts/imageEditor.js'
 ];
 
 self.addEventListener('install', (event) => {
