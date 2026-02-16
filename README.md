@@ -4,9 +4,9 @@
     <img src="https://github.com/user-attachments/assets/175c0d76-b146-460f-bb34-d0ae7e2b57cc" alt="Thena Logo" width="200" />
   </a>
 
-  # THENA - Next-Gen AI Image Generator
-
-  **Futuristic Interface • Local Gallery • Advanced Prompt Engineering • Community Showcase**
+  # THENA - Next-Gen AI Image Generator & Chat
+  
+  **Ultimate Creative Suite • Advanced Roleplay Chat • Image Editing • Local First**
 
   <p>
     <a href="https://github.com/phaticusthiccy/Thena-Web/issues">
@@ -36,40 +36,44 @@
 
 ## 🚀 About The Project
 
-**Thena** is a browser-based, modern, and aesthetic AI image generation interface built entirely with **Vanilla JavaScript, HTML, and CSS**. It pushes the boundaries of browser technologies (IndexedDB, Web Audio API, Canvas API) without relying on heavy frameworks like React or Vue.
+**Thena** is a browser-based, modern, and aesthetic AI powerhouse built entirely with **Vanilla JavaScript, HTML, and CSS**. It pushes the boundaries of browser technologies (IndexedDB, Web Audio API, Canvas API) without relying on heavy frameworks like React or Vue.
 
-It is not just an image generator; it is a full-featured suite including Image-to-Prompt capabilities, local gallery management, PWA support, and customizable themes.
+It combines state-of-the-art **Image Generation**, a full knowledge-aware **AI Roleplay Chat**, and a professional **Image Editor** into one seamless Progressive Web App (PWA).
 
 ---
 
 ## ✨ Key Features
 
-### 🎨 Generation & Models
-* **Multi-Model Support:** Access various models like Thena Movie, Max, V6, Photoreal, Anime Core, and Anime Fast.
+### 🎨 Advanced Image Generation
+* **Multi-Model Support:** Access various models including Photorealism, Anime, Movie, and NSFW options.
 * **Flexible Aspect Ratios:** Support for Square (1:1), Portrait (3:4, 9:16), and Cinematic (16:9, 4:3) formats.
-* **Advanced Parameters:**
+* **Smart Parameters:**
     * **Fast Mode:** Optimized for speed.
     * **Creative & Dense:** Boosts AI imagination and detail.
     * **Movie Filter & HighRes:** Cinematic color grading and upscaling.
+* **Magic Wand:** Enhances short, simple prompts into detailed descriptions with a single click.
 
-### 🛠️ Smart Tools
-* **🖼️ Image to Prompt:** Upload an image to analyze its content and generate a prompt automatically using CLIP technology.
-* **🪄 Magic Wand:** Enhances short, simple prompts into detailed, professional descriptions with a single click.
-* **📜 Prompt History:** Automatically saves your recently used prompts for quick reuse.
-* **🛡️ Moderation Tools:** Toggle between Low, Medium, and High safety moderation levels.
+### 🤖 AI Roleplay Chat
+* **Interactive Characters:** engage in deep, story-driven conversations with unique AI personas.
+* **Story Awareness:** The AI detects when a narrative arc is complete (`[FINISH]` signal) and can guide the story.
+* **Dynamic Responses:** Characters react to your input with personality and context.
+* **The Warden:** An integrated moderation bot ensuring safe and appropriate interactions where necessary.
 
-### 💾 Gallery & Experience
-* **Local Gallery (IndexedDB):** Generated images are stored locally in your browser. Filter by date, model, or aspect ratio.
-* **Community Showcase:** Explore images shared by the community and copy their settings/prompts instantly.
-* **🔗 Instant Sharing:** Generate public links for your creations directly from the lightbox to share with friends.
-* **Audio Feedback:** Dynamic, synthesized sound effects for interactions. (Includes **Silent Mode**).
-* **Lightbox Mode:** View images in full screen, download, delete, or check generation metadata.
+### 🖼️ Professional Image Editor
+* **Quick Presets:** Apply Instagram-like filters and color grades instantly (e.g., Vivid, Noir, Vintage).
+* **Fine-Tuning:** Adjust brightness, contrast, saturation, and more.
+* **Crop & Resize:** Prepare your images for any platform directly in the browser.
+* **Markup:** Draw, annotate, or add text to your generated images.
 
-### ⚙️ Personalization & Performance
-* **Theme Engine:** Switch between solid colors or stunning gradient themes to match your style.
-* **Performance Mode:** Disables heavy animations and blur effects for smoother performance on low-end devices.
-* **PWA Support:** Installable as a native-like app on mobile and desktop devices.
-* **Privacy:** Your API key and images remain on your local device.
+### 🌐 Localization & Accessibility
+* **Multi-Language Support:** Fully translated interface available in **English** and **Turkish**.
+* **Audio Feedback:** Dynamic sound effects for interactions (with Silent Mode).
+* **Responsive Design:** Works seamlessly on desktop, tablet, and mobile.
+
+### 💾 Local-First Architecture
+* **Private Gallery:** All generated images are stored locally in your browser using IndexedDB.
+* **Data Privacy:** Your API key and images remain on your device; no hidden server uploads.
+* **Import/Export:** distinct functionality to backup your favorite images and settings.
 
 ---
 
@@ -79,37 +83,26 @@ It is not just an image generator; it is a full-featured suite including Image-t
   <table>
     <tr>
       <td align="center"><b>Main Interface</b></td>
-      <td align="center"><b>Local Gallery & Filters</b></td>
+      <td align="center"><b>Advanced Image Editor</b></td>
     </tr>
     <tr>
-      <td><img src="https://github.com/user-attachments/assets/e8a53ee4-367a-4ba0-828b-659bae1bc372" alt="UI" /></td>
+      <td><img src="https://github.com/user-attachments/assets/9797eb42-ceec-4760-aa04-67a076421240" alt="UI" /></td>
+      <td><img src="https://github.com/user-attachments/assets/35e1db6e-8bf0-4670-82e8-06e7c5f42a30" alt="Editor" /></td>
+    </tr>
+  </table>
+  <table>
+    <tr>
+      <td align="center"><b>AI Chat Bots</b></td>
+      <td align="center"><b>Gallery & Filters</b></td>
+    </tr>
+    <tr>
+      <td><img src="https://github.com/user-attachments/assets/c491a07f-6def-4dd3-962c-e8b48830143a" alt="Chat" /></td>
       <td><img src="https://github.com/user-attachments/assets/c57d0300-acd0-4bf7-8e53-2daefae9ee99" alt="Gallery" /></td>
-    </tr>
-  </table>
-  <table>
-     <tr>
-      <td align="center"><b>Image to Prompt Tool</b></td>
-      <td align="center"><b>Settings & Themes</b></td>
-    </tr>
-    <tr>
-      <td><img src="https://github.com/user-attachments/assets/ad806d93-1755-4952-b109-e3b58ba8ba4d" alt="Img2Prompt" /></td>
-      <td><img src="https://github.com/user-attachments/assets/641a89aa-21f3-4184-97bf-3d991a75e02a" alt="Settings"/></td>
-    </tr>
-  </table>
-  <table>
-     <tr>
-      <td align="center"><b>Prompt Enhancement</b></td>
-      <td align="center"><b>Community Showcase</b></td>
-    </tr>
-    <tr>
-      <td><img src="https://github.com/user-attachments/assets/801cf8c8-c9d9-4da6-93aa-a56d16c42d2e" alt="Prompt Enhancement" /></td>
-      <td><img src="https://github.com/user-attachments/assets/fcf913be-2c95-4d79-bc7e-0477f989dc46" alt="Community Showcase" /></td>
     </tr>
   </table>
 </div>
 
 ---
-
 
 ## 🛠️ Installation & Usage
 
@@ -123,11 +116,16 @@ This project runs client-side. No backend server installation is required.
 2.  Simply double-click `index.html` to open it in your web browser.
 
 ### Method 2: Local Server (Recommended)
-To avoid CORS issues with some assets or features, running a local server is recommended.
+To avoid CORS issues with some assets, audio features, or PWA installation, running a local server is recommended.
+
 * **VS Code:** Use the "Live Server" extension and click "Go Live".
 * **Python:**
     ```bash
     python -m http.server 8000
+    ```
+* **Node.js (http-server):**
+    ```bash
+    npx http-server .
     ```
 
 ---
@@ -138,7 +136,7 @@ To generate images, you need a free API Key.
 
 1.  Click the **"Get Your Free API Key"** link in the app interface (redirects to the Telegram Bot).
 2.  Paste the key provided by the bot into the `API Key` input field.
-3.  Your key is safely stored in your browser's `LocalStorage` and is not sent to any third-party analytics.
+3.  Your key is safely stored in your browser's `LocalStorage`.
 
 ---
 
@@ -147,11 +145,11 @@ To generate images, you need a free API Key.
 | Technology | Usage |
 | --- | --- |
 | **HTML5** | Semantic structure and DOM layout |
-| **CSS3** | Animations, Flexbox/Grid, Gradients, Glitch Effects |
+| **CSS3** | Animations, Flexbox/Grid, Glassmorphism, Responsive Design |
 | **JavaScript (ES6+)** | Core logic, API communication, DOM manipulation |
 | **IndexedDB** | Persistent local storage for the image gallery |
-| **Web Audio API** | Real-time audio synthesis (Oscillators) for UI sounds |
-| **Canvas API** | Image processing and resizing for the "Image to Prompt" feature |
+| **Web Audio API** | Real-time audio synthesis for UI sounds |
+| **Canvas API** | Image processing, resizing, and editing features |
 | **Service Workers** | PWA functionality for offline capabilities and installation |
 
 ---
