@@ -272,6 +272,12 @@ async function generateVariation() {
         uploadArea.style.pointerEvents = 'none';
         uploadArea.style.opacity = '0.7';
     }
+
+    const presetCards = document.querySelectorAll('.preset-card');
+    presetCards.forEach(card => {
+        card.style.pointerEvents = 'none';
+        card.style.opacity = '0.5';
+    });
     
     if (typeof playStartSound === 'function') playStartSound();
 
@@ -321,6 +327,11 @@ async function generateVariation() {
                 uploadArea.style.pointerEvents = '';
                 uploadArea.style.opacity = '';
             }
+            const presetCards = document.querySelectorAll('.preset-card');
+            presetCards.forEach(card => {
+                card.style.pointerEvents = '';
+                card.style.opacity = '';
+            });
         }
     } catch (error) {
         if (genNotif) genNotif();
@@ -348,6 +359,12 @@ async function generateVariation() {
             uploadArea.style.pointerEvents = '';
             uploadArea.style.opacity = '';
         }
+
+        const presetCards = document.querySelectorAll('.preset-card');
+        presetCards.forEach(card => {
+            card.style.pointerEvents = '';
+            card.style.opacity = '';
+        });
     }
 }
 
@@ -392,6 +409,12 @@ async function pollEditorGeneration(id, apiKey, prompt, genNotif, originalImage,
             uploadArea.style.pointerEvents = '';
             uploadArea.style.opacity = '';
         }
+        
+        const presetCards = document.querySelectorAll('.preset-card');
+        presetCards.forEach(card => {
+            card.style.pointerEvents = '';
+            card.style.opacity = '';
+        });
     };
 
     const checkStatus = async () => {
