@@ -209,7 +209,7 @@ let currentPage = 1;
 const itemsPerPage = 24;
 let currentFilteredItems = [];
 const DB_NAME = 'ThenaGalleryDB';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const STORE_NAME = 'images';
 let isGeneratingImage = false;
 let currentGenParams = null;
@@ -292,16 +292,34 @@ function getPlaceholderHTML(width, height) {
                     </div>
                 `;
 }
+
+class PaginatedResult {
+    constructor(items, total) {
+        this.items = items;
+        this.total = total;
+    }
+}
+
 const dbHelper = {
     open: () => {
         return new Promise((resolve, reject) => {
             const request = indexedDB.open(DB_NAME, DB_VERSION);
             request.onupgradeneeded = (event) => {
                 const db = event.target.result;
+                let store;
                 if (!db.objectStoreNames.contains(STORE_NAME)) {
-                    db.createObjectStore(STORE_NAME, {
+                    store = db.createObjectStore(STORE_NAME, {
                         keyPath: 'timestamp'
                     });
+                } else {
+                    store = request.transaction.objectStore(STORE_NAME);
+                }
+
+                if (!store.indexNames.contains('model')) {
+                    store.createIndex('model', 'model', { unique: false });
+                }
+                if (!store.indexNames.contains('isFavorite')) {
+                    store.createIndex('isFavorite', 'isFavorite', { unique: false });
                 }
             };
             request.onsuccess = (event) => resolve(event.target.result);
@@ -326,6 +344,66 @@ const dbHelper = {
             const request = store.getAll();
             request.onsuccess = () => {
                 resolve(request.result);
+            };
+            request.onerror = () => reject(request.error);
+        });
+    },
+    getPaginated: async (offset = 0, limit = 24, filters = {}) => {
+        const db = await dbHelper.open();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction([STORE_NAME], 'readonly');
+            const store = transaction.objectStore(STORE_NAME);
+            const items = [];
+            let hasFilters = Object.keys(filters).length > 0;
+            
+            const request = store.openCursor(null, 'prev');
+            let advanced = false;
+            let counter = 0;
+            let matchCount = 0;
+
+            request.onsuccess = (event) => {
+                const cursor = event.target.result;
+                if (!cursor) {
+                    resolve(new PaginatedResult(items, matchCount));
+                    return;
+                }
+
+                const item = cursor.value;
+                let matches = true;
+
+                if (hasFilters) {
+                    if (filters.isFavorite && !item.isFavorite) matches = false;
+                    if (matches && filters.model && item.model !== filters.model) matches = false;
+                    if (matches && filters.ratio && item.size !== filters.ratio) matches = false;
+                    if (matches && filters.search) {
+                         if (!item.prompt.toLowerCase().includes(filters.search)) matches = false;
+                    }
+                    if (matches && filters.dateStart) {
+                         const time = new Date(item.timestamp).setHours(0,0,0,0);
+                         if (time < filters.dateStart) matches = false;
+                    }
+                    if (matches && filters.dateEnd) {
+                         const time = new Date(item.timestamp).setHours(0,0,0,0);
+                         if (time > filters.dateEnd) matches = false;
+                    }
+                }
+
+                if (matches) {
+                    matchCount++;
+                    if (matchCount <= offset) {
+                         cursor.continue();
+                         return;
+                    }
+                    
+                    if (items.length < limit) {
+                        items.push(item);
+                        cursor.continue();
+                    } else {
+                        resolve(new PaginatedResult(items, -1));
+                    }
+                } else {
+                    cursor.continue();
+                }
             };
             request.onerror = () => reject(request.error);
         });
@@ -537,6 +615,7 @@ const chatDbHelper = {
         });
     },
     getCharacterSettings: async (characterId) => {
+        if (!characterId) return null;
         const db = await chatDbHelper.open();
         return new Promise((resolve, reject) => {
             if (!db.objectStoreNames.contains('character_settings')) {
@@ -564,6 +643,31 @@ const chatDbHelper = {
             const request = store.put(data);
             request.onsuccess = () => resolve(request.result);
             request.onerror = () => reject(request.error);
+        });
+    },
+    clear: async () => {
+        const db = await chatDbHelper.open();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction([CONVERSATIONS_STORE, MESSAGES_STORE, 'character_settings'], 'readwrite');
+            const convStore = transaction.objectStore(CONVERSATIONS_STORE);
+            const msgStore = transaction.objectStore(MESSAGES_STORE);
+            const settingsStore = transaction.objectStore('character_settings');
+
+            const req1 = convStore.clear();
+            const req2 = msgStore.clear();
+            const req3 = settingsStore.clear();
+
+            let completed = 0;
+            const checkDone = () => {
+                completed++;
+                if (completed === 3) resolve();
+            };
+
+            req1.onsuccess = checkDone;
+            req2.onsuccess = checkDone;
+            req3.onsuccess = checkDone;
+
+            transaction.onerror = () => reject(transaction.error);
         });
     }
 };
@@ -1001,6 +1105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const infoIcon = btn.querySelector('.info-icon-wrapper');
         if (infoIcon) {
             infoIcon.addEventListener('click', (e) => {
+                if (typeof playInformationSound !== 'undefined') playInformationSound();
                 e.stopPropagation();
 
                 const data = featureData[btn.id];
@@ -1104,6 +1209,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (infoIcon && aspectRatioData[ratio]) {
             infoIcon.addEventListener('click', (e) => {
+                if (typeof playInformationSound !== 'undefined') playInformationSound();
                 e.stopPropagation();
                 const data = aspectRatioData[ratio];
                 const t = translations[currentLang];
@@ -1263,6 +1369,7 @@ async function loadModels() {
 
         const infoBtn = card.querySelector('.model-info-icon-wrapper');
         infoBtn.addEventListener('click', (e) => {
+            if (typeof playInformationSound !== 'undefined') playInformationSound();
             e.stopPropagation();
 
             const featModal = document.getElementById('feature-info-modal');
@@ -1616,6 +1723,23 @@ generateBtn.addEventListener('click', async () => {
         apiBody.enhance = isEnhance;
     }
 
+    async function createThumbnail(imageUrl, scale = 0.5) {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.crossOrigin = "Anonymous";
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width * scale;
+                canvas.height = img.height * scale;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                resolve(canvas.toDataURL('image/jpeg', 0.85));
+            };
+            img.onerror = (e) => reject(e);
+            img.src = imageUrl;
+        });
+    }
+
     try {
         const response = await fetch('https://create.thena.workers.dev/createSync', {
             method: 'POST',
@@ -1637,8 +1761,17 @@ generateBtn.addEventListener('click', async () => {
             if (!finalImageUrl.startsWith('data:image') && !finalImageUrl.startsWith('http')) {
                 finalImageUrl = `data:image/png;base64,${data.image}`;
             }
+
+            let thumbnailUrl = finalImageUrl;
+            try {
+                thumbnailUrl = await createThumbnail(finalImageUrl, 0.5);
+            } catch (err) {
+                console.warn("Thumbnail generation failed:", err);
+            }
+
             await dbHelper.add({
                 url: finalImageUrl,
+                thumbnailUrl: thumbnailUrl,
                 prompt: prompt,
                 model: modelData ? modelData.model : 'Unknown',
                 size: selectedSize,
@@ -1790,6 +1923,18 @@ function populateModelFilter() {
 const galleryLoader = document.getElementById('gallery-loader');
 const galleryProgressBar = document.getElementById('gallery-progress-bar');
 const loaderStatus = document.getElementById('loader-status');
+
+function createFilterObject() {
+    return {
+        isFavorite: false,
+        model: '',
+        ratio: '',
+        search: '',
+        dateStart: null,
+        dateEnd: null
+    };
+}
+
 async function loadGallery() {
     galleryGrid.classList.remove('visible');
     galleryLoader.classList.remove('hidden');
@@ -1798,66 +1943,53 @@ async function loadGallery() {
 
     galleryGrid.innerHTML = '';
     populateModelFilter();
+    
+    currentPage = 1;
+    currentFilteredItems = [];
+    allGalleryImages = [];
+
     try {
-        allGalleryImages = await dbHelper.getAll();
-        applyFilters(true);
+        await applyFilters(true);
     } catch (e) {
         galleryGrid.innerHTML = '<div class="empty-gallery">An error occurred while loading the gallery.</div>';
         galleryLoader.classList.add('hidden');
         galleryGrid.classList.add('visible');
+        console.error(e);
     }
 }
+
 galleryGrid.addEventListener('scroll', () => {
     if (isGalleryLoading) return;
 
-    if (galleryGrid.scrollTop + galleryGrid.clientHeight >= galleryGrid.scrollHeight - 100) {
+    if (galleryGrid.scrollTop + galleryGrid.clientHeight >= galleryGrid.scrollHeight - 300) {
         currentPage++;
         loadMoreItems();
     }
 });
 
-function applyFilters(withAnimation = false) {
+async function applyFilters(withAnimation = false) {
     lastRenderId++;
     const currentRenderId = lastRenderId;
-    let filtered = [...allGalleryImages];
-
+    
+    const filters = createFilterObject();
+    
     const showFavsOnly = document.getElementById('filter-favorites')?.checked;
-    if (showFavsOnly) {
-        filtered = filtered.filter(item => item.isFavorite === true);
-    }
-
-    const uniqueMap = new Map();
-    filtered.forEach(item => {
-        if (!uniqueMap.has(item.timestamp)) {
-            uniqueMap.set(item.timestamp, item);
-        }
-    });
-    filtered = Array.from(uniqueMap.values());
+    if (showFavsOnly) filters.isFavorite = true;
 
     const searchText = searchInput.value.toLowerCase().trim();
-    if (searchText) {
-        filtered = filtered.filter(item => item.prompt.toLowerCase().includes(searchText));
-    }
+    if (searchText) filters.search = searchText;
+    
     const modelVal = filterModel.value;
-    if (modelVal) filtered = filtered.filter(item => item.model === modelVal);
+    if (modelVal) filters.model = modelVal;
+    
     const ratioVal = filterRatio.value;
-    if (ratioVal) filtered = filtered.filter(item => item.size === ratioVal);
+    if (ratioVal) filters.ratio = ratioVal;
+    
     const startDateStr = filterDateStart.value;
     const endDateStr = filterDateEnd.value;
-    if (startDateStr) {
-        const start = new Date(startDateStr).setHours(0, 0, 0, 0);
-        filtered = filtered.filter(item => new Date(item.timestamp).setHours(0, 0, 0, 0) >= start);
-    }
-    if (endDateStr) {
-        const end = new Date(endDateStr).setHours(23, 59, 59, 999);
-        filtered = filtered.filter(item => new Date(item.timestamp).setHours(0, 0, 0, 0) <= end);
-    }
-    filtered.sort((a, b) => {
-        const dateA = new Date(a.timestamp);
-        const dateB = new Date(b.timestamp);
-        return sortNewestFirst ? dateB - dateA : dateA - dateB;
-    });
-    currentFilteredItems = filtered;
+    if (startDateStr) filters.dateStart = new Date(startDateStr).setHours(0, 0, 0, 0);
+    if (endDateStr) filters.dateEnd = new Date(endDateStr).setHours(23, 59, 59, 999);
+
     currentPage = 1;
     galleryGrid.innerHTML = '';
     isGalleryLoading = true;
@@ -1866,88 +1998,34 @@ function applyFilters(withAnimation = false) {
         galleryGrid.insertAdjacentHTML('beforeend', getPlaceholderHTML(currentGenParams.width, currentGenParams.height));
     }
 
+    try {
+        loaderStatus.innerText = 'Querying database...';
+        const result = await dbHelper.getPaginated(0, itemsPerPage, filters);
+        currentFilteredItems = result.items;
 
-    if (currentFilteredItems.length === 0 && !isGeneratingImage) {
-        galleryGrid.innerHTML = '<div class="empty-gallery">No images matching the filters were found.</div>';
-        hideLoaderAndShowGrid();
+        if (currentFilteredItems.length === 0 && !isGeneratingImage) {
+            galleryGrid.innerHTML = '<div class="empty-gallery">No images matching the filters were found.</div>';
+            hideLoaderAndShowGrid();
+            isGalleryLoading = false;
+            return;
+        }
+
+        if (withAnimation) {
+            renderItems(currentFilteredItems);
+            hideLoaderAndShowGrid();
+        } else {
+            renderItems(currentFilteredItems);
+            hideLoaderAndShowGrid();
+        }
+    } catch (err) {
+        console.error("Filter error:", err);
         isGalleryLoading = false;
-        return;
-    }
-    if (withAnimation) {
-        preloadImagesAndRender(currentRenderId);
-    } else {
-        loadMoreItems();
         hideLoaderAndShowGrid();
     }
 }
 
-function preloadImagesAndRender(renderId) {
-    const initialBatchCount = 12;
-    const itemsToPreload = currentFilteredItems.slice(0, initialBatchCount);
-    let loadedCount = 0;
-    const batchSize = itemsToPreload.length;
-    const totalGalleryCount = currentFilteredItems.length;
-
-    if (batchSize === 0) {
-        hideLoaderAndShowGrid();
-        isGalleryLoading = false;
-        return;
-    }
-
-    if (renderId !== lastRenderId) return;
-
-    loaderStatus.innerText = `Images are being processed (${totalGalleryCount} images)...`;
-    itemsToPreload.forEach((item) => {
-        const img = new Image();
-        const updateProgress = () => {
-            if (renderId !== lastRenderId) return;
-
-            loadedCount++;
-            const percentage = Math.round((loadedCount / batchSize) * 100);
-            galleryProgressBar.style.width = percentage + '%';
-            loaderStatus.innerText = `Images are being processed (${totalGalleryCount} images)... %${percentage}`;
-            if (loadedCount === batchSize) {
-                setTimeout(() => {
-                    if (renderId !== lastRenderId) return;
-
-                    loadMoreItems();
-                    hideLoaderAndShowGrid();
-                    setTimeout(() => {
-                        if (renderId !== lastRenderId) return;
-
-                        if (galleryGrid.scrollHeight <= galleryGrid.clientHeight + 100) {
-                            currentPage++;
-                            loadMoreItems();
-                        }
-                    }, 500);
-                }, 300);
-            }
-        };
-        img.onload = updateProgress;
-        img.onerror = updateProgress;
-        img.src = item.url;
-    });
-}
-
-function hideLoaderAndShowGrid() {
-    galleryLoader.classList.add('hidden');
-    playGalleryUpdatedSound();
-    setTimeout(() => {
-        galleryGrid.classList.add('visible');
-    }, 100);
-}
-
-function loadMoreItems() {
-    isGalleryLoading = true;
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    const batch = currentFilteredItems.slice(start, end);
-    if (batch.length === 0) {
-        isGalleryLoading = false;
-        return;
-    }
-
-    const html = batch.map((item) => {
+function renderItems(items) {
+    const html = items.map((item) => {
         let spanClass = '';
         if (item.size) {
             const [width, height] = item.size.split('x').map(Number);
@@ -1967,43 +2045,77 @@ function loadMoreItems() {
         }
 
         const itemData = encodeURIComponent(JSON.stringify(item));
+        
+        const displayUrl = item.thumbnailUrl || item.url;
 
         return `
-                        <div class="gallery-item ${spanClass}" data-item="${itemData}">
-                            <img src="${item.url}" loading="lazy" alt="${item.prompt}">
-                            
-                            <button class="gallery-copy-btn" title="Use This Style" onclick="useImageSettings(event, this)">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                    <line x1="12" y1="18" x2="12" y2="12"></line>
-                                    <line x1="9" y1="15" x2="15" y2="15"></line>
-                                </svg>
-                            </button>
-                            <div class="gallery-item-info">
-                                <div class="info-prompt">${item.prompt}</div>
-                                <div class="info-meta">${item.model.toUpperCase()} • ${item.size || 'Auto'}</div>
-                            </div>
-                        </div>`;
+            <div class="gallery-item ${spanClass} show" data-item="${itemData}">
+                <img src="${displayUrl}" loading="lazy" alt="${item.prompt}">
+                
+                <button class="gallery-copy-btn" title="Use This Style" onclick="useImageSettings(event, this)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="12" y1="18" x2="12" y2="12"></line>
+                        <line x1="9" y1="15" x2="15" y2="15"></line>
+                    </svg>
+                </button>
+                <div class="gallery-item-info">
+                    <div class="info-prompt">${item.prompt}</div>
+                    <div class="info-meta">${item.model.toUpperCase()} • ${item.size || 'Auto'}</div>
+                </div>
+            </div>`;
     }).join('');
 
     galleryGrid.insertAdjacentHTML('beforeend', html);
-    const newItems = galleryGrid.querySelectorAll('.gallery-item:not(.show)');
-    newItems.forEach((item, index) => {
-        setTimeout(() => {
-            item.classList.add('show');
-        }, index * 50);
-    });
     isGalleryLoading = false;
-    if (galleryGrid.scrollHeight <= galleryGrid.clientHeight + 200 && end < currentFilteredItems.length) {
-        setTimeout(() => {
-            if (!isGalleryLoading) {
-                currentPage++;
-                loadMoreItems();
-            }
-        }, batch.length * 50);
+}
+
+function hideLoaderAndShowGrid() {
+    galleryLoader.classList.add('hidden');
+    playGalleryUpdatedSound();
+    setTimeout(() => {
+        galleryGrid.classList.add('visible');
+    }, 50);
+}
+
+async function loadMoreItems() {
+    if (isGalleryLoading) return;
+    isGalleryLoading = true;
+
+    const offset = (currentPage - 1) * itemsPerPage;
+    
+    const filters = createFilterObject();
+    const showFavsOnly = document.getElementById('filter-favorites')?.checked;
+    if (showFavsOnly) filters.isFavorite = true;
+    const searchText = searchInput.value.toLowerCase().trim();
+    if (searchText) filters.search = searchText;
+    const modelVal = filterModel.value;
+    if (modelVal) filters.model = modelVal;
+    const ratioVal = filterRatio.value;
+    if (ratioVal) filters.ratio = ratioVal;
+    const startDateStr = filterDateStart.value;
+    const endDateStr = filterDateEnd.value;
+    if (startDateStr) filters.dateStart = new Date(startDateStr).setHours(0, 0, 0, 0);
+    if (endDateStr) filters.dateEnd = new Date(endDateStr).setHours(23, 59, 59, 999);
+
+    try {
+        const result = await dbHelper.getPaginated(offset, itemsPerPage, filters);
+        const newItems = result.items;
+        
+        if (newItems.length === 0) {
+            isGalleryLoading = false;
+            return; 
+        }
+
+        renderItems(newItems);
+        
+    } catch (err) {
+        console.error("Load more error:", err);
+        isGalleryLoading = false;
     }
 }
+
 let searchTimeout;
 searchInput.addEventListener('input', () => {
     clearTimeout(searchTimeout);
@@ -2017,10 +2129,10 @@ if (filterFavorites) {
         applyFilters();
     });
 }
-filterModel.addEventListener('change', applyFilters);
-filterRatio.addEventListener('change', applyFilters);
-filterDateStart.addEventListener('change', applyFilters);
-filterDateEnd.addEventListener('change', applyFilters);
+filterModel.addEventListener('change', () => applyFilters(false));
+filterRatio.addEventListener('change', () => applyFilters(false));
+filterDateStart.addEventListener('change', () => applyFilters(false));
+filterDateEnd.addEventListener('change', () => applyFilters(false));
 toggleFilterBtn.addEventListener('click', () => {
     filterPanel.classList.toggle('active');
     toggleFilterBtn.classList.toggle('active');
@@ -2979,7 +3091,7 @@ settingsBtn.addEventListener('click', () => {
     const advancedGroup = document.getElementById('setting-group-advanced');
     const autocompleteGroup = document.getElementById('setting-group-autocomplete');
     
-    if (currentAppMode === 'chat') {
+    if (currentAppMode === 'chat' || currentAppMode === 'editor') {
         if (advancedGroup) advancedGroup.style.display = 'none';
         if (autocompleteGroup) autocompleteGroup.style.display = 'none';
     } else {
@@ -3019,6 +3131,165 @@ if (perfToggle) {
 const savedPerfMode = localStorage.getItem('thena-perf-mode');
 if (savedPerfMode === 'true') {
     togglePerformanceMode(true);
+}
+
+const perfMonitorToggle = document.getElementById('perf-monitor-toggle');
+let perfMonitorBox = null;
+let lastFrameTime = performance.now();
+let frameCount = 0;
+let fps = 0;
+let perfAnimationFrame = null;
+
+function createPerfMonitorBox() {
+    if (document.getElementById('perf-monitor-box')) return;
+    perfMonitorBox = document.createElement('div');
+    perfMonitorBox.id = 'perf-monitor-box';
+    document.body.appendChild(perfMonitorBox);
+
+    const savedPos = localStorage.getItem('thena-perf-pos');
+    if (savedPos) {
+        try {
+            const { x, y } = JSON.parse(savedPos);
+            const safeX = Math.min(Math.max(0, x), window.innerWidth - 120);
+            const safeY = Math.min(Math.max(0, y), window.innerHeight - 80);
+            perfMonitorBox.style.left = safeX + 'px';
+            perfMonitorBox.style.top = safeY + 'px';
+            perfMonitorBox.style.right = 'auto';
+        } catch (e) {
+            console.error("Error parsing saved perf position", e);
+        }
+    }
+
+    makeDraggable(perfMonitorBox);
+}
+
+function makeDraggable(elmnt) {
+    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+
+    elmnt.onmousedown = dragMouseDown;
+    elmnt.ontouchstart = dragMouseDown;
+
+    function dragMouseDown(e) {
+        e = e || window.event;
+        if (e.type === 'touchstart') {
+            pos3 = e.touches[0].clientX;
+            pos4 = e.touches[0].clientY;
+        } else {
+            e.preventDefault();
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+        }
+
+        document.onmouseup = closeDragElement;
+        document.onmousemove = elementDrag;
+
+        document.ontouchend = closeDragElement;
+        document.ontouchmove = elementDrag;
+    }
+
+    function elementDrag(e) {
+        e = e || window.event;
+
+        let clientX, clientY;
+        if (e.type === 'touchmove') {
+            clientX = e.touches[0].clientX;
+            clientY = e.touches[0].clientY;
+        } else {
+            e.preventDefault();
+            clientX = e.clientX;
+            clientY = e.clientY;
+        }
+
+        pos1 = pos3 - clientX;
+        pos2 = pos4 - clientY;
+        pos3 = clientX;
+        pos4 = clientY;
+        elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+        elmnt.style.right = 'auto';
+    }
+
+    function closeDragElement() {
+        document.onmouseup = null;
+        document.onmousemove = null;
+        document.ontouchend = null;
+        document.ontouchmove = null;
+        localStorage.setItem('thena-perf-pos', JSON.stringify({
+            x: elmnt.offsetLeft,
+            y: elmnt.offsetTop
+        }));
+    }
+}
+
+function updatePerfStats() {
+    if (!perfMonitorBox) return;
+
+    let ramText = 'N/A';
+    let maxRam = 'N/A'
+    if (performance.memory) {
+        maxRam = Math.round(performance.memory.jsHeapSizeLimit / 1048576) + 'MB';
+        ramText = Math.round(performance.memory.usedJSHeapSize / 1048576) + 'MB';
+    }
+
+    const resText = window.innerWidth + 'x' + window.innerHeight;
+
+    const domNodes = document.getElementsByTagName('*').length;
+
+    const imgCount = document.images.length;
+
+    perfMonitorBox.innerHTML = `
+            <div><span class="label">FPS:</span><span style="color: ${fps < 30 ? '#ff4444' : fps < 50 ? '#ffaa00' : '#00ff88'}">${fps}</span></div>
+            <div><span class="label">RAM:</span><span>${ramText}/${maxRam}</span></div>
+            <div><span class="label">RES:</span><span>${resText}</span></div>
+            <div><span class="label">DOM:</span><span>${domNodes}</span></div>
+            <div><span class="label">IMG:</span><span>${imgCount}</span></div>
+        `;
+}
+
+function loopPerfMonitor() {
+    const now = performance.now();
+    frameCount++;
+    if (now - lastFrameTime >= 1000) {
+        fps = frameCount;
+        frameCount = 0;
+        lastFrameTime = now;
+        updatePerfStats();
+    }
+    perfAnimationFrame = requestAnimationFrame(loopPerfMonitor);
+}
+
+function togglePerfMonitor(enable) {
+    if (enable) {
+        createPerfMonitorBox();
+        requestAnimationFrame(() => perfMonitorBox.classList.add('visible'));
+        if (!perfAnimationFrame) loopPerfMonitor();
+        if (perfMonitorToggle) perfMonitorToggle.checked = true;
+        localStorage.setItem('thena-perf-monitor', 'true');
+    } else {
+        if (perfMonitorBox) perfMonitorBox.classList.remove('visible');
+        if (perfAnimationFrame) {
+            cancelAnimationFrame(perfAnimationFrame);
+            perfAnimationFrame = null;
+        }
+        if (perfMonitorToggle) perfMonitorToggle.checked = false;
+        localStorage.setItem('thena-perf-monitor', 'false');
+    }
+}
+
+if (perfMonitorToggle) {
+    perfMonitorToggle.addEventListener('change', (e) => {
+        togglePerfMonitor(e.target.checked);
+        if (typeof playInformationSound === "function") playInformationSound();
+        const msg = e.target.checked
+            ? (currentLang == "tr" ? "Performans Göstergesi Açıldı" : "Performance Monitor Enabled")
+            : (currentLang == "tr" ? "Performans Göstergesi Kapatıldı" : "Performance Monitor Disabled");
+        if (typeof showNotification === "function") showNotification(msg, "info");
+    });
+}
+
+const savedPerfMonitor = localStorage.getItem('thena-perf-monitor');
+if (savedPerfMonitor === 'true') {
+    togglePerfMonitor(true);
 }
 
 
@@ -3300,6 +3571,9 @@ if (btnConfirmReset) {
 
         try {
             await dbHelper.clear();
+            if (typeof chatDbHelper !== 'undefined') {
+                await chatDbHelper.clear();
+            }
             localStorage.clear();
             hardResetModal.classList.remove('active');
             settingsModal.classList.remove('active');
@@ -4229,6 +4503,10 @@ function switchAppMode(mode) {
     }
 
     if (modal) modal.classList.remove('active');
+    
+    if (typeof updateAppSwitcherLang === 'function') {
+        updateAppSwitcherLang(currentLang);
+    }
 }
 
 async function fetchCharacters() {
@@ -4336,6 +4614,7 @@ function renderCharacters(list) {
             e.stopPropagation();
             playInformationSound();
             showCharacterDetails({
+                id: char.id,
                 name: char.name,
                 image: char.characterIMG?.thumbnail || '',
                 subCategories: char.subCategories || [],

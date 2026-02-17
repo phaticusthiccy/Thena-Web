@@ -225,7 +225,7 @@ async function pollImageGeneration(generationId, apiKey, loadingBubbleId) {
                         existingBubble.innerHTML = `
                             <div class="message-content">
                                 <div class="generated-image-wrapper">
-                                    <img src="data:image/png;base64,${statusData.image}" alt="Generated Scene" style="max-width: 100%; border-radius: 8px; cursor: pointer; animation: fadeIn 0.5s ease;" onclick="window.open(this.src, '_blank')">
+                                    <img src="data:image/png;base64,${statusData.image}" alt="Generated Scene" style="max-width: 100%; border-radius: 8px; cursor: default; animation: fadeIn 0.5s ease;">
                                     <div class="gen-img-actions" style="position: absolute; bottom: 10px; right: 10px; display: flex; gap: 5px;">
                                         <button class="img-action-btn img-download-btn" data-img-id="${uniqueId}" onclick="downloadGeneratedImage(this, 'thena_${Date.now()}.png')" title="${currentLang === 'tr' ? 'Resmi İndir' : 'Download Image'}">
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

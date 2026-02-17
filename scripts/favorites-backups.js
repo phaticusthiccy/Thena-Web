@@ -1,15 +1,27 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const btnExport = document.getElementById('btn-export-data');
-    const btnImport = document.getElementById('btn-import-data');
-    const fileInputImport = document.getElementById('import-file-input');
-    const langBtn = document.getElementById('btn-language');
-    const dataModal = document.getElementById('data-selection-modal');
-    const btnDataCancel = document.getElementById('btn-data-cancel');
-    const btnDataConfirm = document.getElementById('btn-data-confirm');
-    const chkSettings = document.getElementById('chk-settings');
-    const chkGallery = document.getElementById('chk-gallery');
-    const chkChat = document.getElementById('chk-chat');
-    
+    const DOMCache = {
+        btnExport: document.getElementById('btn-export-data'),
+        btnImport: document.getElementById('btn-import-data'),
+        fileInputImport: document.getElementById('import-file-input'),
+        langBtn: document.getElementById('btn-language'),
+        dataModal: document.getElementById('data-selection-modal'),
+        btnDataCancel: document.getElementById('btn-data-cancel'),
+        btnDataConfirm: document.getElementById('btn-data-confirm'),
+        chkSettings: document.getElementById('chk-settings'),
+        chkGallery: document.getElementById('chk-gallery'),
+        chkChat: document.getElementById('chk-chat'),
+        modalTitle: document.getElementById('data-modal-title'),
+        lblDesc: document.getElementById('data-modal-desc'),
+        lblSet: document.getElementById('lbl-chk-settings'),
+        lblGal: document.getElementById('lbl-chk-gallery'),
+        lblChat: document.getElementById('lbl-chk-chat'),
+        cpuText: document.getElementById('cpu-usage-text'),
+        settingsModal: document.getElementById('settings-modal'),
+        sizeSettings: document.getElementById('size-settings'),
+        sizeGallery: document.getElementById('size-gallery'),
+        sizeChat: document.getElementById('size-chat')
+    };
+
     let pendingOperation = null; 
     let pendingImportData = null;
 
@@ -17,41 +29,32 @@ document.addEventListener('DOMContentLoaded', () => {
         const lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
         const t = translations[currentLang] || translations['en'];
 
-        const btnExport = document.getElementById('btn-export-data');
-        const btnImport = document.getElementById('btn-import-data');
-        if (btnExport && t.btnBackup) btnExport.textContent = t.btnBackup;
-        if (btnImport && t.btnRestore) btnImport.textContent = t.btnRestore;
+        if (DOMCache.btnExport && t.btnBackup) DOMCache.btnExport.textContent = t.btnBackup;
+        if (DOMCache.btnImport && t.btnRestore) DOMCache.btnImport.textContent = t.btnRestore;
 
-        const modalTitle = document.getElementById('data-modal-title');
-        const lblDesc = document.getElementById('data-modal-desc');
-        const lblSet = document.getElementById('lbl-chk-settings');
-        const lblGal = document.getElementById('lbl-chk-gallery');
-        const lblChat = document.getElementById('lbl-chk-chat');
-        const btnCancel = document.getElementById('btn-data-cancel');
-        const btnConfirm = document.getElementById('btn-data-confirm');
-
-        if (modalTitle && t.dataModalTitle) modalTitle.textContent = t.dataModalTitle;
-        if (lblDesc && t.dataModalDesc) lblDesc.textContent = t.dataModalDesc;
-        if (lblSet && t.lblChkSettings) lblSet.textContent = t.lblChkSettings;
-        if (lblGal && t.lblChkGallery) lblGal.textContent = t.lblChkGallery;
-        if (lblChat && t.lblChkChat) lblChat.textContent = t.lblChkChat;
-        if (btnCancel && t.btnDataCancel) btnCancel.textContent = t.btnDataCancel;
-        if (btnConfirm && t.btnDataConfirm) btnConfirm.textContent = t.btnDataConfirm;
+        if (DOMCache.modalTitle && t.dataModalTitle) DOMCache.modalTitle.textContent = t.dataModalTitle;
+        if (DOMCache.lblDesc && t.dataModalDesc) DOMCache.lblDesc.textContent = t.dataModalDesc;
+        if (DOMCache.lblSet && t.lblChkSettings) DOMCache.lblSet.textContent = t.lblChkSettings;
+        if (DOMCache.lblGal && t.lblChkGallery) DOMCache.lblGal.textContent = t.lblChkGallery;
+        if (DOMCache.lblChat && t.lblChkChat) DOMCache.lblChat.textContent = t.lblChkChat;
+        if (DOMCache.btnDataCancel && t.btnDataCancel) DOMCache.btnDataCancel.textContent = t.btnDataCancel;
+        if (DOMCache.btnDataConfirm && t.btnDataConfirm) DOMCache.btnDataConfirm.textContent = t.btnDataConfirm;
     };
 
     window.updateDataManagementLanguage();
-    const cpuText = document.getElementById('cpu-usage-text');
-    if (cpuText) {
+    if (DOMCache.cpuText) {
         let lastTime = performance.now();
         let frames = 0;
         let targetFPS = 60;
+        
+        const settingsModal = DOMCache.settingsModal; 
+        const cpuText = DOMCache.cpuText;
 
         const updateCPU = (currentTime) => {
-            if (!document.getElementById('settings-modal') || !document.getElementById('settings-modal').classList.contains('active')) {
+            if (!settingsModal || !settingsModal.classList.contains('active')) {
                 setTimeout(() => requestAnimationFrame(updateCPU), 500); 
                 return;
             }
-
             const now = currentTime || performance.now();
             const duration = now - lastTime;
             frames++;
@@ -62,12 +65,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     targetFPS = fps;
                 }
                 const maxFps = Math.ceil(targetFPS);
-                let load = Math.max(0, Math.min(100, Math.round(((maxFps - fps) / maxFps) * 100)));
+                
+                let load = ((maxFps - fps) / maxFps) * 100;
+                load = load < 0 ? 0 : (load > 100 ? 100 : Math.round(load));
+
                 if(load < 5) load = Math.floor(Math.random() * 5) + 1; 
+                
                 cpuText.textContent = `CPU: ${load}%`;
+                
                 if (load > 50) cpuText.style.color = '#ff4444';
                 else if (load > 20) cpuText.style.color = '#ffaa00';
                 else cpuText.style.color = '#00ff88';
+
                 frames = 0;
                 lastTime = now;
             }
@@ -77,35 +86,35 @@ document.addEventListener('DOMContentLoaded', () => {
         requestAnimationFrame(updateCPU);
     }
 
-    if (langBtn) {
-        langBtn.addEventListener('click', () => {
+    if (DOMCache.langBtn) {
+        DOMCache.langBtn.addEventListener('click', () => {
             setTimeout(() => {
                 updateDataManagementLanguage();
             }, 100);
         });
     }
 
-    if (btnExport) {
-        btnExport.onclick = (e) => {
+    if (DOMCache.btnExport) {
+        DOMCache.btnExport.onclick = (e) => {
             e.preventDefault();
             openDataModal('backup');
         };
     }
 
 
-    if (btnImport) {
-        btnImport.onclick = (e) => {
+    if (DOMCache.btnImport) {
+        DOMCache.btnImport.onclick = (e) => {
             e.preventDefault();
-            if (fileInputImport) {
-                fileInputImport.value = ''; 
-                fileInputImport.click();
+            if (DOMCache.fileInputImport) {
+                DOMCache.fileInputImport.value = ''; 
+                DOMCache.fileInputImport.click();
             }
         };
     }
 
 
-    if (fileInputImport) {
-        fileInputImport.onchange = (e) => {
+    if (DOMCache.fileInputImport) {
+        DOMCache.fileInputImport.onchange = (e) => {
             const file = e.target.files[0];
             if (!file) return;
 
@@ -120,6 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 } catch (err) {
                     console.error("JSON Hatası:", err);
                     if (typeof playErrorSound === "function") playErrorSound();
+                    
+                    const t = translations[currentLang] || translations['en'];
                     if(typeof showNotification === "function") 
                         showNotification(t.msgBackupError, "error");
                 }
@@ -130,23 +141,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     function openDataModal(mode) {
-        if (!dataModal) return;
+        if (!DOMCache.dataModal) return;
 
         pendingOperation = mode;
         updateDataManagementLanguage();
         
-        if(chkSettings) chkSettings.checked = true;
-        if(chkGallery) chkGallery.checked = true;
-        if(chkChat) chkChat.checked = true;
+        if(DOMCache.chkSettings) DOMCache.chkSettings.checked = true;
+        if(DOMCache.chkGallery) DOMCache.chkGallery.checked = true;
+        if(DOMCache.chkChat) DOMCache.chkChat.checked = true;
         
-        document.getElementById('size-settings').textContent = '...';
-        document.getElementById('size-gallery').textContent = '...';
-        document.getElementById('size-chat').textContent = '...';
+        if (DOMCache.sizeSettings) DOMCache.sizeSettings.textContent = '...';
+        if (DOMCache.sizeGallery) DOMCache.sizeGallery.textContent = '...';
+        if (DOMCache.sizeChat) DOMCache.sizeChat.textContent = '...';
 
         calculateSizes(mode);
 
-        playInformationSound();
-        dataModal.classList.add('active');
+        if (typeof playInformationSound === "function") playInformationSound();
+        DOMCache.dataModal.classList.add('active');
     }
 
     function formatBytes(bytes, decimals = 2) {
@@ -162,6 +173,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let settingsSize = 0;
         let gallerySize = 0;
         let chatSize = 0;
+        
+        const enc = new TextEncoder();
 
         if (mode === 'backup') {
             const settings = {
@@ -170,12 +183,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectedModel: localStorage.getItem('thena-model'),
                 autocomplete: localStorage.getItem('thena-autocomplete')
             };
-            settingsSize = new Blob([JSON.stringify(settings)]).size;
+            settingsSize = enc.encode(JSON.stringify(settings)).length;
 
             if (typeof dbHelper !== 'undefined') {
                 try {
                     const images = await dbHelper.getAll();
-                    gallerySize = new Blob([JSON.stringify(images)]).size;
+                    gallerySize = enc.encode(JSON.stringify(images)).length;
                 } catch (e) { console.error(e); }
             }
 
@@ -184,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const conversations = await chatDbHelper.getAllConversations();
                     const messages = await chatDbHelper.getAllMessages();
                     const chat = { conversations, messages };
-                    chatSize = new Blob([JSON.stringify(chat)]).size;
+                    chatSize = enc.encode(JSON.stringify(chat)).length;
                 } catch (e) { console.error(e); }
             }
 
@@ -192,45 +205,45 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = pendingImportData;
             
             if (data.settings) {
-                settingsSize = new Blob([JSON.stringify(data.settings)]).size;
+                settingsSize = enc.encode(JSON.stringify(data.settings)).length;
             }
             
             if (data.images) {
-                gallerySize = new Blob([JSON.stringify(data.images)]).size;
+                gallerySize = enc.encode(JSON.stringify(data.images)).length;
             }
             
             if (data.chat) {
-                chatSize = new Blob([JSON.stringify(data.chat)]).size;
+                chatSize = enc.encode(JSON.stringify(data.chat)).length;
             }
         }
 
-        document.getElementById('size-settings').textContent = formatBytes(settingsSize);
-        document.getElementById('size-gallery').textContent = formatBytes(gallerySize);
-        document.getElementById('size-chat').textContent = formatBytes(chatSize);
+        if (DOMCache.sizeSettings) DOMCache.sizeSettings.textContent = formatBytes(settingsSize);
+        if (DOMCache.sizeGallery) DOMCache.sizeGallery.textContent = formatBytes(gallerySize);
+        if (DOMCache.sizeChat) DOMCache.sizeChat.textContent = formatBytes(chatSize);
     }
 
     function closeDataModal() {
-        if (dataModal) dataModal.classList.remove('active');
+        if (DOMCache.dataModal) DOMCache.dataModal.classList.remove('active');
         pendingOperation = null;
         pendingImportData = null;
-        if (fileInputImport) fileInputImport.value = ''; 
+        if (DOMCache.fileInputImport) DOMCache.fileInputImport.value = ''; 
     }
 
-    if (btnDataCancel) {
-        btnDataCancel.onclick = closeDataModal;
+    if (DOMCache.btnDataCancel) {
+        DOMCache.btnDataCancel.onclick = closeDataModal;
     }
 
-    if (dataModal) {
-        dataModal.onclick = (e) => {
-            if (e.target === dataModal) closeDataModal();
+    if (DOMCache.dataModal) {
+        DOMCache.dataModal.onclick = (e) => {
+            if (e.target === DOMCache.dataModal) closeDataModal();
         };
     }
 
-    if (btnDataConfirm) {
-        btnDataConfirm.addEventListener('click', () => {
-            const includeSettings = chkSettings.checked;
-            const includeGallery = chkGallery.checked;
-            const includeChat = chkChat ? chkChat.checked : false;
+    if (DOMCache.btnDataConfirm) {
+        DOMCache.btnDataConfirm.addEventListener('click', () => {
+            const includeSettings = DOMCache.chkSettings.checked;
+            const includeGallery = DOMCache.chkGallery.checked;
+            const includeChat = DOMCache.chkChat ? DOMCache.chkChat.checked : false;
 
             if (!includeSettings && !includeGallery && !includeChat) {
                 if(typeof showNotification === "function") {
@@ -242,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            dataModal.classList.remove('active');
+            DOMCache.dataModal.classList.remove('active');
 
             if (pendingOperation === 'backup') {
                 executeBackup(includeSettings, includeGallery, includeChat);
@@ -319,9 +332,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function executeRestore(includeSettings, includeGallery, includeChat) {
-        if (!pendingImportData) return;
-        const data = pendingImportData;
+    async function executeRestore(data, includeSettings, includeGallery, includeChat) {
+        if (!data) return;
         let restoreCount = 0;
         let chatRestoreCount = 0;
         let t = translations[currentLang] || translations['en'];

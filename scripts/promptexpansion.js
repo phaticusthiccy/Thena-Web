@@ -249,40 +249,57 @@ const sfxTags = [
     "chromatic aberration", "scanlines", "vhs glitch", "double vision"
 ];
 
+const promptDictionary = [];
+const addTags = (tags, type) => {
+    for (let i = 0; i < tags.length; i++) {
+        promptDictionary.push({
+            text: tags[i],
+            lowerText: tags[i].toLowerCase(),
+            type: type
+        });
+    }
+};
 
-const promptDictionary = [
-    ...qualityTags.map(t => ({ text: t, type: "QUALITY" })),
-    ...lightingTags.map(t => ({ text: t, type: "LIGHT" })),
-    ...cameraTags.map(t => ({ text: t, type: "CAMERA" })),
-    ...styleTags.map(t => ({ text: t, type: "STYLE" })),
-    ...engineTags.map(t => ({ text: t, type: "ENGINE" })),
-    ...colorTags.map(t => ({ text: t, type: "COLOR" })),
-    ...materialTags.map(t => ({ text: t, type: "MATERIAL" })), 
-    ...environmentTags.map(t => ({ text: t, type: "ENVIRONMENT" })),
-    ...characterTags.map(t => ({ text: t, type: "CHAR" })),
-    ...anatomyTags.map(t => ({ text: t, type: "FACE" })),
-    ...fashionTags.map(t => ({ text: t, type: "CLOTH" })),
-    ...emotionTags.map(t => ({ text: t, type: "MOOD" })),
-    ...artistTags.map(t => ({ text: t, type: "ARTIST" })),
-    ...movieTags.map(t => ({ text: t, type: "MOVIE" })),
-    ...architectureTags.map(t => ({ text: t, type: "ARCH" })),
-    ...additionalQualityTags.map(t => ({ text: t, type: "QUALITY" })),
-    ...additionalLightingTags.map(t => ({ text: t, type: "LIGHT" })),
-    ...additionalCameraTags.map(t => ({ text: t, type: "CAMERA" })),
-    ...additionalStyleTags.map(t => ({ text: t, type: "STYLE" })),
-    ...additionalMaterialTags.map(t => ({ text: t, type: "MATRL" })), 
-    ...additionalEnvironmentTags.map(t => ({ text: t, type: "ENV" })),
-    ...poseTags.map(t => ({ text: t, type: "POSE" })),
-    ...compositionTags.map(t => ({ text: t, type: "COMPOSITION" })),
-    ...sfxTags.map(t => ({ text: t, type: "SFX" }))
-];
+addTags(qualityTags, "QUALITY");
+addTags(lightingTags, "LIGHT");
+addTags(cameraTags, "CAMERA");
+addTags(styleTags, "STYLE");
+addTags(engineTags, "ENGINE");
+addTags(colorTags, "COLOR");
+addTags(materialTags, "MATERIAL");
+addTags(environmentTags, "ENVIRONMENT");
+addTags(characterTags, "CHAR");
+addTags(anatomyTags, "FACE");
+addTags(fashionTags, "CLOTH");
+addTags(emotionTags, "MOOD");
+addTags(artistTags, "ARTIST");
+addTags(movieTags, "MOVIE");
+addTags(architectureTags, "ARCH");
+addTags(additionalQualityTags, "QUALITY");
+addTags(additionalLightingTags, "LIGHT");
+addTags(additionalCameraTags, "CAMERA");
+addTags(additionalStyleTags, "STYLE");
+addTags(additionalMaterialTags, "MATRL");
+addTags(additionalEnvironmentTags, "ENV");
+addTags(poseTags, "POSE");
+addTags(compositionTags, "COMPOSITION");
+addTags(sfxTags, "SFX");
 
 promptDictionary.sort((a, b) => a.text.localeCompare(b.text));
+
 const promptInputArea = document.getElementById('prompt');
 const autocompleteList = document.getElementById('autocomplete-list');
 let currentFocus = -1;
 let isAutocompleteEnabled = localStorage.getItem('thena-autocomplete') !== 'false';
+const TAG_REGEX = /([a-zA-Z0-9_]+)$/;
 
+autocompleteList.addEventListener('click', function(e) {
+    const item = e.target.closest('.suggestion-item');
+    if (item) {
+        const tagText = item.dataset.tag; 
+        if(tagText) insertTag(tagText);
+    }
+});
 
 promptInputArea.addEventListener('input', function(e) {
     if (!isAutocompleteEnabled) {
@@ -291,41 +308,52 @@ promptInputArea.addEventListener('input', function(e) {
     }
 
     const val = this.value;
-    const lastWordMatch = val.match(/([a-zA-Z0-9_]+)$/);
+    const lastWordMatch = val.match(TAG_REGEX);
         
     closeAllLists();
     
     if (!lastWordMatch) return;
 
     const query = lastWordMatch[0].toLowerCase();
+    const queryLen = query.length;
 
-    const matches = promptDictionary.filter(item => item.text.toLowerCase().startsWith(query));
+    const matches = [];
+    for (let i = 0; i < promptDictionary.length; i++) {
+        const item = promptDictionary[i];
+        if (item.lowerText.startsWith(query)) {
+            matches.push(item);
+            if (matches.length >= 10) break;
+        }
+    }
 
     if (matches.length === 0) return;
 
     autocompleteList.classList.add('active');
     
-    matches.slice(0, 10).forEach(match => {
+    const fragment = document.createDocumentFragment();
+
+    for (let i = 0; i < matches.length; i++) {
+        const match = matches[i];
         const itemDiv = document.createElement('div');
-        itemDiv.className = 'suggestion-item';        
-        const matchText = `<strong>${match.text.substr(0, query.length)}</strong><i>${match.text.substr(query.length)}</i>`;
+        itemDiv.className = 'suggestion-item';
+        itemDiv.dataset.tag = match.text;
+
+        const matchText = `<strong>${match.text.substr(0, queryLen)}</strong><i>${match.text.substr(queryLen)}</i>`;
         
         itemDiv.innerHTML = `
             <div class="suggestion-text">${matchText}</div>
             <span class="tag-badge type-${match.type.toLowerCase()}">${match.type}</span>
         `;
         
-        itemDiv.addEventListener('click', function() {
-            insertTag(match.text);
-        });
-        
-        autocompleteList.appendChild(itemDiv);
-    });
+        fragment.appendChild(itemDiv);
+    }
+    autocompleteList.appendChild(fragment);
 });
 
 promptInputArea.addEventListener('keydown', function(e) {
-    let items = autocompleteList.getElementsByClassName('suggestion-item');
+    const items = autocompleteList.getElementsByClassName('suggestion-item');
     if (!autocompleteList.classList.contains('active')) return;
+    
     if (e.key === 'ArrowDown') {
         currentFocus++;
         addActive(items);
@@ -345,7 +373,7 @@ promptInputArea.addEventListener('keydown', function(e) {
 });
 
 function addActive(items) {
-    if (!items) return false;
+    if (!items || items.length === 0) return false;
     removeActive(items);
     if (currentFocus >= items.length) currentFocus = 0;
     if (currentFocus < 0) currentFocus = (items.length - 1);
@@ -368,23 +396,22 @@ function closeAllLists() {
 
 function insertTag(selectedTag) {
     const val = promptInputArea.value;
-    const lastIndex = val.lastIndexOf(val.match(/([a-zA-Z0-9_]+)$/)[0]);
-    
+    const match = val.match(TAG_REGEX);
+    if (!match) return;
+
+    const lastIndex = val.lastIndexOf(match[0]);
     const newText = val.substring(0, lastIndex) + selectedTag;
     
     promptInputArea.value = newText;
-    
     promptInputArea.focus();
-    
     closeAllLists();
     
     if(localStorage) localStorage.setItem('thena-last-prompt', newText);
-    
     if(typeof checkFormReady === 'function') checkFormReady();
 }
 
 document.addEventListener('click', function(e) {
-    if (e.target !== promptInputArea && e.target !== autocompleteList) {
+    if (e.target !== promptInputArea && !autocompleteList.contains(e.target) && e.target !== autocompleteList) {
         closeAllLists();
     }
 });
@@ -399,13 +426,12 @@ document.addEventListener('DOMContentLoaded', () => {
             isAutocompleteEnabled = e.target.checked;
             localStorage.setItem('thena-autocomplete', isAutocompleteEnabled);
             
+            playInformationSound();
             if (!isAutocompleteEnabled) {
                 closeAllLists();
-                playInformationSound();
-                showNotification(currentLang == "tr" ? "Autocomplete Deaktif Edildi" : "Autocomplete Disabled", "info");
+                showNotification(typeof currentLang !== 'undefined' && currentLang == "tr" ? "Autocomplete Deaktif Edildi" : "Autocomplete Disabled", "info");
             } else {
-                playInformationSound();
-                showNotification(currentLang == "tr" ? "Autocomplete Aktif Edildi" : "Autocomplete Enabled", "info");
+                showNotification(typeof currentLang !== 'undefined' && currentLang == "tr" ? "Autocomplete Aktif Edildi" : "Autocomplete Enabled", "info");
             }
         });
     }

@@ -29,24 +29,15 @@ function loadEditorPresets() {
                     card.appendChild(img);
                     card.appendChild(name);
                     
-                    card.addEventListener('click', () => {
-                        const promptInput = document.getElementById('editor-prompt');
-                        if (promptInput) {
-                            if (typeof playSuccessSound === 'function') playSuccessSound();
-                            if (typeof typeWriterEffect2 === 'function') {
-                                typeWriterEffect2(preset.prompt, promptInput);
-                            } else {
-                                promptInput.value = preset.prompt;
-                                const charCount = document.getElementById('editor-char-count');
-                                if(charCount) charCount.innerText = `${preset.prompt.length} / 5000`;
-                                promptInput.dispatchEvent(new Event('input', { bubbles: true }));
-                            }
-                            checkEditorFormReady();
-                        }
-                    });
+                    card.dataset.prompt = preset.prompt;
                     
                     presetsContainer.appendChild(card);
                 });
+                
+                const presetSearchInput = document.getElementById('editor-preset-search');
+                if (presetSearchInput && presetSearchInput.value.trim() !== '') {
+                    presetSearchInput.dispatchEvent(new Event('input'));
+                }
             } else {
                  presetsContainer.innerHTML = `<div class="loading-presets">${t.editorNoPresets}</div>`;
             }
@@ -178,11 +169,11 @@ document.addEventListener('DOMContentLoaded', () => {
             modBtn.dataset.level = editorModerationLevel;
 
             if (editorModerationLevel === 'high') {
-                showNotification(currentLang == "tr" ? "Moderasyon düzeyi normal olarak ayarlandı." : 'Moderation set to medium.', 'info');
-            } else if (editorModerationLevel === 'medium') {
-                showNotification(currentLang == "tr" ? "Moderasyon düzeyi düşük olarak ayarlandı." : 'Moderation set to low.', 'info');
-            } else {
                 showNotification(currentLang == "tr" ? "Moderasyon düzeyi yüksek olarak ayarlandı." : 'Moderation set to high.', 'info');
+            } else if (editorModerationLevel === 'medium') {
+                showNotification(currentLang == "tr" ? "Moderasyon düzeyi normal olarak ayarlandı." : 'Moderation set to medium.', 'info');
+            } else {
+                showNotification(currentLang == "tr" ? "Moderasyon düzeyi düşük olarak ayarlandı." : 'Moderation set to low.', 'info');
             }
 
             modBtn.title = `Moderation: ${editorModerationLevel.charAt(0).toUpperCase() + editorModerationLevel.slice(1)}`;
@@ -208,6 +199,94 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (editorApiKeyInput) editorApiKeyInput.addEventListener('input', checkEditorFormReady);
     if (editorPromptInput) editorPromptInput.addEventListener('input', checkEditorFormReady);
+
+    const presetsContainer = document.getElementById('presets-container');
+    if (presetsContainer) {
+        presetsContainer.addEventListener('click', (e) => {
+            const card = e.target.closest('.preset-card');
+            if (!card || !card.dataset.prompt) return;
+            
+            const promptInput = document.getElementById('editor-prompt');
+            if (promptInput) {
+                if (typeof playSuccessSound === 'function') playSuccessSound();
+                if (typeof typeWriterEffect2 === 'function') {
+                    typeWriterEffect2(card.dataset.prompt, promptInput);
+                } else {
+                    promptInput.value = card.dataset.prompt;
+                    const charCount = document.getElementById('editor-char-count');
+                    if(charCount) charCount.innerText = `${card.dataset.prompt.length} / 5000`;
+                    promptInput.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+                checkEditorFormReady();
+            }
+        });
+    }
+
+    const scrollLeftBtn = document.getElementById('preset-scroll-left');
+    const scrollRightBtn = document.getElementById('preset-scroll-right');
+
+    if (scrollLeftBtn && scrollRightBtn && presetsContainer) {
+        scrollLeftBtn.addEventListener('click', () => {
+            presetsContainer.scrollBy({ left: -200, behavior: 'smooth' });
+        });
+
+        scrollRightBtn.addEventListener('click', () => {
+            presetsContainer.scrollBy({ left: 200, behavior: 'smooth' });
+        });
+    }
+
+    const presetSearchInput = document.getElementById('editor-preset-search');
+    if (presetSearchInput) {
+        presetSearchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.preset-card');
+            
+            cards.forEach(card => {
+                const name = card.querySelector('.preset-name').textContent.toLowerCase();
+                if (name.includes(searchTerm)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    }
+
+    const toggleViewBtn = document.getElementById('btn-toggle-preset-view');
+    if (toggleViewBtn && presetsContainer) {
+        toggleViewBtn.addEventListener('click', () => {
+            if (typeof playInformationSound === 'function') playInformationSound();
+            presetsContainer.classList.toggle('grid-view');
+            toggleViewBtn.classList.toggle('active');
+            
+            const isGrid = presetsContainer.classList.contains('grid-view');
+            
+            if (scrollLeftBtn) scrollLeftBtn.style.display = isGrid ? 'none' : 'flex';
+            if (scrollRightBtn) scrollRightBtn.style.display = isGrid ? 'none' : 'flex';
+            
+            if (isGrid) {
+                toggleViewBtn.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                </svg>`;
+                toggleViewBtn.title = (typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Liste Görünümü' : 'List View';
+            } else {
+                 toggleViewBtn.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>`;
+                toggleViewBtn.title = (typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Izgara Görünümü' : 'Grid View';
+            }
+        });
+    }
 });
 
 function checkEditorFormReady() {
@@ -252,32 +331,7 @@ async function generateVariation() {
         return;
     }
 
-    if(generateBtn) {
-        generateBtn.disabled = true;
-        generateBtn.innerText = currentLang == "tr" ? 'Model Yükleniyor...' : 'Model Loading...';
-    }
-
-    const promptInput = document.getElementById('editor-prompt');
-    const fileInput = document.getElementById('editor-file-input');
-    const clearBtn = document.getElementById('editor-clear-btn');
-    const uploadArea = document.getElementById('editor-upload-area');
-
-    if (promptInput) promptInput.disabled = true;
-    if (fileInput) fileInput.disabled = true;
-    if (clearBtn) {
-        clearBtn.style.pointerEvents = 'none';
-        clearBtn.style.opacity = '0.5';
-    }
-    if (uploadArea) {
-        uploadArea.style.pointerEvents = 'none';
-        uploadArea.style.opacity = '0.7';
-    }
-
-    const presetCards = document.querySelectorAll('.preset-card');
-    presetCards.forEach(card => {
-        card.style.pointerEvents = 'none';
-        card.style.opacity = '0.5';
-    });
+    setEditorLoadingState(true);
     
     if (typeof playStartSound === 'function') playStartSound();
 
@@ -308,30 +362,7 @@ async function generateVariation() {
              console.error('Generation Error:', error);
              if(typeof playErrorSound === 'function') playErrorSound();
              showNotification(currentLang == "tr" ? "Hata: " + error.message : "Error: " + error.message, 'error');
-             if(generateBtn) {
-                 generateBtn.disabled = false;
-                 generateBtn.innerText = currentLang == "tr" ? 'Varyasyon Oluştur' : 'Generate Variation';
-             }
-            const promptInput = document.getElementById('editor-prompt');
-            const fileInput = document.getElementById('editor-file-input');
-            const clearBtn = document.getElementById('editor-clear-btn');
-            const uploadArea = document.getElementById('editor-upload-area');
-
-            if (promptInput) promptInput.disabled = false;
-            if (fileInput) fileInput.disabled = false;
-            if (clearBtn) {
-                clearBtn.style.pointerEvents = '';
-                clearBtn.style.opacity = '';
-            }
-            if (uploadArea) {
-                uploadArea.style.pointerEvents = '';
-                uploadArea.style.opacity = '';
-            }
-            const presetCards = document.querySelectorAll('.preset-card');
-            presetCards.forEach(card => {
-                card.style.pointerEvents = '';
-                card.style.opacity = '';
-            });
+             setEditorLoadingState(false);
         }
     } catch (error) {
         if (genNotif) genNotif();
@@ -339,32 +370,7 @@ async function generateVariation() {
         if(typeof playErrorSound === 'function') playErrorSound();
         showNotification(currentLang == "tr" ? "Hata: " + error.message : "Error: " + error.message, 'error');
 
-        if(generateBtn) {
-            generateBtn.disabled = false;
-            generateBtn.innerText = currentLang == "tr" ? 'Varyasyon Oluştur' : 'Generate Variation';
-        }
-
-        const promptInput = document.getElementById('editor-prompt');
-        const fileInput = document.getElementById('editor-file-input');
-        const clearBtn = document.getElementById('editor-clear-btn');
-        const uploadArea = document.getElementById('editor-upload-area');
-
-        if (promptInput) promptInput.disabled = false;
-        if (fileInput) fileInput.disabled = false;
-        if (clearBtn) {
-            clearBtn.style.pointerEvents = '';
-            clearBtn.style.opacity = '';
-        }
-        if (uploadArea) {
-            uploadArea.style.pointerEvents = '';
-            uploadArea.style.opacity = '';
-        }
-
-        const presetCards = document.querySelectorAll('.preset-card');
-        presetCards.forEach(card => {
-            card.style.pointerEvents = '';
-            card.style.opacity = '';
-        });
+        setEditorLoadingState(false);
     }
 }
 
@@ -388,34 +394,6 @@ async function pollEditorGeneration(id, apiKey, prompt, genNotif, originalImage,
     const generateBtn = document.getElementById('editor-generate-btn');
     
     await new Promise(r => setTimeout(r, 2000));
-
-    const enableInputs = () => {
-        if(generateBtn) {
-            generateBtn.disabled = false;
-            generateBtn.innerText = currentLang == "tr" ? 'Varyasyon Oluştur' : 'Generate Variation';
-        }
-        const promptInput = document.getElementById('editor-prompt');
-        const fileInput = document.getElementById('editor-file-input');
-        const clearBtn = document.getElementById('editor-clear-btn');
-        const uploadArea = document.getElementById('editor-upload-area');
-
-        if (promptInput) promptInput.disabled = false;
-        if (fileInput) fileInput.disabled = false;
-        if (clearBtn) {
-            clearBtn.style.pointerEvents = '';
-            clearBtn.style.opacity = '';
-        }
-        if (uploadArea) {
-            uploadArea.style.pointerEvents = '';
-            uploadArea.style.opacity = '';
-        }
-        
-        const presetCards = document.querySelectorAll('.preset-card');
-        presetCards.forEach(card => {
-            card.style.pointerEvents = '';
-            card.style.opacity = '';
-        });
-    };
 
     const checkStatus = async () => {
         try {
@@ -468,12 +446,12 @@ async function pollEditorGeneration(id, apiKey, prompt, genNotif, originalImage,
                     });
                 }
                 
-                enableInputs();
+                setEditorLoadingState(false);
             } else {
                 if (genNotif) genNotif();
                 if(typeof playErrorSound === 'function') playErrorSound();
                 showNotification(currentLang == "tr" ? "Hata: " + data.content : "Error: " + data.content, 'error');
-                enableInputs();
+                setEditorLoadingState(false);
                 return;
             }
         } catch (error) {
@@ -481,8 +459,49 @@ async function pollEditorGeneration(id, apiKey, prompt, genNotif, originalImage,
             console.error('Polling Error:', error);
             if(typeof playErrorSound === 'function') playErrorSound();
             showNotification(currentLang == "tr" ? "Hata: " + error.message : "Error: " + error.message, 'error');
-            enableInputs();
+            setEditorLoadingState(false);
         }
     };
     checkStatus();
+}
+
+function setEditorLoadingState(isLoading) {
+    const generateBtn = document.getElementById('editor-generate-btn');
+    const promptInput = document.getElementById('editor-prompt');
+    const fileInput = document.getElementById('editor-file-input');
+    const clearBtn = document.getElementById('editor-clear-btn');
+    const uploadArea = document.getElementById('editor-upload-area');
+    const presetCards = document.querySelectorAll('.preset-card');
+    
+    const disabledState = !!isLoading;
+
+    if (generateBtn) {
+        generateBtn.disabled = disabledState;
+        if (disabledState) {
+             generateBtn.innerText = (typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Model Yükleniyor...' : 'Model Loading...';
+        } else {
+             generateBtn.innerText = (typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Varyasyon Oluştur' : 'Generate Variation';
+        }
+    }
+
+    if (promptInput) promptInput.disabled = disabledState;
+    if (fileInput) fileInput.disabled = disabledState;
+    
+    const pointerEvents = disabledState ? 'none' : '';
+    const opacity = disabledState ? '0.5' : '';
+
+    if (clearBtn) {
+        clearBtn.style.pointerEvents = pointerEvents;
+        clearBtn.style.opacity = opacity;
+    }
+    
+    if (uploadArea) {
+        uploadArea.style.pointerEvents = pointerEvents;
+        uploadArea.style.opacity = disabledState ? '0.7' : '';
+    }
+
+    for(let i = 0; i < presetCards.length; i++) {
+        presetCards[i].style.pointerEvents = pointerEvents;
+        presetCards[i].style.opacity = opacity;
+    }
 }
