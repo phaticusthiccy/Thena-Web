@@ -206,7 +206,7 @@ let isPromptEnhancedByWand = false;
 const viewShareBtn = document.getElementById('btn-share-view');
 const viewShareWrapper = document.getElementById('share-view-wrapper');
 let currentPage = 1;
-const itemsPerPage = 24;
+const itemsPerPage = 14;
 let currentFilteredItems = [];
 const DB_NAME = 'ThenaGalleryDB';
 const DB_VERSION = 2;
@@ -348,7 +348,7 @@ const dbHelper = {
             request.onerror = () => reject(request.error);
         });
     },
-    getPaginated: async (offset = 0, limit = 24, filters = {}) => {
+    getPaginated: async (offset = 0, limit = 24, filters = {}, direction = 'prev') => {
         const db = await dbHelper.open();
         return new Promise((resolve, reject) => {
             const transaction = db.transaction([STORE_NAME], 'readonly');
@@ -356,7 +356,7 @@ const dbHelper = {
             const items = [];
             let hasFilters = Object.keys(filters).length > 0;
             
-            const request = store.openCursor(null, 'prev');
+            const request = store.openCursor(null, direction);
             let advanced = false;
             let counter = 0;
             let matchCount = 0;
@@ -2000,7 +2000,8 @@ async function applyFilters(withAnimation = false) {
 
     try {
         loaderStatus.innerText = 'Querying database...';
-        const result = await dbHelper.getPaginated(0, itemsPerPage, filters);
+        const direction = sortNewestFirst ? 'prev' : 'next';
+        const result = await dbHelper.getPaginated(0, itemsPerPage, filters, direction);
         currentFilteredItems = result.items;
 
         if (currentFilteredItems.length === 0 && !isGeneratingImage) {
@@ -2100,7 +2101,8 @@ async function loadMoreItems() {
     if (endDateStr) filters.dateEnd = new Date(endDateStr).setHours(23, 59, 59, 999);
 
     try {
-        const result = await dbHelper.getPaginated(offset, itemsPerPage, filters);
+        const direction = sortNewestFirst ? 'prev' : 'next';
+        const result = await dbHelper.getPaginated(offset, itemsPerPage, filters, direction);
         const newItems = result.items;
         
         if (newItems.length === 0) {
@@ -2984,9 +2986,8 @@ if (shareBtn) {
 
                 const data = await response.json();
 
-                if (data.status === 200 && data.image) {
-                    const urlObj = new URL(data.image);
-                    const imageId = urlObj.searchParams.get("id");
+                if (data.status === 200 && data.image && data.uniqID_showcase) {
+                    const imageId = data.uniqID_showcase;
 
                     const myShowcaseUrl = `https://create.thena.workers.dev/publicShowcase?id=${imageId}`;
 

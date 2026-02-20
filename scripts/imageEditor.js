@@ -254,12 +254,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const toggleViewBtn = document.getElementById('btn-toggle-preset-view');
     if (toggleViewBtn && presetsContainer) {
+        const savedViewMode = localStorage.getItem('editorViewMode');
+        if (savedViewMode === 'grid') {
+            presetsContainer.classList.add('grid-view');
+            toggleViewBtn.classList.add('active');
+            
+            if (scrollLeftBtn) scrollLeftBtn.style.display = 'none';
+            if (scrollRightBtn) scrollRightBtn.style.display = 'none';
+
+            toggleViewBtn.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="8" y1="6" x2="21" y2="6"></line>
+                <line x1="8" y1="12" x2="21" y2="12"></line>
+                <line x1="8" y1="18" x2="21" y2="18"></line>
+                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+            </svg>`;
+            toggleViewBtn.title = (typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Liste Görünümü' : 'List View';
+        }
+
         toggleViewBtn.addEventListener('click', () => {
             if (typeof playInformationSound === 'function') playInformationSound();
             presetsContainer.classList.toggle('grid-view');
             toggleViewBtn.classList.toggle('active');
             
             const isGrid = presetsContainer.classList.contains('grid-view');
+            
+            localStorage.setItem('editorViewMode', isGrid ? 'grid' : 'list');
             
             if (scrollLeftBtn) scrollLeftBtn.style.display = isGrid ? 'none' : 'flex';
             if (scrollRightBtn) scrollRightBtn.style.display = isGrid ? 'none' : 'flex';
