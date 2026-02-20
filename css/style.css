@@ -4246,6 +4246,10 @@ body.performance-mode .model-filter-container {
     transform: translateY(0);
 }
 
+#view-chatbot.active-view {
+    display: flex !important;
+}
+
 .hidden-view {
     display: none !important;
     opacity: 0;
@@ -6441,7 +6445,7 @@ body.performance-mode .model-filter-container {
 
 .preset-card {
     flex: 0 0 140px;
-    height: 180px;
+    aspect-ratio: 1;
     border-radius: 10px;
     position: relative;
     cursor: pointer;
@@ -6969,6 +6973,7 @@ body.performance-mode .model-filter-container {
     user-select: none;
     touch-action: none;
     cursor: move;
+    overflow: hidden;
 }
 
 #perf-monitor-box.visible {
@@ -6976,20 +6981,62 @@ body.performance-mode .model-filter-container {
     transform: translateY(0);
 }
 
-#perf-monitor-box div {
+#perf-monitor-box .perf-content {
+    pointer-events: none;
+}
+
+#perf-monitor-box .perf-content div {
     display: flex;
     justify-content: space-between;
     margin-bottom: 4px;
     pointer-events: none;
 }
 
-#perf-monitor-box div:last-child {
+#perf-monitor-box .perf-content div:last-child {
     margin-bottom: 0;
 }
 
 #perf-monitor-box span.label {
     color: #888;
     margin-right: 10px;
+}
+
+#perf-monitor-box .perf-resize-handle {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 18px;
+    height: 18px;
+    cursor: nwse-resize;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+    touch-action: none;
+    opacity: 0.3;
+    transition: opacity 0.2s ease, color 0.2s ease;
+    color: #888;
+    z-index: 10;
+}
+
+#perf-monitor-box .perf-resize-handle:hover {
+    opacity: 1;
+    color: var(--primary);
+}
+
+#perf-monitor-box .perf-resize-handle svg {
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+}
+
+#perf-monitor-box.resizing {
+    transition: none;
+}
+
+#perf-monitor-box.resizing .perf-resize-handle {
+    opacity: 1;
+    color: var(--primary);
 }
 
 .presets-wrapper {

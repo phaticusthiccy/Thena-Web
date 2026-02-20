@@ -236,19 +236,40 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const presetSearchInput = document.getElementById('editor-preset-search');
+    const noResultsBox = document.getElementById('editor-search-no-results');
     if (presetSearchInput) {
         presetSearchInput.addEventListener('input', (e) => {
             const searchTerm = e.target.value.toLowerCase();
             const cards = document.querySelectorAll('.preset-card');
+            let visibleCount = 0;
             
             cards.forEach(card => {
                 const name = card.querySelector('.preset-name').textContent.toLowerCase();
                 if (name.includes(searchTerm)) {
                     card.style.display = '';
+                    visibleCount++;
                 } else {
                     card.style.display = 'none';
                 }
             });
+
+            if (noResultsBox) {
+                const shouldShow = visibleCount === 0 && searchTerm !== '';
+                const currentlyVisible = noResultsBox.style.display !== 'none' && !noResultsBox.classList.contains('exiting');
+
+                if (shouldShow && !currentlyVisible) {
+                    noResultsBox.classList.remove('exiting');
+                    noResultsBox.style.display = 'flex';
+                } else if (!shouldShow && currentlyVisible) {
+                    noResultsBox.classList.add('exiting');
+                    const onEnd = () => {
+                        noResultsBox.style.display = 'none';
+                        noResultsBox.classList.remove('exiting');
+                        noResultsBox.removeEventListener('animationend', onEnd);
+                    };
+                    noResultsBox.addEventListener('animationend', onEnd);
+                }
+            }
         });
     }
 
@@ -380,11 +401,23 @@ async function generateVariation() {
         if (response.ok && data.status === 200 && data.image) {
             await pollEditorGeneration(data.image, apiKey, prompt, genNotif, editorSelectedFile, editorModerationLevel);
         } else {
-             if (genNotif) genNotif();
-             console.error('Generation Error:', error);
-             if(typeof playErrorSound === 'function') playErrorSound();
-             showNotification(currentLang == "tr" ? "Hata: " + error.message : "Error: " + error.message, 'error');
-             setEditorLoadingState(false);
+            if (genNotif) genNotif();
+            setEditorLoadingState(false);
+            playErrorSound();
+            if (data.status == 429) {
+                showNotification(currentLang == "tr" ? "Limit tükendi! Lütfen biraz bekleyin ve tekrar deneyin." : 'Limit Exceeded! Please wait a few seconds and try again.', 'error');
+                return;
+            }
+            if (data.status == 401 && data.content.includes('not allowed')) {
+                showNotification(currentLang == "tr" ? "Lütfen moderation seviyesini medium veya low olarak ayarlayın." : 'Please set moderation level to medium or low.', 'error');
+                return;
+            }
+            if (data.status == 423) {
+                showNotification(currentLang == "tr" ? "Thena şuanda çok yoğun. Lütfen daha sonra tekrar deneyin." : 'Thena is currently overloaded. Please try again later.', 'error');
+                return;
+            }
+            showNotification(`Error: ${data.content || 'Unknown Error'}`, 'error');
+            return;
         }
     } catch (error) {
         if (genNotif) genNotif();

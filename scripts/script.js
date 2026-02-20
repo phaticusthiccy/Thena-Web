@@ -85,7 +85,7 @@ const MODEL_STATS = {
     "5g72h1 y661hp k771ns 33bb21 77bagl 6b 3090": { intel: 4, qual: 4, speed: 2 },
     // Thena Anime Fast
     "6781x 66189 00m162 16g61 00y71 6000": { intel: 2, qual: 3, speed: 5 },
-    //Thena MiniWa
+    // Thena MiniWa
     "4c3e77 uy8g8 16gga 54h8h 999a5 5060": { intel: 3, qual: 3, speed: 4 },
     // Thena Radiant
     "771ks 71g6g8 hlh8h8 6b4a5 77b4a5 5060": { intel: 4, qual: 4, speed: 4 },
@@ -698,6 +698,7 @@ apiKeyInput.addEventListener('input', () => {
     else localStorage.removeItem(LS_KEYS.API_KEY);
     checkFormReady();
 });
+
 promptInput.addEventListener('input', () => {
     autoResize(promptInput);
     localStorage.setItem(LS_KEYS.PROMPT, promptInput.value);
@@ -708,6 +709,21 @@ promptInput.addEventListener('input', () => {
         }
     }
     checkFormReady();
+
+    const isPreviewEnabled = localStorage.getItem('thena-prompt-preview') === 'true';
+    if (isPreviewEnabled) {
+        if (promptPreviewTimer) clearTimeout(promptPreviewTimer);
+        const val = promptInput.value.trim();
+        if (val.length > 0 && val.length < 10) {
+            if (promptPreviewAbort) promptPreviewAbort.abort();
+            setPreviewCountdown(10 - val.length);
+        } else if (val.length >= 10) {
+            setPreviewCardsLoading();
+            promptPreviewTimer = setTimeout(() => fetchPromptPreview(val), 800);
+        } else {
+             renderPreviewResults([]); 
+        }
+    }
 });
 
 ['click', 'focus'].forEach(evt => {
@@ -3091,13 +3107,16 @@ settingsBtn.addEventListener('click', () => {
     const currentAppMode = localStorage.getItem('thena-last-app-mode');
     const advancedGroup = document.getElementById('setting-group-advanced');
     const autocompleteGroup = document.getElementById('setting-group-autocomplete');
+    const promptPreviewGroup = document.getElementById('setting-group-prompt-preview');
     
     if (currentAppMode === 'chat' || currentAppMode === 'editor') {
         if (advancedGroup) advancedGroup.style.display = 'none';
         if (autocompleteGroup) autocompleteGroup.style.display = 'none';
+        if (promptPreviewGroup) promptPreviewGroup.style.display = 'none';
     } else {
         if (advancedGroup) advancedGroup.style.display = '';
         if (autocompleteGroup) autocompleteGroup.style.display = '';
+        if (promptPreviewGroup) promptPreviewGroup.style.display = '';
     }
     
     settingsModal.classList.add('active');
@@ -3147,21 +3166,19 @@ function createPerfMonitorBox() {
     perfMonitorBox.id = 'perf-monitor-box';
     document.body.appendChild(perfMonitorBox);
 
-    const savedPos = localStorage.getItem('thena-perf-pos');
-    if (savedPos) {
+    const savedSize = localStorage.getItem('thena-perf-size');
+    if (savedSize) {
         try {
-            const { x, y } = JSON.parse(savedPos);
-            const safeX = Math.min(Math.max(0, x), window.innerWidth - 120);
-            const safeY = Math.min(Math.max(0, y), window.innerHeight - 80);
-            perfMonitorBox.style.left = safeX + 'px';
-            perfMonitorBox.style.top = safeY + 'px';
-            perfMonitorBox.style.right = 'auto';
+            const { w, h } = JSON.parse(savedSize);
+            perfMonitorBox.style.width = w + 'px';
+            perfMonitorBox.style.height = h + 'px';
         } catch (e) {
-            console.error("Error parsing saved perf position", e);
+            console.error("Error parsing saved perf size", e);
         }
     }
 
     makeDraggable(perfMonitorBox);
+    makeResizable(perfMonitorBox);
 }
 
 function makeDraggable(elmnt) {
@@ -3172,6 +3189,7 @@ function makeDraggable(elmnt) {
 
     function dragMouseDown(e) {
         e = e || window.event;
+        if (e.target.closest && e.target.closest('.perf-resize-handle')) return;
         if (e.type === 'touchstart') {
             pos3 = e.touches[0].clientX;
             pos4 = e.touches[0].clientY;
@@ -3215,45 +3233,121 @@ function makeDraggable(elmnt) {
         document.onmousemove = null;
         document.ontouchend = null;
         document.ontouchmove = null;
-        localStorage.setItem('thena-perf-pos', JSON.stringify({
-            x: elmnt.offsetLeft,
-            y: elmnt.offsetTop
+    }
+}
+
+function makeResizable(elmnt) {
+    const contentWrapper = document.createElement('div');
+    contentWrapper.className = 'perf-content';
+    elmnt.appendChild(contentWrapper);
+
+    const handle = document.createElement('div');
+    handle.className = 'perf-resize-handle';
+    handle.innerHTML = '<svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="9" y1="1" x2="1" y2="9"/><line x1="9" y1="5" x2="5" y2="9"/><line x1="9" y1="8" x2="8" y2="9"/></svg>';
+    elmnt.appendChild(handle);
+
+    let startX, startY, startW, startH;
+
+    function onResizeStart(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        startW = elmnt.offsetWidth;
+        startH = elmnt.offsetHeight;
+        if (e.type === 'touchstart') {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        } else {
+            startX = e.clientX;
+            startY = e.clientY;
+        }
+        elmnt.classList.add('resizing');
+        document.addEventListener('mousemove', onResizeMove);
+        document.addEventListener('mouseup', onResizeEnd);
+        document.addEventListener('touchmove', onResizeMove, { passive: false });
+        document.addEventListener('touchend', onResizeEnd);
+    }
+
+    function onResizeMove(e) {
+        e.preventDefault();
+        let clientX, clientY;
+        if (e.type === 'touchmove') {
+            clientX = e.touches[0].clientX;
+            clientY = e.touches[0].clientY;
+        } else {
+            clientX = e.clientX;
+            clientY = e.clientY;
+        }
+        const newW = Math.max(100, Math.min(500, startW + (clientX - startX)));
+        const newH = Math.max(80, Math.min(400, startH + (clientY - startY)));
+        elmnt.style.width = newW + 'px';
+        elmnt.style.height = newH + 'px';
+    }
+
+    function onResizeEnd() {
+        elmnt.classList.remove('resizing');
+        document.removeEventListener('mousemove', onResizeMove);
+        document.removeEventListener('mouseup', onResizeEnd);
+        document.removeEventListener('touchmove', onResizeMove);
+        document.removeEventListener('touchend', onResizeEnd);
+        localStorage.setItem('thena-perf-size', JSON.stringify({
+            w: elmnt.offsetWidth,
+            h: elmnt.offsetHeight
         }));
     }
+
+    handle.addEventListener('mousedown', onResizeStart);
+    handle.addEventListener('touchstart', onResizeStart, { passive: false });
 }
 
 function updatePerfStats() {
     if (!perfMonitorBox) return;
 
     let ramText = 'N/A';
-    let maxRam = 'N/A'
-    if (performance.memory) {
-        maxRam = Math.round(performance.memory.jsHeapSizeLimit / 1048576) + 'MB';
+    let maxRam = 'N/A';
+
+    if (_cachedMemoryBytes !== null) {
+        ramText = Math.round(_cachedMemoryBytes / 1048576) + 'MB';
+    } else if (performance.memory) {
         ramText = Math.round(performance.memory.usedJSHeapSize / 1048576) + 'MB';
     }
-
+    if (performance.memory) {
+        maxRam = Math.round(performance.memory.jsHeapSizeLimit / 1048576) + 'MB';
+    }
     const resText = window.innerWidth + 'x' + window.innerHeight;
 
     const domNodes = document.getElementsByTagName('*').length;
 
     const imgCount = document.images.length;
 
-    perfMonitorBox.innerHTML = `
+    const ramRatio = _cachedMemoryBytes !== null
+        ? _cachedMemoryBytes / (performance.memory ? maxRam : 1)
+        : (performance.memory ? performance.memory.usedJSHeapSize / maxRam : 0);
+    const ramColor = ramRatio > 0.85 ? '#ff4444' : ramRatio > 0.6 ? '#ffaa00' : '#00ff88';
+
+    const cpuColor = _cpuPercent > 80 ? '#ff4444' : _cpuPercent > 50 ? '#ffaa00' : '#00ff88';
+
+    const contentEl = perfMonitorBox.querySelector('.perf-content');
+    if (contentEl) {
+        contentEl.innerHTML = `
             <div><span class="label">FPS:</span><span style="color: ${fps < 30 ? '#ff4444' : fps < 50 ? '#ffaa00' : '#00ff88'}">${fps}</span></div>
-            <div><span class="label">RAM:</span><span>${ramText}/${maxRam}</span></div>
+            <div><span class="label">CPU:</span><span style="color: ${cpuColor}">${_cpuPercent}%</span></div>
+            <div><span class="label">RAM:</span><span><span style="color: ${ramColor}">${ramText}</span><span style="opacity:0.5">/${maxRam}</span></span></div>
             <div><span class="label">RES:</span><span>${resText}</span></div>
             <div><span class="label">DOM:</span><span>${domNodes}</span></div>
             <div><span class="label">IMG:</span><span>${imgCount}</span></div>
         `;
+    }
 }
 
 function loopPerfMonitor() {
     const now = performance.now();
     frameCount++;
+    _updateCpuFrame(now);
     if (now - lastFrameTime >= 1000) {
         fps = frameCount;
         frameCount = 0;
         lastFrameTime = now;
+        _cpuPercent = _calcCpuPercent();
         updatePerfStats();
     }
     perfAnimationFrame = requestAnimationFrame(loopPerfMonitor);
@@ -3262,8 +3356,13 @@ function loopPerfMonitor() {
 function togglePerfMonitor(enable) {
     if (enable) {
         createPerfMonitorBox();
+        perfMonitorBox.style.left = '';
+        perfMonitorBox.style.top = '';
+        perfMonitorBox.style.right = '';
         requestAnimationFrame(() => perfMonitorBox.classList.add('visible'));
         if (!perfAnimationFrame) loopPerfMonitor();
+        _startMemoryPolling();
+        _startCpuMonitoring();
         if (perfMonitorToggle) perfMonitorToggle.checked = true;
         localStorage.setItem('thena-perf-monitor', 'true');
     } else {
@@ -3272,6 +3371,8 @@ function togglePerfMonitor(enable) {
             cancelAnimationFrame(perfAnimationFrame);
             perfAnimationFrame = null;
         }
+        _stopMemoryPolling();
+        _stopCpuMonitoring();
         if (perfMonitorToggle) perfMonitorToggle.checked = false;
         localStorage.setItem('thena-perf-monitor', 'false');
     }
@@ -3291,6 +3392,31 @@ if (perfMonitorToggle) {
 const savedPerfMonitor = localStorage.getItem('thena-perf-monitor');
 if (savedPerfMonitor === 'true') {
     togglePerfMonitor(true);
+}
+
+const promptPreviewToggle = document.getElementById('prompt-preview-toggle');
+const savedPromptPreview = localStorage.getItem('thena-prompt-preview');
+if (promptPreviewToggle) {
+    promptPreviewToggle.checked = savedPromptPreview === 'true';
+    promptPreviewToggle.addEventListener('change', (e) => {
+        const isChecked = e.target.checked;
+        localStorage.setItem('thena-prompt-preview', isChecked ? 'true' : 'false');
+        if (typeof playInformationSound === 'function') playInformationSound();
+        const msg = isChecked
+            ? (currentLang == 'tr' ? 'Prompt Önizleme Aktif Edildi' : 'Prompt Preview Enabled')
+            : (currentLang == 'tr' ? 'Prompt Önizleme Deaktif Edildi' : 'Prompt Preview Disabled');
+        if (typeof showNotification === 'function') showNotification(msg, 'info');
+
+        const box = document.getElementById('prompt-preview-box');
+        if (box) {
+            box.style.display = isChecked ? '' : 'none';
+        }
+    });
+}
+
+if (savedPromptPreview === 'true') {
+    const box = document.getElementById('prompt-preview-box');
+    if (box) box.style.display = '';
 }
 
 
@@ -4449,8 +4575,10 @@ function switchAppMode(mode) {
     const btnGotoEditor = document.getElementById('btn-goto-editor');
     const galleryBtn = document.getElementById('gallery-btn');
 
+    const activeView = mode === 'chat' ? viewChat : mode === 'editor' ? viewEditor : viewImage;
+
     [viewImage, viewChat, viewEditor].forEach(view => {
-        if(view) {
+        if(view && view !== activeView) {
             view.classList.remove('active-view');
             view.classList.add('hidden-view');
             setTimeout(() => view.style.display = 'none', 300);

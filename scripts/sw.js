@@ -6,6 +6,8 @@ const ASSETS_TO_CACHE = [
     './src/icon-192.png',
     './src/icon-512.png',
     './css/style.css',
+    './css/prompt-preview.css',
+    './css/editor-search.css',
     './scripts/script.js',
     './scripts/promptexpansion.js',
     './scripts/lang.js',
@@ -15,7 +17,9 @@ const ASSETS_TO_CACHE = [
     './scripts/chatMessages.js',
     './scripts/aiChat.js',
     './.version',
-    './scripts/imageEditor.js'
+    './scripts/imageEditor.js',
+    './scripts/promptPreview.js',
+    './scripts/cpu.js'
 ];
 
 self.addEventListener('install', (event) => {

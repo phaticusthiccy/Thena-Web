@@ -202,7 +202,19 @@ const translations = {
         "editorLoadingPresets": "Loading presets...",
         "editorNoPresets": "No presets found.",
         "editorFailedPresets": "Failed to load presets.",
-        "editorSearchPlaceholder": "Search presets..."
+        "editorSearchPlaceholder": "Search presets...",
+        "editorSearchNoResults": "No results found",
+        "lblPromptPreview": "PROMPT PREVIEW",
+        "lblPromptPreviewDesc": "Shows similar image previews while typing prompts to help visualize results before generating.",
+        "promptPreviewNoResult": "No preview available",
+        "promptPreviewTryEnglish": "Please try in English",
+        "promptPreviewLoading": "Searching...",
+        "promptPreviewCountdown": "Enter {0} more characters to preview",
+        "promptPreviewTitle": "Preview",
+        "sortDefault": "Default",
+        "sortIntel": "Intelligent",
+        "sortQual": "Quality",
+        "sortSpeed": "Speed"
     },
     "tr": {
         "generateBtn": "Görüntü Oluştur",
@@ -407,7 +419,19 @@ const translations = {
         "editorLoadingPresets": "Hazır ayarlar yükleniyor...",
         "editorNoPresets": "Hazır ayar bulunamadı.",
         "editorFailedPresets": "Hazır ayarlar yüklenemedi.",
-        "editorSearchPlaceholder": "Hazır ayarları ara..."
+        "editorSearchPlaceholder": "Hazır ayarları ara...",
+        "editorSearchNoResults": "Sonuç bulunamadı",
+        "lblPromptPreview": "PROMPT ÖNİZLEME",
+        "lblPromptPreviewDesc": "Prompt yazarken benzer görsellerin önizlemesini göstererek oluşturma öncesinde sonucu görselleştirmenize olanak tanır.",
+        "promptPreviewNoResult": "Ön izleme bulunamadı",
+        "promptPreviewTryEnglish": "Lütfen İngilizce deneyin",
+        "promptPreviewLoading": "Aranıyor...",
+        "promptPreviewCountdown": "Ön izleme için {0} karakter daha girin",
+        "promptPreviewTitle": "Önizleme",
+        "sortDefault": "Varsayılan",
+        "sortIntel": "Zeka",
+        "sortQual": "Kalite",
+        "sortSpeed": "Hız"
     }
 };
 
@@ -439,7 +463,8 @@ function initDomCache() {
         'txt-tab-scene', 'txt-tab-action', 'txt-tab-system',
         'filter-label-img-gen', 'filter-label-category', 'filter-label-subcategories',
         'label-editor-upload', 'label-editor-presets', 'label-editor-instructions',
-        'txt-editor-upload', 'txt-editor-loading-presets', 'editor-generate-btn', 'editor-preset-search'
+        'txt-editor-upload', 'txt-editor-loading-presets', 'editor-generate-btn', 'editor-preset-search',
+        'editor-search-no-results-text'
     ];
 
     ids.forEach(id => {
@@ -524,9 +549,9 @@ function updateLanguage(lang) {
 
              if (btnText && btn) {
                 if (btn.classList.contains('active')) {
-                    btnText.textContent = lang === 'tr' ? "Normal" : "Base";
+                    btnText.textContent = lang === 'tr' ? "Sadece Temel Modeller" : "Base Models Only";
                 } else {
-                    btnText.textContent = lang === 'tr' ? "Tümü" : "All";
+                    btnText.textContent = lang === 'tr' ? "Tüm Modelleri Göster" : "Show All Models";
                 }
             }
         }
@@ -561,6 +586,10 @@ function updateLanguage(lang) {
 
     safelySetText('lbl-perf-monitor', t.lblPerfMon);
     safelySetText('desc-perf-monitor', t.lblPerfMonDesc);
+
+    safelySetText('lbl-prompt-preview', t.lblPromptPreview);
+    safelySetText('desc-prompt-preview', t.lblPromptPreviewDesc);
+    safelySetText('prompt-preview-title', t.promptPreviewTitle);
 
     safelySetText('lbl-data-mgmt', t.lblData);
     safelySetText('desc-data-mgmt', t.lblDataDesc);
@@ -727,6 +756,12 @@ function updateLanguage(lang) {
 
     const editorPresetSearch = cache['editor-preset-search'];
     if(editorPresetSearch) editorPresetSearch.placeholder = t.editorSearchPlaceholder;
+
+    safelySetText('editor-search-no-results-text', t.editorSearchNoResults);
+
+    if (typeof window.updateModelSortLanguage === 'function') {
+        window.updateModelSortLanguage();
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

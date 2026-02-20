@@ -43,47 +43,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.updateDataManagementLanguage();
     if (DOMCache.cpuText) {
-        let lastTime = performance.now();
-        let frames = 0;
-        let targetFPS = 60;
-        
         const settingsModal = DOMCache.settingsModal; 
         const cpuText = DOMCache.cpuText;
-
-        const updateCPU = (currentTime) => {
-            if (!settingsModal || !settingsModal.classList.contains('active')) {
-                setTimeout(() => requestAnimationFrame(updateCPU), 500); 
-                return;
-            }
-            const now = currentTime || performance.now();
-            const duration = now - lastTime;
-            frames++;
-            
-            if (duration >= 1000) {
-                const fps = (frames * 1000) / duration;
-                if (fps > targetFPS) {
-                    targetFPS = fps;
-                }
-                const maxFps = Math.ceil(targetFPS);
-                
-                let load = ((maxFps - fps) / maxFps) * 100;
-                load = load < 0 ? 0 : (load > 100 ? 100 : Math.round(load));
-
-                if(load < 5) load = Math.floor(Math.random() * 5) + 1; 
-                
-                cpuText.textContent = `CPU: ${load}%`;
-                
-                if (load > 50) cpuText.style.color = '#ff4444';
-                else if (load > 20) cpuText.style.color = '#ffaa00';
-                else cpuText.style.color = '#00ff88';
-
-                frames = 0;
-                lastTime = now;
-            }
-            requestAnimationFrame(updateCPU);
-        };
         
-        requestAnimationFrame(updateCPU);
+        let cpuDisplayInterval = null;
+
+        function updateCpuDisplay() {
+            if (!settingsModal || !settingsModal.classList.contains('active')) return;
+            
+            const cpuVal = (typeof _cpuPercent !== 'undefined') ? _cpuPercent : 0;
+            cpuText.textContent = `CPU: ${cpuVal}%`;
+            
+            if (cpuVal > 80) cpuText.style.color = '#ff4444';
+            else if (cpuVal > 50) cpuText.style.color = '#ffaa00';
+            else cpuText.style.color = '#00ff88';
+        }
+
+        const observer = new MutationObserver(() => {
+            if (settingsModal.classList.contains('active')) {
+                updateCpuDisplay();
+                if (!cpuDisplayInterval) {
+                    cpuDisplayInterval = setInterval(updateCpuDisplay, 1000);
+                }
+            } else {
+                if (cpuDisplayInterval) {
+                    clearInterval(cpuDisplayInterval);
+                    cpuDisplayInterval = null;
+                }
+            }
+        });
+
+        if (settingsModal) {
+            observer.observe(settingsModal, { attributes: true, attributeFilter: ['class'] });
+        }
     }
 
     if (DOMCache.langBtn) {
