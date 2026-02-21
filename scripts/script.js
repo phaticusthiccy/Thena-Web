@@ -1667,8 +1667,8 @@ generateBtn.addEventListener('click', async () => {
     const isEnhance = btnEnhance.classList.contains('active');
     var ratio = "1:1";
     if (height == width) ratio = "1:1";
-    else if (height == 1024 && width == 768) ratio = "4:3";
-    else if (height == 768 && width == 1024) ratio = "3:4";
+    else if (height == 1024 && width == 768) ratio = "3:4";
+    else if (height == 768 && width == 1024) ratio = "4:3";
     else if ((height == 576 || height == 512) && width == 1024) ratio = "16:9";
     else if (height == 1024 && (width == 576 || width == 512)) ratio = "9:16";
     else ratio = "1:1";
@@ -3184,11 +3184,10 @@ function createPerfMonitorBox() {
 function makeDraggable(elmnt) {
     let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
-    elmnt.onmousedown = dragMouseDown;
-    elmnt.ontouchstart = dragMouseDown;
+    elmnt.addEventListener('mousedown', dragMouseDown);
+    elmnt.addEventListener('touchstart', dragMouseDown, { passive: false });
 
     function dragMouseDown(e) {
-        e = e || window.event;
         if (e.target.closest && e.target.closest('.perf-resize-handle')) return;
         if (e.type === 'touchstart') {
             pos3 = e.touches[0].clientX;
@@ -3199,18 +3198,17 @@ function makeDraggable(elmnt) {
             pos4 = e.clientY;
         }
 
-        document.onmouseup = closeDragElement;
-        document.onmousemove = elementDrag;
+        document.addEventListener('mouseup', closeDragElement);
+        document.addEventListener('mousemove', elementDrag);
 
-        document.ontouchend = closeDragElement;
-        document.ontouchmove = elementDrag;
+        document.addEventListener('touchend', closeDragElement);
+        document.addEventListener('touchmove', elementDrag, { passive: false });
     }
 
     function elementDrag(e) {
-        e = e || window.event;
-
         let clientX, clientY;
         if (e.type === 'touchmove') {
+            if (e.cancelable) e.preventDefault();
             clientX = e.touches[0].clientX;
             clientY = e.touches[0].clientY;
         } else {
@@ -3229,10 +3227,10 @@ function makeDraggable(elmnt) {
     }
 
     function closeDragElement() {
-        document.onmouseup = null;
-        document.onmousemove = null;
-        document.ontouchend = null;
-        document.ontouchmove = null;
+        document.removeEventListener('mouseup', closeDragElement);
+        document.removeEventListener('mousemove', elementDrag);
+        document.removeEventListener('touchend', closeDragElement);
+        document.removeEventListener('touchmove', elementDrag);
     }
 }
 
@@ -4850,9 +4848,41 @@ document.addEventListener('DOMContentLoaded', () => {
     const newChatBtn = document.getElementById('new-chat-btn');
     const sendBtn = document.getElementById('chat-send-btn');
     const msgInput = document.getElementById('chat-message-input');
+    const toggleSidebarBtn = document.getElementById('chat-sidebar-toggle');
+    const chatSidebar = document.querySelector('.chat-sidebar');
+    const chatSidebarOverlay = document.getElementById('chat-sidebar-overlay');
+
+    if (toggleSidebarBtn && chatSidebar && chatSidebarOverlay) {
+        toggleSidebarBtn.addEventListener('click', () => {
+            chatSidebar.classList.toggle('active');
+            chatSidebarOverlay.classList.toggle('active');
+        });
+        chatSidebarOverlay.addEventListener('click', () => {
+            chatSidebar.classList.remove('active');
+            chatSidebarOverlay.classList.remove('active');
+        });
+    }
 
     if (backBtn) backBtn.addEventListener('click', closeChatScreen);
-    if (newChatBtn) newChatBtn.addEventListener('click', startNewConversation);
+    if (newChatBtn) newChatBtn.addEventListener('click', () => {
+        startNewConversation();
+        if (chatSidebar && chatSidebarOverlay) {
+            chatSidebar.classList.remove('active');
+            chatSidebarOverlay.classList.remove('active');
+        }
+    });
+
+    const convListContainer = document.getElementById('conversations-list');
+    if (convListContainer) {
+        convListContainer.addEventListener('click', (e) => {
+            if (e.target.closest('.conversation-item') && !e.target.closest('.conv-delete-btn')) {
+                if (chatSidebar && chatSidebarOverlay) {
+                    chatSidebar.classList.remove('active');
+                    chatSidebarOverlay.classList.remove('active');
+                }
+            }
+        });
+    }
     if (sendBtn) sendBtn.addEventListener('click', () => {
         if (sendBtn.hasAttribute('data-continue-mode')) {
             continueStory();
