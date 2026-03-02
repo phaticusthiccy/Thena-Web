@@ -214,7 +214,12 @@ const translations = {
         "sortDefault": "Default",
         "sortIntel": "Intelligent",
         "sortQual": "Quality",
-        "sortSpeed": "Speed"
+        "sortSpeed": "Speed",
+        "multiSelectDelete": "Delete Selected",
+        "multiSelectCancel": "Cancel",
+        "multiSelectCount": "{0} selected",
+        "multiSelectConfirmTitle": "Delete Selected Images?",
+        "multiSelectConfirmDesc": "The selected images will be permanently deleted. This action cannot be undone."
     },
     "tr": {
         "generateBtn": "Görüntü Oluştur",
@@ -431,7 +436,12 @@ const translations = {
         "sortDefault": "Varsayılan",
         "sortIntel": "Zeka",
         "sortQual": "Kalite",
-        "sortSpeed": "Hız"
+        "sortSpeed": "Hız",
+        "multiSelectDelete": "Seçilenleri Sil",
+        "multiSelectCancel": "İptal",
+        "multiSelectCount": "{0} seçildi",
+        "multiSelectConfirmTitle": "Seçilen Görseller Silinsin mi?",
+        "multiSelectConfirmDesc": "Seçilen görseller kalıcı olarak silinecek. Bu işlem geri alınamaz."
     }
 };
 
@@ -464,7 +474,8 @@ function initDomCache() {
         'filter-label-img-gen', 'filter-label-category', 'filter-label-subcategories',
         'label-editor-upload', 'label-editor-presets', 'label-editor-instructions',
         'txt-editor-upload', 'txt-editor-loading-presets', 'editor-generate-btn', 'editor-preset-search',
-        'editor-search-no-results-text'
+        'editor-search-no-results-text',
+        'txt-filter-chip-all'
     ];
 
     ids.forEach(id => {
@@ -759,8 +770,14 @@ function updateLanguage(lang) {
 
     safelySetText('editor-search-no-results-text', t.editorSearchNoResults);
 
+    safelySetText('txt-filter-chip-all', t.filterAll);
+
     if (typeof window.updateModelSortLanguage === 'function') {
         window.updateModelSortLanguage();
+    }
+
+    if (typeof window._updateMultiSelectLanguage === 'function') {
+        window._updateMultiSelectLanguage();
     }
 }
 
@@ -785,6 +802,13 @@ document.addEventListener('DOMContentLoaded', () => {
             document.documentElement.lang = currentLang;
             updateLanguage(currentLang);
             updateAppSwitcherLang(currentLang);
+
+            const sortTextEl = document.getElementById('sort-text');
+            if (sortTextEl) {
+                sortTextEl.textContent = typeof sortNewestFirst !== 'undefined' && sortNewestFirst
+                    ? (currentLang === 'tr' ? 'En Yeni' : 'Newest')
+                    : (currentLang === 'tr' ? 'En Eski' : 'Oldest');
+            }
 
             if (typeof window.updateDataManagementLanguage === 'function') {
                 window.updateDataManagementLanguage();

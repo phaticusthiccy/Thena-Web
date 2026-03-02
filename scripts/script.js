@@ -1923,6 +1923,364 @@ galleryModal.addEventListener('click', (e) => {
         document.body.classList.remove('no-scroll');
     }
 });
+
+(function initGalleryDragToDismiss() {
+    const handle = document.querySelector('.gallery-content > .modal-handle');
+    const content = document.querySelector('.gallery-content');
+    if (!handle || !content) return;
+
+    let isDragging = false;
+    let startY = 0;
+    let startTime = 0;
+    let currentDeltaY = 0;
+
+    function getY(e) {
+        if (e.touches && e.touches.length) return e.touches[0].clientY;
+        if (e.changedTouches && e.changedTouches.length) return e.changedTouches[0].clientY;
+        return e.clientY;
+    }
+
+    function onDragStart(e) {
+        if (!galleryModal.classList.contains('active')) return;
+        isDragging = true;
+        startY = getY(e);
+        startTime = Date.now();
+        currentDeltaY = 0;
+        content.classList.add('dragging');
+        content.style.willChange = 'transform';
+    }
+
+    function onDragMove(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+        const y = getY(e);
+        currentDeltaY = Math.max(0, y - startY);
+        content.style.transform = `translateY(${currentDeltaY}px)`;
+    }
+
+    function onDragEnd(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        content.classList.remove('dragging');
+        content.style.willChange = '';
+
+        const elapsed = Date.now() - startTime;
+        const velocity = elapsed > 0 ? currentDeltaY / elapsed : 0;
+        const contentHeight = content.offsetHeight;
+        const threshold = contentHeight * 0.4;
+
+        if (velocity > 0.5 || currentDeltaY > threshold) {
+            content.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 1, 1)';
+            content.style.transform = `translateY(100%)`;
+            setTimeout(() => {
+                galleryModal.classList.remove('active');
+                document.body.classList.remove('no-scroll');
+                content.style.transition = '';
+                content.style.transform = '';
+            }, 300);
+        } else {
+            content.style.transition = 'transform 0.3s cubic-bezier(0.19, 1, 0.22, 1)';
+            content.style.transform = 'translateY(0)';
+            setTimeout(() => {
+                content.style.transition = '';
+                content.style.transform = '';
+            }, 300);
+        }
+        currentDeltaY = 0;
+    }
+
+    handle.addEventListener('touchstart', onDragStart, { passive: true });
+    document.addEventListener('touchmove', onDragMove, { passive: false });
+    document.addEventListener('touchend', onDragEnd);
+    handle.addEventListener('mousedown', onDragStart);
+    document.addEventListener('mousemove', onDragMove);
+    document.addEventListener('mouseup', onDragEnd);
+})();
+
+(function initGalleryLayoutToggle() {
+    const layoutBtn = document.getElementById('gallery-layout-btn');
+    const galleryGrid = document.getElementById('gallery-grid');
+    if (!layoutBtn || !galleryGrid) return;
+
+    const layouts = ['layout-4', 'layout-1', 'layout-2'];
+    const iconClasses = ['gallery-layout-icon-4', 'gallery-layout-icon-1', 'gallery-layout-icon-2'];
+    let currentIndex = 0;
+
+    const saved = localStorage.getItem('gallery-layout');
+    if (saved && layouts.includes(saved)) {
+        currentIndex = layouts.indexOf(saved);
+        galleryGrid.classList.add(saved);
+        updateIcon();
+    }
+
+    function updateIcon() {
+        layoutBtn.querySelectorAll('.gallery-layout-icon').forEach(icon => icon.style.display = 'none');
+        const activeIcon = layoutBtn.querySelector('.' + iconClasses[currentIndex]);
+        if (activeIcon) activeIcon.style.display = '';
+    }
+
+    layoutBtn.addEventListener('click', () => {
+        galleryGrid.classList.remove(layouts[currentIndex]);
+        currentIndex = (currentIndex + 1) % layouts.length;
+        galleryGrid.classList.add(layouts[currentIndex]);
+        localStorage.setItem('gallery-layout', layouts[currentIndex]);
+        updateIcon();
+    });
+})();
+
+(function initMultiSelectMode() {
+    const galleryGridEl = document.getElementById('gallery-grid');
+    const galleryControls = document.querySelector('#gallery-modal .gallery-controls');
+    const multiSelectBar = document.getElementById('multi-select-bar');
+    const msDeleteBtn = document.getElementById('ms-delete-btn');
+    const msCancelBtn = document.getElementById('ms-cancel-btn');
+    const msCountText = document.getElementById('ms-count-text');
+    const msDeleteText = document.getElementById('ms-delete-text');
+    const msCancelText = document.getElementById('ms-cancel-text');
+
+    if (!galleryGridEl || !galleryControls || !multiSelectBar) return;
+
+    let isMultiSelectMode = false;
+    let selectedTimestamps = new Set();
+    let longPressTimer = null;
+    let longPressTriggered = false;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    const LONG_PRESS_DURATION = 500;
+    const MOVE_THRESHOLD = 10;
+
+    function getT() {
+        return translations[currentLang] || translations['en'];
+    }
+
+    function updateMsCountUI() {
+        const t = getT();
+        const count = selectedTimestamps.size;
+        msCountText.textContent = t.multiSelectCount.replace('{0}', count);
+        msDeleteBtn.disabled = count === 0;
+    }
+
+    function updateMsLanguage() {
+        const t = getT();
+        msDeleteText.textContent = t.multiSelectDelete;
+        msCancelText.textContent = t.multiSelectCancel;
+        updateMsCountUI();
+    }
+
+    function enterMultiSelectMode(firstItem) {
+        if (isMultiSelectMode) return;
+        isMultiSelectMode = true;
+        selectedTimestamps.clear();
+
+        galleryGridEl.classList.add('multi-select-active');
+        galleryControls.classList.add('ms-hidden');
+        multiSelectBar.classList.add('active');
+
+        const filterPanel = document.getElementById('filter-panel');
+        const toggleFilterBtnl = document.getElementById('toggle-filter-btn');
+        if (filterPanel && filterPanel.classList.contains('active')) {
+            filterPanel.classList.remove('active');
+            if (toggleFilterBtnl) toggleFilterBtnl.classList.remove('active');
+        }
+
+        updateMsLanguage();
+
+        if (firstItem) {
+            toggleItemSelection(firstItem);
+            firstItem.classList.add('ms-wiggle');
+            setTimeout(() => firstItem.classList.remove('ms-wiggle'), 400);
+        }
+
+        if (navigator.vibrate) navigator.vibrate(50);
+    }
+
+    function exitMultiSelectMode() {
+        if (!isMultiSelectMode) return;
+        isMultiSelectMode = false;
+        selectedTimestamps.clear();
+
+        galleryGridEl.classList.remove('multi-select-active');
+        galleryControls.classList.remove('ms-hidden');
+        multiSelectBar.classList.remove('active');
+
+        galleryGridEl.querySelectorAll('.gallery-item.ms-selected').forEach(item => {
+            item.classList.remove('ms-selected');
+        });
+    }
+
+    function toggleItemSelection(itemEl) {
+        const timestamp = itemEl.dataset.timestamp;
+        if (!timestamp) return;
+
+        if (selectedTimestamps.has(timestamp)) {
+            selectedTimestamps.delete(timestamp);
+            itemEl.classList.remove('ms-selected');
+        } else {
+            selectedTimestamps.add(timestamp);
+            itemEl.classList.add('ms-selected');
+        }
+
+        updateMsCountUI();
+    }
+
+    function onPointerDown(e) {
+        const itemEl = e.target.closest('.gallery-item');
+        if (!itemEl || itemEl.classList.contains('placeholder')) return;
+        if (e.target.closest('.gallery-copy-btn')) return;
+
+        const touch = e.touches ? e.touches[0] : e;
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+        longPressTriggered = false;
+
+        longPressTimer = setTimeout(() => {
+            longPressTriggered = true;
+            if (!isMultiSelectMode) {
+                enterMultiSelectMode(itemEl);
+            } else {
+                toggleItemSelection(itemEl);
+            }
+        }, LONG_PRESS_DURATION);
+    }
+
+    function onPointerMove(e) {
+        if (!longPressTimer) return;
+        const touch = e.touches ? e.touches[0] : e;
+        const dx = Math.abs(touch.clientX - touchStartX);
+        const dy = Math.abs(touch.clientY - touchStartY);
+        if (dx > MOVE_THRESHOLD || dy > MOVE_THRESHOLD) {
+            clearTimeout(longPressTimer);
+            longPressTimer = null;
+        }
+    }
+
+    function onPointerUp(e) {
+        clearTimeout(longPressTimer);
+        longPressTimer = null;
+    }
+
+    galleryGridEl.addEventListener('touchstart', onPointerDown, { passive: true });
+    galleryGridEl.addEventListener('touchmove', onPointerMove, { passive: true });
+    galleryGridEl.addEventListener('touchend', onPointerUp);
+    galleryGridEl.addEventListener('touchcancel', onPointerUp);
+
+    galleryGridEl.addEventListener('mousedown', onPointerDown);
+    document.addEventListener('mousemove', onPointerMove);
+    document.addEventListener('mouseup', onPointerUp);
+
+    galleryGridEl.addEventListener('click', (e) => {
+        if (!isMultiSelectMode) return;
+        if (longPressTriggered) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+            longPressTriggered = false;
+            return;
+        }
+
+        const itemEl = e.target.closest('.gallery-item');
+        if (!itemEl || itemEl.classList.contains('placeholder')) return;
+
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        toggleItemSelection(itemEl);
+    }, true);
+
+    msCancelBtn.addEventListener('click', () => {
+        exitMultiSelectMode();
+    });
+
+    msDeleteBtn.addEventListener('click', async () => {
+        if (selectedTimestamps.size === 0) return;
+
+        const t = getT();
+        const count = selectedTimestamps.size;
+
+        const confirmModal = document.getElementById('delete-all-modal');
+        const confirmH3 = confirmModal.querySelector('h3');
+        const confirmP = confirmModal.querySelector('p');
+        const confirmBtnCancel = document.getElementById('btn-cancel-all');
+        const confirmBtnConfirm = document.getElementById('btn-confirm-all');
+
+        const origH3 = confirmH3.textContent;
+        const origP = confirmP.textContent;
+        const origConfirm = confirmBtnConfirm.textContent;
+
+        confirmH3.textContent = t.multiSelectConfirmTitle;
+        confirmP.textContent = t.multiSelectConfirmDesc;
+        confirmBtnConfirm.textContent = t.multiSelectDelete + ` (${count})`;
+
+        confirmModal.classList.add('active');
+        if (typeof playDeleteAllWarningSound === 'function') playDeleteAllWarningSound();
+
+        const cleanup = () => {
+            confirmModal.classList.remove('active');
+            confirmH3.textContent = origH3;
+            confirmP.textContent = origP;
+            confirmBtnConfirm.textContent = origConfirm;
+            confirmBtnConfirm.removeEventListener('click', onConfirm);
+            confirmBtnCancel.removeEventListener('click', onCancel);
+        };
+
+        const onCancel = () => {
+            cleanup();
+        };
+
+        const onConfirm = async () => {
+            cleanup();
+
+            const timestamps = Array.from(selectedTimestamps);
+            let deletedCount = 0;
+
+            for (const ts of timestamps) {
+                try {
+                    await dbHelper.delete(ts);
+                    deletedCount++;
+                } catch (err) {
+                    console.error('Failed to delete image:', ts, err);
+                }
+            }
+
+            exitMultiSelectMode();
+
+            if (typeof playSuccessSound === 'function') playSuccessSound();
+            if (typeof showNotification === 'function') {
+                const msg = currentLang === 'tr'
+                    ? `${deletedCount} görsel silindi.`
+                    : `${deletedCount} image${deletedCount > 1 ? 's' : ''} deleted.`;
+                showNotification(msg, 'success');
+            }
+
+            if (typeof loadGallery === 'function') await loadGallery();
+        };
+
+        confirmBtnCancel.addEventListener('click', onCancel);
+        confirmBtnConfirm.addEventListener('click', onConfirm);
+    });
+
+    const galleryModalEl = document.getElementById('gallery-modal');
+    const origCloseHandler = closeGalleryBtn.onclick;
+
+    const observer = new MutationObserver((mutations) => {
+        for (const m of mutations) {
+            if (m.type === 'attributes' && m.attributeName === 'class') {
+                if (!galleryModalEl.classList.contains('active') && isMultiSelectMode) {
+                    exitMultiSelectMode();
+                }
+            }
+        }
+    });
+    observer.observe(galleryModalEl, { attributes: true });
+
+    galleryGridEl.addEventListener('contextmenu', (e) => {
+        if (e.target.closest('.gallery-item')) {
+            e.preventDefault();
+        }
+    });
+
+    window._updateMultiSelectLanguage = updateMsLanguage;
+    window._isMultiSelectMode = () => isMultiSelectMode;
+})();
+
 function populateModelFilter() {
     filterModel.innerHTML = '<option value="">All Models</option>';
 
@@ -2066,7 +2424,12 @@ function renderItems(items) {
         const displayUrl = item.thumbnailUrl || item.url;
 
         return `
-            <div class="gallery-item ${spanClass} show" data-item="${itemData}">
+            <div class="gallery-item ${spanClass} show" data-item="${itemData}" data-timestamp="${item.timestamp}">
+                <div class="multi-select-check">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
                 <img src="${displayUrl}" loading="lazy" alt="${item.prompt}">
                 
                 <button class="gallery-copy-btn" title="Use This Style" onclick="useImageSettings(event, this)">
@@ -2187,6 +2550,7 @@ const lightboxPrompt = document.getElementById('lightbox-prompt');
 const lightboxMeta = document.getElementById('lightbox-meta');
 const lightboxDownload = document.getElementById('lightbox-download');
 galleryGrid.addEventListener('click', (e) => {
+    if (window._isMultiSelectMode && window._isMultiSelectMode()) return;
     const item = e.target.closest('.gallery-item');
     if (item) {
         try {
@@ -2826,6 +3190,7 @@ if (deleteAllModal) {
 }
 if (btnConfirmAll) {
     btnConfirmAll.addEventListener('click', async () => {
+        if (window._isMultiSelectMode && window._isMultiSelectMode()) return;
         try {
             await dbHelper.clear();
             allGalleryImages = [];
@@ -4169,6 +4534,7 @@ btnImg2PromptGenerate.addEventListener('click', async () => {
 
             if (!document.getElementById("btn-show-all-models").classList.contains('active')) {
                 document.getElementById("btn-show-all-models").click()
+                await new Promise(resolve => setTimeout(resolve, 1000));
             }
 
             let incomingPrompt = "";
@@ -4211,6 +4577,21 @@ btnImg2PromptGenerate.addEventListener('click', async () => {
                     if (!ratioBtn.classList.contains('active')) {
                         ratioBtn.click();
                     }
+                }
+            }
+
+            if (data.content.moderation_level) {
+                const targetMod = data.content.moderation_level.trim().toLowerCase();
+                const modBtn = document.getElementById('moderation-btn');
+                if (modBtn && ['high', 'medium', 'low'].includes(targetMod)) {
+                    moderationLevel = targetMod;
+                    modBtn.setAttribute('data-level', moderationLevel);
+                    const titles = {
+                        high: currentLang == "tr" ? "Moderasyon: Yüksek" : "Moderation: High (Strict)",
+                        medium: currentLang == "tr" ? "Moderasyon: Ortalama" : "Moderation: Medium (Balanced)",
+                        low: currentLang == "tr" ? "Moderasyon: Düşük" : "Moderation: Low (Permissive)"
+                    };
+                    modBtn.title = titles[moderationLevel];
                 }
             }
 

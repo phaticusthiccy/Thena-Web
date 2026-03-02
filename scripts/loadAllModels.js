@@ -314,3 +314,91 @@ if (btnShowAllModels) {
         }
     });
 }
+
+const btnToggleModelLayout = document.getElementById('btn-toggle-model-layout');
+const layoutModes = ['grid', 'compact', 'list'];
+let modelLayoutMode = localStorage.getItem('modelLayoutMode') || 'grid';
+
+function applyModelLayout(mode) {
+    const modelSelector = document.getElementById('model-selector');
+    if (!modelSelector) return;
+    
+    const gridIcon = btnToggleModelLayout?.querySelector('.layout-icon-grid');
+    const compactIcon = btnToggleModelLayout?.querySelector('.layout-icon-compact');
+    const listIcon = btnToggleModelLayout?.querySelector('.layout-icon-list');
+    
+    modelSelector.classList.remove('list-view', 'compact-view');
+    
+    if (gridIcon) gridIcon.style.display = 'none';
+    if (compactIcon) compactIcon.style.display = 'none';
+    if (listIcon) listIcon.style.display = 'none';
+    
+    if (mode === 'compact') {
+        modelSelector.classList.add('compact-view');
+        if (compactIcon) compactIcon.style.display = 'block';
+    } else if (mode === 'list') {
+        modelSelector.classList.add('list-view');
+        if (listIcon) listIcon.style.display = 'block';
+    } else {
+        if (gridIcon) gridIcon.style.display = 'block';
+    }
+    
+    localStorage.setItem('modelLayoutMode', mode);
+    modelLayoutMode = mode;
+}
+
+applyModelLayout(modelLayoutMode);
+
+if (btnToggleModelLayout) {
+    btnToggleModelLayout.addEventListener('click', (e) => {
+        e.preventDefault();
+        const currentIndex = layoutModes.indexOf(modelLayoutMode);
+        const nextIndex = (currentIndex + 1) % layoutModes.length;
+        applyModelLayout(layoutModes[nextIndex]);
+        if (typeof playFeatureToggleSound === "function") playFeatureToggleSound(true);
+    });
+}
+
+const btnToggleChatLayout = document.getElementById('btn-toggle-chat-layout');
+const chatLayoutModes = ['grid', 'compact', 'list'];
+let chatLayoutMode = localStorage.getItem('chatLayoutMode') || 'grid';
+
+function applyChatLayout(mode) {
+    const charGrid = document.getElementById('characters-grid');
+    if (!charGrid) return;
+    
+    const gridIcon = btnToggleChatLayout?.querySelector('.chat-layout-icon-grid');
+    const compactIcon = btnToggleChatLayout?.querySelector('.chat-layout-icon-compact');
+    const listIcon = btnToggleChatLayout?.querySelector('.chat-layout-icon-list');
+    
+    charGrid.classList.remove('list-view', 'compact-view');
+    
+    if (gridIcon) gridIcon.style.display = 'none';
+    if (compactIcon) compactIcon.style.display = 'none';
+    if (listIcon) listIcon.style.display = 'none';
+    
+    if (mode === 'compact') {
+        charGrid.classList.add('compact-view');
+        if (compactIcon) compactIcon.style.display = 'block';
+    } else if (mode === 'list') {
+        charGrid.classList.add('list-view');
+        if (listIcon) listIcon.style.display = 'block';
+    } else {
+        if (gridIcon) gridIcon.style.display = 'block';
+    }
+    
+    localStorage.setItem('chatLayoutMode', mode);
+    chatLayoutMode = mode;
+}
+
+applyChatLayout(chatLayoutMode);
+
+if (btnToggleChatLayout) {
+    btnToggleChatLayout.addEventListener('click', (e) => {
+        e.preventDefault();
+        const currentIndex = chatLayoutModes.indexOf(chatLayoutMode);
+        const nextIndex = (currentIndex + 1) % chatLayoutModes.length;
+        applyChatLayout(chatLayoutModes[nextIndex]);
+        if (typeof playFeatureToggleSound === "function") playFeatureToggleSound(true);
+    });
+}

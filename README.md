@@ -1,7 +1,13 @@
 <div align="center">
+  <b>🌍 <a href="README.md">English</a> &nbsp; | &nbsp; 🇹🇷 <a href="README.tr.md">Türkçe</a></b>
+</div>
+
+<br/>
+
+<div align="center">
 
   <a href="https://phaticusthiccy.github.io/Thena-Web/">
-    <img src="https://github.com/user-attachments/assets/175c0d76-b146-460f-bb34-d0ae7e2b57cc" alt="Thena Logo" width="200" />
+    <img src="src/icon-512.png" alt="Thena Logo" width="200" />
   </a>
 
   # THENA - Next-Gen AI Image Generator & Chat
@@ -45,42 +51,41 @@ It combines state-of-the-art **Image Generation**, a full knowledge-aware **AI R
 ## ✨ Key Features
 
 ### 🎨 Advanced Image Generation
-* **Multi-Model Support:** Access various models including Photorealism, Anime, Movie, and NSFW options.
+* **Multi-Model Support:** Access various models including Photorealism, Anime, Movie, and other creative options.
 * **Flexible Aspect Ratios:** Support for Square (1:1), Portrait (3:4, 9:16), and Cinematic (16:9, 4:3) formats.
-* **Smart Parameters:**
-    * **Fast Mode:** Optimized for speed.
-    * **Creative & Dense:** Boosts AI imagination and detail.
-    * **Movie Filter & HighRes:** Cinematic color grading and upscaling.
+* **Smart Parameters:** Includes Fast Mode for speed, Creative & Dense for deep details, and HighRes scaling.
+* **Expanded Presets & Styles:** Instantly apply diverse, community-inspired prompts and aesthetic styles.
 * **Live Prompt Preview:** Dynamic visual feedback showing required prompt length before generation.
 * **Magic Wand:** Enhances short, simple prompts into detailed descriptions with a single click.
 
 ### 🤖 AI Roleplay Chat
-* **Interactive Characters:** Engage in deep, story-driven conversations with unique AI personas.
-* **Personalized Profiles:** Create your own user persona (Name, Age, Gender) for AI characters to dynamically react to in discussions.
-* **Character Details:** View in-depth lore, personalities, and custom avatars for each AI companion.
-* **Story Awareness:** The AI detects when a narrative arc is complete (`[FINISH]` signal) and can guide the story.
-* **The Warden:** An integrated moderation bot ensuring safe and appropriate interactions where necessary.
+* **Interactive Characters:** Engage in deep, story-driven conversations with AI personas featuring rich, newly updated lore and backstories.
+* **Dynamic System Prompts:** Create your own user profile (Name, Age, Gender). Characters will adapt their tone and memory specifically to you.
+* **Customizable Views:** Effortlessly switch between Grid, List, and Compact layouts for organizing your character library.
+* **Story Awareness:** The AI detects when a narrative arc is complete (`[FINISH]` signal) and can gently guide the story.
+* **The Warden & Moderation UI:** Integrated content moderation with real-time level indicators (Low, Medium, High).
 
 ### 🖼️ Professional Image Editor
-* **Quick Presets:** Apply Instagram-like filters and color grades instantly, now enhanced with a localized real-time preset search bar.
-* **Fine-Tuning:** Adjust brightness, contrast, saturation, and more.
-* **Crop & Resize:** Prepare your images for any platform directly in the browser.
+* **Quick Presets:** Apply Instagram-like filters instantly, featuring a real-time localized preset search bar.
+* **Fine-Tuning & Adjustments:** Manually adjust brightness, contrast, saturation, and more.
+* **Crop & Resize:** Prepare your generated art for any platform directly in the browser.
 * **Workspace Preferences:** Toggle editor views and save your preferred workspace layout effortlessly.
-* **Markup:** Draw, annotate, or add text to your generated images.
+* **Markup Tools:** Draw, annotate, or add text to your generated images.
 
 ### 📊 Performance Monitoring
 * **Real-Time Stats:** Accurately track RAM usage, monitor FPS drops, and observe average render times.
-* **Customizable HUD:** Drag, drop, and resize the performance monitor box to suit your interface layout preferences.
+* **Customizable HUD:** Drag, drop, and resize the performance monitor box to suit your interface layout preferences without blocking UI animations.
 
 ### 🌐 Localization & Accessibility
-* **Multi-Language Support:** Fully translated interface available in **English** and **Turkish**, including deeper components like dynamic search logic and localized gallery sorting.
-* **Audio Feedback:** Dynamic sound effects for interactions (with Silent Mode).
-* **Responsive Design:** Works seamlessly on desktop, tablet, and mobile, featuring a polished app switch modal for compact screens.
+* **Multi-Language Support:** Fully translated interface available in **English** and **Turkish**, including deeper components like dynamic search logic.
+* **Audio Feedback:** Dynamic sound effects for interactions (with a Silent Mode toggle).
+* **Polished Mobile Experience:** Highly optimized responsive design with drag-to-dismiss bottom sheets and mobile-specific chat sidebars.
 
 ### 💾 Local-First Architecture
-* **Private Gallery:** All generated images, chats, and custom user profiles are securely stored locally in your browser leveraging IndexedDB.
-* **Data Privacy:** Your API key and images remain on your device; absolutely no hidden server uploads.
-* **Import/Export:** Distinct functionality to safely backup and restore your favorite images and ecosystem settings.
+* **Advanced Gallery Management:** Filter, sort (Newest/Oldest), and easily mass-delete images using the brand new Multi-Select capability.
+* **Fluid Gestures:** Intuitively close full-screen image views with a seamless Drag-to-Dismiss swipe gesture.
+* **Private via IndexedDB:** All media, chats, and custom profiles live purely in your browser's local storage.
+* **Data Privacy:** Your API key and creations remain entirely on your device. Absolutely no hidden backend uploads.
 
 ---
 
@@ -93,8 +98,8 @@ It combines state-of-the-art **Image Generation**, a full knowledge-aware **AI R
       <td align="center"><b>Advanced Image Editor</b></td>
     </tr>
     <tr>
-      <td><img src="https://github.com/user-attachments/assets/9797eb42-ceec-4760-aa04-67a076421240" alt="UI" /></td>
-      <td><img src="https://github.com/user-attachments/assets/35e1db6e-8bf0-4670-82e8-06e7c5f42a30" alt="Editor" /></td>
+      <td><img src="src/image_gen.webp" alt="UI" /></td>
+      <td><img src="src/image_edit.webp" alt="Editor" /></td>
     </tr>
   </table>
   <table>
@@ -103,10 +108,37 @@ It combines state-of-the-art **Image Generation**, a full knowledge-aware **AI R
       <td align="center"><b>Gallery & Filters</b></td>
     </tr>
     <tr>
-      <td><img src="https://github.com/user-attachments/assets/c491a07f-6def-4dd3-962c-e8b48830143a" alt="Chat" /></td>
-      <td><img src="https://github.com/user-attachments/assets/c57d0300-acd0-4bf7-8e53-2daefae9ee99" alt="Gallery" /></td>
+      <td><img src="src/chatbot.webp" alt="Chat" /></td>
+      <td><img src="src/gallery.webp" alt="Gallery" /></td>
     </tr>
   </table>
+
+  <br />
+
+  <details>
+    <summary><b>Show More Screenshots</b></summary>
+    <br />
+    <table>
+      <tr>
+        <td align="center"><b>Advanced Settings</b></td>
+        <td align="center"><b>App Switcher Menu</b></td>
+      </tr>
+      <tr>
+        <td><img src="src/adv_settings_image_gen.webp" alt="Advanced Settings" /></td>
+        <td><img src="src/apps.webp" alt="Apps Menu" /></td>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <td align="center"><b>Prompt Preview</b></td>
+        <td align="center"><b>Settings Panel</b></td>
+      </tr>
+      <tr>
+        <td><img src="src/prompt_preview.webp" alt="Prompt Preview" /></td>
+        <td><img src="src/settings.webp" alt="Settings" /></td>
+      </tr>
+    </table>
+  </details>
 </div>
 
 ---
