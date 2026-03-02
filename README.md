@@ -120,6 +120,14 @@ It combines state-of-the-art **Image Generation**, a full knowledge-aware **AI R
     <br />
     <table>
       <tr>
+        <td align="center"><b>Intro</b></td>
+      </tr>
+      <tr>
+        <td><img src="src/trailer.webp" alt="Trailer" /></td>
+      </tr>
+    </table>
+    <table>
+      <tr>
         <td align="center"><b>Advanced Settings</b></td>
         <td align="center"><b>App Switcher Menu</b></td>
       </tr>

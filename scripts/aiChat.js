@@ -1328,25 +1328,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnChatDataDownload = document.getElementById('btn-chat-data-download');
     const listContainer = document.getElementById('chat-data-list-container');
 
-    if (listContainer) {
-        listContainer.addEventListener('click', (e) => {
-            const btn = e.target.closest('.logs-toggle-btn');
-            if (!btn) return;
-            
-            const wrapper = btn.closest('.logs-wrapper');
-            const content = wrapper.querySelector('.logs-content');
-            const arrow = btn.querySelector('.logs-arrow');
-            
-            if (content.style.maxHeight === '0px' || !content.style.maxHeight) {
-                content.style.maxHeight = content.scrollHeight + 'px';
-                content.style.opacity = '1';
-                if(arrow) arrow.style.transform = 'rotate(90deg)';
-            } else {
-                content.style.maxHeight = '0px';
-                content.style.opacity = '0';
-                if(arrow) arrow.style.transform = 'rotate(0deg)';
-            }
-        });
+
+
+    function closeChatDataModal() {
+        if (!chatDataModal) return;
+        chatDataModal.classList.remove('active');
+        setTimeout(() => {
+            const lc = document.getElementById('chat-data-list-container');
+            if (lc) lc.innerHTML = '';
+            const sc = document.getElementById('chat-data-stats-container');
+            if (sc) sc.innerHTML = '';
+        }, 350);
     }
 
     if (chatDataBtn) {
@@ -1370,13 +1362,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 const allConvs = await chatDbHelper.getAllConversations();
                 const allMsgs = await chatDbHelper.getAllMessages();
 
+                const msgCountMap = {};
+                for (let i = 0; i < allMsgs.length; i++) {
+                    const cid = allMsgs[i].conversationId;
+                    msgCountMap[cid] = (msgCountMap[cid] || 0) + 1;
+                }
+
                 let totalMessages = allMsgs.length;
                 let totalCost = 0;
                 let totalConvs = allConvs.length;
 
-                allConvs.forEach(c => {
-                    if (c.totalCost) totalCost += c.totalCost;
-                });
+                for (let i = 0; i < allConvs.length; i++) {
+                    if (allConvs[i].totalCost) totalCost += allConvs[i].totalCost;
+                }
 
                 const statsContainer = document.getElementById('chat-data-stats-container');
                 if (statsContainer) {
@@ -1399,12 +1397,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     `;
                 }
 
-                listContainer.innerHTML = '';
-                
                 allConvs.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-                allConvs.forEach(conv => {
-                    const convMsgs = allMsgs.filter(m => m.conversationId === conv.id).sort((a,b) => new Date(a.timestamp) - new Date(b.timestamp));
+                const msgsByConv = {};
+                for (let i = 0; i < allMsgs.length; i++) {
+                    const msg = allMsgs[i];
+                    if (!msgsByConv[msg.conversationId]) msgsByConv[msg.conversationId] = [];
+                    msgsByConv[msg.conversationId].push(msg);
+                }
+
+                const fragment = document.createDocumentFragment();
+
+                for (let ci = 0; ci < allConvs.length; ci++) {
+                    const conv = allConvs[ci];
+                    const msgCount = msgCountMap[conv.id] || 0;
                     const item = document.createElement('div');
                     item.className = 'data-item';
 
@@ -1420,12 +1426,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         `;
                     }
 
-                    const detailObj = {
-                        ...conv,
-                        messages: convMsgs
-                    };
-                    const detailJson = JSON.stringify(detailObj, null, 2);
-
                     item.innerHTML = `
                         <div class="data-header">
                             <span>${conv.characterName || t.unknownCharacter} ${t.characterNM}</span>
@@ -1433,30 +1433,59 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div class="data-content-row"><span class="data-label">Created:</span> <span class="data-value">${createdDate}</span></div>
                         <div class="data-content-row"><span class="data-label">Last Msg:</span> <span class="data-value">${lastMsgDate}</span></div>
-                        <div class="data-content-row"><span class="data-label">Messages:</span> <span class="data-value">${convMsgs.length}</span></div>
+                        <div class="data-content-row"><span class="data-label">Messages:</span> <span class="data-value">${msgCount}</span></div>
                         <div class="data-content-row"><span class="data-label">Cost:</span> <span class="data-value">$${(conv.totalCost || 0).toFixed(7)}</span></div>
                         ${userInfoHtml}
                         
                         <div class="logs-wrapper" style="margin-top:10px; border-top:1px solid #222; padding-top:5px;">
-                            <button class="logs-toggle-btn" style="background:none; border:none; cursor:pointer; color:var(--primary); font-size:11px; outline:none; padding:5px 0; display:flex; align-items:center; gap:5px;">
+                            <button class="logs-toggle-btn" data-conv-id="${conv.id}" style="background:none; border:none; cursor:pointer; color:var(--primary); font-size:11px; outline:none; padding:5px 0; display:flex; align-items:center; gap:5px;">
                                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" class="logs-arrow" style="transition: transform 0.3s ease; stroke: currentColor;">
                                     <path d="M9 18l6-6-6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                                 ${t.chatDataView || 'View Logs'}
                             </button>
                             <div class="logs-content" style="max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.3s ease-out, opacity 0.3s ease-out;">
-                                <pre style="white-space: pre-wrap; word-wrap: break-word; font-size: 11px; color: #888; background: #050505; padding: 10px; margin-top: 5px; border-radius: 4px; overflow-x:auto;">${escapeHtml(detailJson)}</pre>
                             </div>
                         </div>
                     `;
-                    listContainer.appendChild(item);
-                });
+
+                    const logsToggle = item.querySelector('.logs-toggle-btn');
+                    const logsContent = item.querySelector('.logs-content');
+                    let logsLoaded = false;
+
+                    logsToggle.addEventListener('click', () => {
+                        if (!logsLoaded) {
+                            const convMsgs = (msgsByConv[conv.id] || []).sort((a,b) => new Date(a.timestamp) - new Date(b.timestamp));
+                            const detailObj = { ...conv, messages: convMsgs };
+                            const detailJson = JSON.stringify(detailObj, null, 2);
+                            const pre = document.createElement('pre');
+                            pre.style.cssText = 'white-space: pre-wrap; word-wrap: break-word; font-size: 11px; color: #888; background: #050505; padding: 10px; margin-top: 5px; border-radius: 4px; overflow-x:auto;';
+                            pre.textContent = detailJson;
+                            logsContent.appendChild(pre);
+                            logsLoaded = true;
+                        }
+
+                        const arrow = logsToggle.querySelector('.logs-arrow');
+                        if (logsContent.style.maxHeight === '0px' || !logsContent.style.maxHeight) {
+                            logsContent.style.maxHeight = logsContent.scrollHeight + 'px';
+                            logsContent.style.opacity = '1';
+                            if (arrow) arrow.style.transform = 'rotate(90deg)';
+                        } else {
+                            logsContent.style.maxHeight = '0px';
+                            logsContent.style.opacity = '0';
+                            if (arrow) arrow.style.transform = 'rotate(0deg)';
+                        }
+                    });
+
+                    fragment.appendChild(item);
+                }
+
+                listContainer.innerHTML = '';
+                listContainer.appendChild(fragment);
 
                 if (allConvs.length === 0) {
                      listContainer.innerHTML = `<div style="text-align:center; padding:20px; color:#666;">${t.chatNoConv || 'No conversations found.'}</div>`;
                 }
-
-
 
             } catch (e) {
                 console.error('Error loading chat data:', e);
@@ -1467,14 +1496,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (btnChatDataClose) {
         btnChatDataClose.addEventListener('click', () => {
-            chatDataModal.classList.remove('active');
+            closeChatDataModal();
         });
     }
 
     if (chatDataModal) {
         chatDataModal.addEventListener('click', (e) => {
             if (e.target === chatDataModal) {
-                chatDataModal.classList.remove('active');
+                closeChatDataModal();
             }
         });
     }

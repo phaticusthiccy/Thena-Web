@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thena — The Future of AI Creativity</title>
+    <meta name="description" content="Thena: Next-Gen AI Image Generator, Roleplay Chat & Image Editor. Experience the future of creativity.">
+    <link rel="icon" type="image/png" href="src/icon-192.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/trailer.css">
+</head>
+<body>
+
+    <nav class="trailer-nav" id="trailer-nav">
+        <div class="nav-left">
+            <button class="lang-toggle" id="lang-toggle" title="Switch Language">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M5 8L10 13M4 14L10 8L12 5M2 5H14M7 2H8M12.913 17H20.087M12.913 17L11 21M12.913 17L15.7783 11.009C16.0092 10.5263 16.1246 10.2849 16.2826 10.2086C16.4199 10.1423 16.5801 10.1423 16.7174 10.2086C16.8754 10.2849 16.9908 10.5263 17.2217 11.009L20.087 17M20.087 17L22 21" stroke-linejoin="round" />
+                </svg>
+                <span id="lang-label">TR</span>
+            </button>
+            <a href="index.html" onclick="localStorage.setItem('firstTime','false')" class="nav-logo">
+                <img src="src/icon-192.png" alt="Thena">
+                <span>Thena</span>
+            </a>
+        </div>
+        <a href="index.html" onclick="localStorage.setItem('firstTime','false')" class="nav-cta">
+            <span data-i18n="navCta">Launch App</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+        </a>
+    </nav>
+
+    <section class="hero" id="hero">
+        <div class="particles" id="particles"></div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="dot"></span>
+                <span data-i18n="heroBadge">Introducing Thena</span>
+            </div>
+            <h1 class="hero-title">
+                <span class="gradient-text">THENA</span>
+            </h1>
+            <p class="hero-subtitle" data-i18n="heroSubtitle"><strong>AI Image Generation</strong> · <strong>Roleplay Chat</strong> · <strong>Image Editor</strong><br>All in one place. No installation needed.</p>
+            <div class="hero-cta-group">
+                <a href="index.html" onclick="localStorage.setItem('firstTime','false')" class="btn-primary">
+                    <span data-i18n="heroBtn">Start Creating</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+                <a href="https://github.com/phaticusthiccy/Thena-Web" class="btn-outline" target="_blank">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    <span data-i18n="heroGithub">View on GitHub</span>
+                </a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span data-i18n="scrollExplore">Scroll to explore</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <div class="light-line"></div>
+    <section class="intro-statement">
+        <p class="statement-text word-reveal" id="intro-text" data-i18n="introWords"></p>
+    </section>
+    <div class="light-line"></div>
+
+    <section class="feature-section feat-imagegen" id="feat-imagegen">
+        <div class="feature-inner">
+            <div class="feature-text reveal-left">
+                <div class="feature-number">01</div>
+                <div class="feature-icon-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg>
+                    <span data-i18n="feat1Badge">Image Generation</span>
+                </div>
+                <h2 class="feature-title" data-i18n="feat1Title">Turn words into <span class="text-gradient-purple">stunning visuals.</span></h2>
+                <p class="feature-desc" data-i18n="feat1Desc">Access multiple AI models — from Photorealism to Anime, Cinematic to Abstract. With Magic Wand enhancement, live prompt preview, and creative parameters, your imagination has no limits.</p>
+                <div class="feature-specs">
+                    <span class="spec-chip">⚡ Fast Mode</span>
+                    <span class="spec-chip">🎨 Creative Mode</span>
+                    <span class="spec-chip">💎 HighRes</span>
+                    <span class="spec-chip">✨ Prompt Magic</span>
+                    <span class="spec-chip">🎬 Movie Filter</span>
+                    <span class="spec-chip">💠 Dense Mode</span>
+                </div>
+            </div>
+            <div class="feature-visual reveal-right">
+                <div class="feature-glow"></div>
+                <div class="feature-img-wrapper">
+                    <img src="src/image_gen.webp" alt="Thena Image Generator Interface" loading="lazy">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider-statement">
+        <div class="big-text reveal" data-i18n="divider1Big"><span class="text-gradient-green">No frameworks.</span><br>Pure performance.</div>
+        <p class="sub-text reveal" data-i18n="divider1Sub">Built with Vanilla JavaScript. Every pixel intentional.</p>
+    </div>
+    <div class="light-line"></div>
+
+    <section class="feature-section feat-chat" id="feat-chat">
+        <div class="feature-inner reversed">
+            <div class="feature-text reveal-right">
+                <div class="feature-number">02</div>
+                <div class="feature-icon-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span data-i18n="feat2Badge">AI Roleplay Chat</span>
+                </div>
+                <h2 class="feature-title" data-i18n="feat2Title">Characters that <span class="text-gradient-green">remember you.</span></h2>
+                <p class="feature-desc" data-i18n="feat2Desc">Engage with deeply crafted AI personas. Dynamic system prompts adapt to your profile — name, age, personality. Every conversation is unique, every story unfolds differently.</p>
+                <div class="feature-specs">
+                    <span class="spec-chip">🎭 Deep Lore</span>
+                    <span class="spec-chip">🧠 Story Awareness</span>
+                    <span class="spec-chip">👤 User Profiles</span>
+                    <span class="spec-chip">🖼️ Image Generation</span>
+                    <span class="spec-chip">🔒 Content Moderation</span>
+                </div>
+            </div>
+            <div class="feature-visual reveal-left">
+                <div class="feature-glow"></div>
+                <div class="feature-img-wrapper">
+                    <img src="src/chatbot.webp" alt="Thena AI Chat Interface" loading="lazy">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="light-line"></div>
+    <div class="stats-bar">
+        <div class="stat-item reveal">
+            <div class="stat-number counter" data-target="10">0</div>
+            <div class="stat-label" data-i18n="statModels">AI Models</div>
+        </div>
+        <div class="stat-item reveal">
+            <div class="stat-number counter" data-target="7">0</div>
+            <div class="stat-label" data-i18n="statChars">AI Characters</div>
+        </div>
+        <div class="stat-item reveal">
+            <div class="stat-number counter" data-target="12">0</div>
+            <div class="stat-label" data-i18n="statPresets">Editor Presets</div>
+        </div>
+        <div class="stat-item reveal">
+            <div class="stat-number">∞</div>
+            <div class="stat-label" data-i18n="statCreativity">Creativity</div>
+        </div>
+    </div>
+    <div class="light-line"></div>
+
+    <section class="feature-section feat-editor" id="feat-editor">
+        <div class="feature-inner">
+            <div class="feature-text reveal-left">
+                <div class="feature-number">03</div>
+                <div class="feature-icon-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                    <span data-i18n="feat3Badge">Image Editor</span>
+                </div>
+                <h2 class="feature-title" data-i18n="feat3Title">Edit like a <span class="text-gradient-orange">professional.</span></h2>
+                <p class="feature-desc" data-i18n="feat3Desc">Instagram-like filters, fine-tuning controls, crop & resize — all within the browser. Apply presets with a tap, annotate with markup tools, and prepare your art for any platform.</p>
+                <div class="feature-specs">
+                    <span class="spec-chip">🎨 Instant Presets</span>
+                    <span class="spec-chip">🔧 Fine-Tuning</span>
+                    <span class="spec-chip">✂️ Crop & Resize</span>
+                    <span class="spec-chip">✍️ Markup Tools</span>
+                    <span class="spec-chip">🔍 Localized Search</span>
+                </div>
+            </div>
+            <div class="feature-visual reveal-right">
+                <div class="feature-glow"></div>
+                <div class="feature-img-wrapper">
+                    <img src="src/image_edit.webp" alt="Thena Image Editor" loading="lazy">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider-statement">
+        <div class="big-text reveal" data-i18n="divider2Big">Your data stays<br><span class="text-gradient-blue">on your device.</span></div>
+        <p class="sub-text reveal" data-i18n="divider2Sub">IndexedDB-powered. No hidden uploads. Zero tracking. Complete privacy.</p>
+    </div>
+    <div class="light-line"></div>
+
+    <section class="feature-section feat-gallery" id="feat-gallery">
+        <div class="feature-inner reversed">
+            <div class="feature-text reveal-right">
+                <div class="feature-number">04</div>
+                <div class="feature-icon-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    <span data-i18n="feat4Badge">Gallery & Management</span>
+                </div>
+                <h2 class="feature-title" data-i18n="feat4Title">Organize your <span class="text-gradient-blue">masterpieces.</span></h2>
+                <p class="feature-desc" data-i18n="feat4Desc">Filter by model, ratio, or date. Sort newest to oldest. Multi-select for batch operations. Drag-to-dismiss gestures. Your gallery, your way — powered by local-first architecture.</p>
+                <div class="feature-specs">
+                    <span class="spec-chip">🔍 Smart Search</span>
+                    <span class="spec-chip">📊 Advanced Filters</span>
+                    <span class="spec-chip">⭐ Favorites</span>
+                    <span class="spec-chip">✅ Multi-Select</span>
+                    <span class="spec-chip">👆 Drag to Dismiss</span>
+                </div>
+            </div>
+            <div class="feature-visual reveal-left">
+                <div class="feature-glow"></div>
+                <div class="feature-img-wrapper">
+                    <img src="src/gallery.webp" alt="Thena Gallery" loading="lazy">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="light-line"></div>
+    <div class="showcase-strip">
+        <div class="strip-track" id="strip-track">
+            <div class="strip-item"><img src="src/image_gen.webp" alt="Image Generator" loading="lazy"></div>
+            <div class="strip-item"><img src="src/chatbot.webp" alt="AI Chatbot" loading="lazy"></div>
+            <div class="strip-item"><img src="src/image_edit.webp" alt="Image Editor" loading="lazy"></div>
+            <div class="strip-item"><img src="src/gallery.webp" alt="Gallery" loading="lazy"></div>
+            <div class="strip-item"><img src="src/adv_settings_image_gen.webp" alt="Advanced Settings" loading="lazy"></div>
+            <div class="strip-item"><img src="src/apps.webp" alt="App Switcher" loading="lazy"></div>
+            <div class="strip-item"><img src="src/prompt_preview.webp" alt="Prompt Preview" loading="lazy"></div>
+            <div class="strip-item"><img src="src/settings.webp" alt="Settings" loading="lazy"></div>
+            <div class="strip-item"><img src="src/image_gen.webp" alt="Image Generator" loading="lazy"></div>
+            <div class="strip-item"><img src="src/chatbot.webp" alt="AI Chatbot" loading="lazy"></div>
+            <div class="strip-item"><img src="src/image_edit.webp" alt="Image Editor" loading="lazy"></div>
+            <div class="strip-item"><img src="src/gallery.webp" alt="Gallery" loading="lazy"></div>
+            <div class="strip-item"><img src="src/adv_settings_image_gen.webp" alt="Advanced Settings" loading="lazy"></div>
+            <div class="strip-item"><img src="src/apps.webp" alt="App Switcher" loading="lazy"></div>
+            <div class="strip-item"><img src="src/prompt_preview.webp" alt="Prompt Preview" loading="lazy"></div>
+            <div class="strip-item"><img src="src/settings.webp" alt="Settings" loading="lazy"></div>
+        </div>
+    </div>
+    <div class="light-line"></div>
+
+    <section class="section" id="tech">
+        <div class="section-label reveal" data-i18n="techLabel">Built With</div>
+        <h2 class="section-title reveal" data-i18n="techTitle">The tech behind<br>the magic.</h2>
+        <p class="section-desc reveal" data-i18n="techDesc">No React. No Vue. No Next.js. Just raw browser APIs pushed to their absolute limits.</p>
+        <div class="tech-grid">
+            <div class="tech-card reveal">
+                <span class="tech-emoji">📄</span>
+                <div class="tech-name">HTML5</div>
+                <div class="tech-desc" data-i18n="techHtml">Semantic structure & DOM layout</div>
+            </div>
+            <div class="tech-card reveal">
+                <span class="tech-emoji">🎨</span>
+                <div class="tech-name">CSS3</div>
+                <div class="tech-desc" data-i18n="techCss">Animations, Glassmorphism, Responsive Design</div>
+            </div>
+            <div class="tech-card reveal">
+                <span class="tech-emoji">⚡</span>
+                <div class="tech-name">JavaScript ES6+</div>
+                <div class="tech-desc" data-i18n="techJs">Core logic & API communication</div>
+            </div>
+            <div class="tech-card reveal">
+                <span class="tech-emoji">💾</span>
+                <div class="tech-name">IndexedDB</div>
+                <div class="tech-desc" data-i18n="techIdb">Persistent local storage</div>
+            </div>
+            <div class="tech-card reveal">
+                <span class="tech-emoji">🔊</span>
+                <div class="tech-name">Web Audio API</div>
+                <div class="tech-desc" data-i18n="techAudio">Real-time audio synthesis</div>
+            </div>
+            <div class="tech-card reveal">
+                <span class="tech-emoji">🖼️</span>
+                <div class="tech-name">Canvas API</div>
+                <div class="tech-desc" data-i18n="techCanvas">Image processing & editing</div>
+            </div>
+            <div class="tech-card reveal">
+                <span class="tech-emoji">📱</span>
+                <div class="tech-name">Service Workers</div>
+                <div class="tech-desc" data-i18n="techSw">PWA & offline capabilities</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="light-line"></div>
+    <section class="final-cta">
+        <h2 class="final-title reveal" data-i18n="finalTitle">Ready to<br><span class="gradient-text">create?</span></h2>
+        <p class="final-sub reveal" data-i18n="finalSub">No downloads. No signups. Just open and start creating.</p>
+        <div class="hero-cta-group reveal">
+            <a href="index.html" onclick="localStorage.setItem('firstTime','false')" class="btn-primary">
+                <span data-i18n="finalBtn">Launch Thena</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </a>
+            <a href="https://t.me/ThenaAIBot?start=refAPI" class="btn-outline" target="_blank">
+                <span data-i18n="finalApi">Get Free API Key</span>
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <p data-i18n="footer">Developed by <a href="https://t.me/phaticusthiccy" target="_blank">@phaticusthiccy</a> &nbsp;·&nbsp; <a href="https://github.com/phaticusthiccy/Thena-Web" target="_blank">GitHub</a> &nbsp;·&nbsp; MIT License</p>
+    </footer>
+    <script src="scripts/trailer.js"></script>
+</body>
+</html>

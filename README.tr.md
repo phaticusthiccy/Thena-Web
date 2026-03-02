@@ -120,6 +120,14 @@ Son teknoloji **Görüntü Oluşturma (Image Generation)** motorunu, interaktif 
     <br />
     <table>
       <tr>
+        <td align="center"><b>Intro</b></td>
+      </tr>
+      <tr>
+        <td><img src="src/trailer.webp" alt="Trailer" /></td>
+      </tr>
+    </table>
+    <table>
+      <tr>
         <td align="center"><b>Gelişmiş Ayarlar</b></td>
         <td align="center"><b>Uygulama Seçici</b></td>
       </tr>

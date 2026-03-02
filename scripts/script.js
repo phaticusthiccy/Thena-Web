@@ -198,6 +198,7 @@ let btnFast, btnCreative, btnDense, btnMovie, btnHighRes, btnEnhance;
 let allExtraBtns = [];
 let selectedSize = null;
 let isGalleryLoading = false;
+const galleryItemDataMap = new Map();
 let models = [];
 let lastRenderId = 0;
 let apiKeyVisible = false;
@@ -2281,17 +2282,44 @@ galleryModal.addEventListener('click', (e) => {
     window._isMultiSelectMode = () => isMultiSelectMode;
 })();
 
-function populateModelFilter() {
+let _allModelsCache = null;
+async function populateModelFilter() {
+    const currentVal = filterModel.value;
     filterModel.innerHTML = '<option value="">All Models</option>';
 
-    if (models && models.length > 0) {
-        models.forEach(m => {
-            const opt = document.createElement('option');
-            opt.value = m.model;
-            opt.textContent = m.model;
-            filterModel.appendChild(opt);
-        });
+    try {
+        if (!_allModelsCache) {
+            const res = await fetch('https://create.thena.workers.dev/models?type=all', { mode: 'cors' });
+            if (res.ok) {
+                _allModelsCache = await res.json();
+            }
+        }
+
+        if (_allModelsCache && _allModelsCache.length > 0) {
+            _allModelsCache.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m.model;
+                opt.textContent = m.model;
+                filterModel.appendChild(opt);
+            });
+        }
+    } catch (e) {
+        if (models && models.length > 0) {
+            models.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m.model;
+                opt.textContent = m.model;
+                filterModel.appendChild(opt);
+            });
+        }
     }
+
+    var opt2 = document.createElement('option');
+    opt2.value = "Image Editor";
+    opt2.textContent = "Image Editor";
+    filterModel.appendChild(opt2);
+
+    if (currentVal) filterModel.value = currentVal;
 }
 
 const galleryLoader = document.getElementById('gallery-loader');
@@ -2316,6 +2344,7 @@ async function loadGallery() {
     loaderStatus.innerText = 'Reading the database...';
 
     galleryGrid.innerHTML = '';
+    galleryItemDataMap.clear();
     populateModelFilter();
     
     currentPage = 1;
@@ -2400,7 +2429,11 @@ async function applyFilters(withAnimation = false) {
 }
 
 function renderItems(items) {
-    const html = items.map((item) => {
+    const fragment = document.createDocumentFragment();
+
+    items.forEach((item, index) => {
+        galleryItemDataMap.set(item.timestamp, item);
+
         let spanClass = '';
         if (item.size) {
             const [width, height] = item.size.split('x').map(Number);
@@ -2419,12 +2452,12 @@ function renderItems(items) {
             spanClass += ' is-favorite';
         }
 
-        const itemData = encodeURIComponent(JSON.stringify(item));
-        
         const displayUrl = item.thumbnailUrl || item.url;
 
-        return `
-            <div class="gallery-item ${spanClass} show" data-item="${itemData}" data-timestamp="${item.timestamp}">
+        const div = document.createElement('div');
+        div.className = `gallery-item ${spanClass}`;
+        div.dataset.timestamp = item.timestamp;
+        div.innerHTML = `
                 <div class="multi-select-check">
                     <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="20 6 9 17 4 12"></polyline>
@@ -2443,11 +2476,20 @@ function renderItems(items) {
                 <div class="gallery-item-info">
                     <div class="info-prompt">${item.prompt}</div>
                     <div class="info-meta">${item.model.toUpperCase()} • ${item.size || 'Auto'}</div>
-                </div>
-            </div>`;
-    }).join('');
+                </div>`;
 
-    galleryGrid.insertAdjacentHTML('beforeend', html);
+        fragment.appendChild(div);
+    });
+
+    galleryGrid.appendChild(fragment);
+
+    requestAnimationFrame(() => {
+        const newItems = galleryGrid.querySelectorAll('.gallery-item:not(.show)');
+        newItems.forEach((el, i) => {
+            setTimeout(() => el.classList.add('show'), i * 30);
+        });
+    });
+
     isGalleryLoading = false;
 }
 
@@ -2553,10 +2595,8 @@ galleryGrid.addEventListener('click', (e) => {
     if (window._isMultiSelectMode && window._isMultiSelectMode()) return;
     const item = e.target.closest('.gallery-item');
     if (item) {
-        try {
-            const data = JSON.parse(decodeURIComponent(item.dataset.item));
-            openLightbox(data);
-        } catch { }
+        const data = galleryItemDataMap.get(item.dataset.timestamp);
+        if (data) openLightbox(data);
     }
 });
 let currentImageTimestamp = null;
@@ -3231,12 +3271,8 @@ function useImageSettings(event, btnElement) {
     const parentItem = btnElement.closest('.gallery-item');
     if (!parentItem) return;
 
-    let data;
-    try {
-        data = JSON.parse(decodeURIComponent(parentItem.dataset.item));
-    } catch (e) {
-        return;
-    }
+    const data = galleryItemDataMap.get(parentItem.dataset.timestamp);
+    if (!data) return;
 
     const promptInput = document.getElementById('prompt');
     promptInput.value = data.prompt;
@@ -3780,6 +3816,25 @@ if (promptPreviewToggle) {
 if (savedPromptPreview === 'true') {
     const box = document.getElementById('prompt-preview-box');
     if (box) box.style.display = '';
+}
+
+const skipIntroToggle = document.getElementById('skip-intro-toggle');
+if (skipIntroToggle) {
+    const savedFirstTime = localStorage.getItem('firstTime');
+    skipIntroToggle.checked = savedFirstTime === 'false';
+
+    skipIntroToggle.addEventListener('change', (e) => {
+        const skip = e.target.checked;
+        if (skip) {
+            localStorage.setItem('firstTime', 'false');
+            if (typeof playInformationSound === "function") playInformationSound();
+            const msg = currentLang == "tr" ? "Intro Atlandı" : "Intro Skipped";
+            if (typeof showNotification === "function") showNotification(msg, "info");
+        } else {
+            settingsModal.classList.remove('active');
+            window.location.href = 'trailer.html';
+        }
+    });
 }
 
 

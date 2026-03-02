@@ -227,7 +227,7 @@ textarea:focus {
     border-color: #00ff88;
     color: #00ff88;
     background: rgba(0, 255, 136, 0.1);
-    transform: scale(1.05);
+    transform: translateY(-2px);
     box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
 }
 
@@ -274,7 +274,7 @@ textarea:focus {
 
 #moderation-btn:hover,
 #editor-moderation-btn:hover {
-    transform: scale(1.05);
+    transform: translateY(-2px);
 }
 
 .mod-icon {
@@ -1035,18 +1035,14 @@ textarea:focus {
 .gallery-modal.active {
     visibility: visible;
     opacity: 1;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+    background: rgba(0, 0, 0, 0.7);
 }
 
 .gallery-content {
     width: 100%;
     max-width: 1000px;
     height: 85vh;
-    background: rgba(20, 20, 20, 0.4);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background: rgba(20, 20, 20, 0.95);
     border-radius: 40px 40px 0 0;
     padding: 20px 30px;
     transform: translateY(100%);
@@ -1055,6 +1051,7 @@ textarea:focus {
     flex-direction: column;
     position: relative;
     overflow: hidden;
+    will-change: transform;
 }
 
 .gallery-modal.active .gallery-content {
@@ -1320,14 +1317,12 @@ textarea:focus {
 @keyframes galleryPopIn {
     0% {
         opacity: 0;
-        transform: scale(0.9) translateY(30px);
-        filter: blur(10px);
+        transform: translateY(20px);
     }
 
     100% {
         opacity: 1;
-        transform: scale(1) translateY(0);
-        filter: blur(0);
+        transform: translateY(0);
     }
 }
 
@@ -1341,10 +1336,11 @@ textarea:focus {
     border: 1px solid rgba(255, 255, 255, 0.05);
     cursor: pointer;
     min-height: 200px;
+    contain: layout style paint;
 }
 
 .gallery-item.show {
-    animation: galleryPopIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    animation: galleryPopIn 0.35s ease forwards;
 }
 
 .gallery-item:hover {
@@ -2948,7 +2944,7 @@ body.performance-mode .magic-star {
     border-color: rgba(var(--primary-rgb), 0.5);
     color: rgb(var(--primary-rgb));
     background: rgba(var(--primary-rgb), 0.1);
-    transform: scale(1.05);
+    transform: translateY(-2px);
 }
 
 .upload-area {
@@ -3133,7 +3129,7 @@ body.performance-mode .magic-star {
     border-color: rgba(var(--primary-rgb), 0.5);
     color: rgb(var(--primary-rgb));
     background: rgba(var(--primary-rgb), 0.1);
-    transform: scale(1.05);
+    transform: translateY(-2px);
 }
 
 .history-dropdown {
@@ -6332,6 +6328,16 @@ body.performance-mode .model-filter-container {
 
 .model-select-btn:active {
     transform: translateY(0);
+}
+
+#chat-data-modal {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(0, 0, 0, 0.85);
+}
+
+#chat-data-modal .confirm-content {
+    will-change: transform, opacity;
 }
 
 .chat-data-btn:hover {

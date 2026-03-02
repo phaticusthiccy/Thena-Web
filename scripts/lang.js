@@ -219,7 +219,9 @@ const translations = {
         "multiSelectCancel": "Cancel",
         "multiSelectCount": "{0} selected",
         "multiSelectConfirmTitle": "Delete Selected Images?",
-        "multiSelectConfirmDesc": "The selected images will be permanently deleted. This action cannot be undone."
+        "multiSelectConfirmDesc": "The selected images will be permanently deleted. This action cannot be undone.",
+        "lblSkipIntro": "SKIP INTRO",
+        "lblSkipIntroDesc": "Skip the cinematic intro page on your next visit."
     },
     "tr": {
         "generateBtn": "Görüntü Oluştur",
@@ -441,7 +443,9 @@ const translations = {
         "multiSelectCancel": "İptal",
         "multiSelectCount": "{0} seçildi",
         "multiSelectConfirmTitle": "Seçilen Görseller Silinsin mi?",
-        "multiSelectConfirmDesc": "Seçilen görseller kalıcı olarak silinecek. Bu işlem geri alınamaz."
+        "multiSelectConfirmDesc": "Seçilen görseller kalıcı olarak silinecek. Bu işlem geri alınamaz.",
+        "lblSkipIntro": "İNTROYU ATLA",
+        "lblSkipIntroDesc": "Bir sonraki ziyaretinizde sinematik intro sayfasını atlayın."
     }
 };
 
@@ -466,6 +470,7 @@ function initDomCache() {
         "lbl-adv-mode", "desc-adv-mode", "lbl-auto-mode", "desc-auto-mode",
         "lbl-perf-monitor", "desc-perf-monitor",
         "lbl-data-mgmt", "desc-data-mgmt", "btn-hard-reset", "btn-close-settings",
+        "lbl-skip-intro", "desc-skip-intro",
         'btn-share-copy', 'btn-img2prompt-generate', 'chat-back-btn',
         'character-search-input', 'chat-message-input', 'chat-data-btn',
         'chat-filter-reset-btn', 'custom-main-category-trigger', 'chat-main-category-filter',
@@ -604,6 +609,9 @@ function updateLanguage(lang) {
 
     safelySetText('lbl-data-mgmt', t.lblData);
     safelySetText('desc-data-mgmt', t.lblDataDesc);
+
+    safelySetText('lbl-skip-intro', t.lblSkipIntro);
+    safelySetText('desc-skip-intro', t.lblSkipIntroDesc);
 
 
     setQueryText('#gallery-modal .gallery-title', t.galleryTitle);
