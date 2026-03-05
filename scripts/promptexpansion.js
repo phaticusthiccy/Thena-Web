@@ -429,9 +429,9 @@ document.addEventListener('DOMContentLoaded', () => {
             playInformationSound();
             if (!isAutocompleteEnabled) {
                 closeAllLists();
-                showNotification(typeof currentLang !== 'undefined' && currentLang == "tr" ? "Autocomplete Deaktif Edildi" : "Autocomplete Disabled", "info");
+                showNotification(typeof currentLang !== 'undefined' && currentLang == "tr" ? translations.tr.msgAutocompleteOff : translations.en.msgAutocompleteOff, "info");
             } else {
-                showNotification(typeof currentLang !== 'undefined' && currentLang == "tr" ? "Autocomplete Aktif Edildi" : "Autocomplete Enabled", "info");
+                showNotification(typeof currentLang !== 'undefined' && currentLang == "tr" ? translations.tr.msgAutocompleteOn : translations.en.msgAutocompleteOn, "info");
             }
         });
     }

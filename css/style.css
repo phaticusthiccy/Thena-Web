@@ -2136,6 +2136,7 @@ textarea:focus {
     color: var(--primary) !important;
     box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.1);
     animation: pulse-ready 2s infinite;
+    cursor: pointer;
 }
 .nav-btn:hover {
     border-color: #00ff88;
@@ -5278,11 +5279,23 @@ body.performance-mode .model-filter-container {
     padding: 12px 16px;
     border-radius: 16px;
     position: relative;
+    word-wrap: break-word;
+    border: 1px solid transparent;
+    transition: border-color 0.3s ease;
 }
 
+/* Emotion animations paused by default, play only when visible */
+.message-bubble[class*="emotion-"] {
+    animation-play-state: paused !important;
+    padding-bottom: 22px;
+}
+.message-bubble[class*="emotion-"].emotion-in-view {
+    animation-play-state: running !important;
+    will-change: box-shadow;
+}
 .message-bubble.user {
     align-self: flex-end;
-    background: var(--primary);
+    background: var(--dot-filled-3);
     color: #000;
     border-bottom-right-radius: 4px;
 }
@@ -5294,6 +5307,106 @@ body.performance-mode .model-filter-container {
     border: 1px solid #2a2a2a;
     border-bottom-left-radius: 4px;
 }
+
+/* Emotion icon */
+.emotion-icon {
+    position: absolute;
+    bottom: 4px;
+    right: 6px;
+    opacity: 0.85;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 0 3px currentColor);
+    animation: emotionIconPulse 3s ease-in-out infinite;
+}
+
+.message-bubble.user .emotion-icon {
+    right: auto;
+    left: 6px;
+    filter: drop-shadow(0 0 6px rgba(0, 0, 0, 1))
+}
+
+.message-bubble.user .emotion-icon svg {
+    stroke: rgba(0, 0, 0, 0.7);
+}
+
+/* Emotion label */
+.emotion-label {
+    opacity: 0.88;
+    font-style: italic;
+    font-size: 11px;
+}
+
+/* Hide emotions toggle */
+.messages-container.hide-emotions .emotion-icon,
+.messages-container.hide-emotions .emotion-label {
+    display: none;
+}
+.messages-container.hide-emotions .message-bubble.assistant[class*="emotion-"],
+.messages-container.hide-emotions .message-bubble.user[class*="emotion-"] {
+    box-shadow: none !important;
+    animation: none !important;
+    border-color: #2a2a2a !important;
+}
+
+/* Emotion glow animations */
+@keyframes emotionGlow {
+    0% { box-shadow: 0 0 4px var(--emotion-color), 0 0 8px transparent; }
+    25% { box-shadow: 0 0 6px var(--emotion-color), 0 0 12px var(--emotion-color); }
+    50% { box-shadow: 0 0 10px var(--emotion-color), 0 0 20px var(--emotion-color), inset 0 0 3px var(--emotion-color); }
+    75% { box-shadow: 0 0 6px var(--emotion-color), 0 0 12px var(--emotion-color); }
+    100% { box-shadow: 0 0 4px var(--emotion-color), 0 0 8px transparent; }
+}
+
+@keyframes emotionIconPulse {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+/* 42 Emotion glow classes */
+.message-bubble.emotion-happy { --emotion-color: rgba(255, 215, 0, 0.35); border-color: rgba(255, 215, 0, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-sad { --emotion-color: rgba(74, 144, 217, 0.35); border-color: rgba(74, 144, 217, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-angry { --emotion-color: rgba(255, 68, 68, 0.35); border-color: rgba(255, 68, 68, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-scared { --emotion-color: rgba(155, 89, 182, 0.35); border-color: rgba(155, 89, 182, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-surprised { --emotion-color: rgba(255, 107, 53, 0.35); border-color: rgba(255, 107, 53, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-disgusted { --emotion-color: rgba(46, 204, 64, 0.35); border-color: rgba(46, 204, 64, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-excited { --emotion-color: rgba(255, 20, 147, 0.35); border-color: rgba(255, 20, 147, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-bored { --emotion-color: rgba(149, 165, 166, 0.35); border-color: rgba(149, 165, 166, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-confused { --emotion-color: rgba(230, 126, 34, 0.35); border-color: rgba(230, 126, 34, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-neutral { --emotion-color: rgba(189, 195, 199, 0.25); border-color: rgba(189, 195, 199, 0.2); animation: emotionGlow 6s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-flirtatious { --emotion-color: rgba(255, 105, 180, 0.35); border-color: rgba(255, 105, 180, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-sarcastic { --emotion-color: rgba(243, 156, 18, 0.35); border-color: rgba(243, 156, 18, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-shy { --emotion-color: rgba(253, 207, 232, 0.35); border-color: rgba(253, 207, 232, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-confident { --emotion-color: rgba(52, 152, 219, 0.35); border-color: rgba(52, 152, 219, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-amused { --emotion-color: rgba(241, 196, 15, 0.35); border-color: rgba(241, 196, 15, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-jealous { --emotion-color: rgba(39, 174, 96, 0.35); border-color: rgba(39, 174, 96, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-guilty { --emotion-color: rgba(142, 68, 173, 0.35); border-color: rgba(142, 68, 173, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-curious { --emotion-color: rgba(26, 188, 156, 0.35); border-color: rgba(26, 188, 156, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-hopeful { --emotion-color: rgba(0, 206, 209, 0.35); border-color: rgba(0, 206, 209, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-anxious { --emotion-color: rgba(231, 76, 60, 0.35); border-color: rgba(231, 76, 60, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-frustrated { --emotion-color: rgba(192, 57, 43, 0.35); border-color: rgba(192, 57, 43, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-affectionate { --emotion-color: rgba(255, 118, 117, 0.35); border-color: rgba(255, 118, 117, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-romantic { --emotion-color: rgba(232, 67, 147, 0.35); border-color: rgba(232, 67, 147, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-loving { --emotion-color: rgba(253, 121, 168, 0.35); border-color: rgba(253, 121, 168, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-passionate { --emotion-color: rgba(214, 48, 49, 0.35); border-color: rgba(214, 48, 49, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-infatuated { --emotion-color: rgba(162, 155, 254, 0.35); border-color: rgba(162, 155, 254, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-seductive { --emotion-color: rgba(108, 92, 231, 0.35); border-color: rgba(108, 92, 231, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-lustful { --emotion-color: rgba(255, 45, 85, 0.35); border-color: rgba(255, 45, 85, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-aroused { --emotion-color: rgba(255, 59, 48, 0.35); border-color: rgba(255, 59, 48, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-submissive { --emotion-color: rgba(201, 160, 220, 0.35); border-color: rgba(201, 160, 220, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-dominant { --emotion-color: rgba(139, 0, 0, 0.35); border-color: rgba(139, 0, 0, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-desiring { --emotion-color: rgba(255, 107, 107, 0.35); border-color: rgba(255, 107, 107, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-melancholic { --emotion-color: rgba(91, 125, 177, 0.35); border-color: rgba(91, 125, 177, 0.3); animation: emotionGlow 6s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-hopeless { --emotion-color: rgba(74, 74, 106, 0.35); border-color: rgba(74, 74, 106, 0.3); animation: emotionGlow 6s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-lonely { --emotion-color: rgba(106, 123, 139, 0.35); border-color: rgba(106, 123, 139, 0.3); animation: emotionGlow 6s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-heartbroken { --emotion-color: rgba(178, 34, 34, 0.35); border-color: rgba(178, 34, 34, 0.3); animation: emotionGlow 6s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-nostalgic { --emotion-color: rgba(212, 165, 116, 0.35); border-color: rgba(212, 165, 116, 0.3); animation: emotionGlow 6s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-empty { --emotion-color: rgba(128, 128, 128, 0.25); border-color: rgba(128, 128, 128, 0.2); animation: emotionGlow 7s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-desperate { --emotion-color: rgba(92, 61, 110, 0.35); border-color: rgba(92, 61, 110, 0.3); animation: emotionGlow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-thrilled { --emotion-color: rgba(255, 140, 0, 0.35); border-color: rgba(255, 140, 0, 0.3); animation: emotionGlow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-euphoric { --emotion-color: rgba(255, 215, 0, 0.4); border-color: rgba(255, 215, 0, 0.35); animation: emotionGlow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.message-bubble.emotion-adventurous { --emotion-color: rgba(46, 213, 115, 0.35); border-color: rgba(46, 213, 115, 0.3); animation: emotionGlow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
 
 .message-content {
     font-size: 14px;

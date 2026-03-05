@@ -60,6 +60,8 @@ Son teknoloji **Görüntü Oluşturma (Image Generation)** motorunu, interaktif 
 
 ### 🤖 Yapay Zeka Rol Yapma Sohbeti
 * **Etkileşimli Karakterler:** Zengin irfan (lore) ve arka plan hikayeleri sunan yapay zeka karakterleriyle hikaye odaklı sohbetlere dalın.
+* **Çoklu Zeka Modelleri:** Hikaye anlatımı ihtiyaçlarınıza göre Hızlı (Fast), Dengeli (Balanced) ve Ultra (Gelişmiş) modeller arasından seçim yapın.
+* **Duygu Analizi Motoru:** Gerçek zamanlı duygu analizi, hikayenin duygusal tonuna göre karakterin yüz ifadesini dinamik olarak değiştirir.
 * **Dinamik Sistem Komutları:** Kendi kullanıcı profilinizi oluşturun (İsim, Yaş, Cinsiyet). Karakterler, tonlarını ve hafızalarını size özel olarak uyarlayacaktır.
 * **Özelleştirilebilir Görünümler:** Karakter kütüphanenizi düzenlemek için Izgara (Grid), Liste (List) ve Kompakt görünümler arasında zahmetsizce geçiş yapın.
 * **Hikaye Farkındalığı:** Yapay zeka, bir anlatı örgüsünün tamamlandığını tespit eder (`[FINISH]` sinyali aracılığıyla) ve hikayeyi yönlendirebilir.
@@ -72,17 +74,21 @@ Son teknoloji **Görüntü Oluşturma (Image Generation)** motorunu, interaktif 
 * **Çalışma Alanı Tercihleri:** Düzenleyici panellerinin görünümlerini değiştirin ve çalışma alanı düzenini zahmetsizce kaydedin.
 * **İşaretleme Araçları (Markup):** Oluşturulan görselleri çizin, notlar ekleyin veya metin yazın.
 
-### 📊 Performans İzleme
-* **Gerçek Zamanlı İstatistikler:** RAM kullanımını doğru bir şekilde izleyin, FPS düşüşlerini gözlemleyin ve ortalama işleme (render) sürelerini görün.
+### 📊 Performans ve Optimizasyon
+* **Gerçek Zamanlı İstatistikler:** RAM kullanımını, CPU darboğazlarını doğru bir şekilde izleyin, FPS düşüşlerini gözlemleyin ve ortalama işleme (render) sürelerini görün.
+* **Akıllı Güç Tasarrufu (Power Saver):** Pil ve cihaz kaynaklarını korumak için boşta kalma durumunda arka plan görevlerini otomatik olarak duraklatır, sesi kapatır ve Wake Lock API kullanır.
+* **Gelişmiş İşleme Motoru:** Ekranda görünmeyen öğelerdeki animasyonları duraklatmak için akıllı `IntersectionObserver` kullanımı ile GPU/CPU tasarrufu sağlar.
+* **Optimize Edilmiş Sohbet Sistemi:** Uzun hikayelerde bile gecikmesiz (lag-free) kaydırma sağlamak için sohbet penceresi (DOM rendering) ağır yükte bile akıcı çalışacak şekilde optimize edildi.
 * **Özelleştirilebilir Eklenti Penceresi:** Arayüz animasyonlarını engellemeden performans izleme kutusunu sürükleyip bırakarak yeniden konumlandırın.
 
 ### 🌐 Yerelleştirme ve Erişilebilirlik
-* **Çoklu Dil Desteği:** Dinamik arama mantığı ve galeri yönetimi de dahil olmak üzere tam çevrilmiş arayüz **İngilizce** ve **Türkçe** dillerinde mevcuttur.
+* **Çoklu Dil Desteği:** Dinamik arama mantığı, galeri yönetimi ve tüm sistem bildirimleri dahil olmak üzere tam çevrilmiş arayüz **İngilizce** ve **Türkçe** dillerinde mevcuttur.
 * **Sesli Geri Bildirim:** Tıklama ve işlemler için dinamik arabirim ses efektleri (Sessiz Mod desteği ile).
+* **Sinematik Giriş:** Uygulamayı açarken sürükleyici bir fragman (trailer) deneyiminin keyfini çıkarın veya tek bir tıklamayla doğrudan aksiyona atlayın.
 * **Mobil Deneyim:** Sürükle-kapat (drag-to-dismiss) sayfalar ve sohbet yan çubuklarıyla (chat-sidebar) optimize edilmiş arayüz tasarımları.
 
 ### 💾 Önce Yerel (Local-First) Mimari
-* **Gelişmiş Galeri Yönetimi:** Görselleri filtreleyin, sıralayın (En Yeni/En Eski) ve Çoklu Seçim (Multi-Select) özelliğiyle toplu işlem uygulayın.
+* **Gelişmiş Galeri Yönetimi:** Görselleri filtreleyin, sıralayın (En Yeni/En Eski) ve yepyeni Uzun Basma (Long-Press) Çoklu Seçim modunu kullanarak toplu işlem uygulayın.
 * **Akıcı Hareketler:** Tam ekran resim görünümlerini Sürükle-Kapat ("Drag-to-Dismiss") kaydırma hareketiyle kapatın.
 * **IndexedDB ile Tam Gizlilik:** Tüm medyanız, sohbetleriniz ve özel profilleriniz tamamen tarayıcınızın yerel depolamasında yaşar.
 * **Veri Gizliliği:** API anahtarınız uygulamanızda çalışır, harici bir sunucuya gitmez.
@@ -98,8 +104,8 @@ Son teknoloji **Görüntü Oluşturma (Image Generation)** motorunu, interaktif 
       <td align="center"><b>Gelişmiş Görüntü Düzenleyici</b></td>
     </tr>
     <tr>
-      <td><img src="src/image_gen.webp" alt="UI" /></td>
-      <td><img src="src/image_edit.webp" alt="Editor" /></td>
+      <td><a href="src/image_gen.webp"><img src="src/image_gen.webp" alt="UI" /></a></td>
+      <td><a href="src/image_edit.webp"><img src="src/image_edit.webp" alt="Editor" /></a></td>
     </tr>
   </table>
   <table>
@@ -108,8 +114,8 @@ Son teknoloji **Görüntü Oluşturma (Image Generation)** motorunu, interaktif 
       <td align="center"><b>Galeri ve Filtreler</b></td>
     </tr>
     <tr>
-      <td><img src="src/chatbot.webp" alt="Chat" /></td>
-      <td><img src="src/gallery.webp" alt="Gallery" /></td>
+      <td><a href="src/chatbot.webp"><img src="src/chatbot.webp" alt="Chat" /></a></td>
+      <td><a href="src/gallery.webp"><img src="src/gallery.webp" alt="Gallery" /></a></td>
     </tr>
   </table>
 
@@ -121,9 +127,21 @@ Son teknoloji **Görüntü Oluşturma (Image Generation)** motorunu, interaktif 
     <table>
       <tr>
         <td align="center"><b>Intro</b></td>
+        <td align="center"><b>Topluluk Vitrini</b></td>
       </tr>
       <tr>
-        <td><img src="src/trailer.webp" alt="Trailer" /></td>
+        <td><a href="src/trailer.webp"><img src="src/trailer.webp" alt="Trailer" /></a></td>
+        <td><a href="src/showcase.webp"><img src="src/showcase.webp" alt="Showcase" /></a></td>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <td align="center"><b>Sohbet Başlangıcı</b></td>
+        <td align="center"><b>Sohbet Sonu</b></td>
+      </tr>
+      <tr>
+        <td><a href="src/chat_start.webp"><img src="src/chat_start.webp" alt="Sohbet Başlangıcı" /></a></td>
+        <td><a href="src/chat_end.webp"><img src="src/chat_end.webp" alt="Sohbet Sonu" /></a></td>
       </tr>
     </table>
     <table>
@@ -132,8 +150,8 @@ Son teknoloji **Görüntü Oluşturma (Image Generation)** motorunu, interaktif 
         <td align="center"><b>Uygulama Seçici</b></td>
       </tr>
       <tr>
-        <td><img src="src/adv_settings_image_gen.webp" alt="Advanced Settings" /></td>
-        <td><img src="src/apps.webp" alt="Apps Menu" /></td>
+        <td><a href="src/adv_settings_image_gen.webp"><img src="src/adv_settings_image_gen.webp" alt="Advanced Settings" /></a></td>
+        <td><a href="src/apps.webp"><img src="src/apps.webp" alt="Apps Menu" /></a></td>
       </tr>
     </table>
     <table>
@@ -142,8 +160,8 @@ Son teknoloji **Görüntü Oluşturma (Image Generation)** motorunu, interaktif 
         <td align="center"><b>Ayarlar Menüsü</b></td>
       </tr>
       <tr>
-        <td><img src="src/prompt_preview.webp" alt="Prompt Preview" /></td>
-        <td><img src="src/settings.webp" alt="Settings" /></td>
+        <td><a href="src/prompt_preview.webp"><img src="src/prompt_preview.webp" alt="Prompt Preview" /></a></td>
+        <td><a href="src/settings.webp"><img src="src/settings.webp" alt="Settings" /></a></td>
       </tr>
     </table>
   </details>

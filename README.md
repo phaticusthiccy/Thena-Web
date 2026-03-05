@@ -60,6 +60,8 @@ It combines state-of-the-art **Image Generation**, a full knowledge-aware **AI R
 
 ### 🤖 AI Roleplay Chat
 * **Interactive Characters:** Engage in deep, story-driven conversations with AI personas featuring rich, newly updated lore and backstories.
+* **Multiple Intelligence Models:** Choose between Fast, Balanced, and Ultra (Advanced) models depending on your storytelling needs.
+* **Emotion Analysis Engine:** Real-time sentiment analysis dynamically changes the character's facial expression based on the story's emotional tone.
 * **Dynamic System Prompts:** Create your own user profile (Name, Age, Gender). Characters will adapt their tone and memory specifically to you.
 * **Customizable Views:** Effortlessly switch between Grid, List, and Compact layouts for organizing your character library.
 * **Story Awareness:** The AI detects when a narrative arc is complete (`[FINISH]` signal) and can gently guide the story.
@@ -72,17 +74,21 @@ It combines state-of-the-art **Image Generation**, a full knowledge-aware **AI R
 * **Workspace Preferences:** Toggle editor views and save your preferred workspace layout effortlessly.
 * **Markup Tools:** Draw, annotate, or add text to your generated images.
 
-### 📊 Performance Monitoring
-* **Real-Time Stats:** Accurately track RAM usage, monitor FPS drops, and observe average render times.
+### 📊 Performance & Optimization
+* **Real-Time Stats:** Accurately track CPU usage, RAM levels, monitor FPS drops, and observe average render times.
+* **Smart Power Saver:** Automatically mutes audio, pauses background tasks, and utilizes the Wake Lock API when idle to conserve battery and system resources.
+* **Optimized Rendering Engine:** Intelligent `IntersectionObserver` usage to pause animations on non-visible elements, drastically improving page load and scroll performance.
+* **Optimized Chat System:** Fully optimized DOM rendering ensures lag-free scrolling even with long narratives or heavy message loads.
 * **Customizable HUD:** Drag, drop, and resize the performance monitor box to suit your interface layout preferences without blocking UI animations.
 
 ### 🌐 Localization & Accessibility
-* **Multi-Language Support:** Fully translated interface available in **English** and **Turkish**, including deeper components like dynamic search logic.
+* **Multi-Language Support:** Fully translated interface available in **English** and **Turkish**, including deeper components like dynamic search logic and all system notifications.
 * **Audio Feedback:** Dynamic sound effects for interactions (with a Silent Mode toggle).
+* **Cinematic Intro:** Enjoy an immersive trailer experience when opening the app, or easily skip it to jump straight into action.
 * **Polished Mobile Experience:** Highly optimized responsive design with drag-to-dismiss bottom sheets and mobile-specific chat sidebars.
 
 ### 💾 Local-First Architecture
-* **Advanced Gallery Management:** Filter, sort (Newest/Oldest), and easily mass-delete images using the brand new Multi-Select capability.
+* **Advanced Gallery Management:** Filter, sort (Newest/Oldest), and easily mass-delete images using the brand new Long-Press Multi-Select mode.
 * **Fluid Gestures:** Intuitively close full-screen image views with a seamless Drag-to-Dismiss swipe gesture.
 * **Private via IndexedDB:** All media, chats, and custom profiles live purely in your browser's local storage.
 * **Data Privacy:** Your API key and creations remain entirely on your device. Absolutely no hidden backend uploads.
@@ -98,8 +104,8 @@ It combines state-of-the-art **Image Generation**, a full knowledge-aware **AI R
       <td align="center"><b>Advanced Image Editor</b></td>
     </tr>
     <tr>
-      <td><img src="src/image_gen.webp" alt="UI" /></td>
-      <td><img src="src/image_edit.webp" alt="Editor" /></td>
+      <td><a href="src/image_gen.webp"><img src="src/image_gen.webp" alt="UI" /></a></td>
+      <td><a href="src/image_edit.webp"><img src="src/image_edit.webp" alt="Editor" /></a></td>
     </tr>
   </table>
   <table>
@@ -108,8 +114,8 @@ It combines state-of-the-art **Image Generation**, a full knowledge-aware **AI R
       <td align="center"><b>Gallery & Filters</b></td>
     </tr>
     <tr>
-      <td><img src="src/chatbot.webp" alt="Chat" /></td>
-      <td><img src="src/gallery.webp" alt="Gallery" /></td>
+      <td><a href="src/chatbot.webp"><img src="src/chatbot.webp" alt="Chat" /></a></td>
+      <td><a href="src/gallery.webp"><img src="src/gallery.webp" alt="Gallery" /></a></td>
     </tr>
   </table>
 
@@ -121,9 +127,21 @@ It combines state-of-the-art **Image Generation**, a full knowledge-aware **AI R
     <table>
       <tr>
         <td align="center"><b>Intro</b></td>
+        <td align="center"><b>Showcase</b></td>
       </tr>
       <tr>
-        <td><img src="src/trailer.webp" alt="Trailer" /></td>
+        <td><a href="src/trailer.webp"><img src="src/trailer.webp" alt="Trailer" /></a></td>
+        <td><a href="src/showcase.webp"><img src="src/showcase.webp" alt="Showcase" /></a></td>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <td align="center"><b>Chat Start</b></td>
+        <td align="center"><b>Chat End</b></td>
+      </tr>
+      <tr>
+        <td><a href="src/chat_start.webp"><img src="src/chat_start.webp" alt="Chat Start" /></a></td>
+        <td><a href="src/chat_end.webp"><img src="src/chat_end.webp" alt="Chat End" /></a></td>
       </tr>
     </table>
     <table>
@@ -132,8 +150,8 @@ It combines state-of-the-art **Image Generation**, a full knowledge-aware **AI R
         <td align="center"><b>App Switcher Menu</b></td>
       </tr>
       <tr>
-        <td><img src="src/adv_settings_image_gen.webp" alt="Advanced Settings" /></td>
-        <td><img src="src/apps.webp" alt="Apps Menu" /></td>
+        <td><a href="src/adv_settings_image_gen.webp"><img src="src/adv_settings_image_gen.webp" alt="Advanced Settings" /></a></td>
+        <td><a href="src/apps.webp"><img src="src/apps.webp" alt="Apps Menu" /></a></td>
       </tr>
     </table>
     <table>
@@ -142,8 +160,8 @@ It combines state-of-the-art **Image Generation**, a full knowledge-aware **AI R
         <td align="center"><b>Settings Panel</b></td>
       </tr>
       <tr>
-        <td><img src="src/prompt_preview.webp" alt="Prompt Preview" /></td>
-        <td><img src="src/settings.webp" alt="Settings" /></td>
+        <td><a href="src/prompt_preview.webp"><img src="src/prompt_preview.webp" alt="Prompt Preview" /></a></td>
+        <td><a href="src/settings.webp"><img src="src/settings.webp" alt="Settings" /></a></td>
       </tr>
     </table>
   </details>

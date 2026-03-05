@@ -114,6 +114,8 @@ function createMessageHTML(msg, t, currentLang) {
                     <p style="margin-top: 4px; font-size: 10px; color: #555;">${currentLang === 'tr' ? '(Eski format - görsel kaybolmuş)' : '(Legacy format - image lost)'}</p>
                 </div>
             `;
+    } else if (content === 'Connection Error' || content.startsWith('Error: ')) {
+        messageContent = `<span style="color:#ff4444;">${content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>`;
     } else {
         try {
             messageContent = parseMarkdown(content);
@@ -122,11 +124,30 @@ function createMessageHTML(msg, t, currentLang) {
             messageContent = content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
         }
     }
+
+    const emotionLower = (msg.emotion || '').replace(/[\[\]]/g, '').trim().toLowerCase();
+    let emotionClass = '';
+    let emotionIconHtml = '';
+    let emotionLabelHtml = '';
+
+    if (emotionLower) {
+        emotionClass = ' emotion-' + emotionLower;
+        const emotionNames = t.emotionNames || {};
+        const emotionName = emotionNames[emotionLower] || (emotionLower.charAt(0).toUpperCase() + emotionLower.slice(1));
+        emotionLabelHtml = `<span class="emotion-label"> · ${emotionName}</span>`;
+        if (typeof getEmotionSvg === 'function') {
+            const svg = getEmotionSvg(emotionLower);
+            if (svg) {
+                emotionIconHtml = `<div class="emotion-icon">${svg}</div>`;
+            }
+        }
+    }
     
     return `
-        <div class="message-bubble ${msg.role}">
+        <div class="message-bubble ${msg.role}${emotionClass}">
             <div class="message-content">${messageContent}</div>
-            <div class="message-time">${timeStr}</div>
+            <div class="message-time">${timeStr}${emotionLabelHtml}</div>
+            ${emotionIconHtml}
         </div>
     `;
 }
@@ -149,6 +170,10 @@ function renderMessages(messages) {
 
     container.innerHTML = html;
     container.scrollTop = container.scrollHeight;
+
+    if (typeof initEmotionObserver === 'function') {
+        initEmotionObserver();
+    }
 }
 
 function closeChatScreen() {

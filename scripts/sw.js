@@ -23,7 +23,8 @@ const ASSETS_TO_CACHE = [
     './scripts/promptPreview.js',
     './scripts/cpu.js',
     './scripts/trailer.js',
-    './css/trailer.css'
+    './css/trailer.css',
+    './scripts/powerSaver.js'
 ];
 
 self.addEventListener('install', (event) => {

@@ -34,10 +34,17 @@ async function openCharacterChat(characterData) {
             if (typeof applyThoughtVisibility === 'function') {
                 applyThoughtVisibility(showThoughts);
             }
+            const showEmotions = settings && settings.showEmotions !== undefined ? settings.showEmotions : true;
+            if (typeof applyEmotionVisibility === 'function') {
+                applyEmotionVisibility(showEmotions);
+            }
         } catch (e) {
             console.warn('Failed to load character settings', e);
              if (typeof applyThoughtVisibility === 'function') {
                 applyThoughtVisibility(true);
+            }
+            if (typeof applyEmotionVisibility === 'function') {
+                applyEmotionVisibility(true);
             }
         }
 
@@ -597,11 +604,15 @@ function renderUserInfoStep() {
                 <div style="font-weight: 700; color: #fff; margin-bottom: 5px; transition: color 0.2s;">${t.modelThinking}</div>
                 <div style="font-size: 11px; color: #aaa; line-height: 1.3;">${t.modelThinkingDesc}</div>
             </button>
+            <button class="model-select-btn" data-value="ultra">
+                <div style="font-weight: 700; color: #fff; margin-bottom: 5px; transition: color 0.2s;">${t.modelUltra}</div>
+                <div style="font-size: 11px; color: #aaa; line-height: 1.3;">${t.modelUltraDesc}</div>
+            </button>
         </div>`;
     }
 
     wrapper.innerHTML = `
-        <div class="user-info-box" style="background:#1a1a1a; padding:20px; border-radius:12px; border:1px solid #333; width:300px; display:flex; flex-direction:column; gap:10px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+        <div class="user-info-box" style="background:#1a1a1a; padding:20px; border-radius:12px; border:1px solid #333; width:${userInfoStep === 4 ? '90%' : '300px'}; display:flex; flex-direction:column; gap:10px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
             <label style="color:#fff; font-size:14px; font-weight:600;">${labelText}</label>
             ${contentHTML}
         </div>
@@ -870,7 +881,7 @@ async function sendMessage() {
     
     const pricePerToken = (currentCharacter.tokenPrice && currentCharacter.tokenPrice.en) || 0.0000002;
 
-    await chatDbHelper.addMessage(currentConversationId, 'user', content);
+    const userMessageId = await chatDbHelper.addMessage(currentConversationId, 'user', content);
     await updateConversationCost(currentConversationId, content, pricePerToken);
 
     await chatDbHelper.updateConversation(currentConversationId, {
@@ -911,6 +922,10 @@ async function sendMessage() {
 
     history.forEach(msg => {
         let messageContent = msg.content;
+
+        if (messageContent === 'Connection Error' || (typeof messageContent === 'string' && messageContent.startsWith('Error: '))) {
+            return;
+        }
         
         try {
             const parsed = JSON.parse(msg.content);
@@ -945,6 +960,8 @@ async function sendMessage() {
     let fullResponse = "";
     let isFirstChunk = true;
     let storyFinished = false;
+    let detectedEmotion = null;
+    let detectedUserEmotion = null;
 
     try {
         const response = await fetch('https://create.thena.workers.dev/characterChat', {
@@ -976,12 +993,18 @@ async function sendMessage() {
                 buffer = lines.pop(); 
 
                 for (const line of lines) {
+
+                    if (line.trim().startsWith('emotion:')) {
+                        detectedEmotion = line.replace('emotion:', '').replace(/[\[\]]/g, '').trim().toUpperCase();
+                    }
+                    if (line.trim().startsWith('userEmotion:')) {
+                        detectedUserEmotion = line.replace('userEmotion:', '').replace(/[\[\]]/g, '').trim().toUpperCase();
+                    }
                     if (line.trim().startsWith('data:')) {
                         const jsonStr = line.replace('data: ', '').trim();
-                        if (jsonStr === '[DONE]') break;
-                        if (jsonStr === '[FINISH]') {
-                            storyFinished = true;
-                            break;
+                        if (jsonStr === '[DONE]' || jsonStr === '[FINISH]') {
+                            if (jsonStr === '[FINISH]') storyFinished = true;
+                            continue;
                         }
 
                         try {
@@ -1001,6 +1024,7 @@ async function sendMessage() {
                         }
                     }
                 }
+                if (storyFinished) break;
             }
         }
 
@@ -1017,8 +1041,66 @@ async function sendMessage() {
             contentDiv.innerHTML = parseMarkdown(fullResponse);
         }
 
-        await chatDbHelper.addMessage(currentConversationId, 'assistant', fullResponse);
+        await chatDbHelper.addMessage(currentConversationId, 'assistant', fullResponse, detectedEmotion);
         await updateConversationCost(currentConversationId, fullResponse, pricePerToken);
+
+        if (detectedEmotion) {
+            const emotionLower = detectedEmotion.toLowerCase();
+            assistantBubble.classList.add('emotion-' + emotionLower);
+
+            const emotionIconSvg = getEmotionSvg(emotionLower);
+            if (emotionIconSvg) {
+                const iconWrapper = document.createElement('div');
+                iconWrapper.className = 'emotion-icon';
+                iconWrapper.innerHTML = emotionIconSvg;
+                assistantBubble.appendChild(iconWrapper);
+            }
+
+            const timeDiv = assistantBubble.querySelector('.message-time');
+            if (timeDiv) {
+                const t = translations[currentLang] || translations['en'];
+                const emotionNames = t.emotionNames || {};
+                const emotionName = emotionNames[emotionLower] || (emotionLower.charAt(0).toUpperCase() + emotionLower.slice(1));
+                const lbl = document.createElement('span');
+                lbl.className = 'emotion-label';
+                lbl.textContent = ' · ' + emotionName;
+                timeDiv.appendChild(lbl);
+            }
+        }
+
+        if (detectedUserEmotion && userMessageId) {
+            try {
+                await chatDbHelper.updateMessage(userMessageId, { emotion: detectedUserEmotion });
+                const userEmotionLower = detectedUserEmotion.toLowerCase();
+                const userBubbles = messagesContainer.querySelectorAll('.message-bubble.user');
+                const lastUserBubble = userBubbles[userBubbles.length - 1];
+                if (lastUserBubble) {
+                    lastUserBubble.classList.add('emotion-' + userEmotionLower);
+
+                    const emotionIconSvg = getEmotionSvg(userEmotionLower);
+                    if (emotionIconSvg) {
+                        const iconWrapper = document.createElement('div');
+                        iconWrapper.className = 'emotion-icon';
+                        iconWrapper.innerHTML = emotionIconSvg;
+                        lastUserBubble.appendChild(iconWrapper);
+                    }
+
+                    const timeDiv = lastUserBubble.querySelector('.message-time');
+                    if (timeDiv) {
+                        const t2 = translations[currentLang] || translations['en'];
+                        const emotionNames2 = t2.emotionNames || {};
+                        const emotionName2 = emotionNames2[userEmotionLower] || (userEmotionLower.charAt(0).toUpperCase() + userEmotionLower.slice(1));
+                        const lbl2 = document.createElement('span');
+                        lbl2.className = 'emotion-label';
+                        lbl2.textContent = ' \u00b7 ' + emotionName2;
+                        timeDiv.appendChild(lbl2);
+                    }
+                }
+            } catch (err) {
+                console.warn('Failed to update user emotion:', err);
+            }
+        }
+
         await chatDbHelper.updateConversation(currentConversationId, {
             lastMessage: fullResponse,
             lastMessageTime: new Date().toISOString()
@@ -1051,6 +1133,17 @@ async function showCharacterDetails(character) {
         } catch (e) {
             console.warn('Failed to load settings for modal', e);
             toggleThoughts.checked = true;
+        }
+    }
+
+    const toggleEmotions = document.getElementById('toggle-emotions');
+    if (toggleEmotions && character) {
+        try {
+            const settings = await chatDbHelper.getCharacterSettings(character.id);
+            toggleEmotions.checked = settings && settings.showEmotions !== undefined ? settings.showEmotions : true;
+        } catch (e) {
+            console.warn('Failed to load emotion settings for modal', e);
+            toggleEmotions.checked = true;
         }
     }
 
@@ -1610,6 +1703,126 @@ function applyThoughtVisibility(shouldShow) {
     });
 }
 
+function applyEmotionVisibility(shouldShow) {
+    const containers = document.querySelectorAll('.messages-container');
+    containers.forEach(container => {
+        if (shouldShow) {
+            container.classList.remove('hide-emotions');
+        } else {
+            container.classList.add('hide-emotions');
+        }
+    });
+}
+
+let emotionObserver = null;
+let emotionObserverContainer = null;
+
+function initEmotionObserver() {
+    const container = document.getElementById('messages-container');
+    if (!container) return;
+
+    if (emotionObserver && emotionObserverContainer === container) {
+        container.querySelectorAll('.message-bubble[class*="emotion-"]').forEach(bubble => {
+            emotionObserver.observe(bubble);
+        });
+        return;
+    }
+
+    if (emotionObserver) {
+        emotionObserver.disconnect();
+    }
+
+    emotionObserverContainer = container;
+
+    emotionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('emotion-in-view');
+            } else {
+                entry.target.classList.remove('emotion-in-view');
+            }
+        });
+    }, {
+        root: container,
+        rootMargin: '100px 0px',
+        threshold: 0
+    });
+
+    container.querySelectorAll('.message-bubble[class*="emotion-"]').forEach(bubble => {
+        emotionObserver.observe(bubble);
+    });
+
+    const mutationObs = new MutationObserver((mutations) => {
+        mutations.forEach(mutation => {
+            mutation.addedNodes.forEach(node => {
+                if (node.nodeType === 1) {
+                    if (node.classList && node.className.includes('emotion-')) {
+                        emotionObserver.observe(node);
+                    }
+                    node.querySelectorAll && node.querySelectorAll('.message-bubble[class*="emotion-"]').forEach(bubble => {
+                        emotionObserver.observe(bubble);
+                    });
+                }
+            });
+        });
+    });
+    mutationObs.observe(container, { childList: true, subtree: true });
+}
+
+function observeEmotionBubble(bubble) {
+    if (emotionObserver && bubble) {
+        emotionObserver.observe(bubble);
+    }
+}
+
+function getEmotionSvg(emotion) {
+    const svgs = {
+        happy: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
+        sad: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4A90D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line><path d="M17 9.5c0 1-1 2.5-1 2.5s-1-1.5-1-2.5a1 1 0 0 1 2 0z" fill="#4A90D9"></path></svg>',
+        angry: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 16h8M10 16v-1M14 16v-1"></path><line x1="7" y1="8" x2="10" y2="10"></line><line x1="14" y1="10" x2="17" y2="8"></line></svg>',
+        scared: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9B59B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 16l1.5-1.5L11 16l1-1 1 1 1.5-1.5L16 16"></path><circle cx="9" cy="9" r="1.5"></circle><circle cx="15" cy="9" r="1.5"></circle></svg>',
+        surprised: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="16" r="2"></circle><path d="M7 7c.5-.5 1.5-1 2.5 0"></path><path d="M14.5 7c.5-.5 1.5-1 2.5 0"></path><circle cx="9" cy="9.5" r="0.5" fill="#FF6B35"></circle><circle cx="15" cy="9.5" r="0.5" fill="#FF6B35"></circle></svg>',
+        disgusted: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2ECC40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 15c1-1 2 .5 4 0s3 1 4 0"></path><line x1="8" y1="9" x2="10" y2="10"></line><line x1="14" y1="10" x2="16" y2="9"></line><path d="M11 11.5l1-1 1 1"></path></svg>',
+        excited: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF1493" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 13s1.5 3 4 3 4-3 4-3"></path><path d="M9 9l.5-1.5.5 1.5.5-1.5.5 1.5" fill="none"></path><path d="M14 9l.5-1.5.5 1.5.5-1.5.5 1.5" fill="none"></path></svg>',
+        bored: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#95A5A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="15" x2="16" y2="15"></line><line x1="8" y1="9" x2="10.5" y2="9"></line><path d="M8 8.5h2.5"></path><line x1="13.5" y1="9" x2="16" y2="9"></line><path d="M13.5 8.5h2.5"></path></svg>',
+        confused: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E67E22" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 15c1 .5 2-.5 3 0s2 .5 3 0"></path><path d="M7 7.5c.8-1 2-1 2.5 0"></path><line x1="9" y1="9.5" x2="9.01" y2="9.5"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
+        neutral: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#BDC3C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="9" y1="15" x2="15" y2="15"></line><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
+        flirtatious: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF69B4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><path d="M14 9c.5-.5 1.5-.5 2 0"></path><path d="M13 16.5c.5 1 1.5 1 2 .5"></path></svg>',
+        sarcastic: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F39C12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 15c0 0 1.5-1 4-1 1 0 2 1 4 2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><path d="M14 8c.5-.5 1.5-.5 2 0"></path></svg>',
+        shy: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FDCFE8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M10 14s.8.8 2 .8 2-.8 2-.8"></path><line x1="9" y1="10" x2="9.01" y2="10"></line><line x1="15" y1="10" x2="15.01" y2="10"></line><circle cx="7.5" cy="13" r="1.5" fill="rgba(253,207,232,0.4)" stroke="none"></circle><circle cx="16.5" cy="13" r="1.5" fill="rgba(253,207,232,0.4)" stroke="none"></circle></svg>',
+        confident: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3498DB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><rect x="6.5" y="8" width="4" height="2.5" rx="1"></rect><rect x="13.5" y="8" width="4" height="2.5" rx="1"></rect><line x1="10.5" y1="9.25" x2="13.5" y2="9.25"></line></svg>',
+        amused: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F1C40F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 12s1.5 4 4 4 4-4 4-4"></path><path d="M8 9c.3-.6 1-.8 1.5-.3"></path><path d="M14.5 8.7c.5-.5 1.2-.3 1.5.3"></path><path d="M17.5 11c0 1-1 2.5-1 2.5s-1-1.5-1-2.5a1 1 0 0 1 2 0z" fill="#F1C40F"></path></svg>',
+        jealous: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#27AE60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9 15c1 .5 5 .5 6 0"></path><circle cx="9" cy="9.5" r="1" fill="none"></circle><circle cx="10" cy="9.5" r="0.3" fill="#27AE60"></circle><circle cx="15" cy="9.5" r="1" fill="none"></circle><circle cx="16" cy="9.5" r="0.3" fill="#27AE60"></circle><line x1="7" y1="7.5" x2="10" y2="8.5"></line><line x1="17" y1="7.5" x2="14" y2="8.5"></line></svg>',
+        guilty: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8E44AD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path><path d="M9 10c0-.5-.3-1-1-1"></path><path d="M15 10c0-.5.3-1 1-1"></path><path d="M18 5c0 1.2-1.2 2.5-1.2 2.5S15.5 6.2 15.5 5a1.2 1.2 0 1 1 2.5 0z" fill="#8E44AD"></path></svg>',
+        curious: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1ABC9C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><circle cx="11" cy="11" r="3"></circle></svg>',
+        hopeful: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00CED1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2 5h5l-4 3 1.5 5L12 12l-4.5 3L9 10 5 7h5z"></path><path d="M4 20h16"></path><path d="M7 17h10"></path></svg>',
+        anxious: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E74C3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8c2 0 3 1 3 3s-2 3-3 3-2-1-2-2 1-1.5 2-1.5"></path><path d="M8 15c1 1 3 2 4 2s3-1 4-2"></path></svg>',
+        frustrated: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="10" y1="14" x2="14" y2="17"></line><line x1="14" y1="14" x2="10" y2="17"></line><line x1="7" y1="8" x2="10" y2="10"></line><line x1="14" y1="10" x2="17" y2="8"></line><path d="M8 2.5c0 1.5 1.5 1.5 1.5 3"></path><path d="M14.5 2.5c0 1.5 1.5 1.5 1.5 3"></path></svg>',
+        affectionate: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF7675" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path><path d="M8 11c1-.5 2 .5 3 0s2-.5 3 0"></path></svg>',
+        romantic: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E84393" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path><path d="M3 3l1 2 1-2M20 3l1 2 1-2M3 19l1 2 1-2"></path></svg>',
+        loving: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FD79A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 3.5a4 4 0 0 0-5.66 0L10 4.34 9.16 3.5A4 4 0 0 0 3.5 9.16l.84.84L10 15.66l5.66-5.66.84-.84a4 4 0 0 0 0-5.66z"></path><path d="M20.5 8.5a2.5 2.5 0 0 0-3.54 0l-.46.46-.46-.46a2.5 2.5 0 0 0-3.54 3.54l.46.46L16.5 16l3.54-3.54.46-.46a2.5 2.5 0 0 0 0-3.54z"></path></svg>',
+        passionate: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D63031" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c4-3 8-7 8-12 0-3-2-6-5-7-1.5-.5-3 0-3 2 0-3-1.5-3-3-2.5C6 4 4 7 4 10c0 5 4 9 8 12z"></path><path d="M12 22c-2-2-4-4-4-7 0-2 1.5-3 2.5-3.5 1-.5 1.5.5 1.5 1.5 0-1.5.5-2 1.5-1.5S16 13 16 15c0 3-2 5-4 7z"></path></svg>',
+        infatuated: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A29BFE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><path d="M9.5 7.5a1.5 1.5 0 0 0-2.12 0l-.38.38-.38-.38a1.5 1.5 0 0 0-2.12 2.12l.38.38 2.12 2.12 2.12-2.12.38-.38a1.5 1.5 0 0 0 0-2.12z"></path><path d="M17.5 7.5a1.5 1.5 0 0 0-2.12 0l-.38.38-.38-.38a1.5 1.5 0 0 0-2.12 2.12l.38.38 2.12 2.12 2.12-2.12.38-.38a1.5 1.5 0 0 0 0-2.12z"></path></svg>',
+        seductive: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6C5CE7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12c0-3 3-5 5.5-5 1.5 0 2.5 1 2.5 1s1-1 2.5-1c2.5 0 5.5 2 5.5 5 0 4-4 7-8 10-4-3-8-6-8-10z"></path><path d="M9 14c1.5 1 4.5 1 6 0"></path></svg>',
+        lustful: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF2D55" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c5-4 9-7.5 9-12 0-3-2-5.5-4.5-6.5S13 2 12 4c-1-2-2.5-2.5-4.5-1.5S3 6 3 9c0 4.5 4 8 9 12z"></path><path d="M12 11l-1.5-1.5a1.5 1.5 0 0 0-2.12 2.12L12 15l3.62-3.38a1.5 1.5 0 0 0-2.12-2.12z"></path></svg>',
+        aroused: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22c-2.5-2-5-4.5-5-9 0-4 3-7 6-8 0 3 2 5 4 5 0-4 1-6 3-8 3 2 5 5 5 9s-1.5 6-4 8"></path><path d="M12 22c-1.5-1.5-3-3-3-5.5S11 13 12 12c1 1 3 2.5 3 4.5S13.5 20.5 12 22z"></path></svg>',
+        submissive: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C9A0DC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M10 14.5s.5.5 2 .5 2-.5 2-.5"></path><path d="M8 10.5c.5.5 1.5.5 2 0"></path><path d="M14 10.5c.5.5 1.5.5 2 0"></path></svg>',
+        dominant: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8B0000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18h18L18 8l-3 5-3-7-3 7-3-5z"></path><line x1="3" y1="21" x2="21" y2="21"></line></svg>',
+        desiring: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-4 0"></path><path d="M14 11V4a2 2 0 0 0-4 0v7"></path><path d="M10 10.5V6a2 2 0 0 0-4 0v8c0 4.418 3.582 8 8 8h0a8 8 0 0 0 8-8v-4a2 2 0 0 0-4 0"></path></svg>',
+        melancholic: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5B7DB1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 16.2A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"></path><line x1="8" y1="19" x2="8" y2="21"></line><line x1="12" y1="19" x2="12" y2="23"></line><line x1="16" y1="19" x2="16" y2="21"></line></svg>',
+        hopeless: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4A4A6A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.5 4.5h4.5l-3.5 3 1.5 4.5-4-3-4 3 1.5-4.5-3.5-3h4.5z"></path><line x1="5" y1="18" x2="19" y2="18"></line><line x1="8" y1="21" x2="16" y2="21"></line><path d="M12 14v4"></path></svg>',
+        lonely: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6A7B8B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"></circle><path d="M5.5 21c0-3.5 3-6.5 6.5-6.5s6.5 3 6.5 6.5"></path><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="21" y1="12" x2="21.01" y2="12"></line></svg>',
+        heartbroken: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B22222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path><path d="M12 5.5l1 4-2.5 1.5 2 4"></path></svg>',
+        nostalgic: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D4A574" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12M6 22h12M7 2v4c0 2 2 4 5 4s5-2 5-4V2M7 22v-4c0-2 2-4 5-4s5 2 5 4v4"></path><path d="M10 13l2 2 2-2"></path></svg>',
+        empty: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#808080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="4" stroke-dasharray="2 2"></circle></svg>',
+        desperate: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5C3D6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9 16s1-2 3-2 3 2 3 2"></path><line x1="9" y1="8" x2="7" y2="5"></line><line x1="15" y1="8" x2="17" y2="5"></line><line x1="9" y1="8" x2="9.01" y2="9.5"></line><line x1="15" y1="8" x2="15.01" y2="9.5"></line></svg>',
+        thrilled: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF8C00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>',
+        euphoric: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.5 3.5 3.5 1.5-3.5 1.5L12 13l-1.5-3.5L7 8l3.5-1.5z"></path><path d="M19 13l1 2 2 1-2 1-1 2-1-2-2-1 2-1z"></path><path d="M5 17l.75 1.5L7.25 19l-1.5.75L5 21.25l-.75-1.5L2.75 19l1.5-.75z"></path></svg>',
+        adventurous: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2ED573" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="none"></polygon></svg>'
+    };
+    return svgs[emotion] || svgs.neutral;
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const toggleThoughts = document.getElementById('toggle-thoughts');
@@ -1634,6 +1847,35 @@ document.addEventListener('DOMContentLoaded', () => {
                      applyThoughtVisibility(checked);
                 } catch (err) {
                     console.error('Failed to save character settings (fallback):', err);
+                }
+            }
+            
+            if (typeof playButtonSound === "function") playButtonSound();
+        });
+    }
+
+    const toggleEmotions = document.getElementById('toggle-emotions');
+    if (toggleEmotions) {
+        toggleEmotions.addEventListener('change', async (e) => {
+            const checked = e.target.checked;
+            const modal = document.getElementById('character-details-modal');
+            const characterId = modal ? modal.dataset.characterId : null;
+            
+            if (characterId) {
+                try {
+                    await chatDbHelper.saveCharacterSettings(characterId, { showEmotions: checked });
+                    if (currentCharacter && currentCharacter.id == characterId) {
+                        applyEmotionVisibility(checked);
+                    }
+                } catch (err) {
+                    console.error('Failed to save emotion settings:', err);
+                }
+            } else if (currentCharacter) {
+                try {
+                    await chatDbHelper.saveCharacterSettings(currentCharacter.id, { showEmotions: checked });
+                    applyEmotionVisibility(checked);
+                } catch (err) {
+                    console.error('Failed to save emotion settings (fallback):', err);
                 }
             }
             

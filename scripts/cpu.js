@@ -65,7 +65,8 @@ function _stopCpuMonitoring() {
 function _updateCpuFrame(now) {
     if (_lastCpuFrameTime > 0) {
         const frameDelta = now - _lastCpuFrameTime;
-        const idealFrame = 1000 / 60;
+        const targetFps = (typeof PowerSaver !== 'undefined' && PowerSaver.isActive && PowerSaver.isActive()) ? 30 : 60;
+        const idealFrame = 1000 / targetFps;
         const busyEstimate = Math.min(frameDelta, frameDelta - idealFrame + idealFrame * 0.5);
         _cpuBusyTime += Math.max(0, busyEstimate);
         _cpuTotalTime += frameDelta;

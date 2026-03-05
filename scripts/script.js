@@ -69,9 +69,11 @@ const modelTranslationsTR = {
     "771ks 71g6g8 hlh8h8 6b4a5 77b4a5 5060": "Thena'nın son derece canlı ve parlak anime görselleri oluşturmak için kullandığı model. Basitleştirilmiş bir Anime Core modeli ve son işlem teknikleri kullanır.",
     "911ks fdg6g8 66h8h8 900a5 zxb4a5 9000": "Müstehçen veya NSFW içerik oluşturmak için mutlak doğrulukta bir model. Thena Movie temel modeline dayanmaktadır. İnsanların ve sahnelerin gerçekçi görüntülerini oluşturabilir.",
     "524ks ffs6g8 091h8h 660a5 1dn55 1000": "Yeni difüzyon mimarisi ile oluşturulan 7. versiyon. Her resim türünde başarılı sonuçlar çıkaran, güçlü ve aşırı hızlı model.",
+    "81ggz 7j661 66281 yy161 1f4f4 21143": "Thena'nın en güçlü gürültü ile akıl yürütme modeli. Saf güç ve benzersiz kalitenin birleşimi.",
 };
 const UNSUPPORTED_FAST_MODELS = ["551ks 8g6g8 16gga 1h8h8 6b4a5 5060"];
 const MOVIE_FILTER_SUPPORTED_MODELS = ["8gg12 61812 6628 19729 6b4a5 5060", "551ks 8g6g8 16gga 1h8h8 6b4a5 5060", "771ks 71g6g8 hlh8h8 6b4a5 77b4a5 5060"];
+const NO_EXTRA_FEATURES_MODELS = ["81ggz 7j661 66281 yy161 1f4f4 21143"];
 const MODEL_STATS = {
     // Thena Movie
     "8gg12 61812 6628 19729 6b4a5 5060": { intel: 5, qual: 5, speed: 3 },
@@ -93,6 +95,8 @@ const MODEL_STATS = {
     "911ks fdg6g8 66h8h8 900a5 zxb4a5 9000": { intel: 3, qual: 4, speed: 3 },
     // Thena V7
     "524ks ffs6g8 091h8h 660a5 1dn55 1000": { intel: 4, qual: 3, speed: 5 },
+    // Thena Ultra
+    "81ggz 7j661 66281 yy161 1f4f4 21143": { intel: 5, qual: 5, speed: 5 },
     // Default 
     "default": { intel: 3, qual: 3, speed: 3 }
 };
@@ -541,7 +545,7 @@ const chatDbHelper = {
             transaction.onerror = () => reject(transaction.error);
         });
     },
-    addMessage: async (conversationId, role, content) => {
+    addMessage: async (conversationId, role, content, emotion) => {
         const db = await chatDbHelper.open();
         return new Promise((resolve, reject) => {
             const transaction = db.transaction([MESSAGES_STORE], 'readwrite');
@@ -550,11 +554,29 @@ const chatDbHelper = {
                 conversationId,
                 role,
                 content,
+                emotion: emotion || null,
                 timestamp: new Date().toISOString()
             };
             const request = store.add(data);
             request.onsuccess = () => resolve(request.result);
             request.onerror = () => reject(request.error);
+        });
+    },
+    updateMessage: async (messageId, updates) => {
+        const db = await chatDbHelper.open();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction([MESSAGES_STORE], 'readwrite');
+            const store = transaction.objectStore(MESSAGES_STORE);
+            const getReq = store.get(messageId);
+            getReq.onsuccess = () => {
+                const msg = getReq.result;
+                if (!msg) return resolve(null);
+                Object.assign(msg, updates);
+                const putReq = store.put(msg);
+                putReq.onsuccess = () => resolve(msg);
+                putReq.onerror = () => reject(putReq.error);
+            };
+            getReq.onerror = () => reject(getReq.error);
         });
     },
     getMessages: async (conversationId) => {
@@ -767,18 +789,18 @@ magicWandBtn.addEventListener('click', async () => {
 
     if (!currentPrompt) {
         if (typeof playErrorSound === "function") playErrorSound();
-        showNotification(currentLang == "tr" ? "Prompt alanı boş! Lütfen bir şey yazın." : "The prompt field is empty! Please type something.", "error");
+        showNotification(currentLang == "tr" ? translations.tr.msgPromptEmpty : translations.en.msgPromptEmpty, "error");
         return;
     }
     if (!apiKey) {
         if (typeof playErrorSound === "function") playErrorSound();
-        showNotification(currentLang == "tr" ? "Lütfen API anahtarı girin." : "Please enter the API key first.", "error");
+        showNotification(currentLang == "tr" ? translations.tr.msgEnterApiKey : translations.en.msgEnterApiKey, "error");
         return;
     }
 
     if (typeof playInformationSound === "function") playInformationSound();
 
-    const removeLoading = showNotification(currentLang == "tr" ? "Prompt analiz ediliyor ve iyileştiriliyor..." : "Prompt is being analyzed and enhanced...", "loading");
+    const removeLoading = showNotification(currentLang == "tr" ? translations.tr.msgImgProcessing : translations.en.msgImgProcessing, "loading");
 
     magicWandBtn.classList.add('loading');
     generateBtn.disabled = true;
@@ -802,14 +824,14 @@ magicWandBtn.addEventListener('click', async () => {
             if (typeof playSuccessSound === "function") playSuccessSound();
         } else {
             if (typeof playErrorSound === "function") playErrorSound();
-            showNotification(currentLang == "tr" ? "Prompt oluşturulamadı. Bir hata oluştu." : "The prompt could not be created. An error occurred.", "error");
+            showNotification(currentLang == "tr" ? translations.tr.msgPromptGenErr : translations.en.msgPromptGenErr, "error");
             checkFormReady();
         }
     } catch (error) {
         if (removeLoading) removeLoading();
 
         if (typeof playErrorSound === "function") playErrorSound();
-        showNotification(currentLang == "tr" ? "Bir hata oluştu: " + error.message : "An error occurred:" + error.message, "error");
+        showNotification(currentLang == "tr" ? translations.tr.msgUnknownError + error.message : translations.en.msgUnknownError + " " + error.message, "error");
         checkFormReady();
     } finally {
         magicWandBtn.classList.remove('loading');
@@ -853,7 +875,7 @@ btnWandConfirm.addEventListener('click', () => {
         localStorage.setItem(LS_KEYS.PROMPT, pendingEnhancedPrompt);
         checkFormReady();
 
-        showNotification(currentLang == "tr" ? "Prompt başarıyla güncellendi!" : "Prompt updated successfully!", "success");
+        showNotification(currentLang == "tr" ? translations.tr.msgPromptUpdated : translations.en.msgPromptUpdated, "success");
     }
 });
 
@@ -877,13 +899,13 @@ if (moderationBtn) {
     moderationBtn.addEventListener('click', () => {
         if (moderationLevel === 'high') {
             moderationLevel = 'medium';
-            showNotification(currentLang == "tr" ? "Moderasyon düzeyi normal olarak ayarlandı." : 'Moderation set to medium.', 'info');
+            showNotification(currentLang == "tr" ? translations.tr.msgModMedium : translations.en.msgModMedium, 'info');
         } else if (moderationLevel === 'medium') {
             moderationLevel = 'low';
-            showNotification(currentLang == "tr" ? "Moderasyon düzeyi düşük olarak ayarlandı." : 'Moderation set to low.', 'info');
+            showNotification(currentLang == "tr" ? translations.tr.msgModLow : translations.en.msgModLow, 'info');
         } else {
             moderationLevel = 'high';
-            showNotification(currentLang == "tr" ? "Moderasyon düzeyi yüksek olarak ayarlandı." : 'Moderation set to high.', 'info');
+            showNotification(currentLang == "tr" ? translations.tr.msgModHigh : translations.en.msgModHigh, 'info');
         }
 
         moderationBtn.setAttribute('data-level', moderationLevel);
@@ -909,7 +931,7 @@ toggleApiKeyBtn.addEventListener('click', () => {
 
     if (!originalValue) {
         playInformationSound();
-        showNotification(currentLang == "tr" ? "API Anahtarını giriniz" : "Enter an API Key first", "info");
+        showNotification(currentLang == "tr" ? translations.tr.msgEnterApiKey : translations.en.msgEnterApiKey, "info");
         return;
     }
     if (typeof playFeatureToggleSound === "function") playFeatureToggleSound(true);
@@ -959,6 +981,95 @@ function checkFastModeAvailability(modelId) {
     }
 }
 
+function checkExtraFeaturesAvailability(modelId) {
+    const extrasContainer = document.querySelector('.extras-selector');
+    const extrasLabel = extrasContainer ? extrasContainer.closest('.input-group') : null;
+    if (!extrasContainer) return;
+
+    if (NO_EXTRA_FEATURES_MODELS.includes(modelId)) {
+        extrasContainer.classList.add('disabled-area');
+        allExtraBtns.forEach(btn => {
+            btn.classList.remove('active');
+            btn.disabled = true;
+        });
+        if (extrasLabel) {
+            extrasLabel.style.transition = 'opacity 0.3s ease, max-height 0.4s ease';
+            extrasLabel.style.opacity = '0.3';
+            extrasLabel.style.pointerEvents = 'none';
+        }
+    } else {
+        const isAdvMode = localStorage.getItem('thena-advanced-mode') === 'true';
+        if (!isAdvMode) {
+            extrasContainer.classList.remove('disabled-area');
+            allExtraBtns.forEach(btn => {
+                btn.disabled = false;
+            });
+        }
+        if (extrasLabel) {
+            extrasLabel.style.opacity = '1';
+            extrasLabel.style.pointerEvents = 'auto';
+        }
+        checkFastModeAvailability(modelId);
+        checkMovieFilterAvailability(modelId);
+    }
+}
+
+async function checkUltraRateLimit(modelId, card) {
+    const apiKey = apiKeyInput ? apiKeyInput.value.trim() : '';
+    if (!apiKey) {
+        showNotification(currentLang == "tr" ? translations.tr.msgEnterApiKey : translations.en.msgEnterApiKey, "error");
+        return false;
+    }
+
+    try {
+        const response = await fetch('https://create.thena.workers.dev/checkUltraRateLimit', {
+            method: 'GET',
+            headers: {
+                'apikey': apiKey
+            }
+        });
+
+        const data = await response.json();
+
+        if (data.remainingMinutes && data.remainingMinutes !== 0) {
+            selectedModel = null;
+            localStorage.removeItem(LS_KEYS.MODEL);
+            if (card) card.classList.remove('active');
+            checkExtraFeaturesAvailability(null);
+
+            const minutes = data.remainingMinutes;
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+
+            let timeStr = '';
+            if (currentLang == "tr") {
+                if (hours > 0) timeStr += `${hours} saat `;
+                if (mins > 0) timeStr += `${mins} dakika`;
+                showNotification(translations.tr.msgModelUnavailableWait + timeStr.trim() + ".", "error");
+            } else {
+                if (hours > 0) timeStr += `${hours} hour${hours > 1 ? 's' : ''} `;
+                if (mins > 0) timeStr += `${mins} minute${mins > 1 ? 's' : ''}`;
+                showNotification(translations.en.msgModelUnavailableWait + timeStr.trim() + ".", "error");
+            }
+
+            if (typeof playErrorSound === "function") playErrorSound();
+            checkFormReady();
+            return false;
+        }
+
+        return true;
+    } catch (error) {
+        console.error('Ultra rate limit check failed:', error);
+        showNotification(currentLang == "tr" ? translations.tr.msgRateLimitFail : translations.en.msgRateLimitFail, "error");
+        
+        selectedModel = null;
+        localStorage.removeItem(LS_KEYS.MODEL);
+        if (card) card.classList.remove('active');
+        checkFormReady();
+        return false;
+    }
+}
+
 function updateAdvancedSettingsConstraints(modelId) {
     const advCfg = document.getElementById('adv-cfg');
     const advSteps = document.getElementById('adv-steps');
@@ -985,7 +1096,7 @@ function updateAdvancedSettingsConstraints(modelId) {
         if (parseInt(advSteps.value) < 2) advSteps.value = 8;
 
         if (localStorage.getItem('thena-advanced-mode') === 'true') {
-            showNotification(currentLang == "tr" ? "Anime Fast modeli için limitler güncelledi." : "Limits updated for Anime Fast model.", "info");
+            showNotification(currentLang == "tr" ? translations.tr.msgAnimeFastLimits : translations.en.msgAnimeFastLimits, "info");
         }
 
     } else {
@@ -1168,13 +1279,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (isActive) {
                     promptInput.maxLength = 1150;
                     promptInput.placeholder = "Describe your image... (Min 10 chars, Max 1150 chars)";
-                    showNotification(currentLang == "tr" ? "Prompt uzunluğu Prompt Magic sınırına uygun hale getirildi (1150 karakter)." : "Prompt length reduced to fit Prompt Magic limit (1150 chars).", "info");
+                    showNotification(currentLang == "tr" ? translations.tr.msgPromptMagicLimit : translations.en.msgPromptMagicLimit, "info");
                     if (promptInput.value.length > 1150) {
                         promptInput.value = promptInput.value.substring(0, 1150);
                         autoResize(promptInput);
                     }
                 } else {
-                    showNotification(currentLang == "tr" ? "Prompt uzunluğu 5000 karaktere geri döndü." : "Prompt length restored to 5000 chars.", "info");
+                    showNotification(currentLang == "tr" ? translations.tr.msgPromptRestored : translations.en.msgPromptRestored, "info");
                     promptInput.maxLength = 5000;
                     promptInput.placeholder = "Describe your image... (Min 10 chars, Max 5000 chars)";
                 }
@@ -1257,7 +1368,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-window.addEventListener('load', () => {
+document.addEventListener('DOMContentLoaded', () => {
     const progressBar = document.getElementById('progress-bar');
     const loadingScreen = document.getElementById('loading-screen');
     const app = document.getElementById('app');
@@ -1277,7 +1388,7 @@ window.addEventListener('load', () => {
                 timeoutId = setTimeout(() => controller.abort(), 1000);
             } else if (attempt <= 8) {
                 if (firsload === true) {
-                    showNotification(currentLang == "tr" ? "İnternet bağlantınız stabil değil. Lütfen biraz bekleyiniz." : "Your internet connection is unstable. Please wait a moment.", "warning");
+                    showNotification(currentLang == "tr" ? translations.tr.msgUnstableConn : translations.en.msgUnstableConn, "warning");
                     firsload = false;
                 }
                 timeoutId = setTimeout(() => controller.abort(), 2000);
@@ -1304,7 +1415,7 @@ window.addEventListener('load', () => {
 
     fetchModelsWithRetry().then(data => {
         models = data;
-        const imagePromises = models.map(model => {
+        models.forEach(model => {
             var imgUrl = model.examples?.portraits?.[0];
 
             if (model.id == "754019 b5df2e e606f1 a7600b 96b0c8 94") imgUrl = "https://api.apidog.com/api/v1/projects/743905/resources/369883/image-preview"
@@ -1314,23 +1425,25 @@ window.addEventListener('load', () => {
             if (model.id == "551ks 8g6g8 16gga 1h8h8 6b4a5 5060") imgUrl = "https://api.apidog.com/api/v1/projects/743905/resources/369763/image-preview"
             if (model.id == "6781x 66189 00m162 16g61 00y71 6000") imgUrl = "https://api.apidog.com/api/v1/projects/743905/resources/370236/image-preview"
 
-            if (!imgUrl) return Promise.resolve();
-            return new Promise((resolve) => {
+            if (imgUrl) {
                 const img = new Image();
-                img.onload = resolve;
-                img.onerror = resolve;
                 img.src = imgUrl;
-            });
+            }
         });
-        return Promise.all(imagePromises);
     }).finally(() => {
         modelsLoaded = true;
     });
     const interval = setInterval(() => {
-        progress += Math.random() * 15;
-        if (!modelsLoaded && progress > 90) progress = 90;
+        if (modelsLoaded) {
+            progress = 100;
+        } else {
+            progress += Math.random() * 15;
+            if (progress > 90) progress = 90;
+        }
+        
         if (progress > 100) progress = 100;
         progressBar.style.width = progress + '%';
+        
         if (progress === 100 && modelsLoaded) {
             clearInterval(interval);
             setTimeout(() => {
@@ -1338,9 +1451,9 @@ window.addEventListener('load', () => {
                 app.classList.add('visible');
                 loadModels();
                 restoreAspectRatio();
-            }, 500);
+            }, 300);
         }
-    }, 200);
+    }, 100);
 });
 async function loadModels() {
     if (!models || models.length === 0) {
@@ -1431,7 +1544,7 @@ async function loadModels() {
             featModal.classList.add('active');
         });
 
-        card.addEventListener('click', () => {
+        card.addEventListener('click', async () => {
             if (selectedModel === modelId) {
                 playModelSelectSound(false);
                 selectedModel = null;
@@ -1439,6 +1552,7 @@ async function loadModels() {
                 card.classList.remove('active');
                 checkMovieFilterAvailability(null);
                 checkFastModeAvailability(null);
+                checkExtraFeaturesAvailability(null);
                 updateAdvancedSettingsConstraints(null);
             } else {
                 playModelSelectSound(true);
@@ -1449,7 +1563,13 @@ async function loadModels() {
                 createConfetti(card);
                 checkMovieFilterAvailability(modelId);
                 checkFastModeAvailability(modelId);
+                checkExtraFeaturesAvailability(modelId);
                 updateAdvancedSettingsConstraints(modelId);
+
+                if (NO_EXTRA_FEATURES_MODELS.includes(modelId)) {
+                    const allowed = await checkUltraRateLimit(modelId, card);
+                    if (!allowed) return;
+                }
             }
             checkFormReady();
         });
@@ -1463,12 +1583,18 @@ async function loadModels() {
             selectedModel = lastModelId;
             checkMovieFilterAvailability(lastModelId);
             checkFastModeAvailability(lastModelId);
+            checkExtraFeaturesAvailability(lastModelId);
             updateAdvancedSettingsConstraints(lastModelId);
             checkFormReady();
+
+            if (NO_EXTRA_FEATURES_MODELS.includes(lastModelId)) {
+                checkUltraRateLimit(lastModelId, targetCard);
+            }
         }
     } else {
         checkMovieFilterAvailability(null);
         checkFastModeAvailability(null);
+        checkExtraFeaturesAvailability(null);
     }
 }
 
@@ -1607,14 +1733,14 @@ generateBtn.addEventListener('click', async () => {
     const currentLength = promptInput.value.trim().length;
     if (currentLength < 10) {
         playErrorSound();
-        showNotification(currentLang == "tr" ? "Prompt çok kısa! En az 10 karakter girmelisin." : "Prompt is too short! Please enter at least 10 characters.", "error");
+        showNotification(currentLang == "tr" ? translations.tr.msgPromptShort : translations.en.msgPromptShort, "error");
         return;
     }
     const maxAllowed = btnEnhance.classList.contains('active') ? 1150 : 5000;
 
     if (currentLength > maxAllowed) {
         playErrorSound();
-        showNotification(currentLang == "tr" ? "Prompt çok uzun! Maksimum " + maxAllowed + " karakter girebilirsin." : `Prompt is too long! Max ${maxAllowed} characters allowed.`, "error");
+        showNotification(currentLang == "tr" ? translations.tr.msgPromptLong1 + maxAllowed + translations.tr.msgPromptLong2 : translations.en.msgPromptLong1 + maxAllowed + translations.en.msgPromptLong2, "error");
         return;
     }
     playStartSound();
@@ -1632,7 +1758,7 @@ generateBtn.addEventListener('click', async () => {
         if (galleryGrid.querySelector('.empty-gallery')) galleryGrid.innerHTML = '';
         galleryGrid.insertAdjacentHTML('afterbegin', getPlaceholderHTML(width, height));
     }
-    const removeLoading = showNotification(currentLang == "tr" ? "Görüntü oluşturuluyor..." : 'Image is being processed...', 'loading');
+    const removeLoading = showNotification(currentLang == "tr" ? translations.tr.msgImgProcessing : translations.en.msgImgProcessing, 'loading');
     generateBtn.disabled = true;
     generateBtn.innerHTML = 'Processing<span class="loading-spinner"></span>';
     generateBtn.classList.add('generating');
@@ -1688,34 +1814,34 @@ generateBtn.addEventListener('click', async () => {
         if (stepsVal < 10) {
             stepsVal = 10;
             document.getElementById('adv-steps').value = 10;
-            showNotification(currentLang == "tr" ? "Minimum adım sayısı 10. Değer güncellendi." : "Minimum steps is 10. Value updated.", "info");
+            showNotification(currentLang == "tr" ? translations.tr.msgMinSteps : translations.en.msgMinSteps, "info");
         }
         else if (stepsVal > 30) {
             stepsVal = 30;
             document.getElementById('adv-steps').value = 30;
-            showNotification(currentLang == "tr" ? "Maximum adım sayısı 30. Değer güncellendi." : "Maximum steps is 30. Value updated.", "info");
+            showNotification(currentLang == "tr" ? translations.tr.msgMaxSteps : translations.en.msgMaxSteps, "info");
         }
 
         if (cfgVal < 1) {
             cfgVal = 1;
             document.getElementById('adv-cfg').value = 1;
-            showNotification(currentLang == "tr" ? "Minimum CFG Scale 1. Değer güncellendi." : "Minimum CFG Scale is 1. Value updated.", "info");
+            showNotification(currentLang == "tr" ? translations.tr.msgMinCfg : translations.en.msgMinCfg, "info");
         }
         else if (cfgVal > 20) {
             cfgVal = 20;
             document.getElementById('adv-cfg').value = 20;
-            showNotification(currentLang == "tr" ? "Maximum CFG Scale 20. Değer güncellendi." : "Maximum CFG Scale is 20. Value updated.", "info");
+            showNotification(currentLang == "tr" ? translations.tr.msgMaxCfg : translations.en.msgMaxCfg, "info");
         }
 
         if (seedVal < -1) {
             seedVal = -1;
             document.getElementById('adv-seed').value = -1;
-            showNotification(currentLang == "tr" ? "Minimum Seed -1. Değer güncellendi." : "Minimum Seed is -1. Value updated.", "info");
+            showNotification(currentLang == "tr" ? translations.tr.msgMinSeed : translations.en.msgMinSeed, "info");
         }
         else if (seedVal > 900000000) {
             seedVal = 900000000;
             document.getElementById('adv-seed').value = 900000000;
-            showNotification(currentLang == "tr" ? "Maximum Seed 900000000. Değer güncellendi." : "Maximum Seed is 900000000. Value updated.", "info");
+            showNotification(currentLang == "tr" ? translations.tr.msgMaxSeed : translations.en.msgMaxSeed, "info");
         }
 
         apiBody.advanced = {
@@ -1811,13 +1937,13 @@ generateBtn.addEventListener('click', async () => {
                 await loadGallery();
                 await applyFilters();
             }
-            showNotification(currentLang == "tr" ? "Resim galeriye kaydedildi." : 'The image has been saved to the gallery.', 'success', finalImageUrl);
+            showNotification(currentLang == "tr" ? translations.tr.msgImgSaved : translations.en.msgImgSaved, 'success', finalImageUrl);
         } else {
             playErrorSound();
 
 
             if (data.status == 429) {
-                showNotification(currentLang == "tr" ? "Limit tükendi! Lütfen biraz bekleyin ve tekrar deneyin." : 'Limit Exceeded! Please wait a few seconds and try again.', 'error');
+                showNotification(currentLang == "tr" ? translations.tr.msgLimitExceeded : translations.en.msgLimitExceeded, 'error');
                 isGeneratingImage = false;
                 const placeholder = document.getElementById('active-generation-placeholder');
                 if (placeholder) {
@@ -1826,8 +1952,12 @@ generateBtn.addEventListener('click', async () => {
                 }
                 return;
             }
-            if (data.status == 401 && data.content.includes('not allowed')) {
-                showNotification(currentLang == "tr" ? "Lütfen moderation seviyesini medium veya low olarak ayarlayın." : 'Please set moderation level to medium or low.', 'error');
+            if ((data.status == 401 && data.content.includes('not allowed')) || (data.status == 204)) {
+                if (moderationLevel === 'low') {
+                    showNotification(currentLang == "tr" ? translations.tr.msgNotAllowedLow : translations.en.msgNotAllowedLow, 'error');
+                } else {
+                    showNotification(currentLang == "tr" ? translations.tr.msgNotAllowed : translations.en.msgNotAllowed, 'error');
+                }
                 isGeneratingImage = false;
                 const placeholder = document.getElementById('active-generation-placeholder');
                 if (placeholder) {
@@ -1837,7 +1967,7 @@ generateBtn.addEventListener('click', async () => {
                 return;
             }
             if (data.status == 423) {
-                showNotification(currentLang == "tr" ? "Thena şuanda çok yoğun. Lütfen daha sonra tekrar deneyin." : 'Thena is currently overloaded. Please try again later.', 'error');
+                showNotification(currentLang == "tr" ? translations.tr.msgServerOverloaded : translations.en.msgServerOverloaded, 'error');
                 isGeneratingImage = false;
                 const placeholder = document.getElementById('active-generation-placeholder');
                 if (placeholder) {
@@ -1852,7 +1982,7 @@ generateBtn.addEventListener('click', async () => {
     } catch (error) {
         if (removeLoading) removeLoading();
         playErrorSound();
-        showNotification(currentLang == "tr" ? "Resim oluşturulamadı! Lütfen tekrar deneyin." : "There was an error generating the image. Please try again.", 'error');
+        showNotification(currentLang == "tr" ? translations.tr.msgGenError : translations.en.msgGenError, 'error');
         isGeneratingImage = false;
         const placeholder = document.getElementById('active-generation-placeholder');
         if (placeholder) {
@@ -2735,10 +2865,10 @@ function openLightbox(data) {
                     const data = await response.json();
 
                     if (data.status === 200 && data.image) {
-                        if (typeof showNotification === "function") showNotification(currentLang == "tr" ? "Resim Telegram'a gönderildi." : "Image has been sent to Telegram.", "success");
+                        if (typeof showNotification === "function") showNotification(currentLang == "tr" ? translations.tr.msgTelegramSent : translations.en.msgTelegramSent, "success");
                         if (typeof playSuccessSound === "function") playSuccessSound();
                     } else {
-                        if (typeof showNotification === "function") showNotification(currentLang == "tr" ? "Resim Telegram'a gönderilemedi. Lütfen yeniden deneyin." : "Download failed. Please try again.", "error");
+                        if (typeof showNotification === "function") showNotification(currentLang == "tr" ? translations.tr.msgTelegramErr : translations.en.msgTelegramErr, "error");
                         if (typeof playErrorSound === "function") playErrorSound();
                     }
 
@@ -2756,14 +2886,14 @@ function openLightbox(data) {
 
                 const fileName = `thena-image-${Date.now()}.png`;
                 forceDownload(blob, fileName);
-                if (typeof showNotification === "function") showNotification(currentLang == "tr" ? "Resim indirildi." : "Download completed.", "success");
+                if (typeof showNotification === "function") showNotification(currentLang == "tr" ? translations.tr.msgDownloadCompleted : translations.en.msgDownloadCompleted, "success");
                 if (typeof playSuccessSound === "function") playSuccessSound();
             }
 
         } catch (error) {
             console.error("Download action failed:", error);
             if (typeof playErrorSound === "function") playErrorSound();
-            if (typeof showNotification === "function") showNotification(currentLang == "tr" ? "Resim indirilemedi. Lütfen yeniden deneyin." : "Download failed. Please try again.", "error");
+            if (typeof showNotification === "function") showNotification(currentLang == "tr" ? translations.tr.msgDownloadFailed : translations.en.msgDownloadFailed, "error");
         } finally {
             lightboxDownload.innerHTML = originalText;
             lightboxDownload.style.pointerEvents = "auto";
@@ -2855,7 +2985,7 @@ function openLightbox(data) {
             }, 100);
 
             playSuccessSound();
-            showNotification(currentLang == "tr" ? "Ayarlar başarıyla uygulandı!" : "Settings applied successfully!", "success", data.url);
+            showNotification(currentLang == "tr" ? translations.tr.msgSettingsLoaded : translations.en.msgSettingsLoaded, "success", data.url);
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
@@ -2930,12 +3060,12 @@ btnConfirm.addEventListener('click', async () => {
             lightbox.classList.remove('active');
             await loadGallery();
             playSuccessSound()
-            showNotification(currentLang == "tr" ? "Resim başarıyla silindi." : "The image has been successfully deleted.");
+            showNotification(currentLang == "tr" ? translations.tr.msgImgDeleted : translations.en.msgImgDeleted, "success");
         }
     } catch (error) {
         confirmModal.classList.remove('active');
         playErrorSound()
-        showNotification(currentLang == "tr" ? "Silme işleminde bir hata olustu." : "An error occurred during the deletion process.");
+        showNotification(currentLang == "tr" ? translations.tr.msgImgDeleteErr : translations.en.msgImgDeleteErr, "error");
     }
 });
 let activeNotification = null;
@@ -3211,7 +3341,7 @@ if (deleteAllBtn) {
     deleteAllBtn.addEventListener('click', () => {
         if (!allGalleryImages || allGalleryImages.length === 0) {
             playInformationSound();
-            showNotification(currentLang == "tr" ? "Galeri halihazırda boş." : "The gallery is already empty.", "info");
+            showNotification(currentLang == "tr" ? translations.tr.msgGalleryEmpty : translations.en.msgGalleryEmpty, "info");
             return;
         }
         playDeleteAllWarningSound();
@@ -3237,11 +3367,11 @@ if (btnConfirmAll) {
             galleryGrid.innerHTML = '<div class="empty-gallery">No images yet. Start generating!</div>';
             deleteAllModal.classList.remove('active');
             playSuccessSound()
-            showNotification(currentLang == "tr" ? "Tüm galeri temizlendi." : "The entire gallery has been successfully cleaned.", "success");
+            showNotification(currentLang == "tr" ? translations.tr.msgGalleryCleaned : translations.en.msgGalleryCleaned, "success");
         } catch (error) {
             console.error("Error deleting all images:", error);
             playErrorSound()
-            showNotification(currentLang == "tr" ? "Galeri temizlenirken bir hata oluştu." : "An error occurred during the deletion process.", "error");
+            showNotification(currentLang == "tr" ? translations.tr.msgGalleryCleanErr : translations.en.msgGalleryCleanErr, "error");
             deleteAllModal.classList.remove('active');
         }
     });
@@ -3316,7 +3446,7 @@ function useImageSettings(event, btnElement) {
 
     playSuccessSound();
     showNotification(
-        currentLang == "tr" ? "Ayarlar bu resimden yüklendi!" : "Settings loaded from this image!",
+        currentLang == "tr" ? translations.tr.msgSettingsLoaded : translations.en.msgSettingsLoaded,
         "success",
         data.url
     );
@@ -3425,7 +3555,7 @@ if (shareBtn) {
 
                     if (typeof playSuccessSound === "function") {
                         playSuccessSound();
-                        showNotification(currentLang == "tr" ? "Resim yüklendi!" : "Image uploaded successfully!", "success", base64Data);
+                        showNotification(currentLang == "tr" ? translations.tr.msgImgUploaded : translations.en.msgImgUploaded, "success", base64Data);
                     }
 
                 } else {
@@ -3435,18 +3565,18 @@ if (shareBtn) {
                     if (typeof playErrorSound === "function") playErrorSound();
 
                     if (data.status == 401) {
-                        showNotification(currentLang == "tr" ? "API anahtarınız geçerli değil." : "Invalid API Key provided.", "error");
+                        showNotification(currentLang == "tr" ? translations.tr.msgInvalidApi : translations.en.msgInvalidApi, "error");
                     } else if (data.status == 429) {
-                        showNotification(currentLang == "tr" ? "Limit aşıldı. Günlük 10 yükleme yapabilirsiniz." : "Upload limit exceeded. Max 10 uploads per day.", "error");
+                        showNotification(currentLang == "tr" ? translations.tr.msgLimit10 : translations.en.msgLimit10, "error");
                     } else if (data.status == 502) {
-                        showNotification(currentLang == "tr" ? "Sunucu hatası. Lütfen daha sonra tekrar deneyiniz." : "Server error. Please try again later.", "error");
+                        showNotification(currentLang == "tr" ? translations.tr.msgServerErr : translations.en.msgServerErr, "error");
                     }
                 }
             } else {
                 shareUrlDisplay.value = "Error: Image source is not base64.";
                 shareUrlDisplay.value = t.msgUploadFail;
                 copyShareLinkBtn.textContent = t.btnShareError;
-                showNotification("Image source is not base64.", "error");
+                showNotification(currentLang == "tr" ? translations.tr.msgImgNotBase : translations.en.msgImgNotBase, "error");
             }
 
         } catch (error) {
@@ -3454,7 +3584,7 @@ if (shareBtn) {
             shareUrlDisplay.value = currentLang == "tr" ? "Yükleme hatası. Lütfen daha sonra tekrar deneyiniz." : "Upload failed. Please try again.";
             copyShareLinkBtn.textContent = "Error";
             if (typeof playErrorSound === "function") playErrorSound();
-            showNotification(currentLang == "tr" ? "Resim yükleme hatası." : "Image upload failed.", "error");
+            showNotification(currentLang == "tr" ? translations.tr.msgUploadFailed : translations.en.msgUploadFailed, "error");
         }
     });
 }
@@ -3545,7 +3675,7 @@ if (perfToggle) {
         const isChecked = e.target.checked;
         togglePerformanceMode(isChecked);
         if (typeof playInformationSound === "function") playInformationSound();
-        const msg = isChecked ? currentLang == "tr" ? "Performans Modü Aktif Edildi" : "Performance Mode Enabled" : currentLang == "tr" ? "Performans Modü Deaktif Edildi" : "Performance Mode Disabled";
+        const msg = isChecked ? (currentLang == "tr" ? translations.tr.msgPerfModeOn : translations.en.msgPerfModeOn) : (currentLang == "tr" ? translations.tr.msgPerfModeOff : translations.en.msgPerfModeOff);
         if (typeof showNotification === "function") showNotification(msg, "info");
     });
 }
@@ -3719,21 +3849,73 @@ function updatePerfStats() {
     const imgCount = document.images.length;
 
     const ramRatio = _cachedMemoryBytes !== null
-        ? _cachedMemoryBytes / (performance.memory ? maxRam : 1)
-        : (performance.memory ? performance.memory.usedJSHeapSize / maxRam : 0);
+        ? _cachedMemoryBytes / (performance.memory ? performance.memory.jsHeapSizeLimit : 1)
+        : (performance.memory ? performance.memory.usedJSHeapSize / performance.memory.jsHeapSizeLimit : 0);
     const ramColor = ramRatio > 0.85 ? '#ff4444' : ramRatio > 0.6 ? '#ffaa00' : '#00ff88';
 
     const cpuColor = _cpuPercent > 80 ? '#ff4444' : _cpuPercent > 50 ? '#ffaa00' : '#00ff88';
 
+    const isPowerSaving = typeof PowerSaver !== 'undefined' && PowerSaver.isActive && PowerSaver.isActive();
+    const fpsLow = isPowerSaving ? 15 : 30;
+    const fpsMid = isPowerSaving ? 25 : 50;
+    const fpsColor = fps < fpsLow ? '#ff4444' : fps < fpsMid ? '#ffaa00' : '#00ff88';
+    const fpsLabel = isPowerSaving ? `${fps} <span style="opacity:0.5;font-size:9px">(30cap)</span>` : `${fps}`;
+
+    const psEnabled = typeof PowerSaver !== 'undefined' && PowerSaver.isEnabled && PowerSaver.isEnabled();
+    const psActive = isPowerSaving;
+    let pwrText = '';
+    let pwrColor = '#666';
+    if (!psEnabled) {
+        pwrText = 'OFF';
+        pwrColor = '#666';
+    } else if (psActive) {
+        pwrText = 'SAVING';
+        pwrColor = '#ffaa00';
+    } else {
+        pwrText = 'ON';
+        pwrColor = '#00ff88';
+    }
+
+    let batText = '';
+    if (typeof PowerSaver !== 'undefined' && PowerSaver.getBattery) {
+        const bat = PowerSaver.getBattery();
+        if (bat) {
+            const batColor = bat.level <= 20 ? '#ff4444' : bat.level <= 50 ? '#ffaa00' : '#00ff88';
+            const batIcon = bat.charging ? '⚡' : '';
+            batText = `<div><span class="label">BAT:</span><span style="color:${batColor}">${bat.level}% ${batIcon}</span></div>`;
+        }
+    }
+
+    let netText = '';
+    const isOnline = navigator.onLine;
+    const netColor = isOnline ? '#00ff88' : '#ff4444';
+    let netDetail = isOnline ? 'ON' : 'OFF';
+    if (navigator.connection) {
+        const conn = navigator.connection;
+        if (conn.effectiveType) {
+            netDetail = conn.effectiveType.toUpperCase();
+        }
+        if (conn.downlink) {
+            netDetail += ` ${conn.downlink}Mb`;
+        }
+    }
+    netText = `<div><span class="label">NET:</span><span style="color:${netColor}">${netDetail}</span></div>`;
+
+    const evtCount = document.querySelectorAll('[onclick], [onchange], [onsubmit], [onkeydown], [onmousedown], [ontouchstart]').length;
+
     const contentEl = perfMonitorBox.querySelector('.perf-content');
     if (contentEl) {
         contentEl.innerHTML = `
-            <div><span class="label">FPS:</span><span style="color: ${fps < 30 ? '#ff4444' : fps < 50 ? '#ffaa00' : '#00ff88'}">${fps}</span></div>
+            <div><span class="label">FPS:</span><span style="color: ${fpsColor}">${fpsLabel}</span></div>
             <div><span class="label">CPU:</span><span style="color: ${cpuColor}">${_cpuPercent}%</span></div>
             <div><span class="label">RAM:</span><span><span style="color: ${ramColor}">${ramText}</span><span style="opacity:0.5">/${maxRam}</span></span></div>
             <div><span class="label">RES:</span><span>${resText}</span></div>
             <div><span class="label">DOM:</span><span>${domNodes}</span></div>
             <div><span class="label">IMG:</span><span>${imgCount}</span></div>
+            <div><span class="label">EVT:</span><span>${evtCount}</span></div>
+            ${netText}
+            ${batText}
+            <div><span class="label">PWR:</span><span style="color:${pwrColor}">${pwrText}</span></div>
         `;
     }
 }
@@ -3765,7 +3947,11 @@ function togglePerfMonitor(enable) {
         if (perfMonitorToggle) perfMonitorToggle.checked = true;
         localStorage.setItem('thena-perf-monitor', 'true');
     } else {
-        if (perfMonitorBox) perfMonitorBox.classList.remove('visible');
+        if (perfMonitorBox) {
+            perfMonitorBox.classList.remove('visible');
+            perfMonitorBox.remove();
+            perfMonitorBox = null;
+        }
         if (perfAnimationFrame) {
             cancelAnimationFrame(perfAnimationFrame);
             perfAnimationFrame = null;
@@ -3782,8 +3968,8 @@ if (perfMonitorToggle) {
         togglePerfMonitor(e.target.checked);
         if (typeof playInformationSound === "function") playInformationSound();
         const msg = e.target.checked
-            ? (currentLang == "tr" ? "Performans Göstergesi Açıldı" : "Performance Monitor Enabled")
-            : (currentLang == "tr" ? "Performans Göstergesi Kapatıldı" : "Performance Monitor Disabled");
+            ? (currentLang == "tr" ? translations.tr.msgPerfMonOn : translations.en.msgPerfMonOn)
+            : (currentLang == "tr" ? translations.tr.msgPerfMonOff : translations.en.msgPerfMonOff);
         if (typeof showNotification === "function") showNotification(msg, "info");
     });
 }
@@ -3802,8 +3988,8 @@ if (promptPreviewToggle) {
         localStorage.setItem('thena-prompt-preview', isChecked ? 'true' : 'false');
         if (typeof playInformationSound === 'function') playInformationSound();
         const msg = isChecked
-            ? (currentLang == 'tr' ? 'Prompt Önizleme Aktif Edildi' : 'Prompt Preview Enabled')
-            : (currentLang == 'tr' ? 'Prompt Önizleme Deaktif Edildi' : 'Prompt Preview Disabled');
+            ? (currentLang == 'tr' ? translations.tr.msgPreviewOn : translations.en.msgPreviewOn)
+            : (currentLang == 'tr' ? translations.tr.msgPreviewOff : translations.en.msgPreviewOff);
         if (typeof showNotification === 'function') showNotification(msg, 'info');
 
         const box = document.getElementById('prompt-preview-box');
@@ -3828,7 +4014,7 @@ if (skipIntroToggle) {
         if (skip) {
             localStorage.setItem('firstTime', 'false');
             if (typeof playInformationSound === "function") playInformationSound();
-            const msg = currentLang == "tr" ? "Intro Atlandı" : "Intro Skipped";
+            const msg = currentLang == "tr" ? translations.tr.msgIntroSkipped : translations.en.msgIntroSkipped;
             if (typeof showNotification === "function") showNotification(msg, "info");
         } else {
             settingsModal.classList.remove('active');
@@ -3837,6 +4023,23 @@ if (skipIntroToggle) {
     });
 }
 
+const powerSaverToggle = document.getElementById('power-saver-toggle');
+if (powerSaverToggle) {
+    const savedPowerSaver = localStorage.getItem('thena-power-saver');
+    powerSaverToggle.checked = savedPowerSaver === 'true';
+
+    powerSaverToggle.addEventListener('change', (e) => {
+        const isChecked = e.target.checked;
+        if (window.PowerSaver) {
+            window.PowerSaver.toggle(isChecked);
+        }
+        if (typeof playInformationSound === "function") playInformationSound();
+        const msg = isChecked
+            ? (currentLang == "tr" ? translations.tr.msgPowerSaverOn : translations.en.msgPowerSaverOn)
+            : (currentLang == "tr" ? translations.tr.msgPowerSaverOff : translations.en.msgPowerSaverOff);
+        if (typeof showNotification === "function") showNotification(msg, "info");
+    });
+}
 
 const muteToggle = document.getElementById('mute-mode-toggle');
 if (muteToggle) {
@@ -3847,7 +4050,7 @@ if (muteToggle) {
         localStorage.setItem('thena-mute-mode', isMuted);
 
         if (typeof showNotification === "function") {
-            showNotification(isMuted ? currentLang == "tr" ? "Sessiz Mod Aktif Edildi" : "Silent Mode Enabled" : currentLang == "tr" ? "Sessiz Mod Deaktif Edildi" : "Silent Mode Disabled", "info");
+            showNotification(isMuted ? (currentLang == "tr" ? translations.tr.msgSilentModeOn : translations.en.msgSilentModeOn) : (currentLang == "tr" ? translations.tr.msgSilentModeOff : translations.en.msgSilentModeOff), "info");
         }
 
         if (!isMuted && typeof playInformationSound === "function") {
@@ -3887,7 +4090,7 @@ if (advToggle) {
     advToggle.addEventListener('change', (e) => {
         toggleAdvancedMode(e.target.checked);
         if (typeof playInformationSound === "function") playInformationSound();
-        const msg = e.target.checked ? currentLang == "tr" ? "Gelişmiş Mod Aktif Edildi" : "Advanced Mode Enabled" : currentLang == "tr" ? "Gelişmiş Mod Deaktif Edildi" : "Advanced Mode Disabled";
+        const msg = e.target.checked ? (currentLang == "tr" ? translations.tr.msgAdvModeOn : translations.en.msgAdvModeOn) : (currentLang == "tr" ? translations.tr.msgAdvModeOff : translations.en.msgAdvModeOff);
         if (typeof showNotification === "function") showNotification(msg, "info");
     });
 }
@@ -4064,7 +4267,7 @@ function setTheme(color, rgb, gradient = null, notify = true) {
 
     if (notify) {
         if (typeof playSuccessSound === "function") playModelSelectSound(true);
-        showNotification(currentLang == "tr" ? "Tema güncellendi" : "Theme updated successfully!", "info");
+        showNotification(currentLang == "tr" ? translations.tr.msgThemeUpdated : translations.en.msgThemeUpdated, "info");
     }
 }
 
@@ -4125,7 +4328,7 @@ if (btnConfirmReset) {
 
             if (typeof playSuccessSound === "function") playSuccessSound();
 
-            showNotification(currentLang == "tr" ? "Uygulama başarıyla sıfırlandı. Sayfa yenileniyor..." : "Application successfully reset. Page reloading...", "success");
+            showNotification(currentLang == "tr" ? translations.tr.msgAppReset : translations.en.msgAppReset, "success");
 
             setTimeout(() => {
                 window.location.reload();
@@ -4134,7 +4337,7 @@ if (btnConfirmReset) {
         } catch (e) {
 
             if (typeof playErrorSound === "function") playErrorSound();
-            showNotification(currentLang == "tr" ? "Reset hatası: " + e.message : "Error occurred during reset: " + e.message, "error");
+            showNotification(currentLang == "tr" ? translations.tr.msgResetError + e.message : translations.en.msgResetError + e.message, "error");
 
             btnConfirmReset.innerText = originalText;
             btnConfirmReset.disabled = false;
@@ -4199,7 +4402,7 @@ async function fetchShowcaseImages() {
         const response = await fetch('https://create.thena.workers.dev/showcaseImages');
         if (!response.ok) {
             playErrorSound();
-            showNotification(currentLang == "tr" ? "Showcase resmi alınamadı. Lütfen daha sonra tekrar deneyin." : "Failed to fetch showcase images. Please try again later.", "error");
+            showNotification(currentLang == "tr" ? translations.tr.msgShowcaseFetchErr : translations.en.msgShowcaseFetchErr, "error");
             return [];
         }
 
@@ -4498,12 +4701,12 @@ function clearImageSelection() {
 
 function handleImageFile(file) {
     if (!file || !file.type.startsWith('image/')) {
-        if (typeof showNotification === "function") showNotification(currentLang == "tr" ? "Lütfen geçerli bir resim dosyası seçin." : "Please select a valid image file.", "error");
+        if (typeof showNotification === "function") showNotification(currentLang == "tr" ? translations.tr.msgInvalidImgFile : translations.en.msgInvalidImgFile, "error");
         return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-        if (typeof showNotification === "function") showNotification(currentLang == "tr" ? "Resim dosyası 5MB'dan fazla olamaz." : "Image is too large (Max 5MB).", "error");
+        if (typeof showNotification === "function") showNotification(currentLang == "tr" ? translations.tr.msgImgTooLarge : translations.en.msgImgTooLarge, "error");
         return;
     }
 
@@ -4527,7 +4730,7 @@ btnImg2PromptGenerate.addEventListener('click', async () => {
     const apiKey = document.getElementById('api-key').value.trim();
 
     if (!apiKey) {
-        if (typeof showNotification === "function") showNotification(currentLang == "tr" ? "Lütfen API Anahtarını girin." : "Please enter your API Key first.", "error");
+        if (typeof showNotification === "function") showNotification(currentLang == "tr" ? translations.tr.msgEnterApiKey : translations.en.msgEnterApiKey, "error");
         if (typeof playErrorSound === "function") playErrorSound();
         return;
     }
@@ -4537,7 +4740,7 @@ btnImg2PromptGenerate.addEventListener('click', async () => {
     const originalBtnContent = btnImg2PromptGenerate.innerHTML;
 
     btnImg2PromptGenerate.innerHTML = `<span>${t.lblAnalyzing}</span><svg class="sparkle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>`;
-    var clipnotif = showNotification(currentLang === 'tr' ? "Görselden prompt oluşturuluyor. Bu işlem biraz sürebilir..." : "Generating prompt from image. This may take a moment...", "loading");
+    var clipnotif = showNotification(currentLang === 'tr' ? translations.tr.msgGenPrompt : translations.en.msgGenPrompt, "loading");
     playInformationSound();
     btnImg2PromptGenerate.classList.add('loading');
     btnImg2PromptGenerate.disabled = true;
@@ -4617,7 +4820,7 @@ btnImg2PromptGenerate.addEventListener('click', async () => {
                             card.click();
                             if (typeof showNotification === "function") {
                                 setTimeout(() => {
-                                    showNotification(currentLang == "tr" ? "Model güncellendi: " + targetModelName : `Model switched to: ${targetModelName}`, "info");
+                                    showNotification(currentLang == "tr" ? translations.tr.msgModelUpdated + targetModelName : translations.en.msgModelUpdated + targetModelName, "info");
                                 }, 800);
                             }
                         }
@@ -4667,17 +4870,17 @@ btnImg2PromptGenerate.addEventListener('click', async () => {
             }
 
             checkFormReady();
-            if (typeof showNotification === "function") showNotification(currentLang == "tr" ? "Prompt ve ayarlar başarıyla uygulandı!" : "Prompt and settings applied successfully!", "success");
+            if (typeof showNotification === "function") showNotification(currentLang == "tr" ? translations.tr.msgPromptSettingsApplied : translations.en.msgPromptSettingsApplied, "success");
 
         } else {
-            showNotification(currentLang == "tr" ? "Prompt oluşturulamadı. Lütfen farklı bir resimle tekrar deneyin." : "Failed to generate prompt. Please try different image.", "error");
+            showNotification(currentLang == "tr" ? translations.tr.msgGenPromptFailed : translations.en.msgGenPromptFailed, "error");
             if (typeof playErrorSound === "function") playErrorSound();
         }
 
     } catch (error) {
         console.error(error);
         if (typeof playErrorSound === "function") playErrorSound();
-        showNotification(currentLang == "tr" ? "Prompt oluşturulamadı. Lütfen farklı bir resimle tekrar deneyin." : "Failed to generate prompt. Please try different image.", "error");
+        showNotification(currentLang == "tr" ? translations.tr.msgGenPromptFailed : translations.en.msgGenPromptFailed, "error");
     } finally {
         btnImg2PromptGenerate.innerHTML = originalBtnContent;
         btnImg2PromptGenerate.classList.remove('loading');
@@ -4756,7 +4959,7 @@ function renderPromptHistory() {
             e.stopPropagation();
             navigator.clipboard.writeText(text).then(() => {
                 if (typeof playStartSound === 'function') playStartSound();
-                if (typeof showNotification === 'function') showNotification(currentLang == "tr" ? "Prompt kopyalandı!" : "Prompt copied to clipboard!", "success");
+                if (typeof showNotification === 'function') showNotification(currentLang == "tr" ? translations.tr.msgPromptCopied : translations.en.msgPromptCopied, "success");
             });
         });
 
@@ -4804,7 +5007,7 @@ btnHistoryConfirm.addEventListener('click', () => {
     historyClearModal.classList.remove('active');
 
     if (typeof playSuccessSound === "function") playSuccessSound();
-    if (typeof showNotification === "function") showNotification(currentLang == "tr" ? "Prompt geçmişi temizlendi." : "Prompt history cleared successfully.", "success");
+    if (typeof showNotification === "function") showNotification(currentLang == "tr" ? translations.tr.msgHistCleared : translations.en.msgHistCleared, "success");
 });
 
 historyClearModal.addEventListener('click', (e) => {
@@ -5385,7 +5588,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if ((e.key === 'F5') || (e.ctrlKey && e.key === 'r') || (e.ctrlKey && e.key === 'R')) {
                 e.preventDefault();
                 if (typeof playErrorSound === 'function') playErrorSound();
-                showNotification((currentLang === 'tr') ? 'İşlem devam ederken sayfayı yenileyemezsiniz.' : 'You cannot refresh the page while the process is running.', 'warning');
+                showNotification(currentLang === 'tr' ? translations.tr.msgNoRefresh : translations.en.msgNoRefresh, 'warning');
             }
         }
     });

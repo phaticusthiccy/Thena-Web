@@ -35,6 +35,9 @@ const modelSpecs = {
     },
     "524ks ffs6g8 091h8h 660a5 1dn55 1000": {
         usedTechniques: ["General", "NSFW"]
+    },
+    "81ggz 7j661 66281 yy161 1f4f4 21143": {
+        usedTechniques: ["General"]
     }
 };
 
@@ -132,7 +135,7 @@ function renderModels(modelsToRender) {
             
             featModal.classList.add('active');
         });
-        card.addEventListener('click', () => {
+        card.addEventListener('click', async () => {
             const clickedId = card.dataset.modelId;
             if (selectedModel === clickedId) {
                 playModelSelectSound(false);
@@ -141,6 +144,7 @@ function renderModels(modelsToRender) {
                 card.classList.remove('active');
                 checkMovieFilterAvailability(null);
                 checkFastModeAvailability(null);
+                if (typeof checkExtraFeaturesAvailability === 'function') checkExtraFeaturesAvailability(null);
                 updateAdvancedSettingsConstraints(null);
             } else {
                 playModelSelectSound(true);
@@ -151,7 +155,15 @@ function renderModels(modelsToRender) {
                 createConfetti(card);
                 checkMovieFilterAvailability(clickedId);
                 checkFastModeAvailability(clickedId);
+                if (typeof checkExtraFeaturesAvailability === 'function') checkExtraFeaturesAvailability(clickedId);
                 updateAdvancedSettingsConstraints(clickedId);
+
+                if (typeof NO_EXTRA_FEATURES_MODELS !== 'undefined' && NO_EXTRA_FEATURES_MODELS.includes(clickedId)) {
+                    if (typeof checkUltraRateLimit === 'function') {
+                        const allowed = await checkUltraRateLimit(clickedId, card);
+                        if (!allowed) return;
+                    }
+                }
             }
             checkFormReady();
         });
@@ -286,7 +298,7 @@ if (btnShowAllModels) {
                 btnShowAllModels.classList.remove('active');
                 if(btnSpan) btnSpan.innerText = currentLang == "tr" ? "Tüm Modelleri Göster" : "Show All Models";
                 if(typeof playSuccessSound === "function") playSuccessSound();
-                if(typeof showNotification === "function") showNotification(currentLang == "tr" ? "Varsayılan modellere dönüldü." : "Reverted to base models.", "info");
+                if(typeof showNotification === "function") showNotification(currentLang == "tr" ? translations.tr.msgBaseModelsLoaded : translations.en.msgBaseModelsLoaded, "info");
                 if (btnSortModels) btnSortModels.style.display = 'none';
                 currentSortMode = 'default';
                 const sortBtnText = btnSortModels?.querySelector('span');
@@ -295,7 +307,7 @@ if (btnShowAllModels) {
                 btnShowAllModels.classList.add('active');
                 if(btnSpan) btnSpan.innerText = currentLang == "tr" ? "Sadece Temel Modeller" : "Base Models Only";
                 if(typeof playSuccessSound === "function") playSuccessSound();
-                if(typeof showNotification === "function") showNotification(currentLang == "tr" ? "Tüm modeller yüklendi!" : "All models loaded!", "success");
+                if(typeof showNotification === "function") showNotification(currentLang == "tr" ? translations.tr.msgAllModelsLoaded : translations.en.msgAllModelsLoaded, "success");
                 
                 if (modelFilterContainer) {
                     modelFilterContainer.classList.add('visible');
@@ -308,7 +320,7 @@ if (btnShowAllModels) {
         } catch (error) {
             console.error(error);
             if(typeof playErrorSound === "function") playErrorSound();
-            if(typeof showNotification === "function") showNotification(currentLang == "tr" ? "Modeller güncellenemedi." : "Failed to update models.", "error");
+            if(typeof showNotification === "function") showNotification(currentLang == "tr" ? translations.tr.msgModelUpdateErr : translations.en.msgModelUpdateErr, "error");
         } finally {
             btnShowAllModels.classList.remove('loading');
         }

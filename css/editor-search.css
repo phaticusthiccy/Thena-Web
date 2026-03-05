@@ -91,6 +91,79 @@
     }
 }
 
+.presets-container.large-view {
+    flex-wrap: wrap;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 400px;
+    justify-content: flex-start;
+    padding-right: 5px; 
+}
+
+.presets-container.large-view .preset-card {
+    flex: 0 0 calc(50% - 10px);
+    aspect-ratio: 1;
+    margin-bottom: 5px;
+}
+
+@media (max-width: 768px) {
+    .presets-container.large-view .preset-card {
+        flex: 0 0 calc(100% - 10px);
+    }
+}
+
+.presets-container.list-view {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 400px;
+    padding-right: 5px; 
+}
+
+.presets-container.list-view .preset-card {
+    flex: 1 1 280px;
+    max-width: 400px;
+    aspect-ratio: auto;
+    height: 60px;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    padding: 0;
+}
+
+.presets-container.list-view .preset-card:hover {
+    scale: 1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    border-color: var(--primary, #00ff88);
+}
+
+.presets-container.list-view .preset-card img {
+    width: 60px;
+    height: 100%;
+}
+
+.presets-container.list-view .preset-name {
+    position: static;
+    background: none;
+    text-shadow: none;
+    color: #ccc;
+    font-size: 14px;
+    padding: 0 15px;
+    text-align: left;
+    width: auto;
+    flex: 1;
+}
+
+.presets-container.list-view .preset-card:hover .preset-name {
+    color: var(--primary, #00ff88);
+    text-shadow: none;
+}
+
 @keyframes editorNoResultsSlideIn {
     0% {
         opacity: 0;

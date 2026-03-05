@@ -165,6 +165,8 @@ const translations = {
         "modelThinking": "Thinking",
         "modelFastDesc": "Quick responses, great for casual chat.",
         "modelThinkingDesc": "Slower, detailed responses with reasoning.",
+        "modelUltra": "Intelligent",
+        "modelUltraDesc": "More understanding ability but more robotic responses possible.",
         "profileTitle": "User Profile",
         "profileName": "Name",
         "profileCharName": "AI Name",
@@ -189,6 +191,24 @@ const translations = {
         "unknownCharacter": "Unknown Character",
         "characterNM": " (Default)",
         "toggleThoughts": "Show Thoughts",
+        "toggleEmotions": "Show Emotions",
+        "emotionNames": {
+            "happy": "Happy", "sad": "Sad", "angry": "Angry", "scared": "Scared",
+            "surprised": "Surprised", "disgusted": "Disgusted", "excited": "Excited",
+            "bored": "Bored", "confused": "Confused", "neutral": "Neutral",
+            "flirtatious": "Flirtatious", "sarcastic": "Sarcastic", "shy": "Shy",
+            "confident": "Confident", "amused": "Amused", "jealous": "Jealous",
+            "guilty": "Guilty", "curious": "Curious", "hopeful": "Hopeful",
+            "anxious": "Anxious", "frustrated": "Frustrated", "affectionate": "Affectionate",
+            "romantic": "Romantic", "loving": "Loving", "passionate": "Passionate",
+            "infatuated": "Infatuated", "seductive": "Seductive",
+            "lustful": "Lustful", "aroused": "Aroused", "submissive": "Submissive",
+            "dominant": "Dominant", "desiring": "Desiring",
+            "melancholic": "Melancholic", "hopeless": "Hopeless", "lonely": "Lonely",
+            "heartbroken": "Heartbroken", "nostalgic": "Nostalgic", "empty": "Empty",
+            "desperate": "Desperate",
+            "thrilled": "Thrilled", "euphoric": "Euphoric", "adventurous": "Adventurous"
+        },
         "chatStoryFinished": "This story has reached its conclusion. You can start a new conversation to begin a new adventure.",
         "chatStoryFinishedPlaceholder": "This story has ended.",
         "chatStoryContinued": "The story had actually ended here, but the user wanted to continue.",
@@ -221,7 +241,105 @@ const translations = {
         "multiSelectConfirmTitle": "Delete Selected Images?",
         "multiSelectConfirmDesc": "The selected images will be permanently deleted. This action cannot be undone.",
         "lblSkipIntro": "SKIP INTRO",
-        "lblSkipIntroDesc": "Skip the cinematic intro page on your next visit."
+        "lblSkipIntroDesc": "Skip the cinematic intro page on your next visit.",
+        "lblPowerSaver": "POWER SAVER",
+        "lblPowerSaverDesc": "Automatically reduces power consumption after 20 seconds of inactivity. Limits FPS, pauses animations, and dims the screen.",
+        "msgNotAllowed": "Please set moderation level to medium or low.",
+        "msgNotAllowedLow": "This image cannot be generated with Thena.",
+        "msgImgProcessing": "Image is being processed...",
+        "msgMinSteps": "Minimum steps is 10. Value updated.",
+        "msgMaxSteps": "Maximum steps is 30. Value updated.",
+        "msgMinCfg": "Minimum CFG Scale is 1. Value updated.",
+        "msgMaxCfg": "Maximum CFG Scale is 20. Value updated.",
+        "msgMinSeed": "Minimum Seed is -1. Value updated.",
+        "msgMaxSeed": "Maximum Seed is 900000000. Value updated.",
+        "msgImgSaved": "The image has been saved to the gallery.",
+        "msgLimitExceeded": "Limit Exceeded! Please wait a few seconds and try again.",
+        "msgServerOverloaded": "Thena is currently overloaded. Please try again later.",
+        "msgGenError": "There was an error generating the image. Please try again.",
+        "msgPromptUpdated": "Prompt updated successfully!",
+        "msgModMedium": "Moderation set to medium.",
+        "msgModLow": "Moderation set to low.",
+        "msgModHigh": "Moderation set to high.",
+        "msgEnterApiKey": "Please enter an API Key first.",
+        "msgModelUnavailableWait": "This model is currently unavailable. Remaining wait time: ",
+        "msgRateLimitFail": "Rate limit check failed. Please try again.",
+        "msgAnimeFastLimits": "Limits updated for Anime Fast model.",
+        "msgPromptMagicLimit": "Prompt length reduced to fit Prompt Magic limit (1150 chars).",
+        "msgPromptRestored": "Prompt length restored to 5000 chars.",
+        "msgUnstableConn": "Your internet connection is unstable. Please wait a moment.",
+        "msgPromptShort": "Prompt is too short! Please enter at least 10 characters.",
+        "msgPromptLong1": "Prompt is too long! Max ",
+        "msgPromptLong2": " characters allowed.",
+        "msgPromptEmpty": "The prompt field is empty! Please type something.",
+        "msgPromptGenErr": "The prompt could not be created. An error occurred.",
+        "msgUnknownError": "An error occurred:",
+        "msgTelegramSent": "Image has been sent to Telegram.",
+        "msgTelegramErr": "Download failed. Please try again.",
+        "msgDownloadCompleted": "Download completed.",
+        "msgDownloadFailed": "Download failed. Please try again.",
+        "msgGalleryEmpty": "The gallery is already empty.",
+        "msgGalleryCleaned": "The entire gallery has been successfully cleaned.",
+        "msgGalleryCleanErr": "An error occurred during the deletion process.",
+        "msgSettingsLoaded": "Settings loaded from this image!",
+        "msgImgUploaded": "Image uploaded successfully!",
+        "msgInvalidApi": "Invalid API Key provided.",
+        "msgLimit10": "Upload limit exceeded. Max 10 uploads per day.",
+        "msgServerErr": "Server error. Please try again later.",
+        "msgImgNotBase": "Image source is not base64.",
+        "msgUploadFailed": "Image upload failed.",
+        "msgPerfModeOn": "Performance Mode Enabled",
+        "msgPerfModeOff": "Performance Mode Disabled",
+        "msgPerfMonOn": "Performance Monitor Enabled",
+        "msgPerfMonOff": "Performance Monitor Disabled",
+        "msgPreviewOn": "Prompt Preview Enabled",
+        "msgPreviewOff": "Prompt Preview Disabled",
+        "msgIntroSkipped": "Intro Skipped",
+        "msgPowerSaverOn": "Power Saver Enabled",
+        "msgPowerSaverOff": "Power Saver Disabled",
+        "msgSilentModeOn": "Silent Mode Enabled",
+        "msgSilentModeOff": "Silent Mode Disabled",
+        "msgAdvModeOn": "Advanced Mode Enabled",
+        "msgAdvModeOff": "Advanced Mode Disabled",
+        "msgThemeUpdated": "Theme updated successfully!",
+        "msgAppReset": "Application successfully reset. Page reloading...",
+        "msgResetError": "Error occurred during reset: ",
+        "msgShowcaseFetchErr": "Failed to fetch showcase images. Please try again later.",
+        "msgInvalidImgFile": "Please select a valid image file.",
+        "msgImgTooLarge": "Image is too large (Max 5MB).",
+        "msgGenPrompt": "Generating prompt from image. This may take a moment...",
+        "msgModelUpdated": "Model switched to: ",
+        "msgPromptSettingsApplied": "Prompt and settings applied successfully!",
+        "msgGenPromptFailed": "Failed to generate prompt. Please try different image.",
+        "msgPromptCopied": "Prompt copied to clipboard!",
+        "msgHistCleared": "Prompt history cleared successfully.",
+        "msgNoRefresh": "You cannot refresh the page while the process is running.",
+        "msgImgDeleted": "The image has been successfully deleted.",
+        "msgImgDeleteErr": "An error occurred during the deletion process.",
+        "msgAutocompleteOff": "Autocomplete Disabled",
+        "msgAutocompleteOn": "Autocomplete Enabled",
+        "msgBatteryLow1": "Low battery (",
+        "msgBatteryLow2": "%) – Power saver auto-activated",
+        "msgBaseModelsLoaded": "Reverted to base models.",
+        "msgAllModelsLoaded": "All models loaded!",
+        "msgModelUpdateErr": "Failed to update models.",
+        "msgImgUploadSuccess": "Image uploaded successfully!",
+        "msgModHighSet": "Moderation set to high.",
+        "msgModMediumSet": "Moderation set to medium.",
+        "msgModLowSet": "Moderation set to low.",
+        "msgApiKeyRequired": "Please enter your API Key.",
+        "msgImgRequired": "Please upload an image.",
+        "msgPromptRequired": "Please enter a prompt.",
+        "msgGeneratingQueued": "Generating... Queued.",
+        "msgLimitWait": "Limit Exceeded! Please wait a few seconds and try again.",
+        "msgModMediumLowReq": "Please set moderation level to medium or low.",
+        "msgThenaOverloaded": "Thena is currently overloaded. Please try again later.",
+        "msgErrorPrefix": "Error: ",
+        "msgVariationSuccess": "Variation generated successfully!",
+        "msgImageShared": "Image shared!",
+        "msgDownloadingImg": "Downloading image...",
+        "msgImageNotFound": "Image not found.",
+        "msgDownloadFailed": "Download failed."
     },
     "tr": {
         "generateBtn": "Görüntü Oluştur",
@@ -389,6 +507,8 @@ const translations = {
         "modelThinking": "Düşünen",
         "modelFastDesc": "Hızlı yanıtlar, gündelik sohbet için ideal.",
         "modelThinkingDesc": "Daha yavaş, mantıklı ve detaylı yanıtlar.",
+        "modelUltra": "Zeki",
+        "modelUltraDesc": "Daha fazla anlamlandırma yeteneği fakat daha robotik yanıtlar çok daha olası.",
         "profileTitle": "Kullanıcı Profili",
         "profileName": "İsim",
         "profileCharName": "AI Adı",
@@ -413,6 +533,24 @@ const translations = {
         "unknownCharacter": "Bilinmeyen Karakter",
         "characterNM": " (Varsayılan)",
         "toggleThoughts": "Düşünce Balonlarını Göster",
+        "toggleEmotions": "Duygu Göstergelerini Göster",
+        "emotionNames": {
+            "happy": "Mutlu", "sad": "Üzgün", "angry": "Kızgın", "scared": "Korkmuş",
+            "surprised": "Şaşkın", "disgusted": "İğrenmiş", "excited": "Heyecanlı",
+            "bored": "Sıkılmış", "confused": "Kafası Karışmış", "neutral": "Nötr",
+            "flirtatious": "Flirtöz", "sarcastic": "Alaylı", "shy": "Utangaç",
+            "confident": "Özgüvenli", "amused": "Eğlenmiş", "jealous": "Kıskanç",
+            "guilty": "Suçlu", "curious": "Meraklı", "hopeful": "Umutlu",
+            "anxious": "Endişeli", "frustrated": "Sinirli", "affectionate": "Şefkatli",
+            "romantic": "Romantik", "loving": "Sevgi Dolu", "passionate": "Tutkulu",
+            "infatuated": "Vurgun", "seductive": "Baştan Çıkarıcı",
+            "lustful": "Şehvetli", "aroused": "Tahrik Olmuş", "submissive": "İtaatkâr",
+            "dominant": "Baskın", "desiring": "Arzulayan",
+            "melancholic": "Melankolik", "hopeless": "Umutsuz", "lonely": "Yalnız",
+            "heartbroken": "Kalbi Kırık", "nostalgic": "Nostaljik", "empty": "Boş",
+            "desperate": "Çaresiz",
+            "thrilled": "Heyecan Dolu", "euphoric": "Coşku İçinde", "adventurous": "Maceraperest"
+        },
         "chatStoryFinished": "Bu hikaye sonuna ulaştı. Yeni bir maceraya başlamak için yeni bir sohbet başlatabilirsiniz.",
         "chatStoryFinishedPlaceholder": "Bu hikaye sona erdi.",
         "chatStoryContinued": "Hikaye aslında burada sona ermişti, ancak kullanıcı devam etmek istedi.",
@@ -445,7 +583,105 @@ const translations = {
         "multiSelectConfirmTitle": "Seçilen Görseller Silinsin mi?",
         "multiSelectConfirmDesc": "Seçilen görseller kalıcı olarak silinecek. Bu işlem geri alınamaz.",
         "lblSkipIntro": "İNTROYU ATLA",
-        "lblSkipIntroDesc": "Bir sonraki ziyaretinizde sinematik intro sayfasını atlayın."
+        "lblSkipIntroDesc": "Bir sonraki ziyaretinizde sinematik intro sayfasını atlayın.",
+        "lblPowerSaver": "GÜÇ TASARRUFU",
+        "lblPowerSaverDesc": "20 saniye hareketsizlik sonrası pil tüketimini otomatik olarak azaltır. FPS'yi sınırlar, animasyonları duraklatır ve ekranı karartır.",
+        "msgNotAllowed": "Lütfen moderation seviyesini medium veya low olarak ayarlayın.",
+        "msgNotAllowedLow": "Bu görsel Thena ile oluşturulamaz.",
+        "msgImgProcessing": "Görüntü oluşturuluyor...",
+        "msgMinSteps": "Minimum adım sayısı 10. Değer güncellendi.",
+        "msgMaxSteps": "Maksimum adım sayısı 30. Değer güncellendi.",
+        "msgMinCfg": "Minimum CFG Scale 1. Değer güncellendi.",
+        "msgMaxCfg": "Maksimum CFG Scale 20. Değer güncellendi.",
+        "msgMinSeed": "Minimum Seed -1. Değer güncellendi.",
+        "msgMaxSeed": "Maksimum Seed 900000000. Değer güncellendi.",
+        "msgImgSaved": "Resim galeriye kaydedildi.",
+        "msgLimitExceeded": "Limit tükendi! Lütfen biraz bekleyin ve tekrar deneyin.",
+        "msgServerOverloaded": "Thena şuanda çok yoğun. Lütfen daha sonra tekrar deneyin.",
+        "msgGenError": "Resim oluşturulamadı! Lütfen tekrar deneyin.",
+        "msgPromptUpdated": "Prompt başarıyla güncellendi!",
+        "msgModMedium": "Moderasyon düzeyi normal olarak ayarlandı.",
+        "msgModLow": "Moderasyon düzeyi düşük olarak ayarlandı.",
+        "msgModHigh": "Moderasyon düzeyi yüksek olarak ayarlandı.",
+        "msgEnterApiKey": "Lütfen API Anahtarını girin.",
+        "msgModelUnavailableWait": "Bu model şu anda kullanılamıyor. Kalan bekleme süresi: ",
+        "msgRateLimitFail": "Hız limiti kontrolü başarısız oldu. Lütfen tekrar deneyin.",
+        "msgAnimeFastLimits": "Anime Fast modeli için limitler güncellendi.",
+        "msgPromptMagicLimit": "Prompt uzunluğu Prompt Magic sınırına uygun hale getirildi (1150 karakter).",
+        "msgPromptRestored": "Prompt uzunluğu 5000 karaktere geri döndü.",
+        "msgUnstableConn": "İnternet bağlantınız stabil değil. Lütfen biraz bekleyiniz.",
+        "msgPromptShort": "Prompt çok kısa! En az 10 karakter girmelisin.",
+        "msgPromptLong1": "Prompt çok uzun! Maksimum ",
+        "msgPromptLong2": " karakter girebilirsin.",
+        "msgPromptEmpty": "Prompt alanı boş! Lütfen bir şey yazın.",
+        "msgPromptGenErr": "Prompt oluşturulamadı. Bir hata oluştu.",
+        "msgUnknownError": "Bir hata oluştu: ",
+        "msgTelegramSent": "Resim Telegram'a gönderildi.",
+        "msgTelegramErr": "Resim Telegram'a gönderilemedi. Lütfen yeniden deneyin.",
+        "msgDownloadCompleted": "Resim indirildi.",
+        "msgDownloadFailed": "Resim indirilemedi. Lütfen yeniden deneyin.",
+        "msgGalleryEmpty": "Galeri halihazırda boş.",
+        "msgGalleryCleaned": "Tüm galeri temizlendi.",
+        "msgGalleryCleanErr": "Galeri temizlenirken bir hata oluştu.",
+        "msgSettingsLoaded": "Ayarlar bu resimden yüklendi!",
+        "msgImgUploaded": "Resim yüklendi!",
+        "msgInvalidApi": "API anahtarınız geçerli değil.",
+        "msgLimit10": "Limit aşıldı. Günlük 10 yükleme yapabilirsiniz.",
+        "msgServerErr": "Sunucu hatası. Lütfen daha sonra tekrar deneyiniz.",
+        "msgImgNotBase": "Resim kaynağı base64 formatında değil.",
+        "msgUploadFailed": "Resim yükleme hatası.",
+        "msgPerfModeOn": "Performans Modü Aktif Edildi",
+        "msgPerfModeOff": "Performans Modü Deaktif Edildi",
+        "msgPerfMonOn": "Performans Göstergesi Açıldı",
+        "msgPerfMonOff": "Performans Göstergesi Kapatıldı",
+        "msgPreviewOn": "Prompt Önizleme Aktif Edildi",
+        "msgPreviewOff": "Prompt Önizleme Deaktif Edildi",
+        "msgIntroSkipped": "Intro Atlandı",
+        "msgPowerSaverOn": "Güç Tasarrufu Aktif Edildi",
+        "msgPowerSaverOff": "Güç Tasarrufu Deaktif Edildi",
+        "msgSilentModeOn": "Sessiz Mod Aktif Edildi",
+        "msgSilentModeOff": "Sessiz Mod Deaktif Edildi",
+        "msgAdvModeOn": "Gelişmiş Mod Aktif Edildi",
+        "msgAdvModeOff": "Gelişmiş Mod Deaktif Edildi",
+        "msgThemeUpdated": "Tema güncellendi",
+        "msgAppReset": "Uygulama başarıyla sıfırlandı. Sayfa yenileniyor...",
+        "msgResetError": "Reset hatası: ",
+        "msgShowcaseFetchErr": "Showcase resmi alınamadı. Lütfen daha sonra tekrar deneyin.",
+        "msgInvalidImgFile": "Lütfen geçerli bir resim dosyası seçin.",
+        "msgImgTooLarge": "Resim dosyası 5MB'dan fazla olamaz.",
+        "msgGenPrompt": "Görselden prompt oluşturuluyor. Bu işlem biraz sürebilir...",
+        "msgModelUpdated": "Model güncellendi: ",
+        "msgPromptSettingsApplied": "Prompt ve ayarlar başarıyla uygulandı!",
+        "msgGenPromptFailed": "Prompt oluşturulamadı. Lütfen farklı bir resimle tekrar deneyin.",
+        "msgPromptCopied": "Prompt kopyalandı!",
+        "msgHistCleared": "Prompt geçmişi temizlendi.",
+        "msgNoRefresh": "İşlem devam ederken sayfayı yenileyemezsiniz.",
+        "msgImgDeleted": "Resim başarıyla silindi.",
+        "msgImgDeleteErr": "Silme işleminde bir hata olustu.",
+        "msgAutocompleteOff": "Autocomplete Deaktif Edildi",
+        "msgAutocompleteOn": "Autocomplete Aktif Edildi",
+        "msgBatteryLow1": "Düşük pil (",
+        "msgBatteryLow2": "%) – Güç tasarrufu otomatik devreye girdi",
+        "msgBaseModelsLoaded": "Varsayılan modellere dönüldü.",
+        "msgAllModelsLoaded": "Tüm modeller yüklendi!",
+        "msgModelUpdateErr": "Modeller güncellenemedi.",
+        "msgImgUploadSuccess": "Resim başarıyla yüklendi!",
+        "msgModHighSet": "Moderasyon düzeyi yüksek olarak ayarlandı.",
+        "msgModMediumSet": "Moderasyon düzeyi normal olarak ayarlandı.",
+        "msgModLowSet": "Moderasyon düzeyi düşük olarak ayarlandı.",
+        "msgApiKeyRequired": "Lütfen API Anahtarınızı girin.",
+        "msgImgRequired": "Lütfen bir resim yükleyin.",
+        "msgPromptRequired": "Lütfen bir prompt girin.",
+        "msgGeneratingQueued": "Oluşturuluyor... Sıraya alındı.",
+        "msgLimitWait": "Limit tükendi! Lütfen biraz bekleyin ve tekrar deneyin.",
+        "msgModMediumLowReq": "Lütfen moderation seviyesini medium veya low olarak ayarlayın.",
+        "msgThenaOverloaded": "Thena şuanda çok yoğun. Lütfen daha sonra tekrar deneyin.",
+        "msgErrorPrefix": "Hata: ",
+        "msgVariationSuccess": "Varyasyon başarıyla oluşturuldu!",
+        "msgImageShared": "Resim paylaşıldı!",
+        "msgDownloadingImg": "Resim indiriliyor...",
+        "msgImageNotFound": "Resim bulunamadı.",
+        "msgDownloadFailed": "İndirme başarısız oldu."
     }
 };
 
@@ -471,10 +707,11 @@ function initDomCache() {
         "lbl-perf-monitor", "desc-perf-monitor",
         "lbl-data-mgmt", "desc-data-mgmt", "btn-hard-reset", "btn-close-settings",
         "lbl-skip-intro", "desc-skip-intro",
+        "lbl-power-saver", "desc-power-saver",
         'btn-share-copy', 'btn-img2prompt-generate', 'chat-back-btn',
         'character-search-input', 'chat-message-input', 'chat-data-btn',
         'chat-filter-reset-btn', 'custom-main-category-trigger', 'chat-main-category-filter',
-        'lbl-toggle-thoughts', 'editor-prompt',
+        'lbl-toggle-thoughts', 'lbl-toggle-emotions', 'editor-prompt',
         'txt-tab-scene', 'txt-tab-action', 'txt-tab-system',
         'filter-label-img-gen', 'filter-label-category', 'filter-label-subcategories',
         'label-editor-upload', 'label-editor-presets', 'label-editor-instructions',
@@ -513,6 +750,20 @@ function safelySetText(id, text) {
     const el = domElementCache.static[id] || document.getElementById(id);
     if (el) {
         el.textContent = text;
+        if (!domElementCache.static[id]) domElementCache.static[id] = el;
+    }
+}
+
+function safelySetSvgText(id, text) {
+    const el = domElementCache.static[id] || document.getElementById(id);
+    if (el) {
+        const textNodes = Array.from(el.childNodes).filter(n => n.nodeType === Node.TEXT_NODE);
+        if (textNodes.length > 0) {
+            textNodes.forEach(n => n.textContent = '');
+            textNodes[textNodes.length - 1].textContent = '\n                        ' + text + '\n                    ';
+        } else {
+            el.appendChild(document.createTextNode('\n                        ' + text + '\n                    '));
+        }
         if (!domElementCache.static[id]) domElementCache.static[id] = el;
     }
 }
@@ -588,31 +839,33 @@ function updateLanguage(lang) {
     safelySetText('lbl-solid-colors', t.lblSolid);
     safelySetText('lbl-gradient-themes', t.lblGradient);
 
-    safelySetText('lbl-perf-mode', t.lblPerf);
+    safelySetSvgText('lbl-perf-mode', t.lblPerf);
     safelySetText('desc-perf-mode', t.lblPerfDesc);
 
-    safelySetText('lbl-silent-mode', t.lblSilent);
+    safelySetSvgText('lbl-silent-mode', t.lblSilent);
     safelySetText('desc-silent-mode', t.lblSilentDesc);
 
-    safelySetText('lbl-adv-mode', t.lblAdv);
+    safelySetSvgText('lbl-adv-mode', t.lblAdv);
     safelySetText('desc-adv-mode', t.lblAdvDesc);
 
-    safelySetText('lbl-auto-mode', t.lblAuto);
+    safelySetSvgText('lbl-auto-mode', t.lblAuto);
     safelySetText('desc-auto-mode', t.lblAutoDesc);
 
-    safelySetText('lbl-perf-monitor', t.lblPerfMon);
+    safelySetSvgText('lbl-perf-monitor', t.lblPerfMon);
     safelySetText('desc-perf-monitor', t.lblPerfMonDesc);
 
-    safelySetText('lbl-prompt-preview', t.lblPromptPreview);
+    safelySetSvgText('lbl-prompt-preview', t.lblPromptPreview);
     safelySetText('desc-prompt-preview', t.lblPromptPreviewDesc);
     safelySetText('prompt-preview-title', t.promptPreviewTitle);
 
     safelySetText('lbl-data-mgmt', t.lblData);
     safelySetText('desc-data-mgmt', t.lblDataDesc);
 
-    safelySetText('lbl-skip-intro', t.lblSkipIntro);
+    safelySetSvgText('lbl-skip-intro', t.lblSkipIntro);
     safelySetText('desc-skip-intro', t.lblSkipIntroDesc);
 
+    safelySetSvgText('lbl-power-saver', t.lblPowerSaver);
+    safelySetText('desc-power-saver', t.lblPowerSaverDesc);
 
     setQueryText('#gallery-modal .gallery-title', t.galleryTitle);
     setQueryText('#showcase-modal .gallery-title', t.showcaseTitle);
@@ -762,6 +1015,7 @@ function updateLanguage(lang) {
     }
 
     safelySetText('lbl-toggle-thoughts', t.toggleThoughts);
+    safelySetText('lbl-toggle-emotions', t.toggleEmotions);
     
     safelySetText('label-editor-upload', t.editorUploadLabel);
     safelySetText('label-editor-presets', t.editorPresetsLabel);

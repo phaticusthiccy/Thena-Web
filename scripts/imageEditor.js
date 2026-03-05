@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
             placeholder.style.display = 'none';
             
             if (typeof playSuccessSound === 'function') playSuccessSound();
-            showNotification(typeof currentLang !== 'undefined' && currentLang === 'tr' ? 'Resim başarıyla yüklendi!' : 'Image uploaded successfully!', 'success');
+            showNotification(typeof currentLang !== 'undefined' && currentLang === 'tr' ? translations.tr.msgImgUploadSuccess : translations.en.msgImgUploadSuccess, 'success');
             
             if (typeof checkEditorFormReady === 'function') checkEditorFormReady();
         };
@@ -169,11 +169,11 @@ document.addEventListener('DOMContentLoaded', () => {
             modBtn.dataset.level = editorModerationLevel;
 
             if (editorModerationLevel === 'high') {
-                showNotification(currentLang == "tr" ? "Moderasyon düzeyi yüksek olarak ayarlandı." : 'Moderation set to high.', 'info');
+                showNotification(currentLang == "tr" ? translations.tr.msgModHighSet : translations.en.msgModHighSet, 'info');
             } else if (editorModerationLevel === 'medium') {
-                showNotification(currentLang == "tr" ? "Moderasyon düzeyi normal olarak ayarlandı." : 'Moderation set to medium.', 'info');
+                showNotification(currentLang == "tr" ? translations.tr.msgModMediumSet : translations.en.msgModMediumSet, 'info');
             } else {
-                showNotification(currentLang == "tr" ? "Moderasyon düzeyi düşük olarak ayarlandı." : 'Moderation set to low.', 'info');
+                showNotification(currentLang == "tr" ? translations.tr.msgModLowSet : translations.en.msgModLowSet, 'info');
             }
 
             modBtn.title = `Moderation: ${editorModerationLevel.charAt(0).toUpperCase() + editorModerationLevel.slice(1)}`;
@@ -275,39 +275,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const toggleViewBtn = document.getElementById('btn-toggle-preset-view');
     if (toggleViewBtn && presetsContainer) {
-        const savedViewMode = localStorage.getItem('editorViewMode');
-        if (savedViewMode === 'grid') {
-            presetsContainer.classList.add('grid-view');
-            toggleViewBtn.classList.add('active');
-            
-            if (scrollLeftBtn) scrollLeftBtn.style.display = 'none';
-            if (scrollRightBtn) scrollRightBtn.style.display = 'none';
-
-            toggleViewBtn.innerHTML = `
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="8" y1="6" x2="21" y2="6"></line>
-                <line x1="8" y1="12" x2="21" y2="12"></line>
-                <line x1="8" y1="18" x2="21" y2="18"></line>
-                <line x1="3" y1="6" x2="3.01" y2="6"></line>
-                <line x1="3" y1="12" x2="3.01" y2="12"></line>
-                <line x1="3" y1="18" x2="3.01" y2="18"></line>
-            </svg>`;
-            toggleViewBtn.title = (typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Liste Görünümü' : 'List View';
+        const viewModes = ['default', 'grid', 'large', 'list'];
+        let currentMode = localStorage.getItem('editorViewMode');
+        if (!viewModes.includes(currentMode)) {
+            currentMode = 'default';
+            // handle legacy migration
+            if (localStorage.getItem('editorViewMode') === 'list') { // legacy check
+               currentMode = 'default';
+            }
         }
 
-        toggleViewBtn.addEventListener('click', () => {
-            if (typeof playInformationSound === 'function') playInformationSound();
-            presetsContainer.classList.toggle('grid-view');
-            toggleViewBtn.classList.toggle('active');
+        const updateView = (mode) => {
+            presetsContainer.classList.remove('grid-view', 'large-view', 'list-view');
+            toggleViewBtn.classList.remove('active');
             
-            const isGrid = presetsContainer.classList.contains('grid-view');
-            
-            localStorage.setItem('editorViewMode', isGrid ? 'grid' : 'list');
-            
-            if (scrollLeftBtn) scrollLeftBtn.style.display = isGrid ? 'none' : 'flex';
-            if (scrollRightBtn) scrollRightBtn.style.display = isGrid ? 'none' : 'flex';
-            
-            if (isGrid) {
+            if (scrollLeftBtn) scrollLeftBtn.style.display = mode === 'default' ? 'flex' : 'none';
+            if (scrollRightBtn) scrollRightBtn.style.display = mode === 'default' ? 'flex' : 'none';
+
+            let nextMode;
+            if (mode === 'default') {
+                nextMode = 'grid';
+                toggleViewBtn.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>`;
+                toggleViewBtn.title = (typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Izgara Görünümü' : 'Grid View';
+            } else if (mode === 'grid') {
+                presetsContainer.classList.add('grid-view');
+                toggleViewBtn.classList.add('active');
+                nextMode = 'large';
+                toggleViewBtn.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="8" rx="2"></rect>
+                    <rect x="3" y="13" width="18" height="8" rx="2"></rect>
+                </svg>`;
+                toggleViewBtn.title = (typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Büyük Görünüm' : 'Large View';
+            } else if (mode === 'large') {
+                presetsContainer.classList.add('large-view');
+                toggleViewBtn.classList.add('active');
+                nextMode = 'list';
                 toggleViewBtn.innerHTML = `
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="8" y1="6" x2="21" y2="6"></line>
@@ -318,16 +327,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     <line x1="3" y1="18" x2="3.01" y2="18"></line>
                 </svg>`;
                 toggleViewBtn.title = (typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Liste Görünümü' : 'List View';
-            } else {
-                 toggleViewBtn.innerHTML = `
+            } else if (mode === 'list') {
+                presetsContainer.classList.add('list-view');
+                toggleViewBtn.classList.add('active');
+                nextMode = 'default';
+                toggleViewBtn.innerHTML = `
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="3" width="7" height="7"></rect>
-                    <rect x="14" y="3" width="7" height="7"></rect>
-                    <rect x="14" y="14" width="7" height="7"></rect>
-                    <rect x="3" y="14" width="7" height="7"></rect>
+                    <rect x="2" y="6" width="14" height="12" rx="2"></rect>
+                    <path d="M22 6v12"></path>
                 </svg>`;
-                toggleViewBtn.title = (typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Izgara Görünümü' : 'Grid View';
+                toggleViewBtn.title = (typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Yatay Görünüm' : 'Horizontal View';
             }
+            
+            localStorage.setItem('editorViewMode', mode);
+            return nextMode;
+        };
+
+        let nextView = updateView(currentMode);
+
+        toggleViewBtn.addEventListener('click', () => {
+            if (typeof playInformationSound === 'function') playInformationSound();
+            currentMode = nextView;
+            nextView = updateView(currentMode);
         });
     }
 });
@@ -358,19 +379,19 @@ async function generateVariation() {
 
     if (!apiKey) {
         if(typeof playErrorSound === 'function') playErrorSound();
-        showNotification(currentLang == "tr" ? "Lütfen API Anahtarınızı girin." : 'Please enter your API Key.', 'error');
+        showNotification(currentLang == "tr" ? translations.tr.msgApiKeyRequired : translations.en.msgApiKeyRequired, 'error');
         return;
     }
 
     if (!editorSelectedFile) {
         if(typeof playErrorSound === 'function') playErrorSound();
-        showNotification(currentLang == "tr" ? "Lütfen bir resim yükleyin." : 'Please upload an image.', 'error');
+        showNotification(currentLang == "tr" ? translations.tr.msgImgRequired : translations.en.msgImgRequired, 'error');
         return;
     }
 
     if (!prompt) {
         if(typeof playErrorSound === 'function') playErrorSound();
-        showNotification(currentLang == "tr" ? "Lütfen bir prompt girin." : 'Please enter a prompt.', 'error');
+        showNotification(currentLang == "tr" ? translations.tr.msgPromptRequired : translations.en.msgPromptRequired, 'error');
         return;
     }
 
@@ -378,7 +399,7 @@ async function generateVariation() {
     
     if (typeof playStartSound === 'function') playStartSound();
 
-    let genNotif = showNotification((currentLang === 'tr') ? 'Oluşturuluyor... Sıraya alındı.' : 'Generating... Queued.', 'info', null, 120000, 0);
+    let genNotif = showNotification((currentLang === 'tr') ? translations.tr.msgGeneratingQueued : translations.en.msgGeneratingQueued, 'info', null, 120000, 0);
 
     try {
         const payload = {
@@ -405,15 +426,19 @@ async function generateVariation() {
             setEditorLoadingState(false);
             playErrorSound();
             if (data.status == 429) {
-                showNotification(currentLang == "tr" ? "Limit tükendi! Lütfen biraz bekleyin ve tekrar deneyin." : 'Limit Exceeded! Please wait a few seconds and try again.', 'error');
+                showNotification(currentLang == "tr" ? translations.tr.msgLimitWait : translations.en.msgLimitWait, 'error');
                 return;
             }
-            if (data.status == 401 && data.content.includes('not allowed')) {
-                showNotification(currentLang == "tr" ? "Lütfen moderation seviyesini medium veya low olarak ayarlayın." : 'Please set moderation level to medium or low.', 'error');
+            if ((data.status == 401 && data.content.includes('not allowed')) || (data.status == 204)) {
+                if (editorModerationLevel === 'low') {
+                    showNotification(currentLang == "tr" ? translations.tr.msgNotAllowedLow : translations.en.msgNotAllowedLow, 'error');
+                } else {
+                    showNotification(currentLang == "tr" ? translations.tr.msgModMediumLowReq : translations.en.msgModMediumLowReq, 'error');
+                }
                 return;
             }
             if (data.status == 423) {
-                showNotification(currentLang == "tr" ? "Thena şuanda çok yoğun. Lütfen daha sonra tekrar deneyin." : 'Thena is currently overloaded. Please try again later.', 'error');
+                showNotification(currentLang == "tr" ? translations.tr.msgThenaOverloaded : translations.en.msgThenaOverloaded, 'error');
                 return;
             }
             showNotification(`Error: ${data.content || 'Unknown Error'}`, 'error');
@@ -423,7 +448,7 @@ async function generateVariation() {
         if (genNotif) genNotif();
         console.error('Generation Error:', error);
         if(typeof playErrorSound === 'function') playErrorSound();
-        showNotification(currentLang == "tr" ? "Hata: " + error.message : "Error: " + error.message, 'error');
+        showNotification((currentLang == "tr" ? translations.tr.msgErrorPrefix : translations.en.msgErrorPrefix) + error.message, 'error');
 
         setEditorLoadingState(false);
     }
@@ -479,7 +504,7 @@ async function pollEditorGeneration(id, apiKey, prompt, genNotif, originalImage,
                     finalUrl = `data:image/png;base64,${finalUrl}`;
                 }
                 
-                showNotification(currentLang === 'tr' ? 'Varyasyon başarıyla oluşturuldu!' : 'Variation generated successfully!', 'success', finalUrl);
+                showNotification(currentLang === 'tr' ? translations.tr.msgVariationSuccess : translations.en.msgVariationSuccess, 'success', finalUrl);
                 
                 if(typeof dbHelper !== 'undefined') {
                     let originalResized = null;
@@ -505,7 +530,7 @@ async function pollEditorGeneration(id, apiKey, prompt, genNotif, originalImage,
             } else {
                 if (genNotif) genNotif();
                 if(typeof playErrorSound === 'function') playErrorSound();
-                showNotification(currentLang == "tr" ? "Hata: " + data.content : "Error: " + data.content, 'error');
+                showNotification((currentLang == "tr" ? translations.tr.msgErrorPrefix : translations.en.msgErrorPrefix) + data.content, 'error');
                 setEditorLoadingState(false);
                 return;
             }
@@ -513,7 +538,7 @@ async function pollEditorGeneration(id, apiKey, prompt, genNotif, originalImage,
             if (genNotif) genNotif();
             console.error('Polling Error:', error);
             if(typeof playErrorSound === 'function') playErrorSound();
-            showNotification(currentLang == "tr" ? "Hata: " + error.message : "Error: " + error.message, 'error');
+            showNotification((currentLang == "tr" ? translations.tr.msgErrorPrefix : translations.en.msgErrorPrefix) + error.message, 'error');
             setEditorLoadingState(false);
         }
     };

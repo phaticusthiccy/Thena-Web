@@ -36,7 +36,7 @@ async function handleShare(blob, filename) {
             files: [file],
             title: 'Thena Generated Image',
         });
-        showNotification((typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Resim paylaşıldı!' : 'Image shared!', 'success');
+        showNotification((typeof currentLang !== 'undefined' && currentLang === 'tr') ? translations.tr.msgImageShared : translations.en.msgImageShared, 'success');
         playSuccessSound();
         return true;
     } catch (err) {
@@ -63,7 +63,7 @@ function downloadBlob(blob, filename) {
     }, 100);
     
     playSuccessSound();
-    showNotification((typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Resim indiriliyor...' : 'Downloading image...', 'success');
+    showNotification((typeof currentLang !== 'undefined' && currentLang === 'tr') ? translations.tr.msgDownloadingImg : translations.en.msgDownloadingImg, 'success');
 }
 
 function downloadDataUrl(dataUrl, filename) {
@@ -76,7 +76,7 @@ function downloadDataUrl(dataUrl, filename) {
     document.body.removeChild(link);
     
     playSuccessSound();
-    showNotification((typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Resim indiriliyor...' : 'Downloading image...', 'success');
+    showNotification((typeof currentLang !== 'undefined' && currentLang === 'tr') ? translations.tr.msgDownloadingImg : translations.en.msgDownloadingImg, 'success');
 }
 
 async function downloadGeneratedImage(btnElement, filename) {
@@ -84,7 +84,7 @@ async function downloadGeneratedImage(btnElement, filename) {
     const img = wrapper ? wrapper.querySelector('img') : null;
     
     if (!img || !img.src) {
-        showNotification((typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Resim bulunamadı.' : 'Image not found.', 'error');
+        showNotification((typeof currentLang !== 'undefined' && currentLang === 'tr') ? translations.tr.msgImageNotFound : translations.en.msgImageNotFound, 'error');
         return;
     }
 
@@ -111,7 +111,7 @@ async function downloadGeneratedImage(btnElement, filename) {
     } catch (error) {
         console.error('Download error:', error);
         playErrorSound();
-        showNotification((typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'İndirme başarısız oldu.' : 'Download failed.', 'error');
+        showNotification((typeof currentLang !== 'undefined' && currentLang === 'tr') ? translations.tr.msgDownloadFailed : translations.en.msgDownloadFailed, 'error');
     } finally {
         setButtonLoading(btnElement, false);
     }
