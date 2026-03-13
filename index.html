@@ -172,8 +172,8 @@
 
                         <button id="magic-wand-btn" title="Enhance Prompt"
                             style="border-color: rgba(0, 255, 136, 0.3);">
-                            <svg fill="#26d96b" width="64px" height="64px" viewBox="0 0 64.00 64.00"
-                                xmlns="http://www.w3.org/2000/svg" stroke="#26d96b" stroke-width="0.00064">
+                            <svg fill="#26d96b" width="32px" height="32px" viewBox="0 0 64 64"
+                                xmlns="http://www.w3.org/2000/svg" stroke="#26d96b" stroke-width="0.00024">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"
                                     stroke="#CCCCCC" stroke-width="0.384"></g>
@@ -193,6 +193,17 @@
                                         </path>
                                     </g>
                                 </g>
+                            </svg>
+                        </button>
+
+                        <button id="random-prompt-btn" title="Random Prompt">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="12" height="12" x="2" y="10" rx="2" ry="2"></rect>
+                                <path d="m17.92 14 3.5-3.5a2.24 2.24 0 0 0 0-3l-5-4.92a2.24 2.24 0 0 0-3 0L10 6"></path>
+                                <path d="M6 18h.01"></path>
+                                <path d="M10 14h.01"></path>
+                                <path d="M15 6h.01"></path>
+                                <path d="M18 9h.01"></path>
                             </svg>
                         </button>
 
@@ -400,6 +411,18 @@
                                 <circle cx="11" cy="11" r="8"></circle>
                                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                             </svg>
+                        </div>
+                        <div class="custom-dropdown" id="dropdown-preset-filter" style="position: relative; flex-shrink: 0;">
+                            <button id="btn-preset-filter" class="editor-view-toggle-btn" title="Filter Presets">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                                </svg>
+                            </button>
+                            <div class="custom-dropdown-menu" id="menu-preset-filter" style="right: 0; left: auto; top: calc(100% + 5px); display: none;">
+                                <div class="custom-dropdown-option active" data-value="all" id="opt-preset-all">Show All Presets</div>
+                                <div class="custom-dropdown-option" data-value="safe" id="opt-preset-safe">Show only Safe Presets</div>
+                                <div class="custom-dropdown-option" data-value="18plus" id="opt-preset-18plus">Show only +18 Presets</div>
+                            </div>
                         </div>
                         <button id="btn-toggle-preset-view" class="editor-view-toggle-btn" title="Toggle View">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1405,6 +1428,34 @@
                     style="background: rgba(var(--primary-rgb), 0.1); color: rgb(var(--primary-rgb)); border: 1px solid rgba(var(--primary-rgb), 0.3);">
                     Apply Changes
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="random-prompt-modal" class="confirm-modal">
+        <div class="confirm-content" style="max-width: 650px; width: 95%; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column;">
+            <div class="confirm-icon" style="color: var(--primary); background: rgba(var(--primary-rgb), 0.1);">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="12" height="12" x="2" y="10" rx="2" ry="2"></rect>
+                    <path d="m17.92 14 3.5-3.5a2.24 2.24 0 0 0 0-3l-5-4.92a2.24 2.24 0 0 0-3 0L10 6"></path>
+                    <path d="M6 18h.01"></path>
+                    <path d="M10 14h.01"></path>
+                    <path d="M15 6h.01"></path>
+                    <path d="M18 9h.01"></path>
+                </svg>
+            </div>
+            <h3 style="color: #fff; margin-bottom: 15px;" id="random-prompt-modal-title">Random Prompt Generated</h3>
+
+            <div class="diff-container" style="display: flex; flex-direction: column; gap: 15px;">
+                <div class="diff-box enhanced" style="width: 100%;">
+                    <h6 id="random-prompt-subtitle">New Prompt</h6>
+                    <div class="diff-text" id="random-prompt-text"></div>
+                </div>
+            </div>
+
+            <div class="confirm-actions" style="margin-top: 25px;">
+                <button id="btn-random-cancel" style="background: #1a1a1a; color: #fff; border: 1px solid #333;">Keep Original</button>
+                <button id="btn-random-apply" style="background: rgba(var(--primary-rgb), 0.1); color: rgb(var(--primary-rgb)); border: 1px solid rgba(var(--primary-rgb), 0.3);">Apply New Prompt</button>
             </div>
         </div>
     </div>

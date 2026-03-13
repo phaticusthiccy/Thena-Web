@@ -100,6 +100,34 @@ const MODEL_STATS = {
     // Default 
     "default": { intel: 3, qual: 3, speed: 3 }
 };
+const HOT_MODELS = ["81ggz 7j661 66281 yy161 1f4f4 21143", "8gg12 61812 6628 19729 6b4a5 5060"];
+
+const WHIMSICAL_FLAME_SVG = `
+<div class="whimsical-flame-effect" style="position: absolute; inset: 0; z-index: 10; pointer-events: none;">
+    <svg width="100%" height="100%">
+        <defs>
+            <linearGradient id="magic-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ff3366"></stop>
+                <stop offset="50%" stop-color="#ff9933"></stop>
+                <stop offset="100%" stop-color="#ff3366"></stop>
+            </linearGradient>
+            <linearGradient id="magic-grad2" x1="100%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#ffcc00"></stop>
+                <stop offset="50%" stop-color="#ff3366"></stop>
+                <stop offset="100%" stop-color="#ffcc00"></stop>
+            </linearGradient>
+            <filter id="magical-glow">
+                <feGaussianBlur stdDeviation="3" result="blur"></feGaussianBlur>
+                <feMerge><feMergeNode in="blur"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge>
+            </filter>
+        </defs>
+        <rect x="2" y="2" width="calc(100% - 4px)" height="calc(100% - 4px)" rx="8" fill="none" class="magical-line line-1" filter="url(#magical-glow)"></rect>
+        <rect x="2" y="2" width="calc(100% - 4px)" height="calc(100% - 4px)" rx="8" fill="none" class="magical-line line-2" filter="url(#magical-glow)"></rect>
+        <rect x="2" y="2" width="calc(100% - 4px)" height="calc(100% - 4px)" rx="8" fill="none" class="magical-line line-3" filter="url(#magical-glow)"></rect>
+    </svg>
+</div>
+`;
+
 function base64ToBlob(base64, mimeType) {
     const byteCharacters = atob(base64.split(',')[1]);
     const byteNumbers = new Array(byteCharacters.length);
@@ -759,9 +787,15 @@ function typeWriterEffect2(text, element) {
     let i = 0;
     element.value = "";
     element.style.height = 'auto';
+    
+    const speed = text && text.length > 0 ? Math.max(1, Math.min(15, Math.floor(1000 / text.length))) : 15;
+    const baseChunkSize = text && text.length > 0 ? Math.max(1, Math.ceil(text.length / 80)) : 1;
+
     const interval = setInterval(() => {
         if (i < text.length) {
-            element.value += text.charAt(i);
+            const dynamicChunk = Math.max(1, Math.floor(Math.random() * baseChunkSize) + 1);
+
+            element.value += text.substring(i, i + dynamicChunk);
             autoResize(element);
 
             const isEditor = element.id === 'editor-prompt';
@@ -771,7 +805,7 @@ function typeWriterEffect2(text, element) {
 
             if (charCountEl) charCountEl.textContent = `${element.value.length} / ${maxLen}`;
 
-            i++;
+            i += dynamicChunk;
         } else {
             clearInterval(interval);
             if (element.id !== 'editor-prompt') {
@@ -781,7 +815,7 @@ function typeWriterEffect2(text, element) {
                 if (typeof checkEditorFormReady === 'function') checkEditorFormReady();
             }
         }
-    }, 7);
+    }, speed);
 }
 magicWandBtn.addEventListener('click', async () => {
     const currentPrompt = promptInput.value.trim();
@@ -800,7 +834,7 @@ magicWandBtn.addEventListener('click', async () => {
 
     if (typeof playInformationSound === "function") playInformationSound();
 
-    const removeLoading = showNotification(currentLang == "tr" ? translations.tr.msgImgProcessing : translations.en.msgImgProcessing, "loading");
+    const removeLoading = showNotification(currentLang == "tr" ? translations.tr.promptProcessing : translations.en.promptProcessing, "loading");
 
     magicWandBtn.classList.add('loading');
     generateBtn.disabled = true;
@@ -883,6 +917,92 @@ wandModal.addEventListener('click', (e) => {
     if (e.target === wandModal) {
         wandModal.classList.remove('active');
         checkFormReady();
+    }
+});
+
+const randomPromptBtn = document.getElementById('random-prompt-btn');
+const randomPromptModal = document.getElementById('random-prompt-modal');
+const randomPromptText = document.getElementById('random-prompt-text');
+const btnRandomCancel = document.getElementById('btn-random-cancel');
+const btnRandomApply = document.getElementById('btn-random-apply');
+let pendingRandomPrompt = "";
+
+randomPromptBtn.addEventListener('click', async () => {
+    const apiKey = apiKeyInput.value.trim();
+    if (!apiKey) {
+        if (typeof playErrorSound === "function") playErrorSound();
+        showNotification(currentLang === 'tr' ? translations.tr.msgEnterApiKey : translations.en.msgEnterApiKey, "error");
+        return;
+    }
+
+    if (typeof playInformationSound === "function") playInformationSound();
+    
+    const notifMsg = currentLang === 'tr' ? translations.tr.msgPromptGenerating : translations.en.msgPromptGenerating;
+    const removeLoading = showNotification(notifMsg, "loading");
+    
+    randomPromptBtn.classList.add('loading');
+    
+    try {
+        const response = await fetch('https://create.thena.workers.dev/randomPrompts', {
+            method: 'GET',
+            headers: {
+                "apikey": apiKey
+            }
+        });
+        const data = await response.json();
+        
+        if (removeLoading) removeLoading();
+        randomPromptBtn.classList.remove('loading');
+        
+        if (data.status === 200 && data.content) {
+            pendingRandomPrompt = data.content;
+            randomPromptText.textContent = pendingRandomPrompt;
+            randomPromptModal.classList.add('active');
+            
+            if (typeof playSuccessSound === "function") playSuccessSound();
+        } else if (data.status === 429) {
+            if (typeof playErrorSound === "function") playErrorSound();
+            showNotification(data.error, "error");
+        } else {
+            if (typeof playErrorSound === "function") playErrorSound();
+            showNotification(currentLang === 'tr' ? translations.tr.msgPromptGenErr : translations.en.msgPromptGenErr, "error");
+        }
+    } catch (error) {
+        if (removeLoading) removeLoading();
+        randomPromptBtn.classList.remove('loading');
+        
+        if (typeof playErrorSound === "function") playErrorSound();
+        showNotification(currentLang === 'tr' ? translations.tr.msgUnknownError + error.message : translations.en.msgUnknownError + " " + error.message, "error");
+    }
+});
+
+btnRandomCancel.addEventListener('click', () => {
+    randomPromptModal.classList.remove('active');
+    pendingRandomPrompt = "";
+    if (typeof checkFormReady === "function") checkFormReady();
+});
+
+btnRandomApply.addEventListener('click', () => {
+    randomPromptModal.classList.remove('active');
+    if (pendingRandomPrompt) {
+        if (typeof typeWriterEffect2 === "function") {
+            typeWriterEffect2(pendingRandomPrompt, promptInput);
+        } else {
+            promptInput.value = pendingRandomPrompt;
+            if (typeof autoResize === "function") autoResize(promptInput);
+        }
+        localStorage.setItem(LS_KEYS.PROMPT, pendingRandomPrompt);
+        if (typeof checkFormReady === "function") checkFormReady();
+        
+        const updatedMsg = currentLang === "tr" ? translations.tr.msgPromptUpdated : translations.en.msgPromptUpdated;
+        showNotification(updatedMsg, "success");
+    }
+});
+
+randomPromptModal.addEventListener('click', (e) => {
+    if (e.target === randomPromptModal) {
+        randomPromptModal.classList.remove('active');
+        if (typeof checkFormReady === "function") checkFormReady();
     }
 });
 
@@ -1472,9 +1592,11 @@ async function loadModels() {
         if (model.id == "5g72h1 y661hp k771ns 33bb21 77bagl 6b 3090") previewImage = "https://api.apidog.com/api/v1/projects/743905/resources/369762/image-preview"
         if (model.id == "551ks 8g6g8 16gga 1h8h8 6b4a5 5060") previewImage = "https://api.apidog.com/api/v1/projects/743905/resources/369763/image-preview"
         if (model.id == "6781x 66189 00m162 16g61 00y71 6000") previewImage = "https://api.apidog.com/api/v1/projects/743905/resources/370236/image-preview"
+        const isHot = typeof HOT_MODELS !== 'undefined' && HOT_MODELS.includes(model.id);
 
         return `
-                        <div class="model-card" data-model-id="${model.id}" data-preview="${previewImage}">
+                        <div class="model-card ${isHot ? 'hot-model' : ''}" data-model-id="${model.id}" data-preview="${previewImage}">
+                            ${isHot ? WHIMSICAL_FLAME_SVG : ''}
                             <div class="model-info-icon-wrapper" title="Model Details">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>

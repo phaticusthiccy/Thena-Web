@@ -71,12 +71,14 @@ function renderModels(modelsToRender) {
         if (model.id == "6781x 66189 00m162 16g61 00y71 6000") previewImage = "https://api.apidog.com/api/v1/projects/743905/resources/370236/image-preview";
 
         const delay = index * 50;
+        const isHot = typeof HOT_MODELS !== 'undefined' && HOT_MODELS.includes(model.id);
         
         return `
-            <div class="model-card animate-in" 
+            <div class="model-card animate-in ${isHot ? 'hot-model' : ''}" 
                  data-model-id="${model.id}" 
                  data-preview="${previewImage}"
                  style="animation-delay: ${delay}ms; --bg-image: url('${previewImage}')">
+                 ${isHot ? WHIMSICAL_FLAME_SVG : ''}
                 <div class="model-info-icon-wrapper" title="Model Details">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10"></circle>

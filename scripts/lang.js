@@ -90,6 +90,10 @@ const translations = {
         "wandEnhanced": "ENHANCED PROMPT",
         "btnKeepOriginal": "Keep Original",
         "btnApplyChanges": "Apply Changes",
+        "randomPromptTitle": "Random Prompt Generated",
+        "randomPromptSubtitle": "New Prompt",
+        "btnRandomApply": "Apply New Prompt",
+        "msgPromptGenerating": "Prompt is being generated...",
         "shareTitle": "Public Share Link",
         "shareDesc": "Your image is now publicly accessible via this link. Anyone with this URL can view the image.",
         "btnShareCopy": "Copy Link",
@@ -247,6 +251,7 @@ const translations = {
         "msgNotAllowed": "Please set moderation level to medium or low.",
         "msgNotAllowedLow": "This image cannot be generated with Thena.",
         "msgImgProcessing": "Image is being processed...",
+        "promptProcessing": "Prompt is being generated...",
         "msgMinSteps": "Minimum steps is 10. Value updated.",
         "msgMaxSteps": "Maximum steps is 30. Value updated.",
         "msgMinCfg": "Minimum CFG Scale is 1. Value updated.",
@@ -339,7 +344,12 @@ const translations = {
         "msgImageShared": "Image shared!",
         "msgDownloadingImg": "Downloading image...",
         "msgImageNotFound": "Image not found.",
-        "msgDownloadFailed": "Download failed."
+        "msgDownloadFailed": "Download failed.",
+        "presetFilterAll": "Show All Presets",
+        "presetFilterSafe": "Show only Safe Presets",
+        "presetFilterPlus18": "Show only +18 Presets",
+        "btnPresetFilterTitle": "Filter Presets",
+        "msgPleaseWait": "Please do not close the page."
     },
     "tr": {
         "generateBtn": "Görüntü Oluştur",
@@ -432,6 +442,10 @@ const translations = {
         "wandEnhanced": "İYİLEŞTİRİLMİŞ PROMPT",
         "btnKeepOriginal": "Orijinali Koru",
         "btnApplyChanges": "Değişiklikleri Uygula",
+        "randomPromptTitle": "Rastgele Prompt Üretildi",
+        "randomPromptSubtitle": "Yeni Prompt",
+        "btnRandomApply": "Yeni Promptu Uygula",
+        "msgPromptGenerating": "Prompt üretiliyor...",
         "shareTitle": "Genel Paylaşım Bağlantısı",
         "shareDesc": "Resminiz artık bu bağlantı üzerinden herkese açık. URL'ye sahip olan herkes resmi görüntüleyebilir.",
         "btnShareCopy": "Bağlantıyı Kopyala",
@@ -589,6 +603,7 @@ const translations = {
         "msgNotAllowed": "Lütfen moderation seviyesini medium veya low olarak ayarlayın.",
         "msgNotAllowedLow": "Bu görsel Thena ile oluşturulamaz.",
         "msgImgProcessing": "Görüntü oluşturuluyor...",
+        "promptProcessing": "Prompt oluşturuluyor...",
         "msgMinSteps": "Minimum adım sayısı 10. Değer güncellendi.",
         "msgMaxSteps": "Maksimum adım sayısı 30. Değer güncellendi.",
         "msgMinCfg": "Minimum CFG Scale 1. Değer güncellendi.",
@@ -681,7 +696,12 @@ const translations = {
         "msgImageShared": "Resim paylaşıldı!",
         "msgDownloadingImg": "Resim indiriliyor...",
         "msgImageNotFound": "Resim bulunamadı.",
-        "msgDownloadFailed": "İndirme başarısız oldu."
+        "msgDownloadFailed": "İndirme başarısız oldu.",
+        "presetFilterAll": "Tüm Önayarları Göster",
+        "presetFilterSafe": "Sadece Güvenli Önayarları Göster",
+        "presetFilterPlus18": "Sadece +18 Önayarları Göster",
+        "btnPresetFilterTitle": "Önayarları Filtrele",
+        "msgPleaseWait": "Lütfen sayfayı kapatmayınız."
     }
 };
 
@@ -717,7 +737,7 @@ function initDomCache() {
         'label-editor-upload', 'label-editor-presets', 'label-editor-instructions',
         'txt-editor-upload', 'txt-editor-loading-presets', 'editor-generate-btn', 'editor-preset-search',
         'editor-search-no-results-text',
-        'txt-filter-chip-all'
+        'txt-filter-chip-all', 'opt-preset-all', 'opt-preset-safe', 'opt-preset-18plus', 'btn-preset-filter'
     ];
 
     ids.forEach(id => {
@@ -848,6 +868,12 @@ function updateLanguage(lang) {
     safelySetSvgText('lbl-adv-mode', t.lblAdv);
     safelySetText('desc-adv-mode', t.lblAdvDesc);
 
+    safelySetText('opt-preset-all', t.presetFilterAll);
+    safelySetText('opt-preset-safe', t.presetFilterSafe);
+    safelySetText('opt-preset-18plus', t.presetFilterPlus18);
+    if (cache['btn-preset-filter']) cache['btn-preset-filter'].title = t.btnPresetFilterTitle;
+    
+
     safelySetSvgText('lbl-auto-mode', t.lblAuto);
     safelySetText('desc-auto-mode', t.lblAutoDesc);
 
@@ -907,6 +933,11 @@ function updateLanguage(lang) {
 
     setQueryText('#btn-wand-cancel', t.btnKeepOriginal);
     setQueryText('#btn-wand-confirm', t.btnApplyChanges);
+    
+    setQueryText('#random-prompt-modal-title', t.randomPromptTitle);
+    setQueryText('#random-prompt-subtitle', t.randomPromptSubtitle);
+    setQueryText('#btn-random-cancel', t.btnKeepOriginal);
+    setQueryText('#btn-random-apply', t.btnRandomApply);
 
     const resetDataBtn = cache['btn-hard-reset'];
     if (resetDataBtn) resetDataBtn.textContent = t.btnResetData;

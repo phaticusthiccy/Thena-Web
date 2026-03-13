@@ -30,6 +30,7 @@ function loadEditorPresets() {
                     card.appendChild(name);
                     
                     card.dataset.prompt = preset.prompt;
+                    card.dataset.nsfw = preset.nsfw === true ? 'true' : 'false';
                     
                     presetsContainer.appendChild(card);
                 });
@@ -217,6 +218,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     if(charCount) charCount.innerText = `${card.dataset.prompt.length} / 5000`;
                     promptInput.dispatchEvent(new Event('input', { bubbles: true }));
                 }
+
+                if (card.dataset.nsfw === 'true' && editorModerationLevel !== 'low') {
+                    editorModerationLevel = 'low';
+                    const modBtn = document.getElementById('editor-moderation-btn');
+                    if (modBtn) {
+                        modBtn.dataset.level = 'low';
+                        modBtn.title = 'Moderation: Low';
+                    }
+                    showNotification(currentLang == "tr" ? translations.tr.msgModLowSet : translations.en.msgModLowSet, 'info');
+                }
+
                 checkEditorFormReady();
             }
         });
@@ -237,6 +249,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const presetSearchInput = document.getElementById('editor-preset-search');
     const noResultsBox = document.getElementById('editor-search-no-results');
+    const filterBtn = document.getElementById('btn-preset-filter');
+    const filterMenu = document.getElementById('menu-preset-filter');
+    const dropdownWrapper = document.getElementById('dropdown-preset-filter');
+    let currentPresetFilter = 'all';
+
+    if (filterBtn && filterMenu && dropdownWrapper) {
+        filterBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (filterMenu.style.display === 'block') {
+                filterMenu.style.display = 'none';
+            } else {
+                document.querySelectorAll('.custom-dropdown-menu').forEach(menu => {
+                     menu.style.display = 'none';
+                });
+                filterMenu.style.display = 'block';
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!dropdownWrapper.contains(e.target) && filterMenu.style.display === 'block') {
+                filterMenu.style.display = 'none';
+            }
+        });
+
+        const filterOptions = filterMenu.querySelectorAll('.custom-dropdown-option');
+        filterOptions.forEach(option => {
+            option.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (typeof playInformationSound === 'function') playInformationSound();
+                filterOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                currentPresetFilter = option.dataset.value;
+                filterMenu.style.display = 'none';
+
+                if (presetSearchInput) {
+                    presetSearchInput.dispatchEvent(new Event('input'));
+                }
+            });
+        });
+    }
+
     if (presetSearchInput) {
         presetSearchInput.addEventListener('input', (e) => {
             const searchTerm = e.target.value.toLowerCase();
@@ -245,7 +298,13 @@ document.addEventListener('DOMContentLoaded', () => {
             
             cards.forEach(card => {
                 const name = card.querySelector('.preset-name').textContent.toLowerCase();
-                if (name.includes(searchTerm)) {
+                const isNsfw = card.dataset.nsfw === 'true';
+                
+                let filterMatch = true;
+                if (currentPresetFilter === 'safe' && isNsfw) filterMatch = false;
+                if (currentPresetFilter === '18plus' && !isNsfw) filterMatch = false;
+
+                if (name.includes(searchTerm) && filterMatch) {
                     card.style.display = '';
                     visibleCount++;
                 } else {
@@ -279,7 +338,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let currentMode = localStorage.getItem('editorViewMode');
         if (!viewModes.includes(currentMode)) {
             currentMode = 'default';
-            // handle legacy migration
             if (localStorage.getItem('editorViewMode') === 'list') { // legacy check
                currentMode = 'default';
             }
@@ -398,8 +456,8 @@ async function generateVariation() {
     setEditorLoadingState(true);
     
     if (typeof playStartSound === 'function') playStartSound();
-
-    let genNotif = showNotification((currentLang === 'tr') ? translations.tr.msgGeneratingQueued : translations.en.msgGeneratingQueued, 'info', null, 120000, 0);
+    let pleaseWaitMsg = typeof translations !== 'undefined' ? (currentLang === 'tr' ? translations.tr.msgPleaseWait : translations.en.msgPleaseWait) : (currentLang === 'tr' ? 'Lütfen sayfayı kapatmayınız.' : 'Please do not close the page.');
+    let genNotif = showNotification((currentLang === 'tr') ? translations.tr.msgGeneratingQueued + " - " + pleaseWaitMsg : translations.en.msgGeneratingQueued + " - " + pleaseWaitMsg, 'info', null, 120000, 0);
 
     try {
         const payload = {
@@ -487,8 +545,9 @@ async function pollEditorGeneration(id, apiKey, prompt, genNotif, originalImage,
                      generateBtn.innerText = currentLang == "tr" ? `İşleniyor... ${data.progress}%` : `Generating... ${data.progress}%`;
                 }
                 if (genNotif && typeof genNotif.update === 'function') {
+                    const pleaseWaitMsg = typeof translations !== 'undefined' ? (currentLang === 'tr' ? translations.tr.msgPleaseWait : translations.en.msgPleaseWait) : (currentLang === 'tr' ? 'Lütfen sayfayı kapatmayınız.' : 'Please do not close the page.');
                     genNotif.update(
-                        (currentLang === 'tr') ? `Oluşturuluyor... %${data.progress}` : `Generating... ${data.progress}%`,
+                        (currentLang === 'tr') ? `Oluşturuluyor... %${data.progress} - ${pleaseWaitMsg}` : `Generating... ${data.progress}% - ${pleaseWaitMsg}`,
                         'info',
                         data.progress
                     );
