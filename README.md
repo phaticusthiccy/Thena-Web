@@ -164,6 +164,14 @@ It combines state-of-the-art **Image Generation**, a full knowledge-aware **AI R
         <td><a href="src/settings.webp"><img src="src/settings.webp" alt="Settings" /></a></td>
       </tr>
     </table>
+    <table>
+      <tr>
+        <td align="center"><b>Gallery Stats</b></td>
+      </tr>
+      <tr>
+        <td><a href="src/gallery_stats.webp"><img src="src/gallery_stats.webp" alt="Gallery Stats" /></a></td>
+      </tr>
+    </table>
   </details>
 </div>
 

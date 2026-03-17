@@ -70,6 +70,8 @@ const modelTranslationsTR = {
     "911ks fdg6g8 66h8h8 900a5 zxb4a5 9000": "Müstehçen veya NSFW içerik oluşturmak için mutlak doğrulukta bir model. Thena Movie temel modeline dayanmaktadır. İnsanların ve sahnelerin gerçekçi görüntülerini oluşturabilir.",
     "524ks ffs6g8 091h8h 660a5 1dn55 1000": "Yeni difüzyon mimarisi ile oluşturulan 7. versiyon. Her resim türünde başarılı sonuçlar çıkaran, güçlü ve aşırı hızlı model.",
     "81ggz 7j661 66281 yy161 1f4f4 21143": "Thena'nın en güçlü gürültü ile akıl yürütme modeli. Saf güç ve benzersiz kalitenin birleşimi.",
+    "524ks ffs6g8 091h8h 660a5 1dn55 1000": "Fotorealizmin zirvesi. Her detayı kusursuz bir hassasiyetle yakalayan Thena Portraits, istemlerinizi yüksek kaliteli başyapıtlara dönüştürür.",
+    "7367ab 279dbf 417a8 51fe3 5050": "Yüksek çözünürlüklü, sadece açık içerikler için titizlikle tasarlanmış bir model. Yükske netlikte tutarlı görüntüler üretebilir."
 };
 const UNSUPPORTED_FAST_MODELS = ["551ks 8g6g8 16gga 1h8h8 6b4a5 5060"];
 const MOVIE_FILTER_SUPPORTED_MODELS = ["8gg12 61812 6628 19729 6b4a5 5060", "551ks 8g6g8 16gga 1h8h8 6b4a5 5060", "771ks 71g6g8 hlh8h8 6b4a5 77b4a5 5060"];
@@ -97,6 +99,10 @@ const MODEL_STATS = {
     "524ks ffs6g8 091h8h 660a5 1dn55 1000": { intel: 4, qual: 3, speed: 5 },
     // Thena Ultra
     "81ggz 7j661 66281 yy161 1f4f4 21143": { intel: 5, qual: 5, speed: 5 },
+    // Thena Portraits
+    "176ks dd131 81927 a1165 p00183 6000": { intel: 3, qual: 4, speed: 4 },
+    // Thena Florence
+    "7367ab 279dbf 417a8 51fe3 5050": { intel: 3, qual: 4, speed: 3 },
     // Default 
     "default": { intel: 3, qual: 3, speed: 3 }
 };
@@ -104,26 +110,31 @@ const HOT_MODELS = ["81ggz 7j661 66281 yy161 1f4f4 21143", "8gg12 61812 6628 197
 
 const WHIMSICAL_FLAME_SVG = `
 <div class="whimsical-flame-effect" style="position: absolute; inset: 0; z-index: 10; pointer-events: none;">
-    <svg width="100%" height="100%">
+    <svg width="100%" height="100%" style="overflow:visible">
         <defs>
-            <linearGradient id="magic-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#ff3366"></stop>
-                <stop offset="50%" stop-color="#ff9933"></stop>
-                <stop offset="100%" stop-color="#ff3366"></stop>
-            </linearGradient>
-            <linearGradient id="magic-grad2" x1="100%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#ffcc00"></stop>
-                <stop offset="50%" stop-color="#ff3366"></stop>
-                <stop offset="100%" stop-color="#ffcc00"></stop>
-            </linearGradient>
-            <filter id="magical-glow">
+            <filter id="plasma-glow" x="-20%" y="-20%" width="140%" height="140%">
                 <feGaussianBlur stdDeviation="3" result="blur"></feGaussianBlur>
                 <feMerge><feMergeNode in="blur"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge>
             </filter>
+            <filter id="plasma-glow-soft" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="6" result="blur"></feGaussianBlur>
+                <feMerge><feMergeNode in="blur"></feMergeNode></feMerge>
+            </filter>
         </defs>
-        <rect x="2" y="2" width="calc(100% - 4px)" height="calc(100% - 4px)" rx="8" fill="none" class="magical-line line-1" filter="url(#magical-glow)"></rect>
-        <rect x="2" y="2" width="calc(100% - 4px)" height="calc(100% - 4px)" rx="8" fill="none" class="magical-line line-2" filter="url(#magical-glow)"></rect>
-        <rect x="2" y="2" width="calc(100% - 4px)" height="calc(100% - 4px)" rx="8" fill="none" class="magical-line line-3" filter="url(#magical-glow)"></rect>
+        <rect x="1" y="1" width="calc(100% - 2px)" height="calc(100% - 2px)" rx="8" fill="none"
+              class="plasma-base-glow" filter="url(#plasma-glow-soft)"></rect>
+        <rect x="2" y="2" width="calc(100% - 4px)" height="calc(100% - 4px)" rx="8" fill="none"
+              class="plasma-edge plasma-trail-1" filter="url(#plasma-glow)"></rect>
+        <rect x="2" y="2" width="calc(100% - 4px)" height="calc(100% - 4px)" rx="8" fill="none"
+              class="plasma-edge plasma-trail-2" filter="url(#plasma-glow)"></rect>
+        <rect x="2" y="2" width="calc(100% - 4px)" height="calc(100% - 4px)" rx="8" fill="none"
+              class="plasma-edge plasma-trail-3" filter="url(#plasma-glow)"></rect>
+        <rect x="2" y="2" width="calc(100% - 4px)" height="calc(100% - 4px)" rx="8" fill="none"
+              class="plasma-spark" filter="url(#plasma-glow)"></rect>
+        <circle cx="2" cy="2" r="3.5" class="plasma-corner c-tl"></circle>
+        <circle cx="calc(100% - 2px)" cy="2" r="3.5" class="plasma-corner c-tr"></circle>
+        <circle cx="2" cy="calc(100% - 2px)" r="3.5" class="plasma-corner c-bl"></circle>
+        <circle cx="calc(100% - 2px)" cy="calc(100% - 2px)" r="3.5" class="plasma-corner c-br"></circle>
     </svg>
 </div>
 `;
@@ -249,7 +260,12 @@ let currentGenParams = null;
 let pendingEnhancedPrompt = "";
 let isChatGeneratingImage = false;
 
+const dotsCache = {};
+
 function createDots(count, type) {
+    const key = `${type}-${count}`;
+    if (dotsCache[key]) return dotsCache[key];
+
     const icons = {
         intelligence: {
             viewBox: "0 0 64 64",
@@ -298,13 +314,12 @@ function createDots(count, type) {
     let html = '';
     for (let i = 0; i < 5; i++) {
         const isFilled = i < count ? 'filled' : '';
-        html += `
-            <svg class="rating-icon ${isFilled}" viewBox="${iconData.viewBox}">
-                ${iconData.content}
-            </svg>`;
+        html += `<svg class="rating-icon ${isFilled}" viewBox="${iconData.viewBox}">${iconData.content}</svg>`;
     }
+    dotsCache[key] = html;
     return html;
 }
+
 
 function getPlaceholderHTML(width, height) {
     let spanClass = '';
@@ -728,7 +743,8 @@ const LS_KEYS = {
     PROMPT: 'thena-last-prompt',
     MODEL: 'thena-last-model',
     RATIO: 'thena-last-ratio',
-    SIZE: 'thena-last-size'
+    SIZE: 'thena-last-size',
+    MODEL_SUGGESTION: 'thena-model-suggestion'
 };
 const apiKeyInput = document.getElementById('api-key');
 const promptInput = document.getElementById('prompt');
@@ -762,17 +778,31 @@ promptInput.addEventListener('input', () => {
     checkFormReady();
 
     const isPreviewEnabled = localStorage.getItem('thena-prompt-preview') === 'true';
-    if (isPreviewEnabled) {
+    const isSuggestEnabled = localStorage.getItem('thena-model-suggestion') === 'true';
+
+    if (isPreviewEnabled || isSuggestEnabled) {
         if (promptPreviewTimer) clearTimeout(promptPreviewTimer);
         const val = promptInput.value.trim();
-        if (val.length > 0 && val.length < 10) {
-            if (promptPreviewAbort) promptPreviewAbort.abort();
-            setPreviewCountdown(10 - val.length);
-        } else if (val.length >= 10) {
-            setPreviewCardsLoading();
-            promptPreviewTimer = setTimeout(() => fetchPromptPreview(val), 800);
+
+        if (val.length >= 10) {
+            if (isPreviewEnabled) setPreviewCardsLoading();
+            promptPreviewTimer = setTimeout(() => {
+                const currentAppMode = localStorage.getItem('thena-last-app-mode') || 'image';
+                if (isPreviewEnabled) fetchPromptPreview(val);
+                if (isSuggestEnabled && currentAppMode === 'image' && typeof fetchModelSuggestion === 'function') {
+                    fetchModelSuggestion(val);
+                }
+            }, 1000);
         } else {
-             renderPreviewResults([]); 
+            if (isPreviewEnabled) {
+                if (val.length > 0) {
+                    if (promptPreviewAbort) promptPreviewAbort.abort();
+                    setPreviewCountdown(10 - val.length);
+                } else {
+                    renderPreviewResults([]);
+                }
+            }
+            if (typeof stopModelSuggestionHighlight === 'function') stopModelSuggestionHighlight();
         }
     }
 });
@@ -857,8 +887,12 @@ magicWandBtn.addEventListener('click', async () => {
 
             if (typeof playSuccessSound === "function") playSuccessSound();
         } else {
+            if (data.status == 401) {
+                showNotification(currentLang == "tr" ? translations.tr.invalidApiKey : translations.en.invalidApiKey, "error");
+            } else {
+                showNotification(currentLang == "tr" ? translations.tr.msgPromptGenErr : translations.en.msgPromptGenErr, "error");
+            }
             if (typeof playErrorSound === "function") playErrorSound();
-            showNotification(currentLang == "tr" ? translations.tr.msgPromptGenErr : translations.en.msgPromptGenErr, "error");
             checkFormReady();
         }
     } catch (error) {
@@ -1604,97 +1638,107 @@ async function loadModels() {
                                     <line x1="12" y1="8" x2="12.01" y2="8"></line>
                                 </svg>
                             </div>
+                            ${isHot ? `<div class="flag-item bg-exclusive"><svg class="flag-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 8c-.83 0-1.5-.67-1.5-1.5S4.67 5 5.5 5 7 5.67 7 6.5 6.33 8 5.5 8z"/></svg><span class="flag-text line-one">${translations[currentLang].exclusiveLabel}</span></div>` : ''}
                             <div class="model-name">${model.model}</div>
                         </div>
                     `;
     }).join('');
 
+    if (modelSelector && !modelSelector.hasAttribute('data-delegated')) {
+        modelSelector.setAttribute('data-delegated', 'true');
+        modelSelector.addEventListener('click', async (e) => {
+            const infoBtn = e.target.closest('.model-info-icon-wrapper');
+            const card = e.target.closest('.model-card');
+            
+            if (infoBtn && card) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (typeof playInformationSound !== 'undefined') playInformationSound();
+                
+                const modelId = card.dataset.modelId;
+                const modelName = card.querySelector('.model-name').innerText;
+                const featModal = document.getElementById('feature-info-modal');
+                const featModalTitle = document.getElementById('feat-modal-title');
+                const featModalDesc = document.getElementById('feat-modal-desc');
+                const metricIntel = document.getElementById('metric-intelligence');
+                const metricQual = document.getElementById('metric-quality');
+                const metricSpeed = document.getElementById('metric-speed');
+                const lblIntel = document.getElementById('lbl-intel');
+                const lblQual = document.getElementById('lbl-qual');
+                const lblSpeed = document.getElementById('lbl-speed');
+
+                const currentModelData = (typeof models !== 'undefined' ? models : []).find(m => m.id === modelId);
+                let descriptionToShow = currentModelData ? currentModelData.description : "No description available.";
+
+                const isTR = typeof currentLang !== 'undefined' && currentLang === 'tr';
+                if (isTR) {
+                    if (typeof modelTranslationsTR !== 'undefined' && modelTranslationsTR[modelId]) {
+                        descriptionToShow = modelTranslationsTR[modelId];
+                    }
+                    if (lblIntel) lblIntel.textContent = "Zeka";
+                    if (lblQual) lblQual.textContent = "Kalite";
+                    if (lblSpeed) lblSpeed.textContent = "Hız";
+                } else {
+                    if (lblIntel) lblIntel.textContent = "Intelligence";
+                    if (lblQual) lblQual.textContent = "Quality";
+                    if (lblSpeed) lblSpeed.textContent = "Speed";
+                }
+
+                if (featModalTitle) featModalTitle.innerHTML = `🔮 ${modelName}`;
+                if (featModalDesc) featModalDesc.textContent = descriptionToShow;
+
+                const cleanId = modelId.replace(/\s/g, '');
+                let stats = (typeof MODEL_STATS !== 'undefined' ? (MODEL_STATS[modelId] || MODEL_STATS[cleanId] || MODEL_STATS["default"]) : {intel:3,qual:3,speed:3});
+
+                if (metricIntel) metricIntel.innerHTML = createDots(stats.intel, 'intelligence');
+                if (metricQual) metricQual.innerHTML = createDots(stats.qual, 'quality');
+                if (metricSpeed) metricSpeed.innerHTML = createDots(stats.speed, 'speed');
+
+                if (featModal) featModal.classList.add('active');
+                return;
+            }
+
+            if (card) {
+                const clickedId = card.dataset.modelId;
+                if (selectedModel === clickedId) {
+                    playModelSelectSound(false);
+                    selectedModel = null;
+                    localStorage.removeItem(LS_KEYS.MODEL);
+                    card.classList.remove('active');
+                    checkMovieFilterAvailability(null);
+                    checkFastModeAvailability(null);
+                    if (typeof checkExtraFeaturesAvailability === 'function') checkExtraFeaturesAvailability(null);
+                } else {
+                    playModelSelectSound(true);
+                    localStorage.setItem(LS_KEYS.MODEL, clickedId);
+                    document.querySelectorAll('.model-card').forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    selectedModel = clickedId;
+                    if (typeof createConfetti === 'function') createConfetti(card);
+                    checkMovieFilterAvailability(clickedId);
+                    checkFastModeAvailability(clickedId);
+                    if (typeof checkExtraFeaturesAvailability === 'function') checkExtraFeaturesAvailability(clickedId);
+                    if (typeof updateAdvancedSettingsConstraints === 'function') updateAdvancedSettingsConstraints(clickedId);
+
+                    if (typeof NO_EXTRA_FEATURES_MODELS !== 'undefined' && NO_EXTRA_FEATURES_MODELS.includes(clickedId)) {
+                        if (typeof checkUltraRateLimit === 'function') {
+                            const allowed = await checkUltraRateLimit(clickedId, card);
+                            if (!allowed) return;
+                        }
+                    }
+                }
+                checkFormReady();
+                if (typeof stopModelSuggestionHighlight === 'function') stopModelSuggestionHighlight();
+            }
+        });
+    }
+
     document.querySelectorAll('.model-card').forEach(card => {
         const previewImage = card.dataset.preview;
-        const modelId = card.dataset.modelId;
-        const modelName = card.querySelector('.model-name').innerText;
-
         if (previewImage) {
             card.style.setProperty('--bg-image', `url(${previewImage})`);
             card.style.filter = 'saturate(0.3)';
         }
-
-        const infoBtn = card.querySelector('.model-info-icon-wrapper');
-        infoBtn.addEventListener('click', (e) => {
-            if (typeof playInformationSound !== 'undefined') playInformationSound();
-            e.stopPropagation();
-
-            const featModal = document.getElementById('feature-info-modal');
-            const featModalTitle = document.getElementById('feat-modal-title');
-            const featModalDesc = document.getElementById('feat-modal-desc');
-
-            const metricIntel = document.getElementById('metric-intelligence');
-            const metricQual = document.getElementById('metric-quality');
-            const metricSpeed = document.getElementById('metric-speed');
-
-            const lblIntel = document.getElementById('lbl-intel');
-            const lblQual = document.getElementById('lbl-qual');
-            const lblSpeed = document.getElementById('lbl-speed');
-
-            const currentModelData = models.find(m => m.id === modelId);
-
-            let descriptionToShow = currentModelData ? currentModelData.description : "No description available.";
-
-            if (typeof currentLang !== 'undefined' && currentLang === 'tr') {
-                if (modelTranslationsTR[modelId]) {
-                    descriptionToShow = modelTranslationsTR[modelId];
-                }
-                if (lblIntel) lblIntel.textContent = "Yapay Zeka";
-                if (lblQual) lblQual.textContent = "Kalite";
-                if (lblSpeed) lblSpeed.textContent = "Hız";
-            } else {
-                if (lblIntel) lblIntel.textContent = "Intelligence";
-                if (lblQual) lblQual.textContent = "Quality";
-                if (lblSpeed) lblSpeed.textContent = "Speed";
-            }
-
-            featModalTitle.innerHTML = `🔮 ${modelName}`;
-            featModalDesc.textContent = descriptionToShow;
-
-            const cleanId = modelId.replace(/\s/g, '');
-            let stats = MODEL_STATS[modelId] || MODEL_STATS[cleanId] || MODEL_STATS["default"];
-
-            metricIntel.innerHTML = createDots(stats.intel, 'intelligence');
-            metricQual.innerHTML = createDots(stats.qual, 'quality');
-            metricSpeed.innerHTML = createDots(stats.speed, 'speed');
-
-            featModal.classList.add('active');
-        });
-
-        card.addEventListener('click', async () => {
-            if (selectedModel === modelId) {
-                playModelSelectSound(false);
-                selectedModel = null;
-                localStorage.removeItem(LS_KEYS.MODEL);
-                card.classList.remove('active');
-                checkMovieFilterAvailability(null);
-                checkFastModeAvailability(null);
-                checkExtraFeaturesAvailability(null);
-                updateAdvancedSettingsConstraints(null);
-            } else {
-                playModelSelectSound(true);
-                localStorage.setItem(LS_KEYS.MODEL, modelId);
-                document.querySelectorAll('.model-card').forEach(c => c.classList.remove('active'));
-                card.classList.add('active');
-                selectedModel = modelId;
-                createConfetti(card);
-                checkMovieFilterAvailability(modelId);
-                checkFastModeAvailability(modelId);
-                checkExtraFeaturesAvailability(modelId);
-                updateAdvancedSettingsConstraints(modelId);
-
-                if (NO_EXTRA_FEATURES_MODELS.includes(modelId)) {
-                    const allowed = await checkUltraRateLimit(modelId, card);
-                    if (!allowed) return;
-                }
-            }
-            checkFormReady();
-        });
     });
 
     const lastModelId = localStorage.getItem(LS_KEYS.MODEL);
@@ -3234,6 +3278,9 @@ function showNotification(message, type = 'info', imageUrl = null, duration = 40
         document.body.appendChild(container);
     }
 
+    if (message.toLowerCase().includes("key is not valid")) {
+        message = currentLang == "tr" ? translations.tr.invalidApiKey : translations.en.invalidApiKey;
+    }
     const isPerfMode = document.body.classList.contains('performance-mode');
 
     const notification = document.createElement('div');
@@ -3323,6 +3370,7 @@ function showNotification(message, type = 'info', imageUrl = null, duration = 40
         notification.style.borderColor = '#ff4444';
         notification.style.backgroundColor = 'rgba(255, 68, 68, 0.1)';
     }
+    
 
     notification.innerHTML = contentHtml;
     container.appendChild(notification);
@@ -4542,6 +4590,7 @@ async function fetchShowcaseImages() {
 
             return {
                 url: item.image,
+                thumb: item.thumb,
                 prompt: item.prompt,
                 model: item.model,
                 size: item.ratio,
@@ -4615,7 +4664,7 @@ function renderShowcaseBatch() {
 
         return `
                 <div class="gallery-item ${spanClass}" style="animation-delay: ${index * 50}ms" data-item="${itemData}">
-                    <img src="${item.url}" loading="lazy" alt="Showcase Image">
+                    <img src="${item.thumb || item.url}" loading="lazy" alt="Showcase Image">
                     
                     <div class="gallery-item-info" style="justify-content: center;">
                         <div class="info-meta" style="font-size: 0.9rem; font-weight: 500;">${item.model.replace(/i/g, 'I')}</div>
@@ -4863,6 +4912,40 @@ btnImg2PromptGenerate.addEventListener('click', async () => {
 
     btnImg2PromptGenerate.innerHTML = `<span>${t.lblAnalyzing}</span><svg class="sparkle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>`;
     var clipnotif = showNotification(currentLang === 'tr' ? translations.tr.msgGenPrompt : translations.en.msgGenPrompt, "loading");
+    var _clipnotifDone = false;
+    var _clipnotifTimers = [];
+    const _origClipnotif = clipnotif;
+
+    const _scheduleClipUpdate = (delay, msgTr, msgEn) => {
+        const tid = setTimeout(() => {
+            if (_clipnotifDone) return;
+            if (_origClipnotif && _origClipnotif.update) _origClipnotif.update(currentLang === 'tr' ? msgTr : msgEn, 'loading');
+        }, delay);
+        _clipnotifTimers.push(tid);
+    };
+
+    _scheduleClipUpdate(1000,
+        '[1/4] Resim kontrol ediliyor...',
+        '[1/4] Checking image...'
+    );
+    _scheduleClipUpdate(2300,
+        '[2/4] Prompt oluşturuluyor...',
+        '[2/4] Building prompt...'
+    );
+    _scheduleClipUpdate(3500,
+        '[3/4] Model seçiliyor...',
+        '[3/4] Selecting model...'
+    );
+    _scheduleClipUpdate(4600,
+        '[4/4] Hazırlanıyor...',
+        '[4/4] Preparing...'
+    );
+
+    clipnotif = () => {
+        _clipnotifDone = true;
+        _clipnotifTimers.forEach(tid => clearTimeout(tid));
+        if (_origClipnotif) _origClipnotif();
+    };
     playInformationSound();
     btnImg2PromptGenerate.classList.add('loading');
     btnImg2PromptGenerate.disabled = true;
@@ -4995,7 +5078,11 @@ btnImg2PromptGenerate.addEventListener('click', async () => {
             if (typeof showNotification === "function") showNotification(currentLang == "tr" ? translations.tr.msgPromptSettingsApplied : translations.en.msgPromptSettingsApplied, "success");
 
         } else {
-            showNotification(currentLang == "tr" ? translations.tr.msgGenPromptFailed : translations.en.msgGenPromptFailed, "error");
+            if (data.status == 401) {
+                showNotification(currentLang == "tr" ? translations.tr.invalidApiKey : translations.en.invalidApiKey, "error");
+            } else {
+                showNotification(currentLang == "tr" ? translations.tr.msgGenPromptFailed : translations.en.msgGenPromptFailed, "error");
+            }
             if (typeof playErrorSound === "function") playErrorSound();
         }
 
@@ -5333,6 +5420,11 @@ function switchAppMode(mode) {
     const btnGotoImage = document.getElementById('btn-goto-image');
     const btnGotoEditor = document.getElementById('btn-goto-editor');
     const galleryBtn = document.getElementById('gallery-btn');
+    const modelSuggestionSetting = document.getElementById('setting-group-model-suggestion');
+
+    if (modelSuggestionSetting) {
+        modelSuggestionSetting.style.display = mode === 'image' ? 'block' : 'none';
+    }
 
     const activeView = mode === 'chat' ? viewChat : mode === 'editor' ? viewEditor : viewImage;
 
@@ -5537,7 +5629,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnGotoImage) btnGotoImage.onclick = () => switchAppMode('image');
     if (btnGotoEditor) btnGotoEditor.onclick = () => switchAppMode('editor');
 
-    const lastAppMode = localStorage.getItem('thena-last-app-mode');
+    const lastAppMode = localStorage.getItem('thena-last-app-mode') || 'image';
+    const modelSuggestionSetting = document.getElementById('setting-group-model-suggestion');
+    if (modelSuggestionSetting) {
+        modelSuggestionSetting.style.display = lastAppMode === 'image' ? 'block' : 'none';
+    }
+
     if (lastAppMode === 'chat') {
         const galleryBtn = document.getElementById('gallery-btn');
         
@@ -5715,3 +5812,225 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+const statsStyle = document.createElement('style');
+statsStyle.innerHTML = `
+.gallery-stats-content { padding: 25px; border-radius: 16px; background: #151515; border: 1px solid #333; }
+.stats-section { margin-bottom: 25px; }
+.stat-card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.stat-card-value { font-size: 20px; font-weight: bold; color: #fff; margin-bottom: 5px; }
+.stat-card-label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px; }
+
+#open-gallery-stats-btn {
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    background: #111;
+    z-index: 1;
+}
+#open-gallery-stats-btn::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: -1px; right: -1px; bottom: -1px;
+    border-radius: 9px;
+    background: linear-gradient(45deg, rgba(0,255,136,0.3), rgba(0,188,212,0.3), rgba(138,43,226,0.3), rgba(0,255,136,0.3));
+    background-size: 300% 300%;
+    z-index: -1;
+    animation: rotateGradient 4s ease infinite;
+    transition: opacity 0.4s ease;
+}
+#open-gallery-stats-btn .stats-icon-line {
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-origin: bottom center;
+}
+#open-gallery-stats-btn:hover {
+    background: rgba(0, 255, 136, 0.15) !important;
+    transform: scale(1.05);
+    color: #00ff88;
+}
+#open-gallery-stats-btn:hover::before {
+    opacity: 0;
+}
+#open-gallery-stats-btn:hover .stats-icon-line-1 {
+    animation: whimsicalBar 1.2s ease-in-out infinite alternate;
+    stroke: #00ff88;
+}
+#open-gallery-stats-btn:hover .stats-icon-line-2 {
+    animation: whimsicalBar 1.2s ease-in-out infinite alternate 0.3s;
+    stroke: #00ff88;
+}
+#open-gallery-stats-btn:hover .stats-icon-line-3 {
+    animation: whimsicalBar 1.2s ease-in-out infinite alternate 0.6s;
+    stroke: #00ff88;
+}
+
+@keyframes whimsicalBar {
+    0% { transform: scaleY(1); }
+    50% { transform: scaleY(0.4) translateY(6px); }
+    100% { transform: scaleY(1.3) translateY(-2px); }
+}
+
+@keyframes rotateGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@media (max-width: 600px) {
+    .gallery-stats-content { padding: 15px; width: 95%; max-height: 90vh; }
+    .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+    .stat-card { padding: 10px; }
+    .stat-card-value { font-size: 18px; margin-bottom: 3px; }
+    .stat-card-label { font-size: 11px; }
+    #stats-total-cost { font-size: 20px !important; }
+    #gallery-stats-title { font-size: 18px; margin-bottom: 15px; }
+    #close-gallery-stats { top: 10px; right: 10px; font-size: 20px; }
+}
+`;
+document.head.appendChild(statsStyle);
+
+document.addEventListener('DOMContentLoaded', () => {
+    const openStatsBtn = document.getElementById('open-gallery-stats-btn');
+    const closeStatsBtn = document.getElementById('close-gallery-stats');
+    const statsModal = document.getElementById('gallery-stats-modal');
+    
+    if (openStatsBtn && statsModal && closeStatsBtn) {
+        openStatsBtn.addEventListener('click', async () => {
+            if (typeof playInformationSound === "function") playInformationSound();
+            statsModal.classList.add('active');
+            await loadGalleryStatistics();
+        });
+        
+        closeStatsBtn.addEventListener('click', () => {
+            statsModal.classList.remove('active');
+        });
+        
+        statsModal.addEventListener('click', (e) => {
+            if (e.target === statsModal) {
+                statsModal.classList.remove('active');
+            }
+        });
+    }
+});
+
+async function loadGalleryStatistics() {
+    try {
+        const allItems = await dbHelper.getAll();
+        
+        let modelCounts = {};
+        let featuresCounts = {
+            fast: 0, creative: 0, dense: 0, movie: 0, highRes: 0, enhance: 0
+        };
+        
+        for (const item of allItems) {
+            const m = item.model || 'Unknown';
+            modelCounts[m] = (modelCounts[m] || 0) + 1;
+            
+            if (item.features) {
+                if (item.features.fast) featuresCounts.fast++;
+                if (item.features.creative) featuresCounts.creative++;
+                if (item.features.dense) featuresCounts.dense++;
+                if (item.features.movie) featuresCounts.movie++;
+                if (item.features.highRes) featuresCounts.highRes++;
+                if (item.features.enhance) featuresCounts.enhance++;
+            }
+        }
+        
+        let prices = {};
+        try {
+            const r = await fetch('https://create.thena.workers.dev/modelPrices');
+            if (r.ok) prices = await r.json();
+        } catch(e) { console.error('Error fetching prices', e); }
+        
+        const modelKeyMapping = {
+            "Thena Ultra": "thenaUltra",
+            "Thena Movie": "thenaMovie",
+            "Thena V7": "thenaV7",
+            "Thena V6": "thenaV6",
+            "Thena Max": "thenaMax",
+            "Thena Anime Core": "thenaAnimeCore",
+            "Thena Anime Fast": "thenaAnimeFast",
+            "Thena Photoreal": "thenaPhotoreal",
+            "Thena MiniWa": "thenaMiniWa",
+            "Thena Radiant": "thenaRadiant",
+            "Thena Bloomlight": "thenaBloomlight",
+            "Thena Portraits": "thenaPortraits",
+            "Thena Florence": "thenaFlorence",
+            "Image Editor": "imageEditor"
+        };
+        
+        const t = translations[currentLang];
+        let totalCost = 0;
+        
+        for (const [mName, count] of Object.entries(modelCounts)) {
+            const propKey = modelKeyMapping[mName];
+            if (propKey && prices[propKey]) {
+                const costPerItem = prices[propKey][currentLang] || 0;
+                totalCost += costPerItem * count;
+            } else if (prices[mName]) { 
+                const costPerItem = prices[mName][currentLang] || 0;
+                totalCost += costPerItem * count;
+            }
+        }
+        
+        const modelsList = document.getElementById('stats-models-list');
+        const extrasList = document.getElementById('stats-extras-list');
+        const costEl = document.getElementById('stats-total-cost');
+        
+        modelsList.innerHTML = '';
+        Object.entries(modelCounts).sort((a,b)=>b[1]-a[1]).forEach(([mName, count]) => {
+            modelsList.innerHTML += `<div class="stat-card">
+                <div class="stat-card-value">${count}</div>
+                <div class="stat-card-label">${mName}</div>
+            </div>`;
+        });
+        if (Object.keys(modelCounts).length === 0) {
+            modelsList.innerHTML = `<div style="color:#666; font-size:12px; grid-column: 1 / -1; text-align: center;">${t.statsNoModels}</div>`;
+        }
+        
+        const featureLabels = {
+            fast: t.featFast,
+            creative: t.featCreative,
+            dense: t.featDense,
+            movie: t.featMovie,
+            highRes: t.featHighRes,
+            enhance: t.featEnhance
+        };
+        
+        extrasList.innerHTML = '';
+        let hasExtras = false;
+        Object.entries(featuresCounts).forEach(([feat, count]) => {
+            if (count > 0) {
+                hasExtras = true;
+                const label = featureLabels[feat] || feat;
+                extrasList.innerHTML += `<div class="stat-card">
+                    <div class="stat-card-value">${count}</div>
+                    <div class="stat-card-label">${label}</div>
+                </div>`;
+            }
+        });
+        if (!hasExtras) {
+            extrasList.innerHTML = `<div style="color:#666; font-size:12px; grid-column: 1 / -1; text-align: center;">${t.statsNoExtras}</div>`;
+        }
+        
+        
+        costEl.textContent = ((currentLang === 'tr' ? '₺' : '$') + totalCost.toFixed(4)).replace(".", ",");
+        
+        const approxEl = document.getElementById('stats-approx-cost');
+        if (approxEl) {
+            if (totalCost < 1 && totalCost > 0) {
+                const cents = Math.round(totalCost * 100);
+                if (cents >= 100) {
+                    approxEl.textContent = t.statsApprox.replace('{0}', 1);
+                } else {
+                    approxEl.textContent = t.statsApproxCents.replace('{0}', cents);
+                }
+            } else {
+                const rounded = Math.round(totalCost);
+                approxEl.textContent = t.statsApprox.replace('{0}', rounded);
+            }
+        }
+        
+    } catch(e) {
+    }
+}

@@ -2,6 +2,7 @@ const translations = {
     "en": {
         "generateBtn": "Generate Image",
         "galleryBtn": "Gallery",
+        "invalidApiKey": "Invalid API Key! Please check your API key.",
         "promptPlaceholder": "Describe your image... (Min 10 chars, Max 5000 chars)",
         "apiKeyPlaceholder": "Enter your Thena API key...",
         "apiKeyLabel": "API Key",
@@ -102,6 +103,8 @@ const translations = {
         "btnShareCopied": "Copied!",
         "btnShareError": "Error",
         "msgUploading": "Uploading to server...",
+        "modelSuggestionLabel": "Model Suggestion",
+        "modelSuggestionDesc": "Suggests the best model based on your prompt.",
         "msgUploadFail": "Upload failed. Please try again.",
         "btnDownload": "Download",
         "msgProcessing": "Processing...",
@@ -280,7 +283,7 @@ const translations = {
         "msgPromptGenErr": "The prompt could not be created. An error occurred.",
         "msgUnknownError": "An error occurred:",
         "msgTelegramSent": "Image has been sent to Telegram.",
-        "msgTelegramErr": "Download failed. Please try again.",
+        "msgTelegramErr": "Download failed. Please start the bot and try again!",
         "msgDownloadCompleted": "Download completed.",
         "msgDownloadFailed": "Download failed. Please try again.",
         "msgGalleryEmpty": "The gallery is already empty.",
@@ -349,7 +352,19 @@ const translations = {
         "presetFilterSafe": "Show only Safe Presets",
         "presetFilterPlus18": "Show only +18 Presets",
         "btnPresetFilterTitle": "Filter Presets",
-        "msgPleaseWait": "Please do not close the page."
+        "msgPleaseWait": "Please do not close the page.",
+        "editorCropLabel": "Crop Image",
+        "editorCropCancel": "Cancel",
+        "editorCropApply": "Apply",
+        "exclusiveLabel": "Exclusive",
+        "galleryStatsTitle": "Gallery Statistics",
+        "statsModelsTitle": "Models Used",
+        "statsExtrasTitle": "Extras Used",
+        "statsCostTitle": "Total Estimated Cost",
+        "statsApprox": "({0} Dollars Approx)",
+        "statsApproxCents": "({0} Cents Approx)",
+        "statsNoModels": "No images in gallery yet.",
+        "statsNoExtras": "No extras used yet."
     },
     "tr": {
         "generateBtn": "Görüntü Oluştur",
@@ -357,6 +372,7 @@ const translations = {
         "promptPlaceholder": "Resminizi tarif edin... (Min 10 karakter, Maks 5000 karakter)",
         "apiKeyPlaceholder": "Thena API anahtarınızı girin...",
         "apiKeyLabel": "API Anahtarı",
+        "invalidApiKey": "Geçersiz API Anahtarı! Lütfen API anahtarınızı kontrol edin.",
         "promptLabel": "İstem (Prompt)",
         "modelLabel": "Model",
         "ratioLabel": "En boy Oranı",
@@ -454,6 +470,8 @@ const translations = {
         "btnShareCopied": "Kopyalandı!",
         "btnShareError": "Hata",
         "msgUploading": "Sunucuya yükleniyor...",
+        "modelSuggestionLabel": "Model Önerisi",
+        "modelSuggestionDesc": "Yazdığınız prompta göre en uygun modeli önerir.",
         "msgUploadFail": "Yükleme başarısız. Tekrar deneyin.",
         "btnDownload": "İndir",
         "msgProcessing": "İşleniyor...",
@@ -632,7 +650,7 @@ const translations = {
         "msgPromptGenErr": "Prompt oluşturulamadı. Bir hata oluştu.",
         "msgUnknownError": "Bir hata oluştu: ",
         "msgTelegramSent": "Resim Telegram'a gönderildi.",
-        "msgTelegramErr": "Resim Telegram'a gönderilemedi. Lütfen yeniden deneyin.",
+        "msgTelegramErr": "Resim Telegram'a gönderilemedi. Lütfen botu başlatın ve tekrar deneyin!",
         "msgDownloadCompleted": "Resim indirildi.",
         "msgDownloadFailed": "Resim indirilemedi. Lütfen yeniden deneyin.",
         "msgGalleryEmpty": "Galeri halihazırda boş.",
@@ -701,7 +719,19 @@ const translations = {
         "presetFilterSafe": "Sadece Güvenli Önayarları Göster",
         "presetFilterPlus18": "Sadece +18 Önayarları Göster",
         "btnPresetFilterTitle": "Önayarları Filtrele",
-        "msgPleaseWait": "Lütfen sayfayı kapatmayınız."
+        "msgPleaseWait": "Lütfen sayfayı kapatmayınız.",
+        "editorCropLabel": "Resmi Kırp",
+        "editorCropCancel": "İptal",
+        "editorCropApply": "Uygula",
+        "exclusiveLabel": "Seçkin",
+        "galleryStatsTitle": "Galeri İstatistikleri",
+        "statsModelsTitle": "Kullanılan Modeller",
+        "statsExtrasTitle": "Kullanılan Ekstralar",
+        "statsCostTitle": "Toplam Tahmini Maliyet",
+        "statsApprox": "(Yaklaşık {0} Lira)",
+        "statsApproxCents": "(Yaklaşık {0} Kuruş)",
+        "statsNoModels": "Henüz galeride görsel yok.",
+        "statsNoExtras": "Henüz ekstra kullanılmadı."
     }
 };
 
@@ -737,7 +767,10 @@ function initDomCache() {
         'label-editor-upload', 'label-editor-presets', 'label-editor-instructions',
         'txt-editor-upload', 'txt-editor-loading-presets', 'editor-generate-btn', 'editor-preset-search',
         'editor-search-no-results-text',
-        'txt-filter-chip-all', 'opt-preset-all', 'opt-preset-safe', 'opt-preset-18plus', 'btn-preset-filter'
+        'txt-filter-chip-all', 'opt-preset-all', 'opt-preset-safe', 'opt-preset-18plus', 'btn-preset-filter',
+        'lbl-crop-title', 'btn-crop-cancel', 'btn-crop-apply',
+        'gallery-stats-title', 'stats-models-title', 'stats-extras-title', 'stats-cost-title', 'stats-approx-cost',
+        'lbl-model-suggestion', 'desc-model-suggestion'
     ];
 
     ids.forEach(id => {
@@ -847,106 +880,67 @@ function updateLanguage(lang) {
         else if (item.type === 'adv') item.el.textContent = t.advLabel;
     }
 
-    safelySetText('txt-fast', t.featFast);
-    safelySetText('txt-creative', t.featCreative);
-    safelySetText('txt-dense', t.featDense);
-    safelySetText('txt-movie', t.featMovie);
-    safelySetText('txt-highres', t.featHighRes);
-    safelySetText('txt-enhance', t.featEnhance);
-    safelySetText('txt-filter', t.lblFilter);
-    safelySetText('txt-delete-all', t.btnDelAll);
 
-    safelySetText('lbl-solid-colors', t.lblSolid);
-    safelySetText('lbl-gradient-themes', t.lblGradient);
+    var idsToSetTextSafely = [
+        ["txt-fast", t.featFast], ["txt-creative", t.featCreative], ["txt-dense", t.featDense], ["txt-movie", t.featMovie], ["txt-highres", t.featHighRes], 
+        ["txt-enhance", t.featEnhance], ["txt-filter", t.lblFilter], ["txt-delete-all", t.btnDelAll], ["lbl-solid-colors", t.lblSolid], 
+        ["lbl-gradient-themes", t.lblGradient], ["desc-perf-mode", t.lblPerfDesc], ["desc-silent-mode", t.lblSilentDesc], ["desc-adv-mode", t.lblAdvDesc],
+        ["desc-auto-mode", t.lblAutoDesc], ["desc-perf-monitor", t.lblPerfMonDesc], ["desc-prompt-preview", t.lblPromptPreviewDesc],
+        ["opt-preset-all", t.presetFilterAll], ["opt-preset-safe", t.presetFilterSafe], ["opt-preset-18plus", t.presetFilterPlus18],
+        ["prompt-preview-title", t.promptPreviewTitle], ["lbl-data-mgmt", t.lblData], ["desc-data-mgmt", t.lblDataDesc], ["desc-skip-intro", t.lblSkipIntroDesc],
+        ["desc-power-saver", t.lblPowerSaverDesc],
+        ["lbl-crop-title", t.editorCropLabel], ["btn-crop-cancel", t.editorCropCancel], ["btn-crop-apply", t.editorCropApply],
+        ["gallery-stats-title", t.galleryStatsTitle], ["stats-models-title", t.statsModelsTitle], ["stats-extras-title", t.statsExtrasTitle], ["stats-cost-title", t.statsCostTitle],
+        ["desc-model-suggestion", t.modelSuggestionDesc]
+    ]
+    
+    idsToSetTextSafely.forEach(([id, text]) => {
+        safelySetText(id, text);
+    });
 
-    safelySetSvgText('lbl-perf-mode', t.lblPerf);
-    safelySetText('desc-perf-mode', t.lblPerfDesc);
 
-    safelySetSvgText('lbl-silent-mode', t.lblSilent);
-    safelySetText('desc-silent-mode', t.lblSilentDesc);
+    var idsToSetSvgTextSafely = [
+        ["lbl-perf-mode", t.lblPerf], ["lbl-silent-mode", t.lblSilent], ["lbl-adv-mode", t.lblAdv],
+        ["lbl-auto-mode", t.lblAuto], ["lbl-perf-monitor", t.lblPerfMon], ["lbl-prompt-preview", t.lblPromptPreview],
+        ["lbl-skip-intro", t.lblSkipIntro], ["lbl-power-saver", t.lblPowerSaver],
+        ["lbl-model-suggestion", t.modelSuggestionLabel]
+    ]
+    
+    idsToSetSvgTextSafely.forEach(([id, text]) => {
+        safelySetSvgText(id, text);
+    });
 
-    safelySetSvgText('lbl-adv-mode', t.lblAdv);
-    safelySetText('desc-adv-mode', t.lblAdvDesc);
-
-    safelySetText('opt-preset-all', t.presetFilterAll);
-    safelySetText('opt-preset-safe', t.presetFilterSafe);
-    safelySetText('opt-preset-18plus', t.presetFilterPlus18);
     if (cache['btn-preset-filter']) cache['btn-preset-filter'].title = t.btnPresetFilterTitle;
     
+    var idsToSetQueryText = [
+        ["#gallery-modal .gallery-title", t.galleryTitle], ["#showcase-modal .gallery-title", t.showcaseTitle], ["#settings-modal h3", t.settingsTitle],
+        ["#confirm-modal h3", t.deleteTitle], ["#confirm-modal p", t.deleteDesc], ["#btn-cancel", t.btnCancel], ["#btn-confirm", t.btnConfirm],
+        ["#delete-all-modal h3", t.deleteAllTitle], ["#delete-all-modal p", t.deleteAllDesc], ["#btn-cancel-all", t.btnCancel], ["#btn-confirm-all", t.btnConfirmAll],
+        ["#hard-reset-modal h3", t.resetTitle], ["#hard-reset-modal p", t.resetDesc], ["#btn-cancel-reset", t.btnCancel],
+        ["#btn-confirm-reset", t.btnConfirmReset], ["#img2prompt-modal h3", t.img2promptTitle], ["#img2prompt-modal p", t.img2promptDesc],
+        ["#upload-placeholder span", t.btnUpload], ["#btn-img2prompt-cancel", t.btnCancel],
+        ["#prompt-history-title", t.recentPrompts], ["#clear-history-btn", t.clearHistory],
+        ["#history-clear-modal h3", t.historyClearTitle], ["#history-clear-modal p", t.historyClearDesc],
+        ["#btn-history-cancel", t.btnCancel], ["#btn-history-confirm", t.btnYesClear], ["#wand-modal h3", t.wandTitle],
+        ["#btn-wand-cancel", t.btnKeepOriginal], ["#btn-wand-confirm", t.btnApplyChanges],
+        ["#random-prompt-modal-title", t.randomPromptTitle], ["#random-prompt-subtitle", t.randomPromptSubtitle],
+        ["#btn-random-cancel", t.btnKeepOriginal], ["#btn-random-apply", t.btnRandomApply],
+        ["#btn-close-settings", t.btnClose], ["#share-title", t.shareTitle], ["#share-desc", t.shareDesc],
+        ["#txt-share-view", t.btnShareView]
+    ]
+    
+    idsToSetQueryText.forEach(([id, text]) => {
+        setQueryText(id, text);
+    });
 
-    safelySetSvgText('lbl-auto-mode', t.lblAuto);
-    safelySetText('desc-auto-mode', t.lblAutoDesc);
-
-    safelySetSvgText('lbl-perf-monitor', t.lblPerfMon);
-    safelySetText('desc-perf-monitor', t.lblPerfMonDesc);
-
-    safelySetSvgText('lbl-prompt-preview', t.lblPromptPreview);
-    safelySetText('desc-prompt-preview', t.lblPromptPreviewDesc);
-    safelySetText('prompt-preview-title', t.promptPreviewTitle);
-
-    safelySetText('lbl-data-mgmt', t.lblData);
-    safelySetText('desc-data-mgmt', t.lblDataDesc);
-
-    safelySetSvgText('lbl-skip-intro', t.lblSkipIntro);
-    safelySetText('desc-skip-intro', t.lblSkipIntroDesc);
-
-    safelySetSvgText('lbl-power-saver', t.lblPowerSaver);
-    safelySetText('desc-power-saver', t.lblPowerSaverDesc);
-
-    setQueryText('#gallery-modal .gallery-title', t.galleryTitle);
-    setQueryText('#showcase-modal .gallery-title', t.showcaseTitle);
-    setQueryText('#settings-modal h3', t.settingsTitle);
-
-    setQueryText('#confirm-modal h3', t.deleteTitle);
-    setQueryText('#confirm-modal p', t.deleteDesc);
-    setQueryText('#btn-cancel', t.btnCancel);
-    setQueryText('#btn-confirm', t.btnConfirm);
-
-    setQueryText('#delete-all-modal h3', t.deleteAllTitle);
-    setQueryText('#delete-all-modal p', t.deleteAllDesc);
-    setQueryText('#btn-cancel-all', t.btnCancel);
-    setQueryText('#btn-confirm-all', t.btnConfirmAll);
-
-    setQueryText('#hard-reset-modal h3', t.resetTitle);
-    setQueryText('#hard-reset-modal p', t.resetDesc);
-    setQueryText('#btn-cancel-reset', t.btnCancel);
-    setQueryText('#btn-confirm-reset', t.btnConfirmReset);
-
-    setQueryText('#img2prompt-modal h3', t.img2promptTitle);
-    setQueryText('#img2prompt-modal p', t.img2promptDesc);
-    setQueryText('#upload-placeholder span', t.btnUpload);
-    setQueryText('#btn-img2prompt-cancel', t.btnCancel);
-
-    setQueryText('#prompt-history-title', t.recentPrompts);
-    setQueryText('#clear-history-btn', t.clearHistory);
-
-    setQueryText('#history-clear-modal h3', t.historyClearTitle);
-    setQueryText('#history-clear-modal p', t.historyClearDesc);
-    setQueryText('#btn-history-cancel', t.btnCancel);
-    setQueryText('#btn-history-confirm', t.btnYesClear);
-
-    setQueryText('#wand-modal h3', t.wandTitle);
     const origTitle = document.querySelector('.diff-box.original h6');
     if (origTitle) origTitle.textContent = t.wandOriginal;
     const enhTitle = document.querySelector('.diff-box.enhanced h6');
     if (enhTitle) enhTitle.textContent = t.wandEnhanced;
 
-    setQueryText('#btn-wand-cancel', t.btnKeepOriginal);
-    setQueryText('#btn-wand-confirm', t.btnApplyChanges);
-    
-    setQueryText('#random-prompt-modal-title', t.randomPromptTitle);
-    setQueryText('#random-prompt-subtitle', t.randomPromptSubtitle);
-    setQueryText('#btn-random-cancel', t.btnKeepOriginal);
-    setQueryText('#btn-random-apply', t.btnRandomApply);
-
     const resetDataBtn = cache['btn-hard-reset'];
     if (resetDataBtn) resetDataBtn.textContent = t.btnResetData;
 
-    setQueryText('#btn-close-settings', t.btnClose);
-
-    setQueryText('#share-title', t.shareTitle);
-    setQueryText('#share-desc', t.shareDesc);
-    setQueryText('#txt-share-view', t.btnShareView);
     const copyBtn = cache['btn-share-copy'];
     if (copyBtn && !copyBtn.disabled) copyBtn.textContent = t.btnShareCopy;
     const genPromptBtn = cache['btn-img2prompt-generate'];
@@ -954,8 +948,6 @@ function updateLanguage(lang) {
         const span = genPromptBtn.querySelector('span');
         if (span) span.textContent = t.btnGenPrompt;
     }
-
-    setQueryText('#btn-close-settings', t.btnClose);
 
     const settingsLabels = document.querySelectorAll('.settings-content label'); 
     settingsLabels.forEach(l => {

@@ -74,6 +74,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const clearBtn = document.getElementById('editor-clear-btn');
     const placeholder = document.getElementById('editor-upload-placeholder');
     
+    let editorCropper = null;
+    const cropModal = document.getElementById('crop-modal');
+    const cropImageTarget = document.getElementById('crop-image-target');
+    const btnCropCancel = document.getElementById('btn-crop-cancel');
+    const btnCropApply = document.getElementById('btn-crop-apply');
+    
     if (uploadArea && fileInput) {
         uploadArea.addEventListener('click', (e) => {
              if (e.target.closest('#editor-clear-btn') || e.target.closest('#editor-moderation-btn')) return;
@@ -136,24 +142,71 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleEditorFile(file) {
         if (!file.type.startsWith('image/')) {
-            alert('Please upload an image file.');
+            alert(typeof currentLang !== 'undefined' && currentLang === 'tr' ? 'Lütfen bir resim dosyası yükleyin.' : 'Please upload an image file.');
             return;
         }
 
         const reader = new FileReader();
         reader.onload = (e) => {
-            editorSelectedFile = e.target.result;
-            previewImg.src = editorSelectedFile;
-            previewImg.classList.remove('hidden');
-            clearBtn.classList.remove('hidden');
-            placeholder.style.display = 'none';
+            if (editorCropper) {
+                editorCropper.destroy();
+                editorCropper = null;
+            }
             
-            if (typeof playSuccessSound === 'function') playSuccessSound();
-            showNotification(typeof currentLang !== 'undefined' && currentLang === 'tr' ? translations.tr.msgImgUploadSuccess : translations.en.msgImgUploadSuccess, 'success');
-            
-            if (typeof checkEditorFormReady === 'function') checkEditorFormReady();
+            cropImageTarget.onload = () => {
+                cropModal.classList.add('active');
+                editorCropper = new Cropper(cropImageTarget, {
+                    viewMode: 1,
+                    autoCropArea: 1,
+                    background: false,
+                    responsive: true,
+                    restore: false
+                });
+                cropImageTarget.onload = null;
+            };
+            cropImageTarget.src = e.target.result;
         };
         reader.readAsDataURL(file);
+    }
+
+    if (btnCropCancel) {
+        btnCropCancel.addEventListener('click', () => {
+            if (editorCropper) {
+                editorCropper.destroy();
+                editorCropper = null;
+            }
+            cropImageTarget.src = '';
+            cropModal.classList.remove('active');
+            fileInput.value = '';
+        });
+    }
+
+    if (btnCropApply) {
+        btnCropApply.addEventListener('click', () => {
+            if (!editorCropper) return;
+            
+            const canvas = editorCropper.getCroppedCanvas();
+            if (canvas) {
+                editorSelectedFile = canvas.toDataURL('image/jpeg', 0.9);
+                previewImg.src = editorSelectedFile;
+                previewImg.classList.remove('hidden');
+                clearBtn.classList.remove('hidden');
+                placeholder.style.display = 'none';
+                
+                if (typeof playSuccessSound === 'function') playSuccessSound();
+                showNotification(typeof currentLang !== 'undefined' && currentLang === 'tr' ? translations.tr.msgImgUploadSuccess : translations.en.msgImgUploadSuccess, 'success');
+                
+                if (typeof checkEditorFormReady === 'function') checkEditorFormReady();
+            }
+            
+            if (editorCropper) {
+                editorCropper.destroy();
+                editorCropper = null;
+            }
+            cropImageTarget.src = '';
+            cropModal.classList.remove('active');
+            fileInput.value = '';
+        });
     }
 
     const modBtn = document.getElementById('editor-moderation-btn');
@@ -338,7 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let currentMode = localStorage.getItem('editorViewMode');
         if (!viewModes.includes(currentMode)) {
             currentMode = 'default';
-            if (localStorage.getItem('editorViewMode') === 'list') { // legacy check
+            if (localStorage.getItem('editorViewMode') === 'list') {
                currentMode = 'default';
             }
         }
@@ -493,6 +546,10 @@ async function generateVariation() {
                 } else {
                     showNotification(currentLang == "tr" ? translations.tr.msgModMediumLowReq : translations.en.msgModMediumLowReq, 'error');
                 }
+                return;
+            }
+            if (data.status == 401) {
+                showNotification(currentLang == "tr" ? translations.tr.invalidApiKey : translations.en.invalidApiKey, "error");
                 return;
             }
             if (data.status == 423) {

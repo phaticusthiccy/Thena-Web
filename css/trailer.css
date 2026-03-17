@@ -835,7 +835,7 @@ body {
 
 .stats-bar {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 40px;
     padding: 100px 40px;
     max-width: 1200px;

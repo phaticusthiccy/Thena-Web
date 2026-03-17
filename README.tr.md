@@ -164,6 +164,14 @@ Son teknoloji **Görüntü Oluşturma (Image Generation)** motorunu, interaktif 
         <td><a href="src/settings.webp"><img src="src/settings.webp" alt="Settings" /></a></td>
       </tr>
     </table>
+    <table>
+      <tr>
+        <td align="center"><b>Galeri İstatistikleri</b></td>
+      </tr>
+      <tr>
+        <td><a href="src/gallery_stats.webp"><img src="src/gallery_stats.webp" alt="Galeri İstatistikleri" /></a></td>
+      </tr>
+    </table>
   </details>
 </div>
 

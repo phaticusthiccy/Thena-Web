@@ -153,7 +153,7 @@ async function openCharacterChat(characterData) {
                         if (initialLoadingNotif) initialLoadingNotif();
                         await pollImageGeneration(data.image, apiKey, 'img-gen-loading-bubble');
                     } else {
-                        const errorMessage = data.error || data.message || 'Image generation failed';
+                        const errorMessage = data.error || data.message || data.content || 'Image generation failed';
                         throw new Error(errorMessage);
                     }
 
@@ -981,6 +981,16 @@ async function sendMessage() {
             contentDiv.innerHTML = `<span style="color:#ff4444;">Error: ${response.statusText}</span>`;
             fullResponse = "Error: " + response.statusText;
         } else {
+
+            try {
+                var chatData = await response.json();
+                if (chatData.status == 401) {
+                    showNotification(currentLang == "tr" ? translations.tr.invalidApiKey : translations.en.invalidApiKey, "error");
+                    assistantBubble.remove();
+                    return;
+                }
+            } catch {}
+
             const reader = response.body.getReader();
             const decoder = new TextDecoder("utf-8");
             let buffer = "";

@@ -16,7 +16,7 @@
             feat2Title: 'Characters that <span class="text-gradient-green">remember you.</span>',
             feat2Desc: 'Engage with deeply crafted AI personas. Dynamic system prompts adapt to your profile — name, age, personality. Every conversation is unique, every story unfolds differently.',
             specDeepLore: '🎭 Deep Lore', specStoryAwareness: '🧠 Story Awareness', specUserProfiles: '👤 User Profiles', specChatImageGen: '🖼️ Image Generation', specContentMod: '🔒 Content Moderation',
-            statModels: 'AI Models', statChars: 'AI Characters', statPresets: 'Editor Presets', statCreativity: 'Creativity',
+            statModels: 'AI Models', statChars: 'AI Characters', statPresets: 'Editor Presets', statTotalUsage: 'Total Artworks', statCreativity: 'Creativity',
             feat3Badge: 'Image Editor',
             feat3Title: 'Edit like a <span class="text-gradient-orange">professional.</span>',
             feat3Desc: 'Instagram-like filters, fine-tuning controls, crop & resize — all within the browser. Apply presets with a tap, annotate with markup tools, and prepare your art for any platform.',
@@ -53,7 +53,7 @@
             feat2Title: 'Sizi <span class="text-gradient-green">hatırlayan</span> karakterler.',
             feat2Desc: 'Derinlemesine hazırlanmış AI karakterleriyle etkileşime geçin. Dinamik sistem promptları profilinize uyum sağlar — isim, yaş, kişilik. Her sohbet benzersiz, her hikaye farklı gelişir.',
             specDeepLore: '🎭 Derin Hikaye', specStoryAwareness: '🧠 Hikaye Farkındalığı', specUserProfiles: '👤 Kullanıcı Profilleri', specChatImageGen: '🖼️ Görsel Üretimi', specContentMod: '🔒 İçerik Moderasyonu',
-            statModels: 'AI Modeli', statChars: 'AI Karakter', statPresets: 'Editör Ön Ayarı', statCreativity: 'Yaratıcılık',
+            statModels: 'AI Modeli', statChars: 'AI Karakter', statPresets: 'Editör Ön Ayarı', statTotalUsage: 'Toplam Görsel', statCreativity: 'Yaratıcılık',
             feat3Badge: 'Görsel Düzenleyici',
             feat3Title: 'Bir <span class="text-gradient-orange">profesyonel</span> gibi düzenle.',
             feat3Desc: 'Instagram tarzı filtreler, ince ayar kontrolleri, kırpma ve yeniden boyutlandırma — hepsi tarayıcı içinde. Tek dokunuşla ön ayar uygulayın, işaretleme araçlarıyla açıklama ekleyin.',
@@ -219,5 +219,24 @@
             heroContent.style.transform = `translateY(${progress * 80}px) scale(${1 - progress * 0.1})`;
         }
     }, { passive: true });
+
+    const fetchTotalUsage = async () => {
+        try {
+            const response = await fetch('https://create.thena.workers.dev/totalUsage');
+            if (response.ok) {
+                const data = await response.text();
+                const count = parseInt(data.trim());
+                if (!isNaN(count)) {
+                    const el = document.getElementById('total-usage-counter');
+                    if (el) {
+                        el.setAttribute('data-target', count);
+                    }
+                }
+            }
+        } catch (err) {
+            console.error('Error fetching total usage:', err);
+        }
+    };
+    fetchTotalUsage();
 
 })();

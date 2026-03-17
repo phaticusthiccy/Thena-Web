@@ -36,6 +36,12 @@ const modelSpecs = {
     "524ks ffs6g8 091h8h 660a5 1dn55 1000": {
         usedTechniques: ["General", "NSFW"]
     },
+    "176ks dd131 81927 a1165 p00183 6000": {
+        usedTechniques: ["NSFW", "Photorealism"]
+    },
+    "7367ab 279dbf 417a8 51fe3 5050": {
+        usedTechniques: ["NSFW", "Photorealism"]
+    },
     "81ggz 7j661 66281 yy161 1f4f4 21143": {
         usedTechniques: ["General"]
     }
@@ -86,6 +92,7 @@ function renderModels(modelsToRender) {
                         <line x1="12" y1="8" x2="12.01" y2="8"></line>
                     </svg>
                 </div>
+                ${isHot ? `<div class="flag-item bg-exclusive"><svg class="flag-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 8c-.83 0-1.5-.67-1.5-1.5S4.67 5 5.5 5 7 5.67 7 6.5 6.33 8 5.5 8z"/></svg><span class="flag-text line-one">${translations[currentLang].exclusiveLabel}</span></div>` : ''}
                 <div class="model-name">${model.model}</div>
             </div>
         `;
@@ -97,78 +104,10 @@ function renderModels(modelsToRender) {
         const modelId = card.dataset.modelId;
         if (typeof selectedModel !== 'undefined' && selectedModel === modelId) {
             card.classList.add('active');
-            createConfetti(card);
+            if (typeof createConfetti === 'function') createConfetti(card);
         }
         const previewImage = card.dataset.preview;
         if (previewImage) card.style.filter = 'saturate(0.3)';
-        const infoBtn = card.querySelector('.model-info-icon-wrapper');
-        infoBtn.addEventListener('click', (ev) => {
-            if (typeof playInformationSound !== 'undefined') playInformationSound();
-            ev.stopPropagation();
-            const featModal = document.getElementById('feature-info-modal');
-            const featModalTitle = document.getElementById('feat-modal-title');
-            const featModalDesc = document.getElementById('feat-modal-desc');
-            const metricIntel = document.getElementById('metric-intelligence');
-            const metricQual = document.getElementById('metric-quality');
-            const metricSpeed = document.getElementById('metric-speed');
-            
-            const modelName = card.querySelector('.model-name').innerText;
-            
-            const currentModelData = currentFetchedModels.find(m => m.id === modelId) || models.find(m => m.id === modelId);
-            
-            let desc = currentModelData ? currentModelData.description : "No description.";
-            
-            if (typeof currentLang !== 'undefined' && currentLang === 'tr') {
-                if (typeof modelTranslationsTR !== 'undefined' && modelTranslationsTR[modelId]) {
-                    desc = modelTranslationsTR[modelId];
-                } else if (desc === "No description." || !desc) {
-                    desc = "Açıklama bulunamadı.";
-                }
-            }
-
-            featModalTitle.innerHTML = `🔮 ${modelName}`;
-            featModalDesc.textContent = desc;
-            
-            let stats = MODEL_STATS[modelId] || MODEL_STATS["default"];
-                
-            metricIntel.innerHTML = createDots(stats.intel, 'intelligence');
-            metricQual.innerHTML = createDots(stats.qual, 'quality');
-            metricSpeed.innerHTML = createDots(stats.speed, 'speed');
-            
-            featModal.classList.add('active');
-        });
-        card.addEventListener('click', async () => {
-            const clickedId = card.dataset.modelId;
-            if (selectedModel === clickedId) {
-                playModelSelectSound(false);
-                selectedModel = null;
-                localStorage.removeItem(LS_KEYS.MODEL);
-                card.classList.remove('active');
-                checkMovieFilterAvailability(null);
-                checkFastModeAvailability(null);
-                if (typeof checkExtraFeaturesAvailability === 'function') checkExtraFeaturesAvailability(null);
-                updateAdvancedSettingsConstraints(null);
-            } else {
-                playModelSelectSound(true);
-                localStorage.setItem(LS_KEYS.MODEL, clickedId);
-                document.querySelectorAll('.model-card').forEach(c => c.classList.remove('active'));
-                card.classList.add('active');
-                selectedModel = clickedId;
-                createConfetti(card);
-                checkMovieFilterAvailability(clickedId);
-                checkFastModeAvailability(clickedId);
-                if (typeof checkExtraFeaturesAvailability === 'function') checkExtraFeaturesAvailability(clickedId);
-                updateAdvancedSettingsConstraints(clickedId);
-
-                if (typeof NO_EXTRA_FEATURES_MODELS !== 'undefined' && NO_EXTRA_FEATURES_MODELS.includes(clickedId)) {
-                    if (typeof checkUltraRateLimit === 'function') {
-                        const allowed = await checkUltraRateLimit(clickedId, card);
-                        if (!allowed) return;
-                    }
-                }
-            }
-            checkFormReady();
-        });
     });
 }
 
