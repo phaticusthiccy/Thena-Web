@@ -103,7 +103,7 @@ const translations = {
         "btnShareCopied": "Copied!",
         "btnShareError": "Error",
         "msgUploading": "Uploading to server...",
-        "modelSuggestionLabel": "Model Suggestion",
+        "modelSuggestionLabel": "MODEL SUGGESTION",
         "modelSuggestionDesc": "Suggests the best model based on your prompt.",
         "msgUploadFail": "Upload failed. Please try again.",
         "btnDownload": "Download",
@@ -364,7 +364,52 @@ const translations = {
         "statsApprox": "({0} Dollars Approx)",
         "statsApproxCents": "({0} Cents Approx)",
         "statsNoModels": "No images in gallery yet.",
-        "statsNoExtras": "No extras used yet."
+        "statsNoExtras": "No extras used yet.",
+        "modelSuggestionEnabled": "Model Suggestion Enabled",
+        "modelSuggestionDisabled": "Model Suggestion Disabled",
+        "mgTitle": "Select Finetuned Model",
+        "mgRequestNewModel": "Request New Model",
+        "mgSearchPlaceholder": "Search models...",
+        "mgSortLabel": "Sort:",
+        "mgCatLabel": "Category:",
+        "mgOptDefault": "Default",
+        "mgOptNameAsc": "Name (A-Z)",
+        "mgOptNameDesc": "Name (Z-A)",
+        "mgCatAll": "All",
+        "mgNoResults": "No models found.",
+        "mgBadge": "Custom Model",
+        "mgModels": "Model Gallery",
+        "mgLblDescription": "Description",
+        "mgLblCategory": "Category",
+        "mgLblProvider": "Provider",
+        "mgLblCost": "Cost / Image",
+        "mgLblType": "Type",
+        "mgSelectBtn": "Generate with this Model",
+        "mgModelSelected": "Model selected",
+        "mgRequestTitle": "Request New Model",
+        "mgReqName": "Name",
+        "mgReqMail": "Email",
+        "mgReqTelegram": "Telegram",
+        "mgOptional": "(optional)",
+        "mgReqText": "Model Request",
+        "mgReqNamePlaceholder": "Your name",
+        "mgReqMailPlaceholder": "your@email.com",
+        "mgReqTelegramPlaceholder": "@username",
+        "mgReqTextPlaceholder": "Describe the model you want...",
+        "mgCancelText": "Cancel",
+        "mgSubmitText": "Send",
+        "mgSending": "Sending...",
+        "mgRequestSent": "Request sent successfully!",
+        "mgRequestFail": "Failed to send request. Please try again.",
+        "mgTypeBase": "Base Model",
+        "mgLblTotalUsage": "Total Generated",
+        "mgLblPerUnit": "Images per $1",
+        "mgOptPriceAsc": "Price (Low to High)",
+        "mgOptPriceDesc": "Price (High to Low)",
+        "mgOptUsageDesc": "Most Used",
+        "mgOptUsageAsc": "Least Used",
+        "mgPrevImg": "Previous Image",
+        "mgNextImg": "Next Image"
     },
     "tr": {
         "generateBtn": "Görüntü Oluştur",
@@ -470,7 +515,7 @@ const translations = {
         "btnShareCopied": "Kopyalandı!",
         "btnShareError": "Hata",
         "msgUploading": "Sunucuya yükleniyor...",
-        "modelSuggestionLabel": "Model Önerisi",
+        "modelSuggestionLabel": "MODEL ÖNERİSİ",
         "modelSuggestionDesc": "Yazdığınız prompta göre en uygun modeli önerir.",
         "msgUploadFail": "Yükleme başarısız. Tekrar deneyin.",
         "btnDownload": "İndir",
@@ -731,7 +776,52 @@ const translations = {
         "statsApprox": "(Yaklaşık {0} Lira)",
         "statsApproxCents": "(Yaklaşık {0} Kuruş)",
         "statsNoModels": "Henüz galeride görsel yok.",
-        "statsNoExtras": "Henüz ekstra kullanılmadı."
+        "statsNoExtras": "Henüz ekstra kullanılmadı.",
+        "modelSuggestionEnabled": "Model Önerisi Aktif Edildi",
+        "modelSuggestionDisabled": "Model Önerisi Deaktif Edildi",
+        "mgTitle": "İnce Ayarlı Model Seç",
+        "mgRequestNewModel": "Yeni Model İste",
+        "mgSearchPlaceholder": "Model ara...",
+        "mgSortLabel": "Sırala:",
+        "mgCatLabel": "Kategori:",
+        "mgOptDefault": "Varsayılan",
+        "mgOptNameAsc": "İsim (A-Z)",
+        "mgOptNameDesc": "İsim (Z-A)",
+        "mgCatAll": "Tümü",
+        "mgNoResults": "Model bulunamadı.",
+        "mgBadge": "Özel Model",
+        "mgLblDescription": "Açıklama",
+        "mgLblCategory": "Kategori",
+        "mgLblProvider": "Sağlayıcı",
+        "mgLblCost": "Maliyet / Görsel",
+        "mgLblType": "Tür",
+        "mgSelectBtn": "Bu Modelle Oluştur",
+        "mgModelSelected": "Model seçildi",
+        "mgRequestTitle": "Yeni Model İste",
+        "mgReqName": "İsim",
+        "mgReqMail": "E-posta",
+        "mgReqTelegram": "Telegram",
+        "mgOptional": "(opsiyonel)",
+        "mgReqText": "Model İsteği",
+        "mgReqNamePlaceholder": "Adınız",
+        "mgReqMailPlaceholder": "mail@adresiniz.com",
+        "mgReqTelegramPlaceholder": "@kullaniciadi",
+        "mgReqTextPlaceholder": "İstediğiniz modeli açıklayın...",
+        "mgCancelText": "İptal",
+        "mgSubmitText": "Gönder",
+        "mgSending": "Gönderiliyor...",
+        "mgRequestSent": "İstek başarıyla gönderildi!",
+        "mgRequestFail": "İstek gönderilemedi. Lütfen tekrar deneyin.",
+        "mgTypeBase": "Temel Model",
+        "mgLblTotalUsage": "Toplam Üretim",
+        "mgLblPerUnit": "1₺ ile Üretim",
+        "mgOptPriceAsc": "Ücret (Artan)",
+        "mgOptPriceDesc": "Ücret (Azalan)",
+        "mgOptUsageDesc": "En Çok Kullanılan",
+        "mgOptUsageAsc": "En Az Kullanılan",
+        "mgModels": "Model Galerisi",
+        "mgPrevImg": "Önceki Resim",
+        "mgNextImg": "Sonraki Resim"
     }
 };
 
@@ -1064,6 +1154,10 @@ function updateLanguage(lang) {
     if (typeof window._updateMultiSelectLanguage === 'function') {
         window._updateMultiSelectLanguage();
     }
+
+    if (typeof window.updateModelGalleryLanguage === 'function') {
+        window.updateModelGalleryLanguage();
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -1098,6 +1192,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof window.updateDataManagementLanguage === 'function') {
                 window.updateDataManagementLanguage();
             }
+
+            document.querySelectorAll('.flag-text').forEach(el => {
+                if (translations[currentLang] && translations[currentLang].exclusiveLabel) {
+                    el.textContent = translations[currentLang].exclusiveLabel;
+                }
+            });
 
             if (typeof renderCharacters === 'function' && typeof allCharacters !== 'undefined' && allCharacters.length > 0) {
                 renderCharacters(allCharacters);

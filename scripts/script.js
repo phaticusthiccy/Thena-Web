@@ -70,11 +70,12 @@ const modelTranslationsTR = {
     "911ks fdg6g8 66h8h8 900a5 zxb4a5 9000": "Müstehçen veya NSFW içerik oluşturmak için mutlak doğrulukta bir model. Thena Movie temel modeline dayanmaktadır. İnsanların ve sahnelerin gerçekçi görüntülerini oluşturabilir.",
     "524ks ffs6g8 091h8h 660a5 1dn55 1000": "Yeni difüzyon mimarisi ile oluşturulan 7. versiyon. Her resim türünde başarılı sonuçlar çıkaran, güçlü ve aşırı hızlı model.",
     "81ggz 7j661 66281 yy161 1f4f4 21143": "Thena'nın en güçlü gürültü ile akıl yürütme modeli. Saf güç ve benzersiz kalitenin birleşimi.",
-    "524ks ffs6g8 091h8h 660a5 1dn55 1000": "Fotorealizmin zirvesi. Her detayı kusursuz bir hassasiyetle yakalayan Thena Portraits, istemlerinizi yüksek kaliteli başyapıtlara dönüştürür.",
-    "7367ab 279dbf 417a8 51fe3 5050": "Yüksek çözünürlüklü, sadece açık içerikler için titizlikle tasarlanmış bir model. Yükske netlikte tutarlı görüntüler üretebilir."
+    "176ks dd131 81927 a1165 p00183 6000": "Fotorealizmin zirvesi. Her detayı kusursuz bir hassasiyetle yakalayan Thena Portraits, istemlerinizi yüksek kaliteli başyapıtlara dönüştürür.",
+    "7367ab 279dbf 417a8 51fe3 5050": "Yüksek çözünürlüklü, sadece açık içerikler için titizlikle tasarlanmış bir model. Yükske netlikte tutarlı görüntüler üretebilir.",
+    "3fb0b43e-ef78-44cf-82da-c3e0d6e0a5a7": "Thena Movie'den baz alınarak üretilen sinematik anime modeli. Güçlü kontrast değerleri ve dolgun renkleriyle anime sinematikleri oluşturun."
 };
 const UNSUPPORTED_FAST_MODELS = ["551ks 8g6g8 16gga 1h8h8 6b4a5 5060"];
-const MOVIE_FILTER_SUPPORTED_MODELS = ["8gg12 61812 6628 19729 6b4a5 5060", "551ks 8g6g8 16gga 1h8h8 6b4a5 5060", "771ks 71g6g8 hlh8h8 6b4a5 77b4a5 5060"];
+const MOVIE_FILTER_SUPPORTED_MODELS = ["8gg12 61812 6628 19729 6b4a5 5060", "551ks 8g6g8 16gga 1h8h8 6b4a5 5060", "771ks 71g6g8 hlh8h8 6b4a5 77b4a5 5060", "3fb0b43e-ef78-44cf-82da-c3e0d6e0a5a7"];
 const NO_EXTRA_FEATURES_MODELS = ["81ggz 7j661 66281 yy161 1f4f4 21143"];
 const MODEL_STATS = {
     // Thena Movie
@@ -101,6 +102,8 @@ const MODEL_STATS = {
     "81ggz 7j661 66281 yy161 1f4f4 21143": { intel: 5, qual: 5, speed: 5 },
     // Thena Portraits
     "176ks dd131 81927 a1165 p00183 6000": { intel: 3, qual: 4, speed: 4 },
+    // Thena Alchemy
+    "3fb0b43e-ef78-44cf-82da-c3e0d6e0a5a7": { intel: 3, qual: 4, speed: 2 },
     // Thena Florence
     "7367ab 279dbf 417a8 51fe3 5050": { intel: 3, qual: 4, speed: 3 },
     // Default 
@@ -1571,14 +1574,6 @@ document.addEventListener('DOMContentLoaded', () => {
         models = data;
         models.forEach(model => {
             var imgUrl = model.examples?.portraits?.[0];
-
-            if (model.id == "754019 b5df2e e606f1 a7600b 96b0c8 94") imgUrl = "https://api.apidog.com/api/v1/projects/743905/resources/369883/image-preview"
-            if (model.id == "8gg12 61812 6628 19729 6b4a5 5060") imgUrl = "https://api.apidog.com/api/v1/projects/743905/resources/369760/image-preview"
-            if (model.id == "77h621 yy5271 gga166 hhau22 882hha 1a 3090") imgUrl = "https://api.apidog.com/api/v1/projects/743905/resources/369761/image-preview"
-            if (model.id == "5g72h1 y661hp k771ns 33bb21 77bagl 6b 3090") imgUrl = "https://api.apidog.com/api/v1/projects/743905/resources/369762/image-preview"
-            if (model.id == "551ks 8g6g8 16gga 1h8h8 6b4a5 5060") imgUrl = "https://api.apidog.com/api/v1/projects/743905/resources/369763/image-preview"
-            if (model.id == "6781x 66189 00m162 16g61 00y71 6000") imgUrl = "https://api.apidog.com/api/v1/projects/743905/resources/370236/image-preview"
-
             if (imgUrl) {
                 const img = new Image();
                 img.src = imgUrl;
@@ -1620,12 +1615,6 @@ async function loadModels() {
     const modelSelector = document.getElementById('model-selector');
     modelSelector.innerHTML = models.map(model => {
         var previewImage = model.examples?.portraits?.[0] || '';
-        if (model.id == "754019 b5df2e e606f1 a7600b 96b0c8 94") previewImage = "https://api.apidog.com/api/v1/projects/743905/resources/369883/image-preview"
-        if (model.id == "8gg12 61812 6628 19729 6b4a5 5060") previewImage = "https://api.apidog.com/api/v1/projects/743905/resources/369760/image-preview"
-        if (model.id == "77h621 yy5271 gga166 hhau22 882hha 1a 3090") previewImage = "https://api.apidog.com/api/v1/projects/743905/resources/369761/image-preview"
-        if (model.id == "5g72h1 y661hp k771ns 33bb21 77bagl 6b 3090") previewImage = "https://api.apidog.com/api/v1/projects/743905/resources/369762/image-preview"
-        if (model.id == "551ks 8g6g8 16gga 1h8h8 6b4a5 5060") previewImage = "https://api.apidog.com/api/v1/projects/743905/resources/369763/image-preview"
-        if (model.id == "6781x 66189 00m162 16g61 00y71 6000") previewImage = "https://api.apidog.com/api/v1/projects/743905/resources/370236/image-preview"
         const isHot = typeof HOT_MODELS !== 'undefined' && HOT_MODELS.includes(model.id);
 
         return `
@@ -1712,6 +1701,7 @@ async function loadModels() {
                     playModelSelectSound(true);
                     localStorage.setItem(LS_KEYS.MODEL, clickedId);
                     document.querySelectorAll('.model-card').forEach(c => c.classList.remove('active'));
+                    card.classList.remove('animate-in', 'animate-filter-in');
                     card.classList.add('active');
                     selectedModel = clickedId;
                     if (typeof createConfetti === 'function') createConfetti(card);
@@ -5956,6 +5946,7 @@ async function loadGalleryStatistics() {
             "Thena Bloomlight": "thenaBloomlight",
             "Thena Portraits": "thenaPortraits",
             "Thena Florence": "thenaFlorence",
+            "Thena Alchemy": "thenaAlchemy",
             "Image Editor": "imageEditor"
         };
         
@@ -6034,3 +6025,45 @@ async function loadGalleryStatistics() {
     } catch(e) {
     }
 }
+
+const modalScrollManager = {
+    scrollY: 0,
+    locked: false,
+    lock() {
+        if (this.locked) return;
+        this.scrollY = window.scrollY || document.documentElement.scrollTop;
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${this.scrollY}px`;
+        document.body.style.width = '100%';
+        document.body.style.overflowY = 'scroll';
+        this.locked = true;
+    },
+    unlock() {
+        if (!this.locked) return;
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        document.body.style.overflowY = '';
+        window.scrollTo(0, this.scrollY);
+        this.locked = false;
+    }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    const observer = new MutationObserver(() => {
+        const hasOpenModal = document.querySelector('.mg-overlay.active, .feature-modal.active, .settings-modal.active, .gallery-modal.active, .modal-overlay.active, .chat-screen-modal.active, #character-details-modal.active, #confirm-dialog.active');
+        
+        if (hasOpenModal) {
+            modalScrollManager.lock();
+        } else {
+            modalScrollManager.unlock();
+        }
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['class']
+    });
+});

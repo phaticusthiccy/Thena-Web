@@ -25,7 +25,9 @@ const ASSETS_TO_CACHE = [
     './scripts/trailer.js',
     './css/trailer.css',
     './scripts/powerSaver.js',
-    './scripts/modelSuggestion.js'
+    './scripts/modelSuggestion.js',
+    './scripts/modelGallery.js',
+    './css/modelGallery.css'
 ];
 
 self.addEventListener('install', (event) => {

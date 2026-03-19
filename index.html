@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/editor-search.css">
     <link rel="stylesheet" href="css/prompt-preview.css">
+    <link rel="stylesheet" href="css/model-gallery.css">
     <script src="https://telegram.org/js/telegram-web-app.js?59"></script>
 </head>
 
@@ -449,7 +450,6 @@
                             </svg>
                         </button>
                         <div class="presets-container" id="presets-container">
-                            <!-- Presets will be injected here -->
                             <div class="loading-presets" id="txt-editor-loading-presets">Loading presets...</div>
                         </div>
                         <button class="nav-arrow right" id="preset-scroll-right" aria-label="Scroll Right">
@@ -527,6 +527,12 @@
                             <polyline points="19 12 12 19 5 12"></polyline>
                         </svg>
                         <span id="txt-sort-model">Default</span>
+                    </button>
+                    <button id="btn-open-model-gallery" class="tiny-action-btn" title="Search Models">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
                     </button>
                     <div id="model-filters" class="model-filter-container">
                         <button class="filter-chip active" data-filter="all" id="txt-filter-chip-all">All</button>
@@ -948,17 +954,6 @@
                     <div class="app-card-title" id="txt-app-gen-title">AI Image Gen</div>
                     <div class="app-status" id="txt-app-gen-status">Active</div>
                 </div>
-
-                <div class="app-card" id="btn-goto-chat">
-                    <div class="app-card-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-                        </svg>
-                    </div>
-                    <div class="app-card-title" id="txt-app-chat-title">AI Chat Bots</div>
-                    <div class="app-status" id="txt-app-chat-status">Start</div>
-                </div>
-
                 <div class="app-card" id="btn-goto-editor">
                     <div class="app-card-icon">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -968,6 +963,15 @@
                     </div>
                     <div class="app-card-title" id="txt-app-editor-title">Image Editor</div>
                     <div class="app-status" id="txt-app-editor-status">Start</div>
+                </div>
+                <div class="app-card" id="btn-goto-chat">
+                    <div class="app-card-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                        </svg>
+                    </div>
+                    <div class="app-card-title" id="txt-app-chat-title">AI Chat Bots</div>
+                    <div class="app-status" id="txt-app-chat-status">Start</div>
                 </div>
             </div>
 
@@ -1728,7 +1732,7 @@
     </div>
 
     <div id="gallery-stats-modal" class="modal-overlay">
-        <div class="modal-box gallery-stats-content" style="max-width: 500px; width: 90%; max-height: 80vh; display: flex; flex-direction: column; background: #151515; border: 1px solid #333; padding: 25px; border-radius: 16px;">
+        <div class="modal-box gallery-stats-content" style="max-width: 500px; width: 90%; max-height: 90vh; display: flex; flex-direction: column; background: #151515; border: 1px solid #333; padding: 25px; border-radius: 16px;">
             <button id="close-gallery-stats" class="close-btn" style="position: absolute; top: 15px; right: 15px; color: #aaa; background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button>
             <h3 id="gallery-stats-title" style="margin-bottom: 20px; color: #fff; border-bottom: 1px solid #333; padding-bottom: 10px;">Gallery Statistics</h3>
             
@@ -1831,5 +1835,163 @@
             </div>
         </div>
     </div>
+
+    <div id="model-gallery-modal" class="mg-overlay">
+        <div class="mg-container">
+            <div class="mg-header">
+                <h2 id="mg-title">Select Finetuned Model</h2>
+                <button id="close-model-gallery" class="mg-close-btn" aria-label="Close">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="mg-toolbar">
+                <button id="btn-request-new-model" class="mg-request-btn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span id="mg-request-btn-text">Request New Model</span>
+                </button>
+                <div class="mg-search-wrapper">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mg-search-icon">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="mg-search-input" class="mg-search-input" placeholder="Search models...">
+                </div>
+                <div class="mg-filters">
+                    <div class="mg-filter-group">
+                        <label id="mg-sort-label">Sort:</label>
+                        <select id="mg-sort-select" class="mg-select">
+                            <option value="default" id="mg-opt-default">Default</option>
+                            <option value="name-asc" id="mg-opt-name-asc">Name (A-Z)</option>
+                            <option value="name-desc" id="mg-opt-name-desc">Name (Z-A)</option>
+                            <option value="price-asc" id="mg-opt-price-asc">Price (Low to High)</option>
+                            <option value="price-desc" id="mg-opt-price-desc">Price (High to Low)</option>
+                            <option value="usage-desc" id="mg-opt-usage-desc">Most Used</option>
+                            <option value="usage-asc" id="mg-opt-usage-asc">Least Used</option>
+                        </select>
+                    </div>
+                    <div class="mg-filter-group">
+                        <label id="mg-cat-label">Category:</label>
+                        <select id="mg-cat-select" class="mg-select">
+                            <option value="all" id="mg-opt-all-cats">All</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div id="mg-grid" class="mg-grid custom-scrollbar">
+                <div class="mg-loading-spinner">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="model-detail-panel" class="mg-overlay">
+        <div class="mg-detail-container">
+            <button id="close-model-detail" class="mg-close-btn" aria-label="Close">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div class="mg-detail-image-col">
+                <button id="mg-detail-prev" class="mg-nav-btn prev" aria-label="Previous Image">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <img id="mg-detail-img" src="" alt="" class="mg-detail-img">
+                <button id="mg-detail-next" class="mg-nav-btn next" aria-label="Next Image">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+            </div>
+            <div class="mg-detail-info-col">
+                <div class="mg-detail-badge" id="mg-detail-badge">Finetuned Model</div>
+                <h2 id="mg-detail-name" class="mg-detail-name"></h2>
+                <div class="mg-detail-field">
+                    <span class="mg-detail-field-label" id="mg-lbl-description">Description</span>
+                    <p id="mg-detail-description" class="mg-detail-field-value"></p>
+                </div>
+                <div class="mg-detail-meta-grid">
+                    <div class="mg-detail-meta-item">
+                        <span class="mg-detail-meta-label" id="mg-lbl-category">Category</span>
+                        <span id="mg-detail-category" class="mg-detail-meta-value"></span>
+                    </div>
+                    <div class="mg-detail-meta-item">
+                        <span class="mg-detail-meta-label" id="mg-lbl-provider">Provider</span>
+                        <span id="mg-detail-provider" class="mg-detail-meta-value"></span>
+                    </div>
+                    <div class="mg-detail-meta-item">
+                        <span class="mg-detail-meta-label" id="mg-lbl-cost">Cost / Image</span>
+                        <span id="mg-detail-cost" class="mg-detail-meta-value"></span>
+                    </div>
+                    <div class="mg-detail-meta-item">
+                        <span class="mg-detail-meta-label" id="mg-lbl-type">Type</span>
+                        <span id="mg-detail-type" class="mg-detail-meta-value"></span>
+                    </div>
+                </div>
+                
+                <div class="mg-detail-stats-card" id="mg-detail-stats-card">
+                </div>
+
+                <button id="mg-detail-select-btn" class="mg-select-model-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 11 12 14 22 4"></polyline>
+                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                    </svg>
+                    <span id="mg-select-btn-text">Generate with this Model</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="request-model-modal" class="mg-overlay">
+        <div class="mg-request-container">
+            <button id="close-request-model" class="mg-close-btn" aria-label="Close">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <h3 id="mg-request-title" class="mg-request-heading">Request New Model</h3>
+            <form id="request-model-form" novalidate>
+                <div class="mg-form-group">
+                    <label id="mg-lbl-req-name" for="req-name">Name</label>
+                    <input type="text" id="req-name" name="name" required placeholder="Your name" autocomplete="name">
+                </div>
+                <div class="mg-form-group">
+                    <label id="mg-lbl-req-mail" for="req-mail">Email</label>
+                    <input type="email" id="req-mail" name="mail" required placeholder="your@email.com" autocomplete="email">
+                </div>
+                <div class="mg-form-group">
+                    <label id="mg-lbl-req-telegram" for="req-telegram">Telegram <span id="mg-optional-label">(optional)</span></label>
+                    <input type="text" id="req-telegram" name="telegram" placeholder="@username">
+                </div>
+                <div class="mg-form-group">
+                    <label id="mg-lbl-req-text" for="req-text">Model Request</label>
+                    <textarea id="req-text" name="requestText" rows="4" required placeholder="Describe the model you want..."></textarea>
+                </div>
+                <div class="mg-form-actions">
+                    <button type="button" id="btn-cancel-request" class="mg-btn-cancel">
+                        <span id="mg-cancel-text">Cancel</span>
+                    </button>
+                    <button type="submit" id="btn-submit-request" class="mg-btn-submit">
+                        <span id="mg-submit-text">Send</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="scripts/modelGallery.js" defer></script>
 </body>
 </html>

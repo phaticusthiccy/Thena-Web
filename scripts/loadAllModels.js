@@ -39,6 +39,9 @@ const modelSpecs = {
     "176ks dd131 81927 a1165 p00183 6000": {
         usedTechniques: ["NSFW", "Photorealism"]
     },
+    "3fb0b43e-ef78-44cf-82da-c3e0d6e0a5a7": {
+        usedTechniques: ["Anime", "Movie"]
+    },
     "7367ab 279dbf 417a8 51fe3 5050": {
         usedTechniques: ["NSFW", "Photorealism"]
     },
@@ -69,13 +72,6 @@ function renderModels(modelsToRender) {
 
     const newHtml = modelsToRender.map((model, index) => {
         let previewImage = model.examples?.portraits?.[0] || '';
-        if (model.id == "754019 b5df2e e606f1 a7600b 96b0c8 94") previewImage = "https://api.apidog.com/api/v1/projects/743905/resources/369883/image-preview";
-        if (model.id == "8gg12 61812 6628 19729 6b4a5 5060") previewImage = "https://api.apidog.com/api/v1/projects/743905/resources/369760/image-preview";
-        if (model.id == "77h621 yy5271 gga166 hhau22 882hha 1a 3090") previewImage = "https://api.apidog.com/api/v1/projects/743905/resources/369761/image-preview";
-        if (model.id == "5g72h1 y661hp k771ns 33bb21 77bagl 6b 3090") previewImage = "https://api.apidog.com/api/v1/projects/743905/resources/369762/image-preview";
-        if (model.id == "551ks 8g6g8 16gga 1h8h8 6b4a5 5060") previewImage = "https://api.apidog.com/api/v1/projects/743905/resources/369763/image-preview";
-        if (model.id == "6781x 66189 00m162 16g61 00y71 6000") previewImage = "https://api.apidog.com/api/v1/projects/743905/resources/370236/image-preview";
-
         const delay = index * 50;
         const isHot = typeof HOT_MODELS !== 'undefined' && HOT_MODELS.includes(model.id);
         
@@ -103,6 +99,7 @@ function renderModels(modelsToRender) {
     document.querySelectorAll('.model-card').forEach(card => {
         const modelId = card.dataset.modelId;
         if (typeof selectedModel !== 'undefined' && selectedModel === modelId) {
+            card.classList.remove('animate-in', 'animate-filter-in');
             card.classList.add('active');
             if (typeof createConfetti === 'function') createConfetti(card);
         }

@@ -630,7 +630,9 @@ textarea:focus {
     border-radius: 8px;
     padding: 16px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    filter: brightness(1) saturate(1);
+    box-shadow: 0 0 0 transparent;
     position: relative;
     overflow: hidden;
     min-height: 140px;
@@ -654,7 +656,7 @@ textarea:focus {
     background-position: center;
     background-image: var(--bg-image);
     opacity: 0.8;
-    transition: opacity 0.4s ease;
+    transition: opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
     z-index: 0;
     -webkit-user-select: none !important;
     -moz-user-select: none !important;
@@ -678,33 +680,55 @@ textarea:focus {
 }
 
 .model-card:hover {
-    border-color: #444;
-    filter: saturate(0.7) !important;
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-    user-select: none !important;
-    border-color: var(--dot-filled-2) !important;
+    border-color: var(--primary) !important;
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 15px rgba(var(--primary-rgb), 0.1);
+    z-index: 10;
+    filter: saturate(1.1) !important;
+}
+
+.model-card:hover .model-name {
+    color: #fff;
+    text-shadow: 0 0 12px rgba(var(--primary-rgb), 0.5);
 }
 
 .model-card:hover::before {
     opacity: 1;
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-    user-select: none !important;
-    border-color: var(--dot-filled-2) !important;
+    transform: scale(1.12);
 }
 
 .model-card.active {
-    border-color: #00ff88;
-    background: rgba(0, 255, 136, 0.05);
+    border-color: var(--primary);
+    background: rgba(var(--primary-rgb), 0.05);
     transform: scale(1.06);
-    filter: saturate(1.1) !important;
+    filter: saturate(1.1) brightness(2) !important;
+    box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.4), inset 0 0 10px rgba(var(--primary-rgb), 0.1);
+    animation: active-card-glow-pulse 2s ease-in-out infinite alternate;
     -webkit-user-select: none !important;
     -moz-user-select: none !important;
     -ms-user-select: none !important;
     user-select: none !important;
+    will-change: filter, transform, box-shadow, border-color;
+}
+
+.model-card.active .flag-item.bg-exclusive {
+    filter: brightness(0.5) saturate(0.91) !important;
+}
+
+.model-card.active .flag-item.bg-exclusive::before,
+.model-card.active .flag-item.bg-exclusive::after {
+    filter: brightness(0.75) !important;
+}
+
+@keyframes active-card-glow-pulse {
+    0% {
+        box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.3), inset 0 0 8px rgba(var(--primary-rgb), 0.1);
+        border-color: var(--primary);
+    }
+    100% {
+        box-shadow: 0 0 35px rgba(var(--primary-rgb), 0.6), inset 0 0 15px rgba(var(--primary-rgb), 0.2);
+        border-color: #fff;
+    }
 }
 
 .model-card.active::before {
@@ -725,11 +749,12 @@ textarea:focus {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 .model-card.active .model-name {
-    color: #00ff88;
-    text-shadow: 0 0 15px rgba(0, 255, 136, 0.8);
+    color: var(--primary);
+    text-shadow: 0 0 15px rgba(var(--primary-rgb), 0.8);
     -webkit-user-select: none !important;
     -moz-user-select: none !important;
     -ms-user-select: none !important;
@@ -738,7 +763,7 @@ textarea:focus {
 
 .flag-item {
     position: absolute;
-    bottom: 10px;
+    bottom: 15px;
     right: 10px;
     z-index: 15;
     display: flex;
@@ -808,7 +833,7 @@ body.performance-mode .flag-item::before {
 
 .model-selector.compact-view .flag-item,
 .model-selector.list-view .flag-item {
-    display: none !important;
+    display: flex;
 }
 
 body.performance-mode .whimsical-flame-effect {
@@ -2997,7 +3022,20 @@ textarea:focus,
 
 .model-card.active {
     border-color: var(--primary) !important;
-    background: rgba(var(--primary-rgb), 0.05) !important;
+    background: 
+        linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0) 100%),
+        linear-gradient(to bottom, rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0.85));
+    animation: active-card-brightness-pulse 1s ease-in-out infinite alternate !important;
+    box-shadow: 0 0 25px rgba(var(--primary-rgb), 0.45), inset 0 0 10px rgba(var(--primary-rgb), 0.2) !important;
+}
+
+@keyframes active-card-brightness-pulse {
+    0% {
+        filter: brightness(1.5) saturate(1.1);
+    }
+    100% {
+        filter: brightness(2.6) saturate(1.2);
+    }
 }
 
 .model-card.active .model-name {
@@ -4161,6 +4199,8 @@ body.performance-mode .history-header {
     align-items: center;
     gap: 4px;
     height: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .tiny-action-btn:hover {
@@ -4187,8 +4227,7 @@ body.performance-mode .history-header {
 }
 
 .model-card.animate-in {
-    opacity: 0;
-    animation: fadeInUpModel 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    animation: fadeInUpModel 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
 }
 
 .model-header-wrapper {
@@ -4319,6 +4358,26 @@ body.performance-mode .history-header {
     height: 20px;
 }
 
+.model-selector.compact-view .model-card .flag-item {
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    padding: 2px 5px;
+    font-size: 8px;
+    white-space: nowrap;
+    border-radius: 4px;
+    gap: 2px;
+    overflow: visible !important;
+    width: max-content !important;
+}
+
+.model-selector.compact-view .model-card .flag-item .flag-text {
+    max-width: none !important;
+    flex-shrink: 0 !important;
+}
+
 .model-selector.compact-view .model-card.active {
     transform: scale(1.08);
 }
@@ -4352,6 +4411,7 @@ body.performance-mode .history-header {
 .model-selector.list-view .model-card .model-name {
     font-size: 13px;
     margin-bottom: 0;
+    margin-left: auto;
 }
 
 .model-selector.list-view .model-card .model-info-icon-wrapper {
@@ -4360,9 +4420,25 @@ body.performance-mode .history-header {
     right: auto;
     left: auto;
     margin-left: 0;
-    margin-right: auto;
+    margin-right: 0;
     flex-shrink: 0;
     order: -1;
+}
+
+.model-selector.list-view .model-card .flag-item {
+    position: relative;
+    top: auto;
+    right: auto;
+    left: auto;
+    transform: none;
+    margin-left: 8px;
+    margin-right: 8px;
+    flex-shrink: 0;
+    z-index: 5;
+    padding: 2px 8px;
+    font-size: 10px;
+    border-radius: 4px;
+    transform: translateY(15px);
 }
 
 .model-selector.list-view .model-card.active {
@@ -4413,7 +4489,6 @@ body.performance-mode .history-header {
 
 .model-card.animate-filter-in {
     animation: filterIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-    opacity: 0;
 }
 
 @keyframes filterIn {

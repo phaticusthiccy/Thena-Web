@@ -56,7 +56,6 @@ async function fetchModelSuggestion(promptText) {
             const data = await resp.text();
             if (!document.getElementById("btn-show-all-models").classList.contains('active')) {
                 document.getElementById("btn-show-all-models").click()
-                // wait until models are loaded
                 setTimeout(() => {
                     highlightSuggestedModels(data);
                 }, 1000);
@@ -81,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         toggle.addEventListener('change', (e) => {
             isModelSuggestionEnabled = e.target.checked;
             localStorage.setItem('thena-model-suggestion', isModelSuggestionEnabled);
-            
+
             if (!isModelSuggestionEnabled) {
                 stopModelSuggestionHighlight();
             } else {
@@ -91,9 +90,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
             
-            if (typeof showToast === 'function') {
+            if (typeof showNotification === 'function') {
                 const t = translations[currentLang] || translations['en'];
-                showToast(isModelSuggestionEnabled ? (currentLang === 'tr' ? "Model Önerisi Aktif Edildi" : "Model Suggestion Enabled") : (currentLang === 'tr' ? "Model Önerisi Deaktif Edildi" : "Model Suggestion Disabled"));
+                showNotification(isModelSuggestionEnabled ? (currentLang === 'tr' ? t.modelSuggestionEnabled : t.modelSuggestionEnabled) : (currentLang === 'tr' ? t.modelSuggestionDisabled : t.modelSuggestionDisabled), "info");
             }
         });
     }
