@@ -110,6 +110,12 @@ async function openCharacterChat(characterData) {
 
                     imgGenBtn.disabled = true;
                     isChatGeneratingImage = true;
+                    
+                    const headerEl = document.querySelector('.chat-screen-header');
+                    const convListEl = document.querySelector('.conversations-list');
+                    if (headerEl) headerEl.style.pointerEvents = 'none';
+                    if (convListEl) convListEl.style.pointerEvents = 'none';
+
                     imgGenBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spinning"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>`;
                     const initialLoadingNotif = showNotification((typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Görsel Oluşturuluyor...' : 'Generating Image...', 'info', null, 7000);
                     disableChatInput((typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Görsel Oluşturuluyor...' : 'Generating Image...');
@@ -170,6 +176,11 @@ async function openCharacterChat(characterData) {
                     imgGenBtn.innerHTML = originalContent;
                     enableChatInput();
                     isChatGeneratingImage = false;
+                    
+                    const headerEl = document.querySelector('.chat-screen-header');
+                    const convListEl = document.querySelector('.conversations-list');
+                    if (headerEl) headerEl.style.pointerEvents = '';
+                    if (convListEl) convListEl.style.pointerEvents = '';
                 }
             };
         }
@@ -982,15 +993,6 @@ async function sendMessage() {
             fullResponse = "Error: " + response.statusText;
         } else {
 
-            try {
-                var chatData = await response.json();
-                if (chatData.status == 401) {
-                    showNotification(currentLang == "tr" ? translations.tr.invalidApiKey : translations.en.invalidApiKey, "error");
-                    assistantBubble.remove();
-                    return;
-                }
-            } catch {}
-
             const reader = response.body.getReader();
             const decoder = new TextDecoder("utf-8");
             let buffer = "";
@@ -999,6 +1001,21 @@ async function sendMessage() {
                 const { done, value } = await reader.read();
                 if (done) break;
                 buffer += decoder.decode(value, { stream: true });
+                
+                if (isFirstChunk) {
+                    const trimmed = buffer.trim();
+                    if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+                        try {
+                            const chatData = JSON.parse(trimmed);
+                            if (chatData && chatData.status == 401) {
+                                showNotification(currentLang == "tr" ? translations.tr.invalidApiKey : translations.en.invalidApiKey, "error");
+                                assistantBubble.remove();
+                                return;
+                            }
+                        } catch (e) {}
+                    }
+                }
+
                 const lines = buffer.split('\n');
                 buffer = lines.pop(); 
 
@@ -1766,7 +1783,7 @@ function initEmotionObserver() {
         mutations.forEach(mutation => {
             mutation.addedNodes.forEach(node => {
                 if (node.nodeType === 1) {
-                    if (node.classList && node.className.includes('emotion-')) {
+                    if (node.classList && typeof node.className === 'string' && node.className.includes('emotion-')) {
                         emotionObserver.observe(node);
                     }
                     node.querySelectorAll && node.querySelectorAll('.message-bubble[class*="emotion-"]').forEach(bubble => {
@@ -1797,11 +1814,11 @@ function getEmotionSvg(emotion) {
         bored: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#95A5A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="15" x2="16" y2="15"></line><line x1="8" y1="9" x2="10.5" y2="9"></line><path d="M8 8.5h2.5"></path><line x1="13.5" y1="9" x2="16" y2="9"></line><path d="M13.5 8.5h2.5"></path></svg>',
         confused: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E67E22" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 15c1 .5 2-.5 3 0s2 .5 3 0"></path><path d="M7 7.5c.8-1 2-1 2.5 0"></path><line x1="9" y1="9.5" x2="9.01" y2="9.5"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
         neutral: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#BDC3C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="9" y1="15" x2="15" y2="15"></line><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
-        flirtatious: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF69B4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><path d="M14 9c.5-.5 1.5-.5 2 0"></path><path d="M13 16.5c.5 1 1.5 1 2 .5"></path></svg>',
+        flirtatious: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF69B4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><path d="M14 9c.5-.5 1.5-.5 2 0"></path></svg>',
         sarcastic: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F39C12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 15c0 0 1.5-1 4-1 1 0 2 1 4 2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><path d="M14 8c.5-.5 1.5-.5 2 0"></path></svg>',
         shy: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FDCFE8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M10 14s.8.8 2 .8 2-.8 2-.8"></path><line x1="9" y1="10" x2="9.01" y2="10"></line><line x1="15" y1="10" x2="15.01" y2="10"></line><circle cx="7.5" cy="13" r="1.5" fill="rgba(253,207,232,0.4)" stroke="none"></circle><circle cx="16.5" cy="13" r="1.5" fill="rgba(253,207,232,0.4)" stroke="none"></circle></svg>',
         confident: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3498DB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><rect x="6.5" y="8" width="4" height="2.5" rx="1"></rect><rect x="13.5" y="8" width="4" height="2.5" rx="1"></rect><line x1="10.5" y1="9.25" x2="13.5" y2="9.25"></line></svg>',
-        amused: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F1C40F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 12s1.5 4 4 4 4-4 4-4"></path><path d="M8 9c.3-.6 1-.8 1.5-.3"></path><path d="M14.5 8.7c.5-.5 1.2-.3 1.5.3"></path><path d="M17.5 11c0 1-1 2.5-1 2.5s-1-1.5-1-2.5a1 1 0 0 1 2 0z" fill="#F1C40F"></path></svg>',
+        amused: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F1C40F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 12s1.5 4 4 4 4-4 4-4"></path><path d="M8 9c.3-.6 1-.8 1.5-.3"></path><path d="M14.5 8.7c.5-.5 1.2-.3 1.5.3"></path></svg>',
         jealous: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#27AE60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9 15c1 .5 5 .5 6 0"></path><circle cx="9" cy="9.5" r="1" fill="none"></circle><circle cx="10" cy="9.5" r="0.3" fill="#27AE60"></circle><circle cx="15" cy="9.5" r="1" fill="none"></circle><circle cx="16" cy="9.5" r="0.3" fill="#27AE60"></circle><line x1="7" y1="7.5" x2="10" y2="8.5"></line><line x1="17" y1="7.5" x2="14" y2="8.5"></line></svg>',
         guilty: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8E44AD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path><path d="M9 10c0-.5-.3-1-1-1"></path><path d="M15 10c0-.5.3-1 1-1"></path><path d="M18 5c0 1.2-1.2 2.5-1.2 2.5S15.5 6.2 15.5 5a1.2 1.2 0 1 1 2.5 0z" fill="#8E44AD"></path></svg>',
         curious: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1ABC9C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><circle cx="11" cy="11" r="3"></circle></svg>',

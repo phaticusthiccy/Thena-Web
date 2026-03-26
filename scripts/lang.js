@@ -339,7 +339,10 @@ const translations = {
         "msgImgRequired": "Please upload an image.",
         "msgPromptRequired": "Please enter a prompt.",
         "msgGeneratingQueued": "Generating... Queued.",
-        "msgLimitWait": "Limit Exceeded! Please wait a few seconds and try again.",
+        "msgGenerating": "Generating...",
+        "msgQueued": "Model queued...",
+        "msgLimitWait": "Limit Exceeded! Please wait {0} seconds and try again.",
+        "priorLimitDaily": "You have exceeded the daily limit for this feature. Please try again tomorrow.",
         "msgModMediumLowReq": "Please set moderation level to medium or low.",
         "msgThenaOverloaded": "Thena is currently overloaded. Please try again later.",
         "msgErrorPrefix": "Error: ",
@@ -409,7 +412,10 @@ const translations = {
         "mgOptUsageDesc": "Most Used",
         "mgOptUsageAsc": "Least Used",
         "mgPrevImg": "Previous Image",
-        "mgNextImg": "Next Image"
+        "mgNextImg": "Next Image",
+        "suggestingModel": "Suggesting Model...",
+        "msgServerBusy": "Server Busy",
+        "msgServerBusyDesc": "Thena is very busy right now. Image generation may take a while."
     },
     "tr": {
         "generateBtn": "Görüntü Oluştur",
@@ -751,7 +757,10 @@ const translations = {
         "msgImgRequired": "Lütfen bir resim yükleyin.",
         "msgPromptRequired": "Lütfen bir prompt girin.",
         "msgGeneratingQueued": "Oluşturuluyor... Sıraya alındı.",
-        "msgLimitWait": "Limit tükendi! Lütfen biraz bekleyin ve tekrar deneyin.",
+        "msgGenerating": "Oluşturuluyor...",
+        "msgQueued": "Model sıraya alındı...",
+        "msgLimitWait": "Limit tükendi! Lütfen {0} saniye sonra tekrar deneyin.",
+        "priorLimitDaily": "Bu özelliğin günlük limitini aştınız. Lütfen yarın tekrar deneyin.",
         "msgModMediumLowReq": "Lütfen moderation seviyesini medium veya low olarak ayarlayın.",
         "msgThenaOverloaded": "Thena şuanda çok yoğun. Lütfen daha sonra tekrar deneyin.",
         "msgErrorPrefix": "Hata: ",
@@ -821,7 +830,10 @@ const translations = {
         "mgOptUsageAsc": "En Az Kullanılan",
         "mgModels": "Model Galerisi",
         "mgPrevImg": "Önceki Resim",
-        "mgNextImg": "Sonraki Resim"
+        "mgNextImg": "Sonraki Resim",
+        "suggestingModel": "Model Öneriliyor...",
+        "msgServerBusy": "Sunucu Meşgul",
+        "msgServerBusyDesc": "Thena şu an çok yoğun. Görsel oluşturma biraz zaman alabilir."
     }
 };
 

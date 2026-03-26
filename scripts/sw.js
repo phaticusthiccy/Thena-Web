@@ -1,4 +1,4 @@
-const CACHE_NAME = 'thena-app-v2';
+const CACHE_NAME = 'thena-app-v3';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -6,9 +6,24 @@ const ASSETS_TO_CACHE = [
     './manifest.json',
     './src/icon-192.png',
     './src/icon-512.png',
+    './src/adv_settings_image_gen.webp',
+    './src/apps.webp',
+    './src/chat_end.webp',
+    './src/chat_start.webp',
+    './src/chatbot.webp',
+    './src/gallery.webp',
+    './src/gallery_stats.webp',
+    './src/image_edit.webp',
+    './src/image_gen.webp',
+    './src/prompt_preview.webp',
+    './src/settings.webp',
+    './src/showcase.webp',
+    './src/trailer.webp',
     './css/style.css',
     './css/prompt-preview.css',
     './css/editor-search.css',
+    './css/trailer.css',
+    './css/model-gallery.css',
     './scripts/script.js',
     './scripts/promptexpansion.js',
     './scripts/lang.js',
@@ -23,11 +38,10 @@ const ASSETS_TO_CACHE = [
     './scripts/promptPreview.js',
     './scripts/cpu.js',
     './scripts/trailer.js',
-    './css/trailer.css',
     './scripts/powerSaver.js',
     './scripts/modelSuggestion.js',
     './scripts/modelGallery.js',
-    './css/modelGallery.css'
+    './scripts/customSelect.js'
 ];
 
 self.addEventListener('install', (event) => {

@@ -146,6 +146,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        if (!cropImageTarget || !cropModal) {
+            console.error('Crop modal elements not found in DOM.');
+            return;
+        }
+
         const reader = new FileReader();
         reader.onload = (e) => {
             if (editorCropper) {
@@ -171,6 +176,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (btnCropCancel) {
         btnCropCancel.addEventListener('click', () => {
+            if (editorCropper) {
+                editorCropper.destroy();
+                editorCropper = null;
+            }
+            cropImageTarget.src = '';
+            cropModal.classList.remove('active');
+            fileInput.value = '';
+        });
+    }
+
+    const btnCropClose = document.getElementById('btn-crop-close');
+    if (btnCropClose) {
+        btnCropClose.addEventListener('click', () => {
             if (editorCropper) {
                 editorCropper.destroy();
                 editorCropper = null;
@@ -537,7 +555,7 @@ async function generateVariation() {
             setEditorLoadingState(false);
             playErrorSound();
             if (data.status == 429) {
-                showNotification(currentLang == "tr" ? translations.tr.msgLimitWait : translations.en.msgLimitWait, 'error');
+                showNotification(currentLang == "tr" ? translations.tr.msgLimitWait.replace('{0}', data.remainingSeconds) : translations.en.msgLimitWait.replace('{0}', data.remainingSeconds), 'error');
                 return;
             }
             if ((data.status == 401 && data.content.includes('not allowed')) || (data.status == 204)) {

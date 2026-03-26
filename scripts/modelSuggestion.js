@@ -43,6 +43,9 @@ async function fetchModelSuggestion(promptText) {
     modelSuggestionAbort = new AbortController();
 
     try {
+        if (typeof showNotification === 'function') {
+            var notificationSuggestion = showNotification(translations[currentLang].suggestingModel, "info");
+        }
         const resp = await fetch('https://create.thena.workers.dev/suggestModel', {
             method: 'POST',
             body: JSON.stringify({ prompt: promptText }),
@@ -51,19 +54,27 @@ async function fetchModelSuggestion(promptText) {
             },
             signal: modelSuggestionAbort.signal
         });
-        
+        if (typeof notificationSuggestion !== 'undefined' && notificationSuggestion) {
+            notificationSuggestion()
+        }
+
         if (resp.ok) {
             const data = await resp.text();
-            if (!document.getElementById("btn-show-all-models").classList.contains('active')) {
-                document.getElementById("btn-show-all-models").click()
-                setTimeout(() => {
-                    highlightSuggestedModels(data);
-                }, 1000);
+            if (typeof window.ensureAllModelsVisible === 'function') {
+                await window.ensureAllModelsVisible();
+                highlightSuggestedModels(data);
             } else {
-                document.querySelector("#txt-filter-chip-all").click()
-                setTimeout(() => {
-                    highlightSuggestedModels(data);
-                }, 500);
+                if (!document.getElementById("btn-show-all-models").classList.contains('active')) {
+                    document.getElementById("btn-show-all-models").click()
+                    setTimeout(() => {
+                        highlightSuggestedModels(data);
+                    }, 1000);
+                } else {
+                    document.querySelector("#txt-filter-chip-all").click()
+                    setTimeout(() => {
+                        highlightSuggestedModels(data);
+                    }, 500);
+                }
             }
         }
     } catch (err) {
@@ -91,8 +102,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             if (typeof showNotification === 'function') {
-                const t = translations[currentLang] || translations['en'];
-                showNotification(isModelSuggestionEnabled ? (currentLang === 'tr' ? t.modelSuggestionEnabled : t.modelSuggestionEnabled) : (currentLang === 'tr' ? t.modelSuggestionDisabled : t.modelSuggestionDisabled), "info");
+                try {
+                    const t = (typeof translations !== 'undefined' && typeof currentLang !== 'undefined')
+                        ? (translations[currentLang] || translations['en'])
+                        : null;
+                    if (t) {
+                        showNotification(isModelSuggestionEnabled ? t.modelSuggestionEnabled : t.modelSuggestionDisabled, "info");
+                    }
+                } catch(e) {}
             }
         });
     }

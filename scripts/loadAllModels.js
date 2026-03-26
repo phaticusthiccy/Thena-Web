@@ -42,6 +42,15 @@ const modelSpecs = {
     "3fb0b43e-ef78-44cf-82da-c3e0d6e0a5a7": {
         usedTechniques: ["Anime", "Movie"]
     },
+    "019d2154-7c24-74a1-806d-0fa8274a41d4": {
+        usedTechniques: ["Anime", "Movie"]
+    },
+    "5ac14b95-8600-46d7-a966-a6de2e951995": {
+        usedTechniques: ["General", "Photorealism"]
+    },
+    "a7a7faa7-d391-4cae-a1ac-d4d793da2ecd": {
+        usedTechniques: ["Anime"]
+    },
     "7367ab 279dbf 417a8 51fe3 5050": {
         usedTechniques: ["NSFW", "Photorealism"]
     },
@@ -136,7 +145,7 @@ function filterModelsByTag(tag) {
                 card.style.transform = 'none';
                 card.style.animation = 'none';
             } else {
-                card.style.opacity = '0'; 
+                card.style.opacity = '';
                 void card.offsetWidth;
                 
                 const delay = visibleIndex * 50; 
@@ -146,7 +155,7 @@ function filterModelsByTag(tag) {
             visibleIndex++;
         } else {
             card.style.display = 'none';
-            card.style.opacity = '0'; 
+            card.style.opacity = '';
         }
     });
 }
@@ -199,70 +208,87 @@ if (btnSortModels) {
     });
 }
 
-if (btnShowAllModels) {
-    btnShowAllModels.addEventListener('click', async (e) => {
-        e.preventDefault();
-        const isActive = btnShowAllModels.classList.contains('active');
-        btnShowAllModels.classList.add('loading');
-        
-        if (isActive) {
-            if (modelFilterContainer) {
-                modelFilterContainer.classList.remove('visible');
-                filterChips.forEach(c => c.classList.remove('active'));
-                const allBtn = document.querySelector('.filter-chip[data-filter="all"]');
-                if(allBtn) allBtn.classList.add('active');
-                modelFilterContainer.style.contentVisibility = 'hidden !important';
-            }
-        } 
-        
-        const targetUrl = isActive 
-            ? 'https://create.thena.workers.dev/models?type=base' 
-            : 'https://create.thena.workers.dev/models?type=all';
+window.toggleShowAllModels = async function(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const btnShowAllModels = document.getElementById('btn-show-all-models');
+    if (!btnShowAllModels) return;
 
-        const modelSelector = document.getElementById('model-selector');
-        
-        try {
-            const response = await fetch(targetUrl);
-            if (!response.ok) throw new Error('Network response was not ok');
-            
-            const fetchedModels = await response.json();
-            currentFetchedModels = fetchedModels;
-            renderModels(fetchedModels);
-            
-            if (btnSortModels) btnSortModels.style.display = isActive ? 'none' : 'flex';
-            
-            const btnSpan = btnShowAllModels.querySelector('span');
-            if (isActive) {
-                btnShowAllModels.classList.remove('active');
-                if(btnSpan) btnSpan.innerText = currentLang == "tr" ? "Tüm Modelleri Göster" : "Show All Models";
-                if(typeof playSuccessSound === "function") playSuccessSound();
-                if(typeof showNotification === "function") showNotification(currentLang == "tr" ? translations.tr.msgBaseModelsLoaded : translations.en.msgBaseModelsLoaded, "info");
-                if (btnSortModels) btnSortModels.style.display = 'none';
-                currentSortMode = 'default';
-                const sortBtnText = btnSortModels?.querySelector('span');
-                if(sortBtnText) sortBtnText.innerText = currentLang == 'tr' ? 'Varsayılan' : 'Default';
-            } else {
-                btnShowAllModels.classList.add('active');
-                if(btnSpan) btnSpan.innerText = currentLang == "tr" ? "Sadece Temel Modeller" : "Base Models Only";
-                if(typeof playSuccessSound === "function") playSuccessSound();
-                if(typeof showNotification === "function") showNotification(currentLang == "tr" ? translations.tr.msgAllModelsLoaded : translations.en.msgAllModelsLoaded, "success");
-                
-                if (modelFilterContainer) {
-                    modelFilterContainer.classList.add('visible');
-                    modelFilterContainer.style.contentVisibility = 'visible !important';
-                }
-            }
-
-
-
-        } catch (error) {
-            console.error(error);
-            if(typeof playErrorSound === "function") playErrorSound();
-            if(typeof showNotification === "function") showNotification(currentLang == "tr" ? translations.tr.msgModelUpdateErr : translations.en.msgModelUpdateErr, "error");
-        } finally {
-            btnShowAllModels.classList.remove('loading');
+    const isActive = btnShowAllModels.classList.contains('active');
+    btnShowAllModels.classList.add('loading');
+    
+    if (isActive) {
+        if (modelFilterContainer) {
+            modelFilterContainer.classList.remove('visible');
+            filterChips.forEach(c => c.classList.remove('active'));
+            const allBtn = document.querySelector('.filter-chip[data-filter="all"]');
+            if(allBtn) allBtn.classList.add('active');
+            modelFilterContainer.style.contentVisibility = 'hidden !important';
         }
-    });
+    } 
+    
+    const targetUrl = isActive 
+        ? 'https://create.thena.workers.dev/models?type=base' 
+        : 'https://create.thena.workers.dev/models?type=all';
+
+    const modelSelector = document.getElementById('model-selector');
+    
+    try {
+        const response = await fetch(targetUrl);
+        if (!response.ok) throw new Error('Network response was not ok');
+        
+        const fetchedModels = await response.json();
+        currentFetchedModels = fetchedModels;
+        renderModels(fetchedModels);
+        
+        if (btnSortModels) btnSortModels.style.display = isActive ? 'none' : 'flex';
+        
+        const btnSpan = btnShowAllModels.querySelector('span');
+        if (isActive) {
+            btnShowAllModels.classList.remove('active');
+            if(btnSpan) btnSpan.innerText = currentLang == "tr" ? "Tüm Modelleri Göster" : "Show All Models";
+            if(typeof playSuccessSound === "function") playSuccessSound();
+            if(typeof showNotification === "function") showNotification(currentLang == "tr" ? translations.tr.msgBaseModelsLoaded : translations.en.msgBaseModelsLoaded, "info");
+            if (btnSortModels) btnSortModels.style.display = 'none';
+            currentSortMode = 'default';
+            const sortBtnText = btnSortModels?.querySelector('span');
+            if(sortBtnText) sortBtnText.innerText = currentLang == 'tr' ? 'Varsayılan' : 'Default';
+        } else {
+            btnShowAllModels.classList.add('active');
+            if(btnSpan) btnSpan.innerText = currentLang == "tr" ? "Sadece Temel Modeller" : "Base Models Only";
+            if(typeof playSuccessSound === "function") playSuccessSound();
+            if(typeof showNotification === "function") showNotification(currentLang == "tr" ? translations.tr.msgAllModelsLoaded : translations.en.msgAllModelsLoaded, "success");
+            
+            if (modelFilterContainer) {
+                modelFilterContainer.classList.add('visible');
+                modelFilterContainer.style.contentVisibility = 'visible !important';
+            }
+        }
+
+    } catch (error) {
+        console.error(error);
+        if(typeof playErrorSound === "function") playErrorSound();
+        if(typeof showNotification === "function") showNotification(currentLang == "tr" ? translations.tr.msgModelUpdateErr : translations.en.msgModelUpdateErr, "error");
+    } finally {
+        btnShowAllModels.classList.remove('loading');
+    }
+};
+
+window.ensureAllModelsVisible = async function() {
+    const btnShowAllModels = document.getElementById('btn-show-all-models');
+    if (btnShowAllModels && !btnShowAllModels.classList.contains('active')) {
+        await window.toggleShowAllModels();
+    }
+    
+    const allChip = document.querySelector("#txt-filter-chip-all");
+    if (allChip && !allChip.classList.contains('active')) {
+        allChip.click();
+    }
+    
+    await new Promise(r => requestAnimationFrame(r));
+};
+
+if (btnShowAllModels) {
+    btnShowAllModels.addEventListener('click', window.toggleShowAllModels);
 }
 
 const btnToggleModelLayout = document.getElementById('btn-toggle-model-layout');

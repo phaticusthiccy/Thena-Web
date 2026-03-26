@@ -535,8 +535,13 @@
         }
     }
 
+    let _batteryMonitoringStarted = false;
+    let _lastBatteryLowState = false;
+
     function _startBatteryMonitoring() {
         if (!('getBattery' in navigator)) return;
+        if (_batteryMonitoringStarted) return;
+        _batteryMonitoringStarted = true;
 
         navigator.getBattery().then(battery => {
             _batteryRef = battery;
@@ -548,23 +553,35 @@
     }
 
     function _checkBatteryLevel(battery) {
-        if (!_enabled) return;
-
         const isLow = battery.level <= LOW_BATTERY_THRESHOLD && !battery.charging;
 
-        if (isLow && !_isIdle) {
-            _batteryAutoEnabled = true;
-            _goIdle();
-
-            const msg = typeof currentLang !== 'undefined' && currentLang === 'tr'
-                ? translations.tr.msgBatteryLow1 + Math.round(battery.level * 100) + translations.tr.msgBatteryLow2
-                : translations.en.msgBatteryLow1 + Math.round(battery.level * 100) + translations.en.msgBatteryLow2;
-            if (typeof showNotification === 'function') {
-                showNotification(msg, 'info');
+        if (isLow && !_lastBatteryLowState) {
+            _lastBatteryLowState = true;
+            
+            if (!_enabled) {
+                setPowerSaverEnabled(true);
+                const toggle = document.getElementById('toggle-power-saver');
+                if (toggle) toggle.checked = true;
             }
+
+            if (!_isIdle) {
+                _batteryAutoEnabled = true;
+                _goIdle();
+
+                const msg = typeof currentLang !== 'undefined' && currentLang === 'tr'
+                    ? translations.tr.msgBatteryLow1 + Math.round(battery.level * 100) + translations.tr.msgBatteryLow2
+                    : translations.en.msgBatteryLow1 + Math.round(battery.level * 100) + translations.en.msgBatteryLow2;
+                if (typeof showNotification === 'function') {
+                    showNotification(msg, 'info');
+                }
+            }
+        } else if (!isLow) {
+            _lastBatteryLowState = false;
         }
 
-        _updateBatteryIndicator(battery);
+        if (_enabled) {
+            _updateBatteryIndicator(battery);
+        }
     }
 
     function _updateBatteryIndicator(battery) {
@@ -602,5 +619,5 @@
     if (saved === 'true') {
         setPowerSaverEnabled(true);
     }
-
+    _startBatteryMonitoring();
 })();

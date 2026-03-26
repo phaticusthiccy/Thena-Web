@@ -64,6 +64,9 @@
         "Thena Portraits": "thenaPortraits",
         "Thena Florence": "thenaFlorence",
         "Thena Alchemy": "thenaAlchemy",
+        "Thena Nyx": "thenaNyx",
+        "Thena Noir": "thenaNoir",
+        "Thena Pixel": "thenaPixel",
         "Image Editor": "imageEditor"
     };
 
@@ -71,7 +74,7 @@
         if (allModels.length > 0) return;
         
         if (Object.keys(galleryModelPrices).length === 0) {
-            fetch('https://create.thena.workers.dev/modelPrices')
+            await fetch('https://create.thena.workers.dev/modelPrices')
                 .then(r => r.json())
                 .then(data => galleryModelPrices = data)
                 .catch(e => console.error('Error fetching prices', e));
@@ -227,6 +230,8 @@
         
         detailBadge.textContent = getLang('mgModels', 'Model Gallery');
         detailName.textContent = model.model || '';
+        const modelIdSpan = document.getElementById('mg-detail-model-id');
+        if (modelIdSpan) modelIdSpan.textContent = model.id || '';
         let desc = model.description || '';
         let lang = typeof currentLang !== 'undefined' ? currentLang : 'en';
         if (lang === 'tr' && typeof modelTranslationsTR !== 'undefined' && modelTranslationsTR[model.id]) {
@@ -313,11 +318,23 @@
             renderStatsCard();
         }
 
+        try {
+            const url = new URL(window.location);
+            url.searchParams.set('model', model.id);
+            window.history.replaceState({}, '', url);
+        } catch(e) {}
+
         detailPanel.classList.add('active');
     }
 
     function closeDetail() {
         detailPanel.classList.remove('active');
+        try {
+            const url = new URL(window.location);
+            url.searchParams.delete('model');
+            url.searchParams.set('gallery', 'true');
+            window.history.replaceState({}, '', url);
+        } catch(e) {}
     }
 
     function updateNavBtns() {
@@ -336,14 +353,30 @@
 
     function navigateImg(dir) {
         if (showcaseImgs.length <= 1) return;
-        
+
+        const loader = document.getElementById('mg-img-loader');
+
         detailImg.style.opacity = '0';
+        if (loader) loader.classList.add('visible');
+
         setTimeout(() => {
             currentImgIdx = (currentImgIdx + dir + showcaseImgs.length) % showcaseImgs.length;
-            detailImg.onload = () => {
+
+            const onLoaded = () => {
                 detailImg.style.opacity = '1';
-                detailImg.onload = null;
+                if (loader) loader.classList.remove('visible');
+                detailImg.removeEventListener('load',  onLoaded);
+                detailImg.removeEventListener('error', onError);
             };
+            const onError = () => {
+                detailImg.style.opacity = '1';
+                if (loader) loader.classList.remove('visible');
+                detailImg.removeEventListener('load',  onLoaded);
+                detailImg.removeEventListener('error', onError);
+            };
+
+            detailImg.addEventListener('load',  onLoaded);
+            detailImg.addEventListener('error', onError);
             detailImg.src = showcaseImgs[currentImgIdx];
         }, 150);
     }
@@ -376,12 +409,17 @@
     closeBtnDetail?.addEventListener('click', closeDetail);
     detailPanel?.addEventListener('click', (e) => { if (e.target === detailPanel) closeDetail(); });
 
-    selectModelBtn?.addEventListener('click', () => {
+    selectModelBtn?.addEventListener('click', async () => {
         if (!currentModel) return;
-        if (!document.getElementById("btn-show-all-models").classList.contains('active')) {
-            document.getElementById("btn-show-all-models").click()
+        
+        if (typeof window.ensureAllModelsVisible === 'function') {
+            await window.ensureAllModelsVisible();
         } else {
-            document.querySelector("#txt-filter-chip-all").click()
+            if (!document.getElementById("btn-show-all-models").classList.contains('active')) {
+                document.getElementById("btn-show-all-models").click()
+            } else {
+                document.querySelector("#txt-filter-chip-all").click()
+            }
         }
         const cards = document.querySelectorAll('#model-selector .model-card');
         let found = false;
@@ -409,11 +447,35 @@
                 'success'
             );
         }
+        try {
+            const url = new URL(window.location);
+            url.searchParams.delete('model');
+            url.searchParams.delete('gallery');
+            window.history.replaceState({}, '', url);
+        } catch(e) {}
         detailPanel.classList.remove('active');
         galleryModal.classList.remove('active');
     });
 
+    const copyIdBtn = document.getElementById('btn-copy-model-id');
+    copyIdBtn?.addEventListener('click', () => {
+        const idSpan = document.getElementById('mg-detail-model-id');
+        if (!idSpan || !idSpan.textContent) return;
+        navigator.clipboard.writeText(idSpan.textContent).then(() => {
+            const originalHTML = copyIdBtn.innerHTML;
+            copyIdBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+            setTimeout(() => { copyIdBtn.innerHTML = originalHTML; }, 1500);
+        });
+    });
+
     function openGallery() {
+        try {
+            const url = new URL(window.location);
+            if (!url.searchParams.has('model') && !url.searchParams.has('m')) {
+                url.searchParams.set('gallery', 'true');
+                window.history.replaceState({}, '', url);
+            }
+        } catch(e) {}
         updateGalleryLanguage();
         galleryModal.classList.add('active');
         fetchModels();
@@ -421,6 +483,11 @@
     }
     function closeGallery() {
         galleryModal.classList.remove('active');
+        try {
+            const url = new URL(window.location);
+            url.searchParams.delete('gallery');
+            window.history.replaceState({}, '', url);
+        } catch(e) {}
     }
 
     btnOpen?.addEventListener('click', (e) => { e.preventDefault(); openGallery(); });
@@ -594,6 +661,9 @@
             const lblType = document.getElementById('mg-lbl-type');
             if (lblType) lblType.textContent = getLang('mgLblType', 'Type');
             
+            const lblModelId = document.getElementById('lbl-model-id');
+            if (lblModelId) lblModelId.textContent = getLang('mgLblModelId', lang === 'tr' ? 'Model Kimliği:' : 'Model ID:');
+            
             const selBtnText = document.getElementById('mg-select-btn-text');
             if (selBtnText) selBtnText.textContent = getLang('mgSelectBtn', 'Generate with this Model');
         }
@@ -628,5 +698,35 @@
         updateGalleryLanguage();
         updateRequestLanguage();
     };
+
+    window.openModelInGallery = async function(modelId) {
+        updateGalleryLanguage();
+        galleryModal.classList.add('active');
+        if (typeof playFeatureToggleSound === 'function') playFeatureToggleSound(true);
+        await fetchModels();
+        const model = allModels.find(m => m.id === modelId);
+        if (model) {
+            openDetail(model);
+        }
+    };
+
+    const initModelFromURL = () => {
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const m = urlParams.get('model') || urlParams.get('m');
+            const showGal = urlParams.has('gallery') || urlParams.has('models');
+            if (m && typeof window.openModelInGallery === 'function') {
+                window.openModelInGallery(m);
+            } else if (showGal) {
+                openGallery();
+            }
+        } catch (e) {}
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initModelFromURL);
+    } else {
+        initModelFromURL();
+    }
 
 })();

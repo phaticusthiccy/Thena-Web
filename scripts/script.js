@@ -72,10 +72,13 @@ const modelTranslationsTR = {
     "81ggz 7j661 66281 yy161 1f4f4 21143": "Thena'nın en güçlü gürültü ile akıl yürütme modeli. Saf güç ve benzersiz kalitenin birleşimi.",
     "176ks dd131 81927 a1165 p00183 6000": "Fotorealizmin zirvesi. Her detayı kusursuz bir hassasiyetle yakalayan Thena Portraits, istemlerinizi yüksek kaliteli başyapıtlara dönüştürür.",
     "7367ab 279dbf 417a8 51fe3 5050": "Yüksek çözünürlüklü, sadece açık içerikler için titizlikle tasarlanmış bir model. Yükske netlikte tutarlı görüntüler üretebilir.",
-    "3fb0b43e-ef78-44cf-82da-c3e0d6e0a5a7": "Thena Movie'den baz alınarak üretilen sinematik anime modeli. Güçlü kontrast değerleri ve dolgun renkleriyle anime sinematikleri oluşturun."
+    "3fb0b43e-ef78-44cf-82da-c3e0d6e0a5a7": "Thena Movie'den baz alınarak üretilen sinematik anime modeli. Güçlü kontrast değerleri ve dolgun renkleriyle anime sinematikleri oluşturun.",
+    "a7a7faa7-d391-4cae-a1ac-d4d793da2ecd": "Thena Pixel ile retro oyun karakterleri, çizim çıkartmaları ve 8 bit temalı görseller oluşturmak mümkün. Model sadece 8-bit pixel tarzında görseller üretebilir.",
+    "019d2154-7c24-74a1-806d-0fa8274a41d4": "Thena Nyx ile karanlık, büyüleyici ve atmosferik anime portreleri yaratın. Derin gölgeler, keskin ışıklar ve çarpıcı parlama efektleriyle karakterlerinize gizemli bir hava katın.",
+    "5ac14b95-8600-46d7-a966-a6de2e951995": "Klasik film noir estetiğini yakalayın. Yüksek kontrastlı aydınlatma, derin gölgeler ve sinematik portreler oluşturun. Vintage hissi veren dramatik sahneler ve karakterler yaratmak için mükemmeldir."
 };
 const UNSUPPORTED_FAST_MODELS = ["551ks 8g6g8 16gga 1h8h8 6b4a5 5060"];
-const MOVIE_FILTER_SUPPORTED_MODELS = ["8gg12 61812 6628 19729 6b4a5 5060", "551ks 8g6g8 16gga 1h8h8 6b4a5 5060", "771ks 71g6g8 hlh8h8 6b4a5 77b4a5 5060", "3fb0b43e-ef78-44cf-82da-c3e0d6e0a5a7"];
+const MOVIE_FILTER_SUPPORTED_MODELS = ["8gg12 61812 6628 19729 6b4a5 5060", "551ks 8g6g8 16gga 1h8h8 6b4a5 5060", "771ks 71g6g8 hlh8h8 6b4a5 77b4a5 5060", "3fb0b43e-ef78-44cf-82da-c3e0d6e0a5a7", "019d2154-7c24-74a1-806d-0fa8274a41d4"];
 const NO_EXTRA_FEATURES_MODELS = ["81ggz 7j661 66281 yy161 1f4f4 21143"];
 const MODEL_STATS = {
     // Thena Movie
@@ -106,6 +109,12 @@ const MODEL_STATS = {
     "3fb0b43e-ef78-44cf-82da-c3e0d6e0a5a7": { intel: 3, qual: 4, speed: 2 },
     // Thena Florence
     "7367ab 279dbf 417a8 51fe3 5050": { intel: 3, qual: 4, speed: 3 },
+    // Thena Pixel
+    "a7a7faa7-d391-4cae-a1ac-d4d793da2ecd": { intel: 2, qual: 4, speed: 2 },
+    // Thena Nyx
+    "019d2154-7c24-74a1-806d-0fa8274a41d4": { intel: 2, qual: 5, speed: 3 },
+    // Thena Noir
+    "5ac14b95-8600-46d7-a966-a6de2e951995": { intel: 3, qual: 4, speed: 2 },
     // Default 
     "default": { intel: 3, qual: 3, speed: 3 }
 };
@@ -1271,6 +1280,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function openAdvInfoModal(title, desc, intel, qual, speed) {
         const featModal = document.getElementById('feature-info-modal');
+        const featSliderContainer = document.getElementById('feat-slider-container');
+        if (featSliderContainer) featSliderContainer.style.display = 'none';
+        const actionsDiv = document.getElementById('feat-modal-model-actions');
+        if (actionsDiv) actionsDiv.style.display = 'none';
         const featModalTitle = document.getElementById('feat-modal-title');
         const featModalDesc = document.getElementById('feat-modal-desc');
         const metricIntel = document.getElementById('metric-intelligence');
@@ -1386,6 +1399,59 @@ document.addEventListener('DOMContentLoaded', () => {
     const metricSpeed = document.getElementById('metric-speed');
     const closeFeatModal = document.getElementById('close-feat-modal');
 
+    const featSliderContainer = document.getElementById('feat-slider-container');
+    const featSliderOverlay = document.getElementById('feat-slider-overlay');
+    const featSliderHandle = document.getElementById('feat-slider-handle');
+    const featSliderImgBefore = document.getElementById('feat-slider-img-before');
+    const featSliderImgAfter = document.getElementById('feat-slider-img-after');
+    const featSliderZoomBtn = document.getElementById('feat-slider-zoom');
+    const featSliderImagesWrapper = document.getElementById('feat-slider-images-wrapper');
+    const featModalGotoModelBtn = document.getElementById('feat-modal-goto-model');
+    const featModalModelActions = document.getElementById('feat-modal-model-actions');
+
+    if (featModalGotoModelBtn) {
+        featModalGotoModelBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (featModal) featModal.classList.remove('active');
+            const targetModelId = featModalGotoModelBtn.dataset.modelId;
+            if (targetModelId && typeof window.openModelInGallery === 'function') {
+                window.openModelInGallery(targetModelId);
+            }
+        });
+    }
+
+    if (featSliderZoomBtn && featSliderImagesWrapper) {
+        featSliderZoomBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isActive = featSliderZoomBtn.classList.toggle('active');
+            featSliderImagesWrapper.classList.toggle('slider-zoomed', isActive);
+            if (typeof playFeatureToggleSound === 'function') playFeatureToggleSound(isActive);
+        });
+    }
+
+    if (featSliderContainer && featSliderHandle) {
+        let isDragging = false;
+        
+        const handleDrag = (e) => {
+            if (!isDragging) return;
+            const rect = featSliderContainer.getBoundingClientRect();
+            let clientX = e.type.includes('mouse') ? e.clientX : (e.touches && e.touches.length > 0 ? e.touches[0].clientX : 0);
+            if (!clientX) return;
+            let x = clientX - rect.left;
+            x = Math.max(0, Math.min(x, rect.width));
+            featSliderOverlay.style.width = x + 'px';
+        };
+
+        featSliderHandle.addEventListener('mousedown', (e) => { isDragging = true; e.preventDefault(); });
+        featSliderHandle.addEventListener('touchstart', (e) => { isDragging = true; }, { passive: true});
+        
+        window.addEventListener('mouseup', () => { isDragging = false; });
+        window.addEventListener('touchend', () => { isDragging = false; });
+        
+        window.addEventListener('mousemove', handleDrag);
+        window.addEventListener('touchmove', handleDrag, { passive: true });
+    }
+
     allExtraBtns.forEach(btn => {
         const infoIcon = btn.querySelector('.info-icon-wrapper');
         if (infoIcon) {
@@ -1414,6 +1480,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 metricIntel.innerHTML = createDots(data.intelligence, 'intelligence');
                 metricQual.innerHTML = createDots(data.quality, 'quality');
                 metricSpeed.innerHTML = createDots(data.speed, 'speed');
+
+                if (featSliderContainer) {
+                    const featureName = btn.id.replace('feat-', '');
+                    const featuresWithSlider = ['creative', 'dense', 'fast', 'movie', "enhance", "highres"];
+
+                    if (featuresWithSlider.includes(featureName)) {
+                        featSliderContainer.style.display = 'block';
+                        featSliderOverlay.style.width = '50%';
+                        if (featSliderImgBefore) featSliderImgBefore.src = `src/slider/${featureName}/before.webp`;
+                        if (featSliderImgAfter) featSliderImgAfter.src = `src/slider/${featureName}/after.webp`;
+                    } else {
+                        featSliderContainer.style.display = 'none';
+                    }
+                    if (featSliderZoomBtn) featSliderZoomBtn.classList.remove('active');
+                    if (featSliderImagesWrapper) featSliderImagesWrapper.classList.remove('slider-zoomed');
+                }
+                const actionsDiv = document.getElementById('feat-modal-model-actions');
+                if (actionsDiv) actionsDiv.style.display = 'none';
 
                 featModal.classList.add('active');
             });
@@ -1512,6 +1596,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 metricIntel.innerHTML = createDots(data.intelligence, 'intelligence');
                 metricQual.innerHTML = createDots(data.quality, 'quality');
                 metricSpeed.innerHTML = createDots(data.speed, 'speed');
+                const featSliderContainer = document.getElementById('feat-slider-container');
+                if (featSliderContainer) featSliderContainer.style.display = 'none';
+                const actionsDiv = document.getElementById('feat-modal-model-actions');
+                if (actionsDiv) actionsDiv.style.display = 'none';
                 featModal.classList.add('active');
             });
         }
@@ -1542,13 +1630,13 @@ document.addEventListener('DOMContentLoaded', () => {
             let timeoutId = null;
 
             if (attempt <= 3) {
-                timeoutId = setTimeout(() => controller.abort(), 1000);
+                timeoutId = setTimeout(() => controller.abort(), 2000);
             } else if (attempt <= 8) {
                 if (firsload === true) {
                     showNotification(currentLang == "tr" ? translations.tr.msgUnstableConn : translations.en.msgUnstableConn, "warning");
                     firsload = false;
                 }
-                timeoutId = setTimeout(() => controller.abort(), 2000);
+                timeoutId = setTimeout(() => controller.abort(), 4000);
             }
 
             try {
@@ -1560,11 +1648,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (timeoutId) clearTimeout(timeoutId);
 
                 if (!response.ok) {
+                    await new Promise(resolve => setTimeout(resolve, 1500));
                     continue;
                 }
 
                 return await response.json();
             } catch (error) {
+                await new Promise(resolve => setTimeout(resolve, 1500));
                 continue;
             }
         }
@@ -1682,6 +1772,17 @@ async function loadModels() {
                 if (metricIntel) metricIntel.innerHTML = createDots(stats.intel, 'intelligence');
                 if (metricQual) metricQual.innerHTML = createDots(stats.qual, 'quality');
                 if (metricSpeed) metricSpeed.innerHTML = createDots(stats.speed, 'speed');
+
+                const featSliderContainer = document.getElementById('feat-slider-container');
+                if (featSliderContainer) featSliderContainer.style.display = 'none';
+
+                const actionsDiv = document.getElementById('feat-modal-model-actions');
+                const gotoBtn = document.getElementById('feat-modal-goto-model');
+                if (actionsDiv && gotoBtn) {
+                    actionsDiv.style.display = 'block';
+                    gotoBtn.dataset.modelId = modelId;
+                    gotoBtn.innerHTML = isTR ? 'Model Sayfasına Git <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="feather"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="15 3 21 3 21 9"></polyline><line stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="10" y1="14" x2="21" y2="3"></line></svg>' : 'Go to Model Page <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="feather"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="15 3 21 3 21 9"></polyline><line stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="10" y1="14" x2="21" y2="3"></line></svg>';
+                }
 
                 if (featModal) featModal.classList.add('active');
                 return;
@@ -1918,6 +2019,30 @@ generateBtn.addEventListener('click', async () => {
     generateBtn.disabled = true;
     generateBtn.innerHTML = 'Processing<span class="loading-spinner"></span>';
     generateBtn.classList.add('generating');
+
+    let progressOverlay = document.getElementById('generation-progress-overlay');
+    if (!progressOverlay) {
+        progressOverlay = document.createElement('div');
+        progressOverlay.id = 'generation-progress-overlay';
+        progressOverlay.style.cssText = 'display: flex; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.8); z-index: 49999; justify-content: center; align-items: center; backdrop-filter: blur(5px); pointer-events: all;';
+        progressOverlay.innerHTML = `
+            <div style="background: #111; border: 1px solid #333; padding: 30px 40px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; gap: 15px; box-shadow: 0 10px 50px rgba(0,0,0,0.8);">
+                <div id="generation-spinner-container" style="width: 60px; height: 60px; border-radius: 50%; background: conic-gradient(#00ff88 0%, #333 0%); display: flex; align-items: center; justify-content: center; position: relative;">
+                    <div style="width: 50px; height: 50px; background: #111; border-radius: 50%; position: absolute;"></div>
+                    <div id="generation-progress-text" style="position: absolute; color: #fff; font-size: 14px; font-weight: bold; font-family: monospace;">0%</div>
+                </div>
+                <div id="generation-progress-label" style="color: #aaa; font-size: 14px; font-family: sans-serif; font-weight: 500;">
+                    ${translations[currentLang].msgQueued}
+                </div>
+            </div>
+        `;
+        document.body.appendChild(progressOverlay);
+    } else {
+        progressOverlay.style.display = 'flex';
+        document.getElementById('generation-spinner-container').style.background = 'conic-gradient(#00ff88 0%, #333 0%)';
+        document.getElementById('generation-progress-text').textContent = '0%';
+        document.getElementById('generation-progress-label').textContent = translations[currentLang].msgQueued;
+    }
     let busyNotification = null;
     const BUSY_THRESHOLD = 25000;
     const busyTimer = setTimeout(() => {
@@ -1936,8 +2061,8 @@ generateBtn.addEventListener('click', async () => {
             activeLoader.innerHTML = `
                             <div class="notification-spinner"></div>
                             <div style="display:flex; flex-direction:column; gap:2px;">
-                                <span style="font-weight:700; color:#ffaa00; font-size:13px; letter-spacing:0.5px;">Server Busy</span>
-                                <span style="font-size:12px; opacity:0.9;">Thena is very busy right now. Image generation may take a while.</span>
+                                <span style="font-weight:700; color:#ffaa00; font-size:13px; letter-spacing:0.5px;">${translations[currentLang].msgServerBusy}</span>
+                                <span style="font-size:12px; opacity:0.9;">${translations[currentLang].msgServerBusyDesc}</span>
                             </div>
                         `;
         }
@@ -2039,8 +2164,47 @@ generateBtn.addEventListener('click', async () => {
         });
     }
 
+    var modelETA = await fetch("https://create.thena.workers.dev/modelETAs")
+    modelETA = await modelETA.json()
+
+    const _selectedModelName = models.find(m => m.id === selectedModel)?.model ?? selectedModel;
+    const _etaData = (modelETA && modelETA[_selectedModelName]) ? modelETA[_selectedModelName] : {};
+    const _modelLoadSec   = Math.round(_etaData.modelLoadingTime   ?? 0);
+    const _imgGenSec      = Math.round(_etaData.imageGenerationTime ?? 0);
+
+    let _etaPhase        = 'model';
+    let _etaCountdown    = _modelLoadSec;
+    let _etaPhase2Started = false;
+
+    function _updateEtaLabel() {
+        const progressLabel = document.getElementById('generation-progress-label');
+        if (!progressLabel) return;
+
+        if (_etaPhase === 'model') {
+            if (_etaCountdown > 0) {
+                progressLabel.textContent = `${translations[currentLang].msgQueued} (~${_etaCountdown}s)`;
+            } else {
+                progressLabel.textContent = currentLang === 'tr' ? 'Model yakında hazır olacak' : 'Model will be ready soon';
+            }
+        } else if (_etaPhase === 'image') {
+            if (_etaCountdown > 0) {
+                progressLabel.textContent = `${translations[currentLang].msgGenerating} (~${_etaCountdown}s)`;
+            } else {
+                progressLabel.textContent = currentLang === 'tr' ? 'Resim şimdi üretilecek' : 'Image is about to be ready';
+            }
+        }
+    }
+
+    const _etaInterval = setInterval(() => {
+        if (_etaPhase === 'done') return;
+        if (_etaCountdown > 0) _etaCountdown--;
+        _updateEtaLabel();
+    }, 1000);
+
+    _updateEtaLabel();
+    
     try {
-        const response = await fetch('https://create.thena.workers.dev/createSync', {
+        var response = await fetch('https://create.thena.workers.dev/createSyncPoll', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -2048,9 +2212,74 @@ generateBtn.addEventListener('click', async () => {
             },
             body: JSON.stringify(apiBody)
         });
-        const data = await response.json();
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder("utf-8");
+        let buffer = "";
+        let data = null;
+        let lastProgress = 0;
+
+        while (true) {
+            const { value, done } = await reader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+            
+            let parts = buffer.split('\n\n');
+            buffer = parts.pop();
+
+            for (const part of parts) {
+                const lines = part.split('\n');
+                for (const line of lines) {
+                    if (line.trim().startsWith('data:')) {
+                        const jsonStr = line.substring(5).trim();
+                        if (jsonStr) {
+                            try {
+                                const parsed = JSON.parse(jsonStr);
+                                
+                                if (parsed.progress !== undefined && parsed.progress !== null) {
+                                    const progressVal = parseFloat(parsed.progress);
+                                    if (!isNaN(progressVal)) {
+                                        let p = progressVal;
+                                        if (p > 0 && p <= 1 && p.toString().includes('.')) p *= 100;
+                                        lastProgress = Math.min(100, Math.max(0, Math.round(p)));
+                                    }
+                                }
+
+                                const spinnerContainer = document.getElementById('generation-spinner-container');
+                                const spinnerText = document.getElementById('generation-progress-text');
+                                const progressLabel = document.getElementById('generation-progress-label');
+                                if (spinnerContainer && spinnerText && progressLabel) {
+                                    spinnerContainer.style.background = `conic-gradient(#00ff88 ${lastProgress}%, #333 ${lastProgress}%)`;
+                                    spinnerText.textContent = `${lastProgress}%`;
+
+                                    if (lastProgress > 0 && !_etaPhase2Started) {
+                                        _etaPhase2Started = true;
+                                        _etaPhase = 'image';
+                                        _etaCountdown = _imgGenSec;
+                                    }
+
+                                    if (_etaPhase !== 'done') {
+                                        _updateEtaLabel();
+                                    }
+                                }
+
+                                if (parsed.status === 202) continue; 
+                                data = parsed; 
+                            } catch(e) {
+                                console.error(e);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        _etaPhase = 'done';
+        clearInterval(_etaInterval);
 
         if (removeLoading) removeLoading();
+        if (!data) response.ok = false;
 
         if (response.ok && data.image && data.status === 200) {
             generationSuccess = true;
@@ -2136,9 +2365,38 @@ generateBtn.addEventListener('click', async () => {
             showNotification(`Error: ${data.content || 'Unknown Error'}`, 'error');
         }
     } catch (error) {
+        _etaPhase = 'done';
+        clearInterval(_etaInterval);
         if (removeLoading) removeLoading();
-        playErrorSound();
-        showNotification(currentLang == "tr" ? translations.tr.msgGenError : translations.en.msgGenError, 'error');
+
+        const isNetworkError = !error.response && (
+            error.name === 'TypeError' ||
+            error.name === 'AbortError' ||
+            (error.message && (
+                error.message.includes('Failed to fetch') ||
+                error.message.includes('NetworkError') ||
+                error.message.includes('network') ||
+                error.message.includes('QUIC') ||
+                error.message.includes('ERR_')
+            ))
+        );
+
+        if (isNetworkError) {
+            playErrorSound();
+            showNotification(
+                currentLang == "tr"
+                    ? "Bağlantı hatası. Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin."
+                    : "Connection error. Please check your internet connection and try again.",
+                'error'
+            );
+        } else {
+            const statusCode = error.response?.status;
+            if (statusCode !== 504) {
+                playErrorSound();
+                showNotification(currentLang == "tr" ? translations.tr.msgGenError : translations.en.msgGenError, 'error');
+            }
+        }
+
         isGeneratingImage = false;
         const placeholder = document.getElementById('active-generation-placeholder');
         if (placeholder) {
@@ -2146,6 +2404,10 @@ generateBtn.addEventListener('click', async () => {
             setTimeout(() => placeholder.remove(), 300);
         }
     } finally {
+        const progressOverlay = document.getElementById('generation-progress-overlay');
+        if (progressOverlay) {
+            progressOverlay.style.display = 'none';
+        }
         isGeneratingImage = false;
         clearTimeout(busyTimer);
 
@@ -2573,6 +2835,25 @@ async function populateModelFilter() {
     const currentVal = filterModel.value;
     filterModel.innerHTML = '<option value="">All Models</option>';
 
+    const gfModelDropdown = document.getElementById('gf-model-dropdown');
+    if (gfModelDropdown) {
+        gfModelDropdown.innerHTML = '<div class="gf-select-option active" data-value="">All Models</div>';
+    }
+
+    const appendModel = (value, label) => {
+        const opt = document.createElement('option');
+        opt.value = value;
+        opt.textContent = label;
+        filterModel.appendChild(opt);
+        if (gfModelDropdown) {
+            const div = document.createElement('div');
+            div.className = 'gf-select-option';
+            div.dataset.value = value;
+            div.textContent = label;
+            gfModelDropdown.appendChild(div);
+        }
+    };
+
     try {
         if (!_allModelsCache) {
             const res = await fetch('https://create.thena.workers.dev/models?type=all', { mode: 'cors' });
@@ -2582,30 +2863,23 @@ async function populateModelFilter() {
         }
 
         if (_allModelsCache && _allModelsCache.length > 0) {
-            _allModelsCache.forEach(m => {
-                const opt = document.createElement('option');
-                opt.value = m.model;
-                opt.textContent = m.model;
-                filterModel.appendChild(opt);
-            });
+            _allModelsCache.forEach(m => appendModel(m.model, m.model));
         }
     } catch (e) {
         if (models && models.length > 0) {
-            models.forEach(m => {
-                const opt = document.createElement('option');
-                opt.value = m.model;
-                opt.textContent = m.model;
-                filterModel.appendChild(opt);
-            });
+            models.forEach(m => appendModel(m.model, m.model));
         }
     }
 
-    var opt2 = document.createElement('option');
-    opt2.value = "Image Editor";
-    opt2.textContent = "Image Editor";
-    filterModel.appendChild(opt2);
+    appendModel('Image Editor', 'Image Editor');
 
-    if (currentVal) filterModel.value = currentVal;
+    if (currentVal) {
+        filterModel.value = currentVal;
+        const gfModelValue = document.getElementById('gf-model-value');
+        if (gfModelValue && currentVal) gfModelValue.textContent = currentVal;
+    }
+
+    if (typeof _bindGfModelOptions === 'function') _bindGfModelOptions();
 }
 
 const galleryLoader = document.getElementById('gallery-loader');
@@ -2859,8 +3133,72 @@ resetFiltersBtn.addEventListener('click', () => {
     filterRatio.value = '';
     filterDateStart.value = '';
     filterDateEnd.value = '';
+    const gfModelValue = document.getElementById('gf-model-value');
+    if (gfModelValue) gfModelValue.textContent = 'All Models';
+    const gfRatioValue = document.getElementById('gf-ratio-value');
+    if (gfRatioValue) gfRatioValue.textContent = 'All Sizes';
+    document.querySelectorAll('#gf-model-dropdown .gf-select-option').forEach(o => o.classList.remove('active'));
+    const firstModelOpt = document.querySelector('#gf-model-dropdown .gf-select-option');
+    if (firstModelOpt) firstModelOpt.classList.add('active');
+    document.querySelectorAll('#gf-ratio-dropdown .gf-select-option').forEach(o => o.classList.remove('active'));
+    const firstRatioOpt = document.querySelector('#gf-ratio-dropdown .gf-select-option');
+    if (firstRatioOpt) firstRatioOpt.classList.add('active');
     applyFilters();
 });
+
+(function initGalleryFilterSelects() {
+    function setupGfSelect(customId, triggerId, dropdownId, selectEl, labelEl) {
+        const customEl   = document.getElementById(customId);
+        const triggerEl  = document.getElementById(triggerId);
+        const dropdownEl = document.getElementById(dropdownId);
+        const valueEl    = document.getElementById(labelEl);
+        if (!customEl || !triggerEl || !dropdownEl || !selectEl || !valueEl) return;
+
+        function close() { customEl.classList.remove('open'); }
+
+        if (customId === 'gf-model-custom') {
+            window._bindGfModelOptions = () => bindOptions();
+        }
+
+        function bindOptions() {
+            dropdownEl.querySelectorAll('.gf-select-option').forEach(opt => {
+                opt.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const val  = opt.dataset.value;
+                    const text = opt.textContent.trim();
+                    selectEl.value = val;
+                    valueEl.textContent = text;
+                    dropdownEl.querySelectorAll('.gf-select-option').forEach(o => o.classList.remove('active'));
+                    opt.classList.add('active');
+                    close();
+                    selectEl.dispatchEvent(new Event('change'));
+                });
+            });
+        }
+
+        bindOptions();
+
+        triggerEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = customEl.classList.contains('open');
+            document.querySelectorAll('.gf-custom-select.open').forEach(el => el.classList.remove('open'));
+            if (!isOpen) customEl.classList.add('open');
+        });
+    }
+
+    setupGfSelect(
+        'gf-model-custom', 'gf-model-trigger', 'gf-model-dropdown',
+        document.getElementById('filter-model'), 'gf-model-value'
+    );
+    setupGfSelect(
+        'gf-ratio-custom', 'gf-ratio-trigger', 'gf-ratio-dropdown',
+        document.getElementById('filter-ratio'), 'gf-ratio-value'
+    );
+
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.gf-custom-select.open').forEach(el => el.classList.remove('open'));
+    });
+})();
 function getFileSize(dataUrl) {
     if (!dataUrl.startsWith('data:')) return '';
     const base64Length = dataUrl.length - (dataUrl.indexOf(',') + 1);
@@ -3477,7 +3815,7 @@ function openRedirectModal(type) {
     btnRedirectCancel.textContent = t.btnCancel;
     redirectModal.classList.add('active');
 }
-document.getElementById('btn-open-bot').addEventListener('click', () => openRedirectModal('bot'));
+//document.getElementById('btn-open-bot').addEventListener('click', () => openRedirectModal('bot'));
 document.getElementById('btn-open-owner').addEventListener('click', () => openRedirectModal('owner'));
 document.getElementById('btn-donate').addEventListener('click', () => openRedirectModal('donate'));
 btnRedirectCancel.addEventListener('click', () => {
@@ -4985,9 +5323,16 @@ btnImg2PromptGenerate.addEventListener('click', async () => {
             if (typeof playSuccessSound === "function") playSuccessSound();
             closeImg2PromptModal();
 
-            if (!document.getElementById("btn-show-all-models").classList.contains('active')) {
-                document.getElementById("btn-show-all-models").click()
-                await new Promise(resolve => setTimeout(resolve, 1000));
+            if (typeof window.ensureAllModelsVisible === 'function') {
+                await window.ensureAllModelsVisible();
+            } else {
+                if (!document.getElementById("btn-show-all-models").classList.contains('active')) {
+                    document.getElementById("btn-show-all-models").click();
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                } else {
+                    document.querySelector("#txt-filter-chip-all").click();
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
             }
 
             let incomingPrompt = "";
@@ -5070,6 +5415,8 @@ btnImg2PromptGenerate.addEventListener('click', async () => {
         } else {
             if (data.status == 401) {
                 showNotification(currentLang == "tr" ? translations.tr.invalidApiKey : translations.en.invalidApiKey, "error");
+            } else if (data.status == 429) {
+                showNotification(currentLang == "tr" ? translations.tr.priorLimitDaily : translations.en.priorLimitDaily, "error");
             } else {
                 showNotification(currentLang == "tr" ? translations.tr.msgGenPromptFailed : translations.en.msgGenPromptFailed, "error");
             }
@@ -5947,6 +6294,9 @@ async function loadGalleryStatistics() {
             "Thena Portraits": "thenaPortraits",
             "Thena Florence": "thenaFlorence",
             "Thena Alchemy": "thenaAlchemy",
+            "Thena Pixel": "thenapixel",
+            "Thena Nyx": "thenaNyx",
+            "Thena Noir": "thenaNoir",
             "Image Editor": "imageEditor"
         };
         
