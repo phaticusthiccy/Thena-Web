@@ -21,6 +21,7 @@
     const detailProvider    = document.getElementById('mg-detail-provider');
     const detailCost        = document.getElementById('mg-detail-cost');
     const detailType        = document.getElementById('mg-detail-type');
+    const showMoreStatsBtn  = document.getElementById('mg-show-more-stats');
     const selectModelBtn    = document.getElementById('mg-detail-select-btn');
 
     const requestModelBtn   = document.getElementById('btn-request-new-model');
@@ -40,6 +41,7 @@
     let showcaseImgs = [];
     let galleryModelPrices = {};
     let galleryModelUsages = {};
+    let cachedModelETAs = null;
 
     function debounce(func, wait) {
         let timeout;
@@ -65,6 +67,7 @@
         "Thena Florence": "thenaFlorence",
         "Thena Alchemy": "thenaAlchemy",
         "Thena Nyx": "thenaNyx",
+        "Thena Photoreal V2": "thenaPhotorealV2",
         "Thena Noir": "thenaNoir",
         "Thena Pixel": "thenaPixel",
         "Image Editor": "imageEditor"
@@ -318,6 +321,11 @@
             renderStatsCard();
         }
 
+        if (showMoreStatsBtn) {
+            showMoreStatsBtn.style.display = 'block';
+            showMoreStatsBtn.textContent = getLang('mgShowMoreStats', 'Show more');
+        }
+
         try {
             const url = new URL(window.location);
             url.searchParams.set('model', model.id);
@@ -409,6 +417,50 @@
     closeBtnDetail?.addEventListener('click', closeDetail);
     detailPanel?.addEventListener('click', (e) => { if (e.target === detailPanel) closeDetail(); });
 
+    const fullscreenBtn = document.getElementById('mg-fullscreen-btn');
+    const lightbox = document.getElementById('mg-lightbox');
+    const lightboxImg = document.getElementById('mg-lightbox-img');
+    const lightboxClose = document.getElementById('mg-lightbox-close');
+
+    function openLightbox() {
+        if (!showcaseImgs || showcaseImgs.length === 0) return;
+        lightboxImg.src = showcaseImgs[currentImgIdx];
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        lightbox.classList.add('closing');
+        setTimeout(() => {
+            lightbox.classList.remove('active');
+            lightbox.classList.remove('closing');
+            document.body.style.overflow = '';
+        }, 210);
+    }
+
+    fullscreenBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openLightbox();
+    });
+
+    lightboxClose?.addEventListener('click', closeLightbox);
+    lightbox?.addEventListener('click', (e) => {
+        if (e.target.classList.contains('mg-lightbox-backdrop') || e.target === lightbox) {
+            closeLightbox();
+        }
+    });
+
+    function syncLightbox() {
+        if (lightbox?.classList.contains('active')) {
+            lightboxImg.src = showcaseImgs[currentImgIdx];
+        }
+    }
+    const originalNavigateImg = navigateImg;
+    navigateImg = function(dir) {
+        originalNavigateImg(dir);
+        setTimeout(syncLightbox, 150);
+    };
+
     selectModelBtn?.addEventListener('click', async () => {
         if (!currentModel) return;
         
@@ -455,6 +507,56 @@
         } catch(e) {}
         detailPanel.classList.remove('active');
         galleryModal.classList.remove('active');
+    });
+
+    showMoreStatsBtn?.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (showMoreStatsBtn.textContent === getLang('mgShowMoreLoading', 'Loading...')) return;
+        
+        showMoreStatsBtn.textContent = getLang('mgShowMoreLoading', 'Loading...');
+
+        try {
+            if (!cachedModelETAs) {
+                const res = await fetch('https://create.thena.workers.dev/modelETAs');
+                if (res.ok) cachedModelETAs = await res.json();
+                else cachedModelETAs = {};
+            }
+        } catch (err) {
+            cachedModelETAs = {};
+        }
+        
+        let loadTime = '-';
+        let genTime = '-';
+
+        if (currentModel && currentModel.model) {
+            const mData = cachedModelETAs[currentModel.model];
+            if (mData) {
+                if (mData.modelLoadingTime !== undefined) loadTime = mData.modelLoadingTime + 's';
+                if (mData.imageGenerationTime !== undefined) genTime = mData.imageGenerationTime + 's';
+            }
+        }
+
+        const statsCard = document.getElementById('mg-detail-stats-card');
+        if (statsCard) {
+            const lblLoad = getLang('mgModelLoadTime', 'Model Loading Time');
+            const lblGen = getLang('mgGenTime', 'Avg. Generation Time');
+
+            const div = document.createElement('div');
+            div.innerHTML = `
+                <div class="metric-row" style="margin-top: 10px; border-top: 1px dashed rgba(255,255,255,0.06); padding-top: 14px; margin-bottom: 0;">
+                    <span>${lblLoad}</span><span style="color:#fff; font-weight:600;">${loadTime}</span>
+                </div>
+                <div class="metric-row" style="margin-bottom: 0;">
+                    <span>${lblGen}</span><span style="color:#fff; font-weight:600;">${genTime}</span>
+                </div>
+            `;
+            statsCard.appendChild(div);
+        }
+
+        showMoreStatsBtn.style.display = 'none';
+        showMoreStatsBtn.textContent = getLang('mgShowMoreStats', 'Show more');
     });
 
     const copyIdBtn = document.getElementById('btn-copy-model-id');
@@ -666,6 +768,11 @@
             
             const selBtnText = document.getElementById('mg-select-btn-text');
             if (selBtnText) selBtnText.textContent = getLang('mgSelectBtn', 'Generate with this Model');
+            
+            const btnShowMoreInfo = document.getElementById('mg-show-more-stats');
+            if (btnShowMoreInfo && btnShowMoreInfo.style.display !== 'none') {
+                btnShowMoreInfo.textContent = getLang('mgShowMoreStats', 'Show more');
+            }
         }
     }
 

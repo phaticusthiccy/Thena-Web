@@ -45,6 +45,9 @@ const modelSpecs = {
     "019d2154-7c24-74a1-806d-0fa8274a41d4": {
         usedTechniques: ["Anime", "Movie"]
     },
+    "5d697de8-f9b1-45a0-abfa-3c6da84529d1": {
+        usedTechniques: ["Photorealism"]
+    },
     "5ac14b95-8600-46d7-a966-a6de2e951995": {
         usedTechniques: ["General", "Photorealism"]
     },

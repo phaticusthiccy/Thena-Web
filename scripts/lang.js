@@ -28,6 +28,10 @@ const translations = {
         "resetDesc": "This action will permanently delete ALL images in your gallery, your API key, and all settings. This action is irreversible.",
         "img2promptTitle": "Image to Prompt",
         "img2promptDesc": "Upload an image or paste from clipboard (Ctrl+V) to generate a prompt.",
+        "lblImg2PromptDetail": "Detail Level",
+        "btnDetailLow": "Default",
+        "btnDetailMedium": "Detailed",
+        "btnDetailHigh": "Ultra Detailed",
         "btnCancel": "Cancel",
         "btnConfirm": "Yes, Delete",
         "btnConfirmAll": "Yes, Delete All",
@@ -297,6 +301,7 @@ const translations = {
         "msgImgNotBase": "Image source is not base64.",
         "msgUploadFailed": "Image upload failed.",
         "msgPerfModeOn": "Performance Mode Enabled",
+        "msgPerfModeHalf": "Balanced Performance Mode Enabled",
         "msgPerfModeOff": "Performance Mode Disabled",
         "msgPerfMonOn": "Performance Monitor Enabled",
         "msgPerfMonOff": "Performance Monitor Disabled",
@@ -415,7 +420,22 @@ const translations = {
         "mgNextImg": "Next Image",
         "suggestingModel": "Suggesting Model...",
         "msgServerBusy": "Server Busy",
-        "msgServerBusyDesc": "Thena is very busy right now. Image generation may take a while."
+        "msgServerBusyDesc": "Thena is very busy right now. Image generation may take a while.",
+        "mgShowMoreStats": "Show more",
+        "mgShowMoreLoading": "Loading...",
+        "mgModelLoadTime": "Model Loading Time",
+        "mgGenTime": "Avg. Generation Time",
+        "elementsLabel": "Elements",
+        "elementsAddTitle": "Add Element",
+        "elementsSearchPlaceholder": "Search elements...",
+        "elementsLoading": "Loading elements...",
+        "elementsEmpty": "No elements found.",
+        "elementsNsfwToggle": "+18",
+        "elementsUseBtn": "Use Element",
+        "elementsUseBtnSelected": "✓ Selected",
+        "elementsMaxReached": "You can select at most 2 elements.",
+        "elementsNoModel": "Please select a model first.",
+        "elementsLoadFailed": "Failed to load elements."
     },
     "tr": {
         "generateBtn": "Görüntü Oluştur",
@@ -446,6 +466,10 @@ const translations = {
         "resetDesc": "Bu işlem galerinizdeki TÜM görüntüleri, API anahtarınızı ve tüm ayarları kalıcı olarak silecektir. Geri alınamaz.",
         "img2promptTitle": "Görselden Prompt'a",
         "img2promptDesc": "Bir prompt oluşturmak için resim yükleyin veya yapıştırın (Ctrl+V).",
+        "lblImg2PromptDetail": "Detay Seviyesi",
+        "btnDetailLow": "Varsayılan",
+        "btnDetailMedium": "Detaylı",
+        "btnDetailHigh": "Ultra Detaylı",
         "btnCancel": "İptal",
         "btnConfirm": "Evet, Sil",
         "btnConfirmAll": "Evet, Hepsini Sil",
@@ -715,6 +739,7 @@ const translations = {
         "msgImgNotBase": "Resim kaynağı base64 formatında değil.",
         "msgUploadFailed": "Resim yükleme hatası.",
         "msgPerfModeOn": "Performans Modü Aktif Edildi",
+        "msgPerfModeHalf": "Dengeli Performans Modu Aktif Edildi",
         "msgPerfModeOff": "Performans Modü Deaktif Edildi",
         "msgPerfMonOn": "Performans Göstergesi Açıldı",
         "msgPerfMonOff": "Performans Göstergesi Kapatıldı",
@@ -833,7 +858,22 @@ const translations = {
         "mgNextImg": "Sonraki Resim",
         "suggestingModel": "Model Öneriliyor...",
         "msgServerBusy": "Sunucu Meşgul",
-        "msgServerBusyDesc": "Thena şu an çok yoğun. Görsel oluşturma biraz zaman alabilir."
+        "msgServerBusyDesc": "Thena şu an çok yoğun. Görsel oluşturma biraz zaman alabilir.",
+        "mgShowMoreStats": "Daha fazla göster",
+        "mgShowMoreLoading": "Yükleniyor...",
+        "mgModelLoadTime": "RAM'e Yüklenme Süresi",
+        "mgGenTime": "Ortalama Üretim Süresi",
+        "elementsLabel": "Elementler",
+        "elementsAddTitle": "Element Ekle",
+        "elementsSearchPlaceholder": "Element ara...",
+        "elementsLoading": "Elementler yükleniyor...",
+        "elementsEmpty": "Element bulunamadı.",
+        "elementsNsfwToggle": "+18",
+        "elementsUseBtn": "Elementi Kullan",
+        "elementsUseBtnSelected": "✓ Seçildi",
+        "elementsMaxReached": "En fazla 2 element seçebilirsiniz.",
+        "elementsNoModel": "Lütfen önce bir model seçin.",
+        "elementsLoadFailed": "Elementler yüklenemedi."
     }
 };
 
@@ -892,6 +932,7 @@ function initDomCache() {
         else if (txt === "Aspect Ratio" || txt === "En boy Oranı") type = 'ratio';
         else if (txt === "Extra Features" || txt === "Ekstra Özellikler") type = 'extra';
         else if (txt.includes("Advanced Settings") || txt.includes("Gelişmiş Ayarlar")) type = 'adv';
+        else if (txt === "Elements" || txt === "Elementler") type = 'elements';
         
         if (type) {
             domElementCache.labels.push({ el: lbl, type: type });
@@ -980,6 +1021,7 @@ function updateLanguage(lang) {
         else if (item.type === 'ratio') item.el.textContent = t.ratioLabel;
         else if (item.type === 'extra') item.el.textContent = t.extraLabel;
         else if (item.type === 'adv') item.el.textContent = t.advLabel;
+        else if (item.type === 'elements') item.el.textContent = t.elementsLabel || 'Elements';
     }
 
 
@@ -993,7 +1035,8 @@ function updateLanguage(lang) {
         ["desc-power-saver", t.lblPowerSaverDesc],
         ["lbl-crop-title", t.editorCropLabel], ["btn-crop-cancel", t.editorCropCancel], ["btn-crop-apply", t.editorCropApply],
         ["gallery-stats-title", t.galleryStatsTitle], ["stats-models-title", t.statsModelsTitle], ["stats-extras-title", t.statsExtrasTitle], ["stats-cost-title", t.statsCostTitle],
-        ["desc-model-suggestion", t.modelSuggestionDesc]
+        ["desc-model-suggestion", t.modelSuggestionDesc],
+        ["lbl-img2prompt-detail", t.lblImg2PromptDetail], ["btn-detail-low", t.btnDetailLow], ["btn-detail-medium", t.btnDetailMedium], ["btn-detail-high", t.btnDetailHigh]
     ]
     
     idsToSetTextSafely.forEach(([id, text]) => {

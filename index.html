@@ -705,6 +705,19 @@
 
                 </div>
             </div>
+
+            <div class="input-group" id="elements-section">
+                <label id="label-elements">Elementler</label>
+                <div class="elements-selected-container" id="elements-selected-container">
+                    <button class="element-add-card" id="element-add-btn" title="Element Ekle">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
             <button class="generate-btn" id="generate-btn">Generate Image</button>
         </div>
         <button class="gallery-btn" id="gallery-btn">Gallery</button>
@@ -937,6 +950,7 @@
             <div class="lightbox-details">
                 <div class="lightbox-prompt" id="lightbox-prompt"></div>
                 <div class="lightbox-meta" id="lightbox-meta"></div>
+                <div class="lightbox-elements-section" id="lightbox-elements-section"></div>
             </div>
         </div>
     </div>
@@ -1413,7 +1427,16 @@
                 <button id="clear-img-btn" class="hidden" title="Remove Image">&times;</button>
             </div>
 
-            <div class="confirm-actions" style="margin-top: 20px;">
+            <div id="img2prompt-detail-setting" style="margin-top: 20px; text-align: left;">
+                <label style="display:block; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;"><span id="lbl-img2prompt-detail">Detay Seviyesi / Detail</span></label>
+                <div style="display:flex; gap:10px; justify-content:center;">
+                    <button id="btn-detail-low" class="img2prompt-detail-btn active" data-level="low" style="flex:1; padding:10px; background:rgba(var(--primary-rgb), 0.1); color:var(--primary); border:1px solid var(--primary); border-radius:8px; cursor:pointer; font-weight:600; font-size:13px; transition:all 0.2s;">Low</button>
+                    <button id="btn-detail-medium" class="img2prompt-detail-btn" data-level="medium" style="flex:1; padding:10px; background:#1a1a1a; color:#888; border:1px solid #333; border-radius:8px; cursor:pointer; font-weight:600; font-size:13px; transition:all 0.2s;">Medium</button>
+                    <button id="btn-detail-high" class="img2prompt-detail-btn" data-level="high" style="flex:1; padding:10px; background:#1a1a1a; color:#888; border:1px solid #333; border-radius:8px; cursor:pointer; font-weight:600; font-size:13px; transition:all 0.2s;">High</button>
+                </div>
+            </div>
+
+            <div class="confirm-actions" style="margin-top: 25px;">
                 <button id="btn-img2prompt-cancel">Cancel</button>
                 <button id="btn-img2prompt-generate" class="generate-btn-small" disabled>
                     <span>Generate Prompt</span>
@@ -1531,6 +1554,7 @@
                         <line x1="11" y1="8" x2="11" y2="14" class="zoom-plus-h"></line>
                         <line x1="8" y1="11" x2="14" y2="11" class="zoom-plus-v"></line>
                     </svg>
+                    <span class="zoom-label" style="display: none; font-size: 11px; font-weight: bold; margin-left: 5px; min-width: 25px;"></span>
                 </button>
                 <div class="feat-slider-images-wrapper" id="feat-slider-images-wrapper">
                     <img id="feat-slider-img-after" src="src/slider/creative/after.webp" alt="After">
@@ -2021,7 +2045,27 @@
                         <polyline points="9 18 15 12 9 6"></polyline>
                     </svg>
                 </button>
+                <button id="mg-fullscreen-btn" class="mg-fullscreen-btn" aria-label="View Full Image" title="Tam Ekran">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <polyline points="9 21 3 21 3 15"></polyline>
+                        <line x1="21" y1="3" x2="14" y2="10"></line>
+                        <line x1="3" y1="21" x2="10" y2="14"></line>
+                    </svg>
+                </button>
             </div>
+
+            <div id="mg-lightbox" class="mg-lightbox" aria-hidden="true">
+                <div class="mg-lightbox-backdrop"></div>
+                <button id="mg-lightbox-close" class="mg-lightbox-close" aria-label="Close">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+                <img id="mg-lightbox-img" class="mg-lightbox-img" src="" alt="">
+            </div>
+
             <div class="mg-detail-info-col">
                 <div class="mg-detail-badge" id="mg-detail-badge">Finetuned Model</div>
                 <h2 id="mg-detail-name" class="mg-detail-name"></h2>
@@ -2057,6 +2101,8 @@
                 
                 <div class="mg-detail-stats-card" id="mg-detail-stats-card">
                 </div>
+                
+                <a id="mg-show-more-stats" style="text-decoration: underline; font-style: italic; color: #aaa; font-size: 12px; cursor: pointer; display: block; margin-top: 5px; margin-bottom: 15px; margin-left: 5px; width: max-content;">Daha fazla göster</a>
 
                 <button id="mg-detail-select-btn" class="mg-select-model-btn">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -2107,7 +2153,79 @@
         </div>
     </div>
 
+    <div class="elements-modal-overlay" id="elements-modal-overlay">
+        <div class="elements-modal" id="elements-modal">
+            <div class="elements-modal-header">
+                <div class="elements-search-bar">
+                    <svg class="elements-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="elements-search-input" class="elements-search-input" placeholder="Element ara...">
+                </div>
+                <button class="elements-nsfw-toggle" id="elements-nsfw-btn" title="+18 İçerikleri Göster/Gizle">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                    <span id="elements-nsfw-label">+18</span>
+                </button>
+                <button class="elements-close-btn" id="elements-modal-close">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="elements-modal-body">
+                <div class="elements-grid" id="elements-grid">
+                </div>
+                <div class="elements-loading" id="elements-loading" style="display:none;">
+                    <div class="elements-spinner"></div>
+                    <span>Elementler yükleniyor...</span>
+                </div>
+                <div class="elements-empty" id="elements-empty" style="display:none;">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.3;">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        <line x1="8" y1="11" x2="14" y2="11"></line>
+                    </svg>
+                    <span>Element bulunamadı.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="element-detail-overlay" id="element-detail-overlay">
+        <div class="element-detail-card" id="element-detail-card">
+            <button class="element-detail-close" id="element-detail-close">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div class="element-detail-thumb-wrapper">
+                <img class="element-detail-thumb" id="element-detail-thumb" src="" alt="">
+                <div class="element-detail-nsfw-badge" id="element-detail-nsfw-badge" style="display:none;">+18</div>
+            </div>
+            <div class="element-detail-info">
+                <h3 class="element-detail-name" id="element-detail-name"></h3>
+                <p class="element-detail-desc" id="element-detail-desc"></p>
+                <div class="element-detail-id-row">
+                    <span class="element-detail-id-label">Lora ID</span>
+                    <span class="element-detail-id" id="element-detail-lora-id"></span>
+                </div>
+                <button class="element-use-btn" id="element-use-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    Elementi Kullan
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="scripts/modelGallery.js" defer></script>
     <script src="scripts/customSelect.js"></script>
+    <script src="scripts/elements.js"></script>
 </body>
 </html>
