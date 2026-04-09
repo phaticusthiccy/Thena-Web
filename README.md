@@ -167,9 +167,11 @@ It combines state-of-the-art **Image Generation**, a full knowledge-aware **AI R
     <table>
       <tr>
         <td align="center"><b>Gallery Stats</b></td>
+        <td align="center"><b>Model Showcase</b></td>
       </tr>
       <tr>
         <td><a href="src/gallery_stats.webp"><img src="src/gallery_stats.webp" alt="Gallery Stats" /></a></td>
+        <td><a href="src/model_showcase.webp"><img src="src/model_showcase.webp" alt="Model Showcase" /></a></td>
       </tr>
     </table>
   </details>

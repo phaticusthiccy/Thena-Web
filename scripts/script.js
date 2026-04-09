@@ -74,13 +74,16 @@ const modelTranslationsTR = {
     "7367ab 279dbf 417a8 51fe3 5050": "Yüksek çözünürlüklü, sadece açık içerikler için titizlikle tasarlanmış bir model. Yükske netlikte tutarlı görüntüler üretebilir.",
     "3fb0b43e-ef78-44cf-82da-c3e0d6e0a5a7": "Thena Movie'den baz alınarak üretilen sinematik anime modeli. Güçlü kontrast değerleri ve dolgun renkleriyle anime sinematikleri oluşturun.",
     "a7a7faa7-d391-4cae-a1ac-d4d793da2ecd": "Thena Pixel ile retro oyun karakterleri, çizim çıkartmaları ve 8 bit temalı görseller oluşturmak mümkün. Model sadece 8-bit pixel tarzında görseller üretebilir.",
+    "bb8acd44-9e3f-4a9e-9b99-cee4a52f5ae7": "Klasik 90'lar anime ve vintage lo-fi hissini Thena Rewave ile geri getirin. Belirgin bir retro gren, yumuşak ışıklar ve rüya gibi bir atmosferle nostaljik görseller oluşturun.",
     "019d2154-7c24-74a1-806d-0fa8274a41d4": "Thena Nyx ile karanlık, büyüleyici ve atmosferik anime portreleri yaratın. Derin gölgeler, keskin ışıklar ve çarpıcı parlama efektleriyle karakterlerinize gizemli bir hava katın.",
     "5ac14b95-8600-46d7-a966-a6de2e951995": "Klasik film noir estetiğini yakalayın. Yüksek kontrastlı aydınlatma, derin gölgeler ve sinematik portreler oluşturun. Vintage hissi veren dramatik sahneler ve karakterler yaratmak için mükemmeldir.",
-    "5d697de8-f9b1-45a0-abfa-3c6da84529d1": "Thena Photoreal V2, fotogerçekçiliğin yeni standardı. Kısa istemlerle bile çarpıcı detay ve netliğe sahip, nefes kesici derecede gerçekçi görüntüler üretir."
+    "5d697de8-f9b1-45a0-abfa-3c6da84529d1": "Thena Photoreal V2, fotogerçekçiliğin yeni standardı. Kısa istemlerle bile çarpıcı detay ve netliğe sahip, nefes kesici derecede gerçekçi görüntüler üretir.",
+    "3c7a94a0-c844-471f-ae98-0f8c8508baf7": "Thena Ultra'dan ilham alan, gürültü tabanlı akıl yürütme yeteneğine sahip yeni nesil yapay zeka modeli. Geliştirilen ikinci akıl yürütme odaklı sürüm."
 };
 const UNSUPPORTED_FAST_MODELS = ["551ks 8g6g8 16gga 1h8h8 6b4a5 5060"];
 const MOVIE_FILTER_SUPPORTED_MODELS = ["8gg12 61812 6628 19729 6b4a5 5060", "551ks 8g6g8 16gga 1h8h8 6b4a5 5060", "771ks 71g6g8 hlh8h8 6b4a5 77b4a5 5060", "3fb0b43e-ef78-44cf-82da-c3e0d6e0a5a7", "019d2154-7c24-74a1-806d-0fa8274a41d4"];
 const NO_EXTRA_FEATURES_MODELS = ["81ggz 7j661 66281 yy161 1f4f4 21143"];
+const NO_PRO_RATE_LIMIT_MODELS = ["3c7a94a0-c844-471f-ae98-0f8c8508baf7"];
 const MODEL_STATS = {
     // Thena Movie
     "8gg12 61812 6628 19729 6b4a5 5060": { intel: 5, qual: 5, speed: 3 },
@@ -112,6 +115,10 @@ const MODEL_STATS = {
     "7367ab 279dbf 417a8 51fe3 5050": { intel: 3, qual: 4, speed: 3 },
     // Thena Pixel
     "a7a7faa7-d391-4cae-a1ac-d4d793da2ecd": { intel: 2, qual: 4, speed: 2 },
+    // Thena Rewave
+    "bb8acd44-9e3f-4a9e-9b99-cee4a52f5ae7": { intel: 3, qual: 4, speed: 2 },
+    // Thena Pro
+    "3c7a94a0-c844-471f-ae98-0f8c8508baf7": { intel: 5, qual: 5, speed: 5 },
     // Thena Nyx
     "019d2154-7c24-74a1-806d-0fa8274a41d4": { intel: 2, qual: 5, speed: 3 },
     // Thena Photoreal V2
@@ -121,7 +128,7 @@ const MODEL_STATS = {
     // Default 
     "default": { intel: 3, qual: 3, speed: 3 }
 };
-const HOT_MODELS = ["81ggz 7j661 66281 yy161 1f4f4 21143", "8gg12 61812 6628 19729 6b4a5 5060"];
+const HOT_MODELS = ["81ggz 7j661 66281 yy161 1f4f4 21143", "3c7a94a0-c844-471f-ae98-0f8c8508baf7", "8gg12 61812 6628 19729 6b4a5 5060"];
 
 const WHIMSICAL_FLAME_SVG = `
 <div class="whimsical-flame-effect" style="position: absolute; inset: 0; z-index: 10; pointer-events: none;">
@@ -1249,6 +1256,62 @@ async function checkUltraRateLimit(modelId, card) {
     }
 }
 
+async function checkProRateLimit(modelId, card) {
+    const apiKey = apiKeyInput ? apiKeyInput.value.trim() : '';
+    if (!apiKey) {
+        showNotification(currentLang == "tr" ? translations.tr.msgEnterApiKey : translations.en.msgEnterApiKey, "error");
+        return false;
+    }
+
+    try {
+        const response = await fetch('https://create.thena.workers.dev/checkProRateLimit', {
+            method: 'GET',
+            headers: {
+                'apikey': apiKey
+            }
+        });
+
+        const data = await response.json();
+
+        if (data.remainingMinutes && data.remainingMinutes !== 0) {
+            selectedModel = null;
+            localStorage.removeItem(LS_KEYS.MODEL);
+            if (card) card.classList.remove('active');
+            checkExtraFeaturesAvailability(null);
+
+            const minutes = data.remainingMinutes;
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+
+            let timeStr = '';
+            if (currentLang == "tr") {
+                if (hours > 0) timeStr += `${hours} saat `;
+                if (mins > 0) timeStr += `${mins} dakika`;
+                showNotification(translations.tr.msgModelUnavailableWait + timeStr.trim() + ".", "error");
+            } else {
+                if (hours > 0) timeStr += `${hours} hour${hours > 1 ? 's' : ''} `;
+                if (mins > 0) timeStr += `${mins} minute${mins > 1 ? 's' : ''}`;
+                showNotification(translations.en.msgModelUnavailableWait + timeStr.trim() + ".", "error");
+            }
+
+            if (typeof playErrorSound === "function") playErrorSound();
+            checkFormReady();
+            return false;
+        }
+
+        return true;
+    } catch (error) {
+        console.error('Pro rate limit check failed:', error);
+        showNotification(currentLang == "tr" ? translations.tr.msgRateLimitFail : translations.en.msgRateLimitFail, "error");
+
+        selectedModel = null;
+        localStorage.removeItem(LS_KEYS.MODEL);
+        if (card) card.classList.remove('active');
+        checkFormReady();
+        return false;
+    }
+}
+
 function updateAdvancedSettingsConstraints(modelId) {
     const advCfg = document.getElementById('adv-cfg');
     const advSteps = document.getElementById('adv-steps');
@@ -1932,6 +1995,12 @@ async function loadModels() {
                             if (!allowed) return;
                         }
                     }
+                    if (typeof NO_PRO_RATE_LIMIT_MODELS !== 'undefined' && NO_PRO_RATE_LIMIT_MODELS.includes(clickedId)) {
+                        if (typeof checkProRateLimit === 'function') {
+                            const allowed = await checkProRateLimit(clickedId, card);
+                            if (!allowed) return;
+                        }
+                    }
                 }
                 checkFormReady();
                 if (typeof stopModelSuggestionHighlight === 'function') stopModelSuggestionHighlight();
@@ -1961,6 +2030,9 @@ async function loadModels() {
 
             if (NO_EXTRA_FEATURES_MODELS.includes(lastModelId)) {
                 checkUltraRateLimit(lastModelId, targetCard);
+            }
+            if (NO_PRO_RATE_LIMIT_MODELS.includes(lastModelId)) {
+                checkProRateLimit(lastModelId, targetCard);
             }
         }
     } else {
@@ -6518,6 +6590,7 @@ async function loadGalleryStatistics() {
         
         const modelKeyMapping = {
             "Thena Ultra": "thenaUltra",
+            "Thena Pro": "thenaPro",
             "Thena Movie": "thenaMovie",
             "Thena V7": "thenaV7",
             "Thena V6": "thenaV6",
@@ -6534,6 +6607,7 @@ async function loadGalleryStatistics() {
             "Thena Pixel": "thenapixel",
             "Thena Nyx": "thenaNyx",
             "Thena Photoreal V2": "thenaPhotorealV2",
+            "Thena Rewave": "thenaRewave",
             "Thena Noir": "thenaNoir",
             "Image Editor": "imageEditor"
         };

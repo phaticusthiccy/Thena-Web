@@ -54,6 +54,12 @@ const modelSpecs = {
     "a7a7faa7-d391-4cae-a1ac-d4d793da2ecd": {
         usedTechniques: ["Anime"]
     },
+    "bb8acd44-9e3f-4a9e-9b99-cee4a52f5ae7": {
+        usedTechniques: ["Anime"]
+    },
+    "3c7a94a0-c844-471f-ae98-0f8c8508baf7": {
+        usedTechniques: ["General"]
+    },
     "7367ab 279dbf 417a8 51fe3 5050": {
         usedTechniques: ["NSFW", "Photorealism"]
     },

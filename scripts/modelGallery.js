@@ -53,6 +53,7 @@
 
     const modelKeyMapping = {
         "Thena Ultra": "thenaUltra",
+        "Thena Pro": "thenaPro",
         "Thena Movie": "thenaMovie",
         "Thena V7": "thenaV7",
         "Thena V6": "thenaV6",
@@ -68,6 +69,7 @@
         "Thena Alchemy": "thenaAlchemy",
         "Thena Nyx": "thenaNyx",
         "Thena Photoreal V2": "thenaPhotorealV2",
+        "Thena Rewave": "thenaRewave",
         "Thena Noir": "thenaNoir",
         "Thena Pixel": "thenaPixel",
         "Image Editor": "imageEditor"

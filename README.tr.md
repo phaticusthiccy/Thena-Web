@@ -167,9 +167,11 @@ Son teknoloji **Görüntü Oluşturma (Image Generation)** motorunu, interaktif 
     <table>
       <tr>
         <td align="center"><b>Galeri İstatistikleri</b></td>
+        <td align="center"><b>Model Vitrini</b></td>
       </tr>
       <tr>
         <td><a href="src/gallery_stats.webp"><img src="src/gallery_stats.webp" alt="Galeri İstatistikleri" /></a></td>
+        <td><a href="src/model_showcase.webp"><img src="src/model_showcase.webp" alt="Model Vitrini" /></a></td>
       </tr>
     </table>
   </details>
