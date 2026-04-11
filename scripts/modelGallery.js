@@ -70,6 +70,7 @@
         "Thena Nyx": "thenaNyx",
         "Thena Photoreal V2": "thenaPhotorealV2",
         "Thena Rewave": "thenaRewave",
+        "Thena Pastel": "thenaPastel",
         "Thena Noir": "thenaNoir",
         "Thena Pixel": "thenaPixel",
         "Image Editor": "imageEditor"

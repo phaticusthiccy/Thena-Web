@@ -75,6 +75,7 @@ const modelTranslationsTR = {
     "3fb0b43e-ef78-44cf-82da-c3e0d6e0a5a7": "Thena Movie'den baz alınarak üretilen sinematik anime modeli. Güçlü kontrast değerleri ve dolgun renkleriyle anime sinematikleri oluşturun.",
     "a7a7faa7-d391-4cae-a1ac-d4d793da2ecd": "Thena Pixel ile retro oyun karakterleri, çizim çıkartmaları ve 8 bit temalı görseller oluşturmak mümkün. Model sadece 8-bit pixel tarzında görseller üretebilir.",
     "bb8acd44-9e3f-4a9e-9b99-cee4a52f5ae7": "Klasik 90'lar anime ve vintage lo-fi hissini Thena Rewave ile geri getirin. Belirgin bir retro gren, yumuşak ışıklar ve rüya gibi bir atmosferle nostaljik görseller oluşturun.",
+    "e4cf240b-a8aa-4033-b87c-9c9a60cf456e": "Thena Pastel ile rüya gibi ve canlı bir anime dünyasına adım atın. Bu model, pürüzsüz ve sanatsal bir dokunuşu canlı renklerle birleştirerek büyüleyici görseller yaratır. Parlak portreler ve atmosferik sahneler için mükemmeldir.",
     "019d2154-7c24-74a1-806d-0fa8274a41d4": "Thena Nyx ile karanlık, büyüleyici ve atmosferik anime portreleri yaratın. Derin gölgeler, keskin ışıklar ve çarpıcı parlama efektleriyle karakterlerinize gizemli bir hava katın.",
     "5ac14b95-8600-46d7-a966-a6de2e951995": "Klasik film noir estetiğini yakalayın. Yüksek kontrastlı aydınlatma, derin gölgeler ve sinematik portreler oluşturun. Vintage hissi veren dramatik sahneler ve karakterler yaratmak için mükemmeldir.",
     "5d697de8-f9b1-45a0-abfa-3c6da84529d1": "Thena Photoreal V2, fotogerçekçiliğin yeni standardı. Kısa istemlerle bile çarpıcı detay ve netliğe sahip, nefes kesici derecede gerçekçi görüntüler üretir.",
@@ -117,6 +118,8 @@ const MODEL_STATS = {
     "a7a7faa7-d391-4cae-a1ac-d4d793da2ecd": { intel: 2, qual: 4, speed: 2 },
     // Thena Rewave
     "bb8acd44-9e3f-4a9e-9b99-cee4a52f5ae7": { intel: 3, qual: 4, speed: 2 },
+    // Thena Pastel
+    "e4cf240b-a8aa-4033-b87c-9c9a60cf456e": { intel: 3, qual: 3, speed: 4 },
     // Thena Pro
     "3c7a94a0-c844-471f-ae98-0f8c8508baf7": { intel: 5, qual: 5, speed: 5 },
     // Thena Nyx
@@ -6608,6 +6611,7 @@ async function loadGalleryStatistics() {
             "Thena Nyx": "thenaNyx",
             "Thena Photoreal V2": "thenaPhotorealV2",
             "Thena Rewave": "thenaRewave",
+            "Thena Pastel": "thenaPastel",
             "Thena Noir": "thenaNoir",
             "Image Editor": "imageEditor"
         };

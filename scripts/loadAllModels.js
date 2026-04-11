@@ -57,6 +57,9 @@ const modelSpecs = {
     "bb8acd44-9e3f-4a9e-9b99-cee4a52f5ae7": {
         usedTechniques: ["Anime"]
     },
+    "e4cf240b-a8aa-4033-b87c-9c9a60cf456e": {
+        usedTechniques: ["Anime"]
+    },
     "3c7a94a0-c844-471f-ae98-0f8c8508baf7": {
         usedTechniques: ["General"]
     },
