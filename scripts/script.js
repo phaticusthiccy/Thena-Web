@@ -6801,3 +6801,24 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('modelsLoaded', _observeHeavyElements);
     window.addEventListener('modelsRendered', _observeHeavyElements);
 })();
+
+(function() {
+    const infoBtn = document.getElementById('btn-elements-info');
+    const modal   = document.getElementById('elements-info-modal');
+    const closeBtn = document.getElementById('close-elements-info-modal');
+
+    if (!infoBtn || !modal) return;
+
+    infoBtn.addEventListener('click', () => {
+        modal.classList.add('active');
+        if (typeof playInformationSound === 'function') playInformationSound();
+    });
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+    }
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('active');
+    });
+})();

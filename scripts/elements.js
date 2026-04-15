@@ -186,6 +186,14 @@
                             <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
                     </div>` : ''}
+                    ${!isFull || isSelected ? `<button class="element-quick-add-btn${isSelected ? ' selected' : ''}" title="${isSelected ? 'Kaldır' : 'Hızlı Ekle'}" data-lora-id="${escHtml(el.loraID)}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            ${isSelected
+                                ? '<polyline points="20 6 9 17 4 12"></polyline>'
+                                : '<line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>'
+                            }
+                        </svg>
+                    </button>` : ''}
                 </div>
                 <div class="element-grid-info">
                     <span class="element-grid-name">${escHtml(el.name)}</span>
@@ -193,7 +201,37 @@
                 </div>
             `;
 
-            card.addEventListener('click', () => openDetail(el));
+            const quickBtn = card.querySelector('.element-quick-add-btn');
+            if (quickBtn) {
+                quickBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const alreadySel = selectedElements.some(s => s.loraID === el.loraID);
+                    if (alreadySel) {
+                        if (typeof playTone === 'function') {
+                            playTone('sine', 500, 300, 0.12, 0, 0.18);
+                        }
+                        deselectElement(el.loraID);
+                    } else {
+                        if (typeof playTone === 'function') {
+                            playTone('sine', 400, 700, 0.1, 0, 0.2);
+                            playTone('triangle', 700, 1000, 0.12, 0.08, 0.15);
+                        }
+                        selectElement(el);
+                    }
+                });
+            }
+
+            card.addEventListener('click', () => {
+                if (card.classList.contains('dimmed')) {
+                    if (typeof playErrorSound === 'function') playErrorSound();
+                    card.classList.remove('element-shake');
+                    void card.offsetWidth;
+                    card.classList.add('element-shake');
+                    card.addEventListener('animationend', () => card.classList.remove('element-shake'), { once: true });
+                    return;
+                }
+                openDetail(el);
+            });
             grid.appendChild(card);
         });
     }
@@ -341,9 +379,16 @@
         if (!currentDetailEl) return;
         const alreadySelected = selectedElements.some(s => s.loraID === currentDetailEl.loraID);
         if (alreadySelected) {
+            if (typeof playTone === 'function') {
+                playTone('sine', 500, 300, 0.12, 0, 0.18);
+            }
             deselectElement(currentDetailEl.loraID);
             closeDetail();
         } else {
+            if (typeof playTone === 'function') {
+                playTone('sine', 400, 700, 0.1, 0, 0.2);
+                playTone('triangle', 700, 1000, 0.12, 0.08, 0.15);
+            }
             selectElement(currentDetailEl);
             if (selectedElements.some(s => s.loraID === currentDetailEl.loraID)) {
                 closeDetail();

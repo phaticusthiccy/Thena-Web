@@ -435,7 +435,20 @@ const translations = {
         "elementsUseBtnSelected": "✓ Selected",
         "elementsMaxReached": "You can select at most 2 elements.",
         "elementsNoModel": "Please select a model first.",
-        "elementsLoadFailed": "Failed to load elements."
+        "elementsLoadFailed": "Failed to load elements.",
+        "elInfoTitle": "What are Elements?",
+        "elInfoSub": "LoRA-based Style Layers",
+        "elInfoDesc": "Elements are <strong>LoRA</strong> (Low-Rank Adaptation) layers specific to the selected model. They add extra style, atmosphere, or character traits to your image. You can select up to <strong>2 elements</strong> at once.",
+        "elInfoI1Title": "Model Compatibility",
+        "elInfoI1Desc": "Each element only works with certain models. Elements reset when you change the model.",
+        "elInfoI2Title": "Style Layer",
+        "elInfoI2Desc": "Adds an art style, lighting effect, or special look to the image. It enhances your prompt, not replaces it.",
+        "elInfoI3Title": "Max 2 Elements",
+        "elInfoI3Desc": "At most 2 elements can be active per generation. Click the \"+\" button to open the element gallery.",
+        "elInfoI4Title": "NSFW Elements",
+        "elInfoI4Desc": "Use the NSFW toggle in the element gallery to show +18 elements.",
+        "mgLoadFailed": "Failed to load models. Please try again.",
+        "mgRetry": "Try Again"
     },
     "tr": {
         "generateBtn": "Görüntü Oluştur",
@@ -873,7 +886,20 @@ const translations = {
         "elementsUseBtnSelected": "✓ Seçildi",
         "elementsMaxReached": "En fazla 2 element seçebilirsiniz.",
         "elementsNoModel": "Lütfen önce bir model seçin.",
-        "elementsLoadFailed": "Elementler yüklenemedi."
+        "elementsLoadFailed": "Elementler yüklenemedi.",
+        "elInfoTitle": "Elementler Nedir?",
+        "elInfoSub": "LoRA Tabanlı Stil Katmanları",
+        "elInfoDesc": "Elementler, seçtiğiniz modele özel <strong>LoRA</strong> (Low-Rank Adaptation) katmanlarıdır. Görselinize ekstra stil, atmosfer veya karakter özellikleri kazandırır. Aynı anda en fazla <strong>2 element</strong> seçebilirsiniz.",
+        "elInfoI1Title": "Model Uyumluluğu",
+        "elInfoI1Desc": "Her element yalnızca belirli modellerle çalışır. Model değiştirdiğinizde elementler sıfırlanır.",
+        "elInfoI2Title": "Stil Katmanı",
+        "elInfoI2Desc": "Görsele sanat stili, ışık efekti veya özel görünüm ekler. Prompt'unuzu destekler, değiştirmez.",
+        "elInfoI3Title": "Maks. 2 Element",
+        "elInfoI3Desc": "Her üretimde en fazla 2 element aktif olabilir. \"+\" butonuna tıklayarak element galerini açabilirsiniz.",
+        "elInfoI4Title": "NSFW Elementler",
+        "elInfoI4Desc": "Element galerisindeki NSFW butonu ile +18 elementleri görüntüleyebilirsiniz.",
+        "mgLoadFailed": "Modeller yüklenemedi. Lütfen tekrar deneyin.",
+        "mgRetry": "Tekrar Dene"
     }
 };
 
@@ -912,7 +938,12 @@ function initDomCache() {
         'txt-filter-chip-all', 'opt-preset-all', 'opt-preset-safe', 'opt-preset-18plus', 'btn-preset-filter',
         'lbl-crop-title', 'btn-crop-cancel', 'btn-crop-apply',
         'gallery-stats-title', 'stats-models-title', 'stats-extras-title', 'stats-cost-title', 'stats-approx-cost',
-        'lbl-model-suggestion', 'desc-model-suggestion'
+        'lbl-model-suggestion', 'desc-model-suggestion',
+        'lbl-elinfo-title', 'lbl-elinfo-sub',
+        'lbl-elinfo-i1-title', 'lbl-elinfo-i1-desc',
+        'lbl-elinfo-i2-title', 'lbl-elinfo-i2-desc',
+        'lbl-elinfo-i3-title', 'lbl-elinfo-i3-desc',
+        'lbl-elinfo-i4-title', 'lbl-elinfo-i4-desc'
     ];
 
     ids.forEach(id => {
@@ -1036,12 +1067,20 @@ function updateLanguage(lang) {
         ["lbl-crop-title", t.editorCropLabel], ["btn-crop-cancel", t.editorCropCancel], ["btn-crop-apply", t.editorCropApply],
         ["gallery-stats-title", t.galleryStatsTitle], ["stats-models-title", t.statsModelsTitle], ["stats-extras-title", t.statsExtrasTitle], ["stats-cost-title", t.statsCostTitle],
         ["desc-model-suggestion", t.modelSuggestionDesc],
-        ["lbl-img2prompt-detail", t.lblImg2PromptDetail], ["btn-detail-low", t.btnDetailLow], ["btn-detail-medium", t.btnDetailMedium], ["btn-detail-high", t.btnDetailHigh]
+        ["lbl-img2prompt-detail", t.lblImg2PromptDetail], ["btn-detail-low", t.btnDetailLow], ["btn-detail-medium", t.btnDetailMedium], ["btn-detail-high", t.btnDetailHigh],
+        ["lbl-elinfo-title", t.elInfoTitle], ["lbl-elinfo-sub", t.elInfoSub],
+        ["lbl-elinfo-i1-title", t.elInfoI1Title], ["lbl-elinfo-i1-desc", t.elInfoI1Desc],
+        ["lbl-elinfo-i2-title", t.elInfoI2Title], ["lbl-elinfo-i2-desc", t.elInfoI2Desc],
+        ["lbl-elinfo-i3-title", t.elInfoI3Title], ["lbl-elinfo-i3-desc", t.elInfoI3Desc],
+        ["lbl-elinfo-i4-title", t.elInfoI4Title], ["lbl-elinfo-i4-desc", t.elInfoI4Desc]
     ]
     
     idsToSetTextSafely.forEach(([id, text]) => {
         safelySetText(id, text);
     });
+
+    const elInfoDescEl = document.getElementById('lbl-elinfo-desc');
+    if (elInfoDescEl && t.elInfoDesc) elInfoDescEl.innerHTML = t.elInfoDesc;
 
 
     var idsToSetSvgTextSafely = [

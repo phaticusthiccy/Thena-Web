@@ -103,7 +103,29 @@
             populateCategoryFilter();
             renderModels();
         } catch (err) {
-            grid.innerHTML = `<div class="mg-no-results" style="color:#ff6666;">Failed to load models. Please try again.</div>`;
+            grid.innerHTML = `
+                <div class="mg-no-results" style="color:#ff6666; display:flex; flex-direction:column; align-items:center; gap:14px;">
+                    <span>${getLang('mgLoadFailed', 'Failed to load models. Please try again.')}</span>
+                    <button id="mg-retry-btn" style="
+                        background: linear-gradient(135deg, #ff6666 0%, #cc3333 100%);
+                        color: #fff;
+                        border: none;
+                        border-radius: 10px;
+                        padding: 10px 28px;
+                        font-size: 14px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        letter-spacing: 0.3px;
+                        transition: opacity 0.2s, transform 0.15s;
+                    "
+                    onmouseover="this.style.opacity='0.85';this.style.transform='scale(1.04)'"
+                    onmouseout="this.style.opacity='1';this.style.transform='scale(1)'"
+                    >${getLang('mgRetry', 'Try Again')}</button>
+                </div>`;
+            document.getElementById('mg-retry-btn')?.addEventListener('click', () => {
+                allModels = [];
+                fetchModels();
+            });
         }
     }
 
