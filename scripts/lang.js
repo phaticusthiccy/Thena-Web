@@ -448,7 +448,42 @@ const translations = {
         "elInfoI4Title": "NSFW Elements",
         "elInfoI4Desc": "Use the NSFW toggle in the element gallery to show +18 elements.",
         "mgLoadFailed": "Failed to load models. Please try again.",
-        "mgRetry": "Try Again"
+        "mgRetry": "Try Again",
+        "editorModelLabel": "AI Model",
+        "editorModelV1Name": "PixelFusion",
+        "editorModelV1Tag": "U-Net",
+        "editorModelV2Name": "NeuralFlow",
+        "editorModelV2Tag": "Transformer",
+        "editorV1InfoTitle": "PixelFusion",
+        "editorV1InfoSub": "U-Net Architecture",
+        "editorV1InfoDesc": "PixelFusion uses a classic <strong>U-Net</strong> encoder-decoder architecture for fast, reliable image variation generation. Ideal for precise edits with high spatial fidelity.",
+        "editorV1I1Title": "Fast Generation",
+        "editorV1I1Desc": "Optimized convolutional pipeline delivers results quickly, making it great for rapid iteration.",
+        "editorV1I2Title": "Spatial Precision",
+        "editorV1I2Desc": "Preserves structural details and edges, keeping edits true to the original image layout.",
+        "editorV1I3Title": "Recommended For",
+        "editorV1I3Desc": "Style transfers, color changes, texture variations, and edits that require high structural accuracy.",
+        "editorV2InfoTitle": "NeuralFlow",
+        "editorV2InfoSub": "Transformer Architecture",
+        "editorV2InfoDesc": "NeuralFlow is powered by a modern <strong>Transformer</strong> attention mechanism, enabling richer semantic understanding. Produces highly creative and contextually aware variations.",
+        "editorV2I1Title": "Semantic Understanding",
+        "editorV2I1Desc": "Uses global attention to understand the full context of the image, leading to more coherent results.",
+        "editorV2I2Title": "Creative Variations",
+        "editorV2I2Desc": "Excels at generating imaginative and diverse outputs that go beyond simple pixel-level edits.",
+        "editorV2I3Title": "Recommended For",
+        "editorV2I3Desc": "Complex scene understanding, artistic reimaginings, and prompts that describe significant content changes.",
+        "editorModelV3Name": "Synapse",
+        "editorModelV3Tag": "Reasoning",
+        "editorModelV3Badge": "MAX",
+        "editorV3InfoTitle": "Synapse",
+        "editorV3InfoSub": "Reasoning-Guided Generation",
+        "editorV3InfoDesc": "Synapse is the most powerful editor model, driven by a <strong>reasoning engine</strong> that thinks through your prompt before generating. Delivers unmatched precision, coherence, and detail in every output.",
+        "editorV3I1Title": "Reasoning Engine",
+        "editorV3I1Desc": "Analyses the prompt deeply before generating — understanding intent, context, and nuance for highly accurate results.",
+        "editorV3I2Title": "Maximum Quality",
+        "editorV3I2Desc": "Highest fidelity output across all metrics — detail, coherence, and visual quality are all at their peak.",
+        "editorV3I3Title": "Recommended For",
+        "editorV3I3Desc": "Professional edits, complex multi-subject prompts, and any task where quality must not be compromised."
     },
     "tr": {
         "generateBtn": "Görüntü Oluştur",
@@ -899,7 +934,42 @@ const translations = {
         "elInfoI4Title": "NSFW Elementler",
         "elInfoI4Desc": "Element galerisindeki NSFW butonu ile +18 elementleri görüntüleyebilirsiniz.",
         "mgLoadFailed": "Modeller yüklenemedi. Lütfen tekrar deneyin.",
-        "mgRetry": "Tekrar Dene"
+        "mgRetry": "Tekrar Dene",
+        "editorModelLabel": "AI Modeli",
+        "editorModelV1Name": "PixelFusion",
+        "editorModelV1Tag": "U-Net",
+        "editorModelV2Name": "NeuralFlow",
+        "editorModelV2Tag": "Transformer",
+        "editorV1InfoTitle": "PixelFusion",
+        "editorV1InfoSub": "U-Net Mimarisi",
+        "editorV1InfoDesc": "PixelFusion, hızlı ve güvenilir görsel varyasyonu için klasik <strong>U-Net</strong> kodlayıcı-çözücü mimarisini kullanır. Yüksek mekansal doğrulukla hassas düzenlemeler için idealdir.",
+        "editorV1I1Title": "Hızlı Üretim",
+        "editorV1I1Desc": "Optimize edilmiş konvolüsyonel boru hattı sonuçları hızlıca sunar; hızlı deneme-yanılma süreçleri için mükemmeldir.",
+        "editorV1I2Title": "Mekansal Hassasiyet",
+        "editorV1I2Desc": "Yapısal detayları ve kenarları korur, düzenlemelerin orijinal görsel düzeniyle uyumlu kalmasını sağlar.",
+        "editorV1I3Title": "Tavsiye Edilen Kullanım",
+        "editorV1I3Desc": "Stil transferleri, renk değişiklikleri, doku varyasyonları ve yüksek yapısal doğruluk gerektiren düzenlemeler.",
+        "editorV2InfoTitle": "NeuralFlow",
+        "editorV2InfoSub": "Transformer Mimarisi",
+        "editorV2InfoDesc": "NeuralFlow, daha zengin anlamsal anlayış sağlayan modern bir <strong>Transformer</strong> dikkat mekanizmasıyla çalışır. Yüksek yaratıcılık ve bağlam farkında varyasyonlar üretir.",
+        "editorV2I1Title": "Anlamsal Anlayış",
+        "editorV2I1Desc": "Görselin tüm bağlamını anlamak için global dikkat kullanır; daha tutarlı sonuçlara ulaşır.",
+        "editorV2I2Title": "Yaratıcı Varyasyonlar",
+        "editorV2I2Desc": "Basit piksel düzeyindeki düzenlemelerin ötesine geçen yaratıcı ve çeşitli çıktılar üretmekte öne çıkar.",
+        "editorV2I3Title": "Tavsiye Edilen Kullanım",
+        "editorV2I3Desc": "Karmaşık sahne anlamlandırması, sanatsal yeniden yorumlamalar ve önemli içerik değişikliklerini tanımlayan promptlar.",
+        "editorModelV3Name": "Synapse",
+        "editorModelV3Tag": "Muhakeme",
+        "editorModelV3Badge": "MAX",
+        "editorV3InfoTitle": "Synapse",
+        "editorV3InfoSub": "Muhakeme Destekli Üretim",
+        "editorV3InfoDesc": "Synapse, prompt'unuzu üretmeden önce düşünen bir <strong>muhakeme motoru</strong> tarafından yönetilen en güçlü editör modelidir. Her çıktıda eşsiz hassasiyet, uyum ve detay sunar.",
+        "editorV3I1Title": "Muhakeme Motoru",
+        "editorV3I1Desc": "Prompt'u üretmeden önce derinlemesine analiz eder — amaç, bağlam ve ince ayrıntıları anlayarak son derece doğru sonuçlar üretir.",
+        "editorV3I2Title": "Maksimum Kalite",
+        "editorV3I2Desc": "Tüm metriklerde en yüksek çıktı kalitesi — detay, uyum ve görsel kalite zirvede.",
+        "editorV3I3Title": "Tavsiye Edilen Kullanım",
+        "editorV3I3Desc": "Profesyonel düzenlemeler, çok öğeli karmaşık promptlar ve kalitenin kesinlikle taviz verilmemesi gereken görevler."
     }
 };
 
@@ -943,7 +1013,23 @@ function initDomCache() {
         'lbl-elinfo-i1-title', 'lbl-elinfo-i1-desc',
         'lbl-elinfo-i2-title', 'lbl-elinfo-i2-desc',
         'lbl-elinfo-i3-title', 'lbl-elinfo-i3-desc',
-        'lbl-elinfo-i4-title', 'lbl-elinfo-i4-desc'
+        'lbl-elinfo-i4-title', 'lbl-elinfo-i4-desc',
+        'label-editor-model',
+        'txt-editor-model-v1', 'txt-editor-model-v1-tag',
+        'txt-editor-model-v2', 'txt-editor-model-v2-tag',
+        'lbl-editor-v1-title', 'lbl-editor-v1-sub',
+        'lbl-editor-v1-i1-title', 'lbl-editor-v1-i1-desc',
+        'lbl-editor-v1-i2-title', 'lbl-editor-v1-i2-desc',
+        'lbl-editor-v1-i3-title', 'lbl-editor-v1-i3-desc',
+        'lbl-editor-v2-title', 'lbl-editor-v2-sub',
+        'lbl-editor-v2-i1-title', 'lbl-editor-v2-i1-desc',
+        'lbl-editor-v2-i2-title', 'lbl-editor-v2-i2-desc',
+        'lbl-editor-v2-i3-title', 'lbl-editor-v2-i3-desc',
+        'txt-editor-model-v3', 'txt-editor-model-v3-tag', 'txt-editor-model-v3-badge',
+        'lbl-editor-v3-title', 'lbl-editor-v3-sub',
+        'lbl-editor-v3-i1-title', 'lbl-editor-v3-i1-desc',
+        'lbl-editor-v3-i2-title', 'lbl-editor-v3-i2-desc',
+        'lbl-editor-v3-i3-title', 'lbl-editor-v3-i3-desc'
     ];
 
     ids.forEach(id => {
@@ -1072,7 +1158,24 @@ function updateLanguage(lang) {
         ["lbl-elinfo-i1-title", t.elInfoI1Title], ["lbl-elinfo-i1-desc", t.elInfoI1Desc],
         ["lbl-elinfo-i2-title", t.elInfoI2Title], ["lbl-elinfo-i2-desc", t.elInfoI2Desc],
         ["lbl-elinfo-i3-title", t.elInfoI3Title], ["lbl-elinfo-i3-desc", t.elInfoI3Desc],
-        ["lbl-elinfo-i4-title", t.elInfoI4Title], ["lbl-elinfo-i4-desc", t.elInfoI4Desc]
+        ["lbl-elinfo-i4-title", t.elInfoI4Title], ["lbl-elinfo-i4-desc", t.elInfoI4Desc],
+        ["label-editor-model", t.editorModelLabel],
+        ["txt-editor-model-v1", t.editorModelV1Name], ["txt-editor-model-v1-tag", t.editorModelV1Tag],
+        ["txt-editor-model-v2", t.editorModelV2Name], ["txt-editor-model-v2-tag", t.editorModelV2Tag],
+        ["lbl-editor-v1-title", t.editorV1InfoTitle], ["lbl-editor-v1-sub", t.editorV1InfoSub],
+        ["lbl-editor-v1-i1-title", t.editorV1I1Title], ["lbl-editor-v1-i1-desc", t.editorV1I1Desc],
+        ["lbl-editor-v1-i2-title", t.editorV1I2Title], ["lbl-editor-v1-i2-desc", t.editorV1I2Desc],
+        ["lbl-editor-v1-i3-title", t.editorV1I3Title], ["lbl-editor-v1-i3-desc", t.editorV1I3Desc],
+        ["lbl-editor-v2-title", t.editorV2InfoTitle], ["lbl-editor-v2-sub", t.editorV2InfoSub],
+        ["lbl-editor-v2-i1-title", t.editorV2I1Title], ["lbl-editor-v2-i1-desc", t.editorV2I1Desc],
+        ["lbl-editor-v2-i2-title", t.editorV2I2Title], ["lbl-editor-v2-i2-desc", t.editorV2I2Desc],
+        ["lbl-editor-v2-i3-title", t.editorV2I3Title], ["lbl-editor-v2-i3-desc", t.editorV2I3Desc],
+        ["txt-editor-model-v3", t.editorModelV3Name], ["txt-editor-model-v3-tag", t.editorModelV3Tag],
+        ["txt-editor-model-v3-badge", t.editorModelV3Badge],
+        ["lbl-editor-v3-title", t.editorV3InfoTitle], ["lbl-editor-v3-sub", t.editorV3InfoSub],
+        ["lbl-editor-v3-i1-title", t.editorV3I1Title], ["lbl-editor-v3-i1-desc", t.editorV3I1Desc],
+        ["lbl-editor-v3-i2-title", t.editorV3I2Title], ["lbl-editor-v3-i2-desc", t.editorV3I2Desc],
+        ["lbl-editor-v3-i3-title", t.editorV3I3Title], ["lbl-editor-v3-i3-desc", t.editorV3I3Desc]
     ]
     
     idsToSetTextSafely.forEach(([id, text]) => {
@@ -1081,6 +1184,15 @@ function updateLanguage(lang) {
 
     const elInfoDescEl = document.getElementById('lbl-elinfo-desc');
     if (elInfoDescEl && t.elInfoDesc) elInfoDescEl.innerHTML = t.elInfoDesc;
+
+    const editorV1DescEl = document.getElementById('lbl-editor-v1-desc');
+    if (editorV1DescEl && t.editorV1InfoDesc) editorV1DescEl.innerHTML = t.editorV1InfoDesc;
+
+    const editorV2DescEl = document.getElementById('lbl-editor-v2-desc');
+    if (editorV2DescEl && t.editorV2InfoDesc) editorV2DescEl.innerHTML = t.editorV2InfoDesc;
+
+    const editorV3DescEl = document.getElementById('lbl-editor-v3-desc');
+    if (editorV3DescEl && t.editorV3InfoDesc) editorV3DescEl.innerHTML = t.editorV3InfoDesc;
 
 
     var idsToSetSvgTextSafely = [

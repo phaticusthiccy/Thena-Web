@@ -446,7 +446,14 @@ const dbHelper = {
 
                 if (hasFilters) {
                     if (filters.isFavorite && !item.isFavorite) matches = false;
-                    if (matches && filters.model && item.model !== filters.model) matches = false;
+                    if (matches && filters.model) {
+                        const fm = filters.model;
+                        if (fm === 'Image Editor') {
+                            if (!item.model || !item.model.toUpperCase().startsWith('IMAGE EDITOR')) matches = false;
+                        } else {
+                            if (item.model !== fm) matches = false;
+                        }
+                    }
                     if (matches && filters.ratio && item.size !== filters.ratio) matches = false;
                     if (matches && filters.search) {
                          if (!item.prompt.toLowerCase().includes(filters.search)) matches = false;
@@ -3032,14 +3039,11 @@ async function populateModelFilter() {
         gfModelDropdown.innerHTML = '<div class="gf-select-option active" data-value="">All Models</div>';
     }
 
-    const appendModel = (value, label) => {
-        const opt = document.createElement('option');
-        opt.value = value;
-        opt.textContent = label;
-        filterModel.appendChild(opt);
+    const appendModel = (value, label, isSub = false) => {
+        filterModel.appendChild(new Option(label, value));
         if (gfModelDropdown) {
             const div = document.createElement('div');
-            div.className = 'gf-select-option';
+            div.className = 'gf-select-option' + (isSub ? ' gf-sub-option' : '');
             div.dataset.value = value;
             div.textContent = label;
             gfModelDropdown.appendChild(div);
@@ -3064,6 +3068,9 @@ async function populateModelFilter() {
     }
 
     appendModel('Image Editor', 'Image Editor');
+    appendModel('Image Editor (PixelFusion)', '↳ PixelFusion', true);
+    appendModel('Image Editor (NeuralFlow)', '↳ NeuralFlow', true);
+    appendModel('Image Editor (Synapse)', '↳ Synapse ✦', true);
 
     if (currentVal) {
         filterModel.value = currentVal;
@@ -3236,6 +3243,7 @@ function renderItems(items) {
         const div = document.createElement('div');
         div.className = `gallery-item ${spanClass}`;
         div.dataset.timestamp = item.timestamp;
+        const isSensitive = spanClass.includes('sensitive');
         div.innerHTML = `
                 <div class="multi-select-check">
                     <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -3243,7 +3251,13 @@ function renderItems(items) {
                     </svg>
                 </div>
                 <img data-src="${displayUrl}" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" loading="lazy" alt="${item.prompt}">
-                
+                ${isSensitive ? `
+                <button class="gallery-reveal-btn" title="Reveal Image" aria-label="Reveal sensitive image">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                </button>` : ''}
                 <button class="gallery-copy-btn" title="Use This Style" onclick="useImageSettings(event, this)">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -3437,6 +3451,22 @@ const lightboxMeta = document.getElementById('lightbox-meta');
 const lightboxDownload = document.getElementById('lightbox-download');
 galleryGrid.addEventListener('click', (e) => {
     if (window._isMultiSelectMode && window._isMultiSelectMode()) return;
+
+    const revealBtn = e.target.closest('.gallery-reveal-btn');
+    if (revealBtn) {
+        e.stopPropagation();
+        const item = revealBtn.closest('.gallery-item');
+        if (!item) return;
+        const isUnblurred = item.classList.toggle('unblurred');
+        const eyeSvg = revealBtn.querySelector('svg');
+        if (isUnblurred) {
+            eyeSvg.innerHTML = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path><line x1="1" y1="1" x2="23" y2="23"></line>`;
+        } else {
+            eyeSvg.innerHTML = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>`;
+        }
+        return;
+    }
+
     const item = e.target.closest('.gallery-item');
     if (item) {
         const data = galleryItemDataMap.get(item.dataset.timestamp);
@@ -6613,7 +6643,10 @@ async function loadGalleryStatistics() {
             "Thena Rewave": "thenaRewave",
             "Thena Pastel": "thenaPastel",
             "Thena Noir": "thenaNoir",
-            "Image Editor": "imageEditor"
+            "Image Editor": "imageEditorV1",
+            "Image Editor (NeuralFlow)": "imageEditorV2",
+            "Image Editor (Synapse)": "imageEditorV3",
+            "Image Editor (PixelFusion)": "imageEditorV1"
         };
         
         const t = translations[currentLang];

@@ -467,6 +467,49 @@
                     </div>
                 </div>
 
+                <div class="input-group">
+                    <label id="label-editor-model">AI Model</label>
+                    <div class="editor-model-selector" id="editor-model-selector">
+                        <button class="editor-model-btn active" id="editor-model-btn-v1" data-model="v1">
+                            <span class="editor-model-info-btn" id="btn-editor-model-v1-info" role="button" tabindex="0" title="PixelFusion Info">
+                                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                            </span>
+                            <span class="editor-model-icon">🎨</span>
+                            <span class="editor-model-name" id="txt-editor-model-v1">PixelFusion</span>
+                            <span class="editor-model-tag" id="txt-editor-model-v1-tag">U-Net</span>
+                        </button>
+                        <button class="editor-model-btn" id="editor-model-btn-v2" data-model="v2">
+                            <span class="editor-model-info-btn" id="btn-editor-model-v2-info" role="button" tabindex="0" title="NeuralFlow Info">
+                                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                            </span>
+                            <span class="editor-model-icon">⚡</span>
+                            <span class="editor-model-name" id="txt-editor-model-v2">NeuralFlow</span>
+                            <span class="editor-model-tag" id="txt-editor-model-v2-tag">Transformer</span>
+                        </button>
+                        <button class="editor-model-btn editor-model-btn-premium" id="editor-model-btn-v3" data-model="v3">
+                            <span class="editor-model-info-btn" id="btn-editor-model-v3-info" role="button" tabindex="0" title="Synapse Info">
+                                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                            </span>
+                            <span class="editor-model-premium-badge" id="txt-editor-model-v3-badge">MAX</span>
+                            <span class="editor-model-icon">🧠</span>
+                            <span class="editor-model-name" id="txt-editor-model-v3">Synapse</span>
+                            <span class="editor-model-tag" id="txt-editor-model-v3-tag">Reasoning</span>
+                        </button>
+                    </div>
+                </div>
+
                 <button class="generate-btn" id="editor-generate-btn">Generate Variation</button>
                 
 
@@ -1656,6 +1699,151 @@
                     <div>
                         <span class="elinfo-item-title" id="lbl-elinfo-i4-title">NSFW Elementler</span>
                         <span class="elinfo-item-desc" id="lbl-elinfo-i4-desc">Element galerisindeki NSFW butonu ile +18 elementleri görüntüleyebilirsiniz.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="editor-model-v1-info-modal" class="feature-modal">
+        <div class="elements-info-card">
+            <button id="close-editor-model-v1-info-modal">&times;</button>
+            <div class="elements-info-header">
+                <div class="elements-info-icon-wrap">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                        <path d="M3 9h18"></path><path d="M3 15h18"></path>
+                        <path d="M9 3v18"></path><path d="M15 3v18"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="elements-info-title" id="lbl-editor-v1-title">PixelFusion</h3>
+                    <p class="elements-info-subtitle" id="lbl-editor-v1-sub">U-Net Architecture</p>
+                </div>
+            </div>
+            <p class="elements-info-desc" id="lbl-editor-v1-desc">PixelFusion uses a classic <strong>U-Net</strong> encoder-decoder architecture for fast, reliable image variation generation. Ideal for precise edits with high spatial fidelity.</p>
+            <div class="elements-info-items">
+                <div class="elements-info-item">
+                    <div class="elinfo-item-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polyline></svg>
+                    </div>
+                    <div>
+                        <span class="elinfo-item-title" id="lbl-editor-v1-i1-title">Fast Generation</span>
+                        <span class="elinfo-item-desc" id="lbl-editor-v1-i1-desc">Optimized convolutional pipeline delivers results quickly, making it great for rapid iteration.</span>
+                    </div>
+                </div>
+                <div class="elements-info-item">
+                    <div class="elinfo-item-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                    </div>
+                    <div>
+                        <span class="elinfo-item-title" id="lbl-editor-v1-i2-title">Spatial Precision</span>
+                        <span class="elinfo-item-desc" id="lbl-editor-v1-i2-desc">Preserves structural details and edges, keeping edits true to the original image layout.</span>
+                    </div>
+                </div>
+                <div class="elements-info-item">
+                    <div class="elinfo-item-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    </div>
+                    <div>
+                        <span class="elinfo-item-title" id="lbl-editor-v1-i3-title">Recommended For</span>
+                        <span class="elinfo-item-desc" id="lbl-editor-v1-i3-desc">Style transfers, color changes, texture variations, and edits that require high structural accuracy.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="editor-model-v2-info-modal" class="feature-modal">
+        <div class="elements-info-card">
+            <button id="close-editor-model-v2-info-modal">&times;</button>
+            <div class="elements-info-header">
+                <div class="elements-info-icon-wrap">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="elements-info-title" id="lbl-editor-v2-title">NeuralFlow</h3>
+                    <p class="elements-info-subtitle" id="lbl-editor-v2-sub">Transformer Architecture</p>
+                </div>
+            </div>
+            <p class="elements-info-desc" id="lbl-editor-v2-desc">NeuralFlow is powered by a modern <strong>Transformer</strong> attention mechanism, enabling richer semantic understanding. Produces highly creative and contextually aware variations.</p>
+            <div class="elements-info-items">
+                <div class="elements-info-item">
+                    <div class="elinfo-item-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    </div>
+                    <div>
+                        <span class="elinfo-item-title" id="lbl-editor-v2-i1-title">Semantic Understanding</span>
+                        <span class="elinfo-item-desc" id="lbl-editor-v2-i1-desc">Uses global attention to understand the full context of the image, leading to more coherent results.</span>
+                    </div>
+                </div>
+                <div class="elements-info-item">
+                    <div class="elinfo-item-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+                    </div>
+                    <div>
+                        <span class="elinfo-item-title" id="lbl-editor-v2-i2-title">Creative Variations</span>
+                        <span class="elinfo-item-desc" id="lbl-editor-v2-i2-desc">Excels at generating imaginative and diverse outputs that go beyond simple pixel-level edits.</span>
+                    </div>
+                </div>
+                <div class="elements-info-item">
+                    <div class="elinfo-item-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    </div>
+                    <div>
+                        <span class="elinfo-item-title" id="lbl-editor-v2-i3-title">Recommended For</span>
+                        <span class="elinfo-item-desc" id="lbl-editor-v2-i3-desc">Complex scene understanding, artistic reimaginings, and prompts that describe significant content changes.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="editor-model-v3-info-modal" class="feature-modal">
+        <div class="elements-info-card editor-v3-info-card">
+            <button id="close-editor-model-v3-info-modal">&times;</button>
+            <div class="elements-info-header">
+                <div class="elements-info-icon-wrap editor-v3-icon-wrap">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="elements-info-title" id="lbl-editor-v3-title">Synapse</h3>
+                    <p class="elements-info-subtitle editor-v3-subtitle" id="lbl-editor-v3-sub">Reasoning-Guided Generation</p>
+                </div>
+            </div>
+            <p class="elements-info-desc" id="lbl-editor-v3-desc">Synapse is the most powerful editor model, driven by a <strong>reasoning engine</strong> that thinks through your prompt before generating. Delivers unmatched precision, coherence, and detail in every output.</p>
+            <div class="elements-info-items">
+                <div class="elements-info-item">
+                    <div class="elinfo-item-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    </div>
+                    <div>
+                        <span class="elinfo-item-title" id="lbl-editor-v3-i1-title">Reasoning Engine</span>
+                        <span class="elinfo-item-desc" id="lbl-editor-v3-i1-desc">Analyses the prompt deeply before generating — understanding intent, context, and nuance for highly accurate results.</span>
+                    </div>
+                </div>
+                <div class="elements-info-item">
+                    <div class="elinfo-item-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    </div>
+                    <div>
+                        <span class="elinfo-item-title" id="lbl-editor-v3-i2-title">Maximum Quality</span>
+                        <span class="elinfo-item-desc" id="lbl-editor-v3-i2-desc">Highest fidelity output across all metrics — detail, coherence, and visual quality are all at their peak.</span>
+                    </div>
+                </div>
+                <div class="elements-info-item">
+                    <div class="elinfo-item-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    </div>
+                    <div>
+                        <span class="elinfo-item-title" id="lbl-editor-v3-i3-title">Recommended For</span>
+                        <span class="elinfo-item-desc" id="lbl-editor-v3-i3-desc">Professional edits, complex multi-subject prompts, and any task where quality must not be compromised.</span>
                     </div>
                 </div>
             </div>

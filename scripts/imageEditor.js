@@ -1,5 +1,6 @@
 let editorSelectedFile = null;
 let editorModerationLevel = 'high';
+let editorSelectedModel = 'v1';
 
 function loadEditorPresets() {
     const presetsContainer = document.getElementById('presets-container');
@@ -160,12 +161,17 @@ document.addEventListener('DOMContentLoaded', () => {
             
             cropImageTarget.onload = () => {
                 cropModal.classList.add('active');
+                const body = cropModal.querySelector('.crop-modal-body');
+                const bodyH = body ? body.clientHeight : window.innerHeight * 0.6;
+                const bodyW = body ? body.clientWidth : window.innerWidth * 0.9;
                 editorCropper = new Cropper(cropImageTarget, {
                     viewMode: 1,
                     autoCropArea: 1,
                     background: false,
                     responsive: true,
-                    restore: false
+                    restore: false,
+                    minContainerWidth: bodyW,
+                    minContainerHeight: bodyH
                 });
                 cropImageTarget.onload = null;
             };
@@ -480,7 +486,136 @@ document.addEventListener('DOMContentLoaded', () => {
             nextView = updateView(currentMode);
         });
     }
+
+    const editorModelBtns = document.querySelectorAll('.editor-model-btn');
+    editorModelBtns.forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            if (e.target.closest('.editor-model-info-btn')) return;
+            const targetModel = btn.dataset.model || 'v1';
+
+            if (targetModel === 'v3') {
+                btn.classList.add('editor-model-btn-checking');
+                const loader = document.createElement('div');
+                loader.className = 'editor-model-btn-loader';
+                loader.innerHTML = `<span class="eml-spinner"></span>`;
+                btn.appendChild(loader);
+                requestAnimationFrame(() => requestAnimationFrame(() => {
+                    loader.classList.add('visible');
+                }));
+
+                const allowed = await checkVariationRateLimit();
+
+                loader.classList.remove('visible');
+                await new Promise(r => setTimeout(r, 220));
+                loader.remove();
+                btn.classList.remove('editor-model-btn-checking');
+
+                if (!allowed) return;
+            }
+
+            editorModelBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            editorSelectedModel = targetModel;
+            if (typeof playInformationSound === 'function') playInformationSound();
+        });
+    });
+
+    const btnV1Info = document.getElementById('btn-editor-model-v1-info');
+    const modalV1 = document.getElementById('editor-model-v1-info-modal');
+    const closeV1 = document.getElementById('close-editor-model-v1-info-modal');
+    if (btnV1Info && modalV1) {
+        btnV1Info.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (typeof playInformationSound === 'function') playInformationSound();
+            modalV1.classList.add('active');
+        });
+    }
+    if (closeV1 && modalV1) {
+        closeV1.addEventListener('click', () => modalV1.classList.remove('active'));
+        modalV1.addEventListener('click', (e) => { if (e.target === modalV1) modalV1.classList.remove('active'); });
+    }
+
+    const btnV2Info = document.getElementById('btn-editor-model-v2-info');
+    const modalV2 = document.getElementById('editor-model-v2-info-modal');
+    const closeV2 = document.getElementById('close-editor-model-v2-info-modal');
+    if (btnV2Info && modalV2) {
+        btnV2Info.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (typeof playInformationSound === 'function') playInformationSound();
+            modalV2.classList.add('active');
+        });
+    }
+    if (closeV2 && modalV2) {
+        closeV2.addEventListener('click', () => modalV2.classList.remove('active'));
+        modalV2.addEventListener('click', (e) => { if (e.target === modalV2) modalV2.classList.remove('active'); });
+    }
+
+    const btnV3Info = document.getElementById('btn-editor-model-v3-info');
+    const modalV3 = document.getElementById('editor-model-v3-info-modal');
+    const closeV3 = document.getElementById('close-editor-model-v3-info-modal');
+    if (btnV3Info && modalV3) {
+        btnV3Info.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (typeof playInformationSound === 'function') playInformationSound();
+            modalV3.classList.add('active');
+        });
+    }
+    if (closeV3 && modalV3) {
+        closeV3.addEventListener('click', () => modalV3.classList.remove('active'));
+        modalV3.addEventListener('click', (e) => { if (e.target === modalV3) modalV3.classList.remove('active'); });
+    }
 });
+
+async function checkVariationRateLimit() {
+    const apiKeyInput = document.getElementById('api-key');
+    const apiKey = apiKeyInput ? apiKeyInput.value.trim() : '';
+    if (!apiKey) {
+        if (typeof showNotification === 'function') {
+            const msg = typeof currentLang !== 'undefined' && currentLang === 'tr'
+                ? (translations?.tr?.msgEnterApiKey || 'API anahtarı gerekli.')
+                : (translations?.en?.msgEnterApiKey || 'API key required.');
+            showNotification(msg, 'error');
+        }
+        return false;
+    }
+
+    try {
+        const response = await fetch('https://create.thena.workers.dev/checkVariationRateLimit', {
+            method: 'GET',
+            headers: { 'apikey': apiKey }
+        });
+        const data = await response.json();
+
+        if (data.remainingMinutes && data.remainingMinutes !== 0) {
+            const minutes = data.remainingMinutes;
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            let timeStr = '';
+            const isT = typeof currentLang !== 'undefined' && currentLang === 'tr';
+            if (isT) {
+                if (hours > 0) timeStr += `${hours} saat `;
+                if (mins > 0) timeStr += `${mins} dakika`;
+                showNotification((translations?.tr?.msgModelUnavailableWait || 'Lütfen bekleyin: ') + timeStr.trim() + '.', 'error');
+            } else {
+                if (hours > 0) timeStr += `${hours} hour${hours > 1 ? 's' : ''} `;
+                if (mins > 0) timeStr += `${mins} minute${mins > 1 ? 's' : ''}`;
+                showNotification((translations?.en?.msgModelUnavailableWait || 'Please wait: ') + timeStr.trim() + '.', 'error');
+            }
+            if (typeof playErrorSound === 'function') playErrorSound();
+            return false;
+        }
+        return true;
+    } catch (err) {
+        console.error('Variation rate limit check failed:', err);
+        if (typeof showNotification === 'function') {
+            const msg = typeof currentLang !== 'undefined' && currentLang === 'tr'
+                ? (translations?.tr?.msgRateLimitFail || 'Rate limit kontrolü başarısız.')
+                : (translations?.en?.msgRateLimitFail || 'Rate limit check failed.');
+            showNotification(msg, 'error');
+        }
+        return false;
+    }
+}
 
 function checkEditorFormReady() {
     const apiKeyInput = document.getElementById('api-key');
@@ -534,7 +669,8 @@ async function generateVariation() {
         const payload = {
             img: editorSelectedFile,
             moderation: editorModerationLevel,
-            prompt: prompt
+            prompt: prompt,
+            model: editorSelectedModel
         };
 
         const response = await fetch('https://create.thena.workers.dev/variationApp', {
@@ -651,7 +787,7 @@ async function pollEditorGeneration(id, apiKey, prompt, genNotif, originalImage,
                     await dbHelper.add({
                         url: finalUrl,
                         prompt: prompt,
-                        model: 'Image Editor',
+                        model: `Image Editor (${editorSelectedModel === 'v2' ? 'NeuralFlow' : editorSelectedModel === 'v3' ? 'Synapse' : 'PixelFusion'})`,
                         size: 'Auto',
                         timestamp: new Date().toISOString(),
                         moderation: moderationLevel || 'high',
