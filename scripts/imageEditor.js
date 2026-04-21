@@ -822,7 +822,8 @@ function setEditorLoadingState(isLoading) {
     const clearBtn = document.getElementById('editor-clear-btn');
     const uploadArea = document.getElementById('editor-upload-area');
     const presetCards = document.querySelectorAll('.preset-card');
-    
+    const modelArea = document.getElementById('editor-model-selector');
+
     const disabledState = !!isLoading;
 
     if (generateBtn) {
@@ -845,6 +846,11 @@ function setEditorLoadingState(isLoading) {
         clearBtn.style.opacity = opacity;
     }
     
+    if (modelArea) {
+        modelArea.style.pointerEvents = pointerEvents;
+        modelArea.style.opacity = opacity;
+    }
+
     if (uploadArea) {
         uploadArea.style.pointerEvents = pointerEvents;
         uploadArea.style.opacity = disabledState ? '0.7' : '';
