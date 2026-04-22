@@ -1,6 +1,8 @@
 let editorSelectedFile = null;
 let editorModerationLevel = 'high';
 let editorSelectedModel = 'v1';
+let editorCurrentMode = 'edit';
+
 
 function loadEditorPresets() {
     const presetsContainer = document.getElementById('presets-container');
@@ -138,6 +140,9 @@ document.addEventListener('DOMContentLoaded', () => {
             clearBtn.classList.add('hidden');
             placeholder.style.display = 'flex';
             fileInput.value = '';
+            if (typeof updateOutpaintPreview === 'function') updateOutpaintPreview();
+            if (typeof updateOutpaintPresets === 'function') updateOutpaintPresets();
+            if (typeof checkOutpaintFormReady === 'function') checkOutpaintFormReady();
         });
     }
 
@@ -212,6 +217,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const canvas = editorCropper.getCroppedCanvas();
             if (canvas) {
                 editorSelectedFile = canvas.toDataURL('image/jpeg', 0.9);
+                
+                previewImg.onload = () => {
+                    if (typeof checkEditorFormReady === 'function') checkEditorFormReady();
+                    if (typeof checkOutpaintFormReady === 'function') checkOutpaintFormReady();
+                    if (typeof updateOutpaintPreview === 'function') updateOutpaintPreview();
+                    if (typeof updateOutpaintPresets === 'function') updateOutpaintPresets();
+                };
+                
                 previewImg.src = editorSelectedFile;
                 previewImg.classList.remove('hidden');
                 clearBtn.classList.remove('hidden');
@@ -219,8 +232,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 if (typeof playSuccessSound === 'function') playSuccessSound();
                 showNotification(typeof currentLang !== 'undefined' && currentLang === 'tr' ? translations.tr.msgImgUploadSuccess : translations.en.msgImgUploadSuccess, 'success');
-                
-                if (typeof checkEditorFormReady === 'function') checkEditorFormReady();
             }
             
             if (editorCropper) {
@@ -861,3 +872,535 @@ function setEditorLoadingState(isLoading) {
         presetCards[i].style.opacity = opacity;
     }
 }
+
+function initEditorAppSelector() {
+    const selectorBtn = document.getElementById('editor-app-selector-btn');
+    const popup = document.getElementById('editor-app-popup');
+    const cards = document.querySelectorAll('.editor-app-card');
+
+    if (!selectorBtn || !popup) return;
+
+    selectorBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = popup.style.display !== 'none';
+        if (isOpen) {
+            popup.style.display = 'none';
+            selectorBtn.classList.remove('open');
+            selectorBtn.setAttribute('aria-expanded', 'false');
+        } else {
+            popup.style.display = 'block';
+            selectorBtn.classList.add('open');
+            selectorBtn.setAttribute('aria-expanded', 'true');
+            if (typeof playInformationSound === 'function') playInformationSound();
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        if (popup.style.display !== 'none' &&
+            !popup.contains(e.target) &&
+            !selectorBtn.contains(e.target)) {
+            popup.style.display = 'none';
+            selectorBtn.classList.remove('open');
+            selectorBtn.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    cards.forEach(card => {
+        card.addEventListener('click', () => {
+            const app = card.dataset.app;
+            if (app === editorCurrentMode) {
+                popup.style.display = 'none';
+                selectorBtn.classList.remove('open');
+                selectorBtn.setAttribute('aria-expanded', 'false');
+                return;
+            }
+            cards.forEach(c => {
+                c.classList.remove('active');
+                const check = c.querySelector('.editor-app-card-check');
+                if (check) check.style.opacity = '0';
+            });
+            card.classList.add('active');
+            const check = card.querySelector('.editor-app-card-check');
+            if (check) check.style.opacity = '1';
+
+            switchEditorMode(app);
+            if (typeof playInformationSound === 'function') playInformationSound();
+
+            popup.style.display = 'none';
+            selectorBtn.classList.remove('open');
+            selectorBtn.setAttribute('aria-expanded', 'false');
+        });
+    });
+}
+
+function switchEditorMode(mode) {
+    editorCurrentMode = mode;
+    const editControls = document.getElementById('editor-edit-mode-controls');
+    const outpaintControls = document.getElementById('editor-outpaint-mode-controls');
+    const selectorLabel = document.getElementById('editor-app-selector-label');
+    const selectorIcon = document.querySelector('.editor-app-selector-icon svg');
+    const uploadArea = document.getElementById('editor-upload-area');
+    const moderationBtn = document.getElementById('editor-moderation-btn');
+
+    if (mode === 'outpaint') {
+        if (editControls) editControls.style.display = 'none';
+        if (outpaintControls) outpaintControls.style.display = 'block';
+        if (selectorLabel) selectorLabel.textContent = 'Outpaint';
+        if (uploadArea) uploadArea.classList.add('outpaint-mode');
+        if (moderationBtn) moderationBtn.style.display = 'none';
+        if (selectorIcon) {
+            selectorIcon.innerHTML = `<rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/><line x1="3" y1="12" x2="21" y2="12"/>`;
+        }
+        if (typeof updateOutpaintPreview === 'function') updateOutpaintPreview();
+        if (typeof updateOutpaintPresets === 'function') updateOutpaintPresets();
+    } else {
+        if (editControls) editControls.style.display = 'block';
+        if (outpaintControls) outpaintControls.style.display = 'none';
+        if (selectorLabel) selectorLabel.textContent = currentLang === 'tr' ? 'Resim Düzenleme' : 'Image Editing';
+        if (uploadArea) uploadArea.classList.remove('outpaint-mode');
+        if (moderationBtn) moderationBtn.style.display = 'flex';
+        if (selectorIcon) {
+            selectorIcon.innerHTML = `<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>`;
+        }
+    }
+}
+
+
+
+function updateOutpaintPreview() {
+    const svg = document.getElementById('outpaint-preview-svg');
+    if (!svg) return;
+
+    if (!editorSelectedFile) {
+        svg.innerHTML = `<rect x="24" y="24" width="32" height="32" rx="4" fill="rgba(168,85,247,0.15)" stroke="#a855f7" stroke-width="2"/>`;
+        return;
+    }
+
+    let natW = 1, natH = 1;
+    const img = document.getElementById('editor-preview-img');
+    if (editorSelectedFile && img) {
+        if (img.naturalWidth === 0) {
+            setTimeout(updateOutpaintPreview, 10);
+            return;
+        }
+        natW = img.naturalWidth;
+        natH = img.naturalHeight;
+    }
+
+    const t = parseInt(document.getElementById('outpaint-top')?.value) || 0;
+    const b = parseInt(document.getElementById('outpaint-bottom')?.value) || 0;
+    const l = parseInt(document.getElementById('outpaint-left')?.value) || 0;
+    const r = parseInt(document.getElementById('outpaint-right')?.value) || 0;
+
+    const totalW = natW + l + r;
+    const totalH = natH + t + b;
+
+    const maxDim = 64;
+    const scale = Math.min(maxDim / totalW, maxDim / totalH);
+
+    const drawW = natW * scale;
+    const drawH = natH * scale;
+    const drawT = t * scale;
+    const drawB = b * scale;
+    const drawL = l * scale;
+    const drawR = r * scale;
+
+    const totalDrawW = totalW * scale;
+    const totalDrawH = totalH * scale;
+
+    const offsetX = (80 - totalDrawW) / 2;
+    const offsetY = (80 - totalDrawH) / 2;
+
+    const imgX = offsetX + drawL;
+    const imgY = offsetY + drawT;
+
+    let svgHtml = '';
+
+    if (t > 0) {
+        svgHtml += `<rect x="${imgX}" y="${offsetY}" width="${drawW}" height="${drawT}" fill="rgba(236,72,153,0.2)" stroke="#ec4899" stroke-width="1" stroke-dasharray="2 2" rx="2" />`;
+    }
+    if (b > 0) {
+        svgHtml += `<rect x="${imgX}" y="${imgY + drawH}" width="${drawW}" height="${drawB}" fill="rgba(236,72,153,0.2)" stroke="#ec4899" stroke-width="1" stroke-dasharray="2 2" rx="2" />`;
+    }
+    if (l > 0) {
+        svgHtml += `<rect x="${offsetX}" y="${imgY}" width="${drawL}" height="${drawH}" fill="rgba(236,72,153,0.2)" stroke="#ec4899" stroke-width="1" stroke-dasharray="2 2" rx="2" />`;
+    }
+    if (r > 0) {
+        svgHtml += `<rect x="${imgX + drawW}" y="${imgY}" width="${drawR}" height="${drawH}" fill="rgba(236,72,153,0.2)" stroke="#ec4899" stroke-width="1" stroke-dasharray="2 2" rx="2" />`;
+    }
+
+    svgHtml += `<rect x="${imgX}" y="${imgY}" width="${drawW}" height="${drawH}" rx="4" fill="rgba(168,85,247,0.15)" stroke="#a855f7" stroke-width="2"/>`;
+
+    if (t > 0) {
+        svgHtml += `<path d="M${imgX + drawW/2 - 3} ${imgY - 4} L${imgX + drawW/2} ${imgY - 8} L${imgX + drawW/2 + 3} ${imgY - 4}" fill="none" stroke="#ec4899" stroke-width="1.5" stroke-linecap="round"/>`;
+    }
+    if (b > 0) {
+        svgHtml += `<path d="M${imgX + drawW/2 - 3} ${imgY + drawH + 4} L${imgX + drawW/2} ${imgY + drawH + 8} L${imgX + drawW/2 + 3} ${imgY + drawH + 4}" fill="none" stroke="#ec4899" stroke-width="1.5" stroke-linecap="round"/>`;
+    }
+    if (l > 0) {
+        svgHtml += `<path d="M${imgX - 4} ${imgY + drawH/2 - 3} L${imgX - 8} ${imgY + drawH/2} L${imgX - 4} ${imgY + drawH/2 + 3}" fill="none" stroke="#ec4899" stroke-width="1.5" stroke-linecap="round"/>`;
+    }
+    if (r > 0) {
+        svgHtml += `<path d="M${imgX + drawW + 4} ${imgY + drawH/2 - 3} L${imgX + drawW + 8} ${imgY + drawH/2} L${imgX + drawW + 4} ${imgY + drawH/2 + 3}" fill="none" stroke="#ec4899" stroke-width="1.5" stroke-linecap="round"/>`;
+    }
+
+    svg.innerHTML = svgHtml;
+}
+
+function updateOutpaintPresets() {
+    const presetsContainer = document.getElementById('outpaint-presets');
+    const buttonsContainer = document.getElementById('outpaint-preset-buttons');
+    if (!presetsContainer || !buttonsContainer) return;
+
+    if (!editorSelectedFile) {
+        presetsContainer.style.display = 'none';
+        return;
+    }
+
+    const img = document.getElementById('editor-preview-img');
+    if (!img || img.naturalWidth === 0) {
+        setTimeout(updateOutpaintPresets, 10);
+        return;
+    }
+
+    const natW = img.naturalWidth;
+    const natH = img.naturalHeight;
+
+    const targets = [
+        { name: "1:1", ratio: 1/1 },
+        { name: "16:9", ratio: 16/9 },
+        { name: "9:16", ratio: 9/16 },
+        { name: "4:3", ratio: 4/3 },
+        { name: "3:4", ratio: 3/4 }
+    ];
+
+    let buttonsHtml = '';
+
+    targets.forEach(t => {
+        const currentRatio = natW / natH;
+        if (Math.abs(currentRatio - t.ratio) < 0.05) return;
+
+        let addW = 0;
+        let addH = 0;
+
+        if (t.ratio > currentRatio) {
+            const targetW = Math.round(natH * t.ratio);
+            addW = targetW - natW;
+        } else {
+            const targetH = Math.round(natW / t.ratio);
+            addH = targetH - natH;
+        }
+
+        addW = Math.ceil(addW / 64) * 64;
+        addH = Math.ceil(addH / 64) * 64;
+
+        if (addW > 0 || addH > 0) {
+            let l = Math.floor(addW / 2 / 64) * 64;
+            let r = addW - l;
+            let top = Math.floor(addH / 2 / 64) * 64;
+            let bot = addH - top;
+
+            l = Math.min(l, 1024);
+            r = Math.min(r, 1024);
+            top = Math.min(top, 1024);
+            bot = Math.min(bot, 1024);
+
+            buttonsHtml += `<button class="outpaint-preset-btn" data-t="${top}" data-b="${bot}" data-l="${l}" data-r="${r}">➔ ${t.name}</button>`;
+        }
+    });
+
+    if (buttonsHtml) {
+        buttonsContainer.innerHTML = buttonsHtml;
+        presetsContainer.style.display = 'flex';
+        
+        buttonsContainer.querySelectorAll('.outpaint-preset-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const tInput = document.getElementById('outpaint-top');
+                const bInput = document.getElementById('outpaint-bottom');
+                const lInput = document.getElementById('outpaint-left');
+                const rInput = document.getElementById('outpaint-right');
+                
+                if(tInput) tInput.value = btn.dataset.t;
+                if(bInput) bInput.value = btn.dataset.b;
+                if(lInput) lInput.value = btn.dataset.l;
+                if(rInput) rInput.value = btn.dataset.r;
+                
+                if (typeof updateOutpaintPreview === 'function') updateOutpaintPreview();
+                if (typeof checkOutpaintFormReady === 'function') checkOutpaintFormReady();
+            });
+        });
+    } else {
+        presetsContainer.style.display = 'none';
+    }
+}
+
+function checkOutpaintFormReady() {
+    const btn = document.getElementById('outpaint-generate-btn');
+    const apiKey = document.getElementById('api-key')?.value?.trim();
+    const hasFile = !!editorSelectedFile;
+    const top = parseInt(document.getElementById('outpaint-top')?.value) || 0;
+    const bottom = parseInt(document.getElementById('outpaint-bottom')?.value) || 0;
+    const left = parseInt(document.getElementById('outpaint-left')?.value) || 0;
+    const right = parseInt(document.getElementById('outpaint-right')?.value) || 0;
+    const hasValues = top > 0 || bottom > 0 || left > 0 || right > 0;
+
+    if (btn) {
+        if (apiKey && hasFile && hasValues) {
+            btn.classList.add('ready');
+            btn.disabled = false;
+        } else {
+            btn.classList.remove('ready');
+        }
+    }
+}
+
+async function generateOutpaint() {
+    const apiKey = document.getElementById('api-key')?.value?.trim();
+    const btn = document.getElementById('outpaint-generate-btn');
+
+    if (!apiKey) {
+        if (typeof playErrorSound === 'function') playErrorSound();
+        showNotification(currentLang === 'tr' ? translations.tr.msgApiKeyRequired : translations.en.msgApiKeyRequired, 'error');
+        return;
+    }
+    if (!editorSelectedFile) {
+        if (typeof playErrorSound === 'function') playErrorSound();
+        showNotification(currentLang === 'tr' ? translations.tr.msgImgRequired : translations.en.msgImgRequired, 'error');
+        return;
+    }
+
+    const top = parseInt(document.getElementById('outpaint-top')?.value) || 0;
+    const bottom = parseInt(document.getElementById('outpaint-bottom')?.value) || 0;
+    const left = parseInt(document.getElementById('outpaint-left')?.value) || 0;
+    const right = parseInt(document.getElementById('outpaint-right')?.value) || 0;
+
+    if (top === 0 && bottom === 0 && left === 0 && right === 0) {
+        if (typeof playErrorSound === 'function') playErrorSound();
+        showNotification(currentLang === 'tr' ? 'Lütfen en az bir yön için piksel değeri girin.' : 'Please enter at least one direction pixel value.', 'error');
+        return;
+    }
+
+    setOutpaintLoadingState(true);
+
+    if (typeof playStartSound === 'function') playStartSound();
+    const pleaseWait = currentLang === 'tr' ? translations.tr.msgPleaseWait : translations.en.msgPleaseWait;
+    let genNotif = showNotification(
+        (currentLang === 'tr' ? 'Outpaint işlemi başlatıldı. Sıraya alındı. ' : 'Outpaint queued. ') + pleaseWait,
+        'info', null, 120000, 0
+    );
+
+    try {
+        const payload = {
+            image: editorSelectedFile,
+            top: top == 0 ? 1 : top,
+            left: left == 0 ? 1 : left,
+            bottom: bottom == 0 ? 1 : bottom,
+            right: right == 0 ? 1 : right
+        };
+
+        const response = await fetch('https://create.thena.workers.dev/outpaintApp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': apiKey
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.status === 200 && data.image) {
+            await pollOutpaintGeneration(data.image, apiKey, genNotif, editorSelectedFile, { top, left, bottom, right });
+        } else {
+            if (genNotif) genNotif();
+            if (typeof playErrorSound === 'function') playErrorSound();
+            setOutpaintLoadingState(false);
+            if (data.status === 429) {
+                showNotification(currentLang === 'tr' ? translations.tr.msgLimitWait.replace('{0}', data.remainingSeconds) : translations.en.msgLimitWait.replace('{0}', data.remainingSeconds), 'error');
+            } else if (data.status === 401) {
+                showNotification(currentLang === 'tr' ? translations.tr.invalidApiKey : translations.en.invalidApiKey, 'error');
+            } else if (data.status === 423) {
+                showNotification(currentLang === 'tr' ? translations.tr.msgThenaOverloaded : translations.en.msgThenaOverloaded, 'error');
+            } else {
+                showNotification(`Error: ${data.content || 'Unknown Error'}`, 'error');
+            }
+        }
+    } catch (error) {
+        if (genNotif) genNotif();
+        if (typeof playErrorSound === 'function') playErrorSound();
+        showNotification((currentLang === 'tr' ? translations.tr.msgErrorPrefix : translations.en.msgErrorPrefix) + error.message, 'error');
+        setOutpaintLoadingState(false);
+    }
+}
+
+async function pollOutpaintGeneration(id, apiKey, genNotif, originalImage, dims) {
+    const btn = document.getElementById('outpaint-generate-btn');
+
+    await new Promise(r => setTimeout(r, 2000));
+
+    const checkStatus = async () => {
+        try {
+            const response = await fetch(`https://create.thena.workers.dev/status?id=${id}`, {
+                headers: { 'apikey': apiKey }
+            });
+            const data = await response.json();
+
+            if (data.status === 202) {
+                if (data.progress && btn) {
+                    const span = btn.querySelector('#txt-outpaint-btn');
+                    if (span) span.textContent = currentLang === 'tr' ? `Oluşturuluyor... ${data.progress}%` : `Generating... ${data.progress}%`;
+                }
+                if (genNotif && typeof genNotif.update === 'function') {
+                    const pleaseWait = currentLang === 'tr' ? translations.tr.msgPleaseWait : translations.en.msgPleaseWait;
+                    genNotif.update(
+                        (currentLang === 'tr') ? `Outpaint... %${data.progress} - ${pleaseWait}` : `Outpaint... ${data.progress}% - ${pleaseWait}`,
+                        'info',
+                        data.progress
+                    );
+                }
+                setTimeout(checkStatus, 5000);
+
+            } else if (data.status === 200) {
+                if (genNotif) genNotif();
+                if (typeof playSuccessSound === 'function') playSuccessSound();
+
+                let finalUrl = data.image;
+                if (!finalUrl.startsWith('data:image') && !finalUrl.startsWith('http')) {
+                    finalUrl = `data:image/png;base64,${finalUrl}`;
+                }
+
+                showNotification(
+                    currentLang === 'tr' ? 'Outpaint başarıyla tamamlandı!' : 'Outpaint completed successfully!',
+                    'success', finalUrl
+                );
+
+                if (typeof dbHelper !== 'undefined') {
+                    let originalResized = null;
+                    if (originalImage && originalImage.startsWith('data:image')) {
+                        try { originalResized = await resizeBase64Image(originalImage, 0.5); } catch(e) {}
+                    }
+                    await dbHelper.add({
+                        url: finalUrl,
+                        prompt: '',
+                        model: 'Outpaint',
+                        size: 'Auto',
+                        timestamp: new Date().toISOString(),
+                        moderation: "high",
+                        features: {},
+                        originalImage: originalResized
+                    });
+                }
+
+                setOutpaintLoadingState(false);
+            } else {
+                if (genNotif) genNotif();
+                if (typeof playErrorSound === 'function') playErrorSound();
+                showNotification((currentLang === 'tr' ? translations.tr.msgErrorPrefix : translations.en.msgErrorPrefix) + data.content, 'error');
+                setOutpaintLoadingState(false);
+            }
+        } catch (error) {
+            if (genNotif) genNotif();
+            if (typeof playErrorSound === 'function') playErrorSound();
+            showNotification((currentLang === 'tr' ? translations.tr.msgErrorPrefix : translations.en.msgErrorPrefix) + error.message, 'error');
+            setOutpaintLoadingState(false);
+        }
+    };
+    checkStatus();
+}
+
+function setOutpaintLoadingState(isLoading) {
+    const btn = document.getElementById('outpaint-generate-btn');
+    const span = btn ? btn.querySelector('#txt-outpaint-btn') : null;
+    const fileInput = document.getElementById('editor-file-input');
+    const uploadArea = document.getElementById('editor-upload-area');
+
+    let overlay = document.getElementById('outpaint-global-loading-overlay');
+    if (isLoading) {
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.id = 'outpaint-global-loading-overlay';
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100vw';
+            overlay.style.height = '100vh';
+            overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+            overlay.style.zIndex = '49999';
+            overlay.style.pointerEvents = 'all';
+            document.body.appendChild(overlay);
+        }
+        overlay.style.display = 'block';
+    } else {
+        if (overlay) overlay.style.display = 'none';
+    }
+
+    if (btn) btn.disabled = !!isLoading;
+    if (span) {
+        span.textContent = isLoading
+            ? (currentLang === 'tr' ? 'Oluşturuluyor...' : 'Generating...')
+            : (currentLang === 'tr' ? 'Outpaint Yap' : 'Run Outpaint');
+    }
+    if (fileInput) fileInput.disabled = !!isLoading;
+    if (uploadArea) {
+        uploadArea.style.pointerEvents = isLoading ? 'none' : '';
+        uploadArea.style.opacity = isLoading ? '0.7' : '';
+    }
+    if (!isLoading) checkOutpaintFormReady();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initEditorAppSelector();
+
+    ['outpaint-top', 'outpaint-bottom', 'outpaint-left', 'outpaint-right'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('input', () => {
+                if (typeof updateOutpaintPreview === 'function') updateOutpaintPreview();
+                checkOutpaintFormReady();
+            });
+            el.addEventListener('wheel', (e) => {
+                if (document.activeElement === el) {
+                    e.preventDefault();
+                    let val = parseInt(el.value) || 0;
+                    const step = parseInt(el.step) || 64;
+                    const max = parseInt(el.max) || 1024;
+                    const min = parseInt(el.min) || 0;
+                    
+                    if (e.deltaY < 0) val += step;
+                    else val -= step;
+                    
+                    if (val > max) val = max;
+                    if (val < min) val = min;
+                    
+                    el.value = val;
+                    if (typeof updateOutpaintPreview === 'function') updateOutpaintPreview();
+                    checkOutpaintFormReady();
+                }
+            }, { passive: false });
+        }
+    });
+
+    const resetBtn = document.getElementById('outpaint-reset-btn');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            ['outpaint-top', 'outpaint-bottom', 'outpaint-left', 'outpaint-right'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = 0;
+            });
+            if (typeof updateOutpaintPreview === 'function') updateOutpaintPreview();
+            checkOutpaintFormReady();
+        });
+    }
+
+    const outpaintBtn = document.getElementById('outpaint-generate-btn');
+    if (outpaintBtn) {
+        outpaintBtn.addEventListener('click', generateOutpaint);
+    }
+
+    const apiKeyInput = document.getElementById('api-key');
+    if (apiKeyInput) {
+        apiKeyInput.addEventListener('input', checkOutpaintFormReady);
+    }
+});

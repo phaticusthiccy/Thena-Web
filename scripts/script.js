@@ -3764,7 +3764,8 @@ function openLightbox(data) {
 
     const originalPreview = document.getElementById('lightbox-original-preview');
     if(originalPreview) {
-        if(data.originalImage && data.model && data.model.toUpperCase().includes('IMAGE EDITOR')) {
+        const isEditorApp = data.model && (data.model.toUpperCase().includes('IMAGE EDITOR') || data.model.toUpperCase().includes('OUTPAINT'));
+        if(data.originalImage && isEditorApp) {
              originalPreview.innerHTML = `<img src="${data.originalImage}" alt="Original">`;
              originalPreview.style.display = 'block';
              originalPreview.onclick = (e) => {
@@ -3788,7 +3789,8 @@ function openLightbox(data) {
     else {
         document.querySelector(".lightbox-delete-btn").style.display = "flex"
         
-        if (data.model && data.model.toUpperCase().includes("IMAGE EDITOR")) {
+        const isEditorApp = data.model && (data.model.toUpperCase().includes('IMAGE EDITOR') || data.model.toUpperCase().includes('OUTPAINT'));
+        if (isEditorApp) {
             document.querySelector(".lightbox-share-btn").style.display = "none"
             document.querySelector(".lightbox-copy-btn").style.display = "none"
         } else {
@@ -6646,7 +6648,8 @@ async function loadGalleryStatistics() {
             "Image Editor": "imageEditorV1",
             "Image Editor (NeuralFlow)": "imageEditorV2",
             "Image Editor (Synapse)": "imageEditorV3",
-            "Image Editor (PixelFusion)": "imageEditorV1"
+            "Image Editor (PixelFusion)": "imageEditorV1",
+            "Outpaint": "thenaOutpaint"
         };
         
         const t = translations[currentLang];

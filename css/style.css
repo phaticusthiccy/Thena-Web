@@ -1461,6 +1461,7 @@ body.performance-mode .whimsical-flame-effect {
     border-color: var(--primary) !important;
     color: var(--primary) !important;
     box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.1);
+    cursor: pointer;
 }
 
 .glitch-text.gradient-active {

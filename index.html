@@ -369,6 +369,92 @@
 
             </div>
             <div id="view-image-editor" class="app-view" style="display: none;">
+
+                <div class="editor-app-selector-bar" id="editor-app-selector-bar">
+                    <button class="editor-app-selector-btn active" id="editor-app-selector-btn" aria-haspopup="true" aria-expanded="false">
+                        <span class="editor-app-selector-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+                            </svg>
+                        </span>
+                        <span class="editor-app-selector-label" id="editor-app-selector-label">Resim Düzenleme</span>
+                        <svg class="editor-app-selector-caret" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+
+                    <div class="editor-app-popup" id="editor-app-popup" style="display:none;">
+                        <div class="editor-app-popup-inner">
+                        <div class="editor-app-card active" id="editor-app-card-edit" data-app="edit">
+                            <div class="editor-app-card-thumb">
+                                <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <linearGradient id="eg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00ff88"/><stop offset="100%" stop-color="#00c3ff"/></linearGradient>
+                                        <filter id="eglow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                                    </defs>
+                                    <rect x="10" y="10" width="60" height="60" rx="6" stroke="url(#eg1)" stroke-width="2" fill="rgba(0,255,136,0.05)" class="esvg-frame"/>
+                                    <rect x="18" y="18" width="44" height="28" rx="3" fill="rgba(0,195,255,0.1)" stroke="rgba(0,195,255,0.4)" stroke-width="1" class="esvg-img"/>
+                                    <circle cx="26" cy="26" r="4" fill="rgba(0,255,136,0.3)" stroke="#00ff88" stroke-width="1" class="esvg-sun"/>
+                                    <polyline points="18,44 30,32 38,40 46,30 62,46" stroke="url(#eg1)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="esvg-mountain"/>
+                                    <line x1="52" y1="54" x2="68" y2="70" stroke="#00ff88" stroke-width="3" stroke-linecap="round" class="esvg-wand"/>
+                                    <circle cx="52" cy="54" r="4" fill="rgba(0,255,136,0.8)" filter="url(#eglow)" class="esvg-spark"/>
+                                    <g class="esvg-sparkles">
+                                        <circle cx="44" cy="48" r="1.5" fill="#00ff88"/>
+                                        <circle cx="56" cy="46" r="1" fill="#00c3ff"/>
+                                        <circle cx="48" cy="56" r="1" fill="#00ff88"/>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div class="editor-app-card-info">
+                                <span class="editor-app-card-name" id="txt-app-card-edit">Resim Düzenleme</span>
+                                <span class="editor-app-card-desc" id="txt-app-card-edit-desc">Görselini AI ile dönüştür, prompt ile yeniden şekillendir.</span>
+                            </div>
+                            <span class="editor-app-card-check">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                        </div>
+                        <div class="editor-app-card" id="editor-app-card-outpaint" data-app="outpaint">
+                            <div class="editor-app-card-thumb">
+                                <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <linearGradient id="og1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#a855f7"/><stop offset="100%" stop-color="#ec4899"/></linearGradient>
+                                        <filter id="oglow"><feGaussianBlur stdDeviation="2.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                                        <pattern id="opattern" patternUnits="userSpaceOnUse" width="8" height="8"><line x1="0" y1="8" x2="8" y2="0" stroke="rgba(168,85,247,0.25)" stroke-width="1"/></pattern>
+                                    </defs>
+                                    <rect x="4" y="4" width="72" height="72" rx="5" fill="url(#opattern)" stroke="rgba(168,85,247,0.3)" stroke-width="1" class="osvg-outer"/>
+                                    <rect x="20" y="20" width="40" height="40" rx="4" fill="rgba(168,85,247,0.15)" stroke="url(#og1)" stroke-width="2" class="osvg-inner"/>
+                                    <rect x="20" y="20" width="40" height="26" rx="4" fill="rgba(168,85,247,0.08)"/>
+                                    <polyline points="20,44 30,32 38,40 46,30 60,44" stroke="url(#og1)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="osvg-mountain"/>
+                                    <g class="osvg-arrows" filter="url(#oglow)">
+                                        <g class="osvg-arrow-top">
+                                            <line x1="40" y1="18" x2="40" y2="6" stroke="#a855f7" stroke-width="1.5" stroke-linecap="round"/>
+                                            <polyline points="36,10 40,6 44,10" stroke="#a855f7" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </g>
+                                        <g class="osvg-arrow-bottom">
+                                            <line x1="40" y1="62" x2="40" y2="74" stroke="#ec4899" stroke-width="1.5" stroke-linecap="round"/>
+                                            <polyline points="36,70 40,74 44,70" stroke="#ec4899" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </g>
+                                        <g class="osvg-arrow-left">
+                                            <line x1="18" y1="40" x2="6" y2="40" stroke="#a855f7" stroke-width="1.5" stroke-linecap="round"/>
+                                            <polyline points="10,36 6,40 10,44" stroke="#a855f7" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </g>
+                                        <g class="osvg-arrow-right">
+                                            <line x1="62" y1="40" x2="74" y2="40" stroke="#ec4899" stroke-width="1.5" stroke-linecap="round"/>
+                                            <polyline points="70,36 74,40 70,44" stroke="#ec4899" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div class="editor-app-card-info">
+                                <span class="editor-app-card-name" id="txt-app-card-outpaint">Outpaint</span>
+                                <span class="editor-app-card-desc" id="txt-app-card-outpaint-desc">Görselin kenarlarını AI ile genişlet, yeni alanlar ekle.</span>
+                            </div>
+                            <span class="editor-app-card-check" style="opacity:0;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="input-group">
                     <label id="label-editor-upload">Upload Image</label>
                     <div class="image-editor-upload-area" id="editor-upload-area">
@@ -399,9 +485,11 @@
                                 </svg>
                             </button>
                         </div>
+
                     </div>
                 </div>
 
+                <div id="editor-edit-mode-controls">
                 <div class="input-group">
                     <label id="label-editor-presets">Presets</label>
                     <div class="editor-search-container">
@@ -511,11 +599,71 @@
                 </div>
 
                 <button class="generate-btn" id="editor-generate-btn">Generate Variation</button>
-                
+                </div>
+
+                <div id="editor-outpaint-mode-controls" style="display:none;">
+                    <div class="input-group">
+                        <label id="label-outpaint-settings">
+                            <span id="txt-outpaint-label">Outpaint Ayarları</span>
+                        </label>
+                        <div class="outpaint-controls-grid">
+                            <div class="outpaint-dir-row">
+                                <div class="outpaint-dir-item">
+                                    <label class="outpaint-dir-label" id="txt-outpaint-top">Üst (px)</label>
+                                    <input type="number" id="outpaint-top" class="outpaint-input" value="0" min="0" max="1024" step="64" placeholder="0">
+                                </div>
+                            </div>
+                            <div class="outpaint-dir-row outpaint-middle-row">
+                                <div class="outpaint-dir-item">
+                                    <label class="outpaint-dir-label" id="txt-outpaint-left">Sol (px)</label>
+                                    <input type="number" id="outpaint-left" class="outpaint-input" value="0" min="0" max="1024" step="64" placeholder="0">
+                                </div>
+                                <div class="outpaint-preview-center">
+                                    <svg id="outpaint-preview-svg" width="80" height="80" viewBox="0 0 80 80" fill="none">
+                                        <rect x="24" y="24" width="32" height="32" rx="4" fill="rgba(168,85,247,0.15)" stroke="#a855f7" stroke-width="2"/>
+                                    </svg>
+                                </div>
+                                <div class="outpaint-dir-item">
+                                    <label class="outpaint-dir-label" id="txt-outpaint-right">Sağ (px)</label>
+                                    <input type="number" id="outpaint-right" class="outpaint-input" value="0" min="0" max="1024" step="64" placeholder="0">
+                                </div>
+                            </div>
+                            <div class="outpaint-dir-row">
+                                <div class="outpaint-dir-item">
+                                    <label class="outpaint-dir-label" id="txt-outpaint-bottom">Alt (px)</label>
+                                    <input type="number" id="outpaint-bottom" class="outpaint-input" value="0" min="0" max="1024" step="64" placeholder="0">
+                                </div>
+                            </div>
+                            
+                            <div class="outpaint-presets-container" id="outpaint-presets" style="display: none;">
+                                <div class="outpaint-presets-title" id="txt-outpaint-presets">Hızlı Boyutlar</div>
+                                <div class="outpaint-preset-buttons" id="outpaint-preset-buttons">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="outpaint-reset-container" style="width: 100%; display: flex; justify-content: center; margin-top: 8px;">
+                            <button id="outpaint-reset-btn" class="outpaint-reset-btn" title="Değerleri Sıfırla">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+                                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                                    <path d="M3 3v5h5"></path>
+                                </svg>
+                                <span id="txt-outpaint-reset">Sıfırla</span>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="generate-btn outpaint-generate-btn" id="outpaint-generate-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/><line x1="3" y1="12" x2="21" y2="12"/>
+                        </svg>
+                        <span id="txt-outpaint-btn">Outpaint Yap</span>
+                    </button>
+                </div>
+
 
             </div>
             <div class="input-group hidden" id="advanced-panel">
                 <label class="section-title-glow">Advanced Settings</label>
+
                 <div class="advanced-grid">
                     <div class="adv-input-wrapper">
                         <span class="adv-label">Seed (-1 for random)</span>

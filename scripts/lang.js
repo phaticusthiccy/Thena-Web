@@ -483,7 +483,22 @@ const translations = {
         "editorV3I2Title": "Maximum Quality",
         "editorV3I2Desc": "Highest fidelity output across all metrics — detail, coherence, and visual quality are all at their peak.",
         "editorV3I3Title": "Recommended For",
-        "editorV3I3Desc": "Professional edits, complex multi-subject prompts, and any task where quality must not be compromised."
+        "editorV3I3Desc": "Professional edits, complex multi-subject prompts, and any task where quality must not be compromised.",
+        "outpaintLabel": "Outpaint Settings",
+        "outpaintTop": "Top (px)",
+        "outpaintBottom": "Bottom (px)",
+        "outpaintLeft": "Left (px)",
+        "outpaintRight": "Right (px)",
+        "outpaintBtn": "Run Outpaint",
+        "outpaintReset": "Reset",
+        "outpaintPresetsTitle": "Quick Dimensions",
+        "outpaintSuccess": "Outpaint completed successfully!",
+        "outpaintQueued": "Outpaint queued. ",
+        "outpaintPixelRequired": "Please enter at least one direction pixel value.",
+        "appCardEditName": "Image Editing",
+        "appCardEditDesc": "Transform your image with AI, reshape with prompts.",
+        "appCardOutpaintName": "Outpaint",
+        "appCardOutpaintDesc": "Expand image borders with AI, add new areas."
     },
     "tr": {
         "generateBtn": "Görüntü Oluştur",
@@ -969,7 +984,22 @@ const translations = {
         "editorV3I2Title": "Maksimum Kalite",
         "editorV3I2Desc": "Tüm metriklerde en yüksek çıktı kalitesi — detay, uyum ve görsel kalite zirvede.",
         "editorV3I3Title": "Tavsiye Edilen Kullanım",
-        "editorV3I3Desc": "Profesyonel düzenlemeler, çok öğeli karmaşık promptlar ve kalitenin kesinlikle taviz verilmemesi gereken görevler."
+        "editorV3I3Desc": "Profesyonel düzenlemeler, çok öğeli karmaşık promptlar ve kalitenin kesinlikle taviz verilmemesi gereken görevler.",
+        "outpaintLabel": "Outpaint Ayarları",
+        "outpaintTop": "Üst (px)",
+        "outpaintBottom": "Alt (px)",
+        "outpaintLeft": "Sol (px)",
+        "outpaintRight": "Sağ (px)",
+        "outpaintBtn": "Outpaint Yap",
+        "outpaintReset": "Sıfırla",
+        "outpaintPresetsTitle": "Hızlı Boyutlar",
+        "outpaintSuccess": "Outpaint başarıyla tamamlandı!",
+        "outpaintQueued": "Outpaint sıraya alındı. ",
+        "outpaintPixelRequired": "Lütfen en az bir yön için piksel değeri girin.",
+        "appCardEditName": "Resim Düzenleme",
+        "appCardEditDesc": "Görselini AI ile dönüştür, prompt ile yeniden şekillendir.",
+        "appCardOutpaintName": "Outpaint",
+        "appCardOutpaintDesc": "Görselin kenarlarını AI ile genişlet, yeni alanlar ekle."
     }
 };
 
@@ -1342,6 +1372,27 @@ function updateLanguage(lang) {
     safelySetText('txt-editor-upload', t.editorUploadMsg);
     safelySetText('txt-editor-loading-presets', t.editorLoadingPresets);
     safelySetText('editor-generate-btn', t.editorGenerateBtn);
+
+    safelySetText('txt-outpaint-label', t.outpaintLabel);
+    safelySetText('txt-outpaint-top', t.outpaintTop);
+    safelySetText('txt-outpaint-bottom', t.outpaintBottom);
+    safelySetText('txt-outpaint-left', t.outpaintLeft);
+    safelySetText('txt-outpaint-right', t.outpaintRight);
+    safelySetText('txt-outpaint-btn', t.outpaintBtn);
+    safelySetText('txt-outpaint-reset', t.outpaintReset);
+    safelySetText('txt-outpaint-presets', t.outpaintPresetsTitle);
+    safelySetText('txt-app-card-edit', t.appCardEditName);
+    safelySetText('txt-app-card-edit-desc', t.appCardEditDesc);
+    safelySetText('txt-app-card-outpaint', t.appCardOutpaintName);
+    safelySetText('txt-app-card-outpaint-desc', t.appCardOutpaintDesc);
+
+    if (typeof editorCurrentMode !== 'undefined') {
+        const selectorLabel = document.getElementById('editor-app-selector-label');
+        if (selectorLabel) {
+            selectorLabel.textContent = editorCurrentMode === 'outpaint' ? t.appCardOutpaintName : t.appCardEditName;
+        }
+    }
+
     
     const editorPrompt = cache['editor-prompt'];
     if(editorPrompt) editorPrompt.placeholder = t.editorPromptPlaceholder;
