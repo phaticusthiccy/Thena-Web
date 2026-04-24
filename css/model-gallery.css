@@ -1,4 +1,4 @@
-.mg-overlay {
+﻿.mg-overlay {
     display: none;
     position: fixed;
     inset: 0;
@@ -1051,3 +1051,8 @@ body.performance-mode .mg-card-provider {
     backdrop-filter: none !important;
     background: rgba(0,0,0,0.8);
 }
+
+.mg-card { will-change: auto; }
+.mg-card:hover { will-change: transform; }
+[data-vo-paused].mg-card-inner,
+[data-vo-paused].mg-card { animation-play-state: paused !important; }

@@ -588,7 +588,7 @@ textarea:focus {
     max-height: 500px;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 20px 10px 20px 10px;
+    padding: 0px 10px 20px 10px;
     margin: 0px -10px -10px -10px;
 }
 
@@ -613,6 +613,8 @@ textarea:focus {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 18px;
+    padding: 20px 14px 20px 14px;
+    margin: 0px -14px -10px -14px;
 }
 
 .model-info-icon-wrapper {
@@ -784,6 +786,30 @@ textarea:focus {
     -moz-user-select: none !important;
     -ms-user-select: none !important;
     user-select: none !important;
+}
+
+@keyframes hot-model-name-gradient {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+.model-card.hot-model.active .model-name {
+    background: linear-gradient(
+        90deg, 
+        var(--titanium-2) 0%, 
+        var(--titanium-1) 20%, 
+        var(--titanium-3) 40%, 
+        var(--titanium-5) 50%, 
+        var(--titanium-3) 60%, 
+        var(--titanium-1) 80%, 
+        var(--titanium-2) 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: hot-model-name-gradient 3s linear infinite;
+    text-shadow: 0 0 20px rgba(var(--primary-rgb), 0.6);
 }
 
 .flag-item {
@@ -3497,6 +3523,12 @@ body.performance-mode .whimsical-flame-effect {
     --pulse0: #00ff8856;
     --pulse50: #00ff8888;
     --pulse100: #00ff8833;
+
+    --titanium-1: color-mix(in srgb, var(--primary) 10%, #5c6169);
+    --titanium-2: color-mix(in srgb, var(--primary) 15%, #878e99);
+    --titanium-3: color-mix(in srgb, var(--primary) 20%, #c3c9d1);
+    --titanium-4: color-mix(in srgb, var(--primary) 10%, #ebeef2);
+    --titanium-5: #ffffff;
 }
 
 
@@ -4836,12 +4868,15 @@ body.performance-mode .history-header {
 .model-filter-container {
     display: flex;
     gap: 6px;
-    margin-left: 12px;
+    margin-left: 0;
     opacity: 0;
     visibility: hidden;
     transform: translateX(-10px);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     content-visibility: hidden;
+    max-width: 0;
+    overflow: hidden;
+    padding: 0;
 }
 
 .model-filter-container.visible {
@@ -4849,6 +4884,8 @@ body.performance-mode .history-header {
     visibility: visible;
     content-visibility: visible;
     transform: translateX(0);
+    max-width: 500px;
+    margin-left: 12px;
 }
 
 .filter-chip {
@@ -5039,11 +5076,19 @@ body.performance-mode .history-header {
     .model-filter-container {
         width: 100%;
         margin-left: 0;
-        margin-top: 8px;
+        margin-top: 0;
         overflow-x: auto;
-        padding-bottom: 4px;
+        padding-bottom: 0;
         content-visibility: hidden;
         order: 10;
+        max-width: 100%;
+        max-height: 0;
+    }
+
+    .model-filter-container.visible {
+        margin-top: 8px;
+        padding-bottom: 4px;
+        max-height: 50px;
     }
 
     .model-selector-wrapper {
@@ -6994,11 +7039,7 @@ body.performance-mode .model-filter-container {
     visibility: hidden;
     transform: scale(0.98);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 50;
+    margin-bottom: 0;
 }
 
 .chat-filter-panel.active {
@@ -7008,6 +7049,7 @@ body.performance-mode .model-filter-container {
     visibility: visible;
     border-color: #222;
     transform: scale(1);
+    margin-bottom: 10px;
 }
 
 .chat-filter-panel-content {
@@ -7372,6 +7414,10 @@ body.performance-mode .model-filter-container {
     .img-download-btn svg {
         width: 16px;
         height: 16px;
+    }
+
+    .model-btn-group {
+        flex-direction: column;
     }
 }
 
@@ -9056,12 +9102,20 @@ body.performance-mode .model-filter-container {
 }
 .crop-btn-apply:hover { filter: brightness(1.15); }
 
-.plasma-base-glow, .plasma-trail-1, .plasma-trail-2, .plasma-trail-3, .plasma-spark, .plasma-corner, 
+.hot-model:not(.out-of-view) .plasma-base-glow,
+.hot-model:not(.out-of-view) .plasma-trail-1,
+.hot-model:not(.out-of-view) .plasma-trail-2,
+.hot-model:not(.out-of-view) .plasma-trail-3,
+.hot-model:not(.out-of-view) .plasma-spark,
+.hot-model:not(.out-of-view) .plasma-corner {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
 .flag-item::before, .glitch-text, .confetti, .glow-layer-1, .glow-layer-2,
 .model-suggest-blink::after, .img-gen-badge::after, .storyIconGlow, .emotion-icon,
 #magic-wand-btn.loading::after, #random-prompt-btn.loading::after {
-    will-change: transform, opacity;
-    transform: translateZ(0); 
+    transform: translateZ(0);
     backface-visibility: hidden;
 }
 .message-bubble[class*="emotion-"] {
@@ -9188,6 +9242,36 @@ body.performance-mode .model-filter-container {
 .out-of-view .story-finished-content,
 .out-of-view .char-card-bg {
     animation-play-state: paused !important;
+}
+
+.out-of-view.hot-model .whimsical-flame-effect {
+    visibility: hidden !important;
+}
+.out-of-view.hot-model,
+.out-of-view.hot-model .plasma-base-glow,
+.out-of-view.hot-model .plasma-trail-1,
+.out-of-view.hot-model .plasma-trail-2,
+.out-of-view.hot-model .plasma-trail-3,
+.out-of-view.hot-model .plasma-spark,
+.out-of-view.hot-model .plasma-corner,
+.out-of-view.hot-model .flag-item,
+.out-of-view.hot-model .flag-item::before,
+.out-of-view.hot-model svg,
+.out-of-view.hot-model svg * {
+    will-change: auto !important;
+    animation-play-state: paused !important;
+}
+body.performance-mode .hot-model .whimsical-flame-effect,
+body.performance-mode .hot-model .plasma-base-glow,
+body.performance-mode .hot-model .plasma-trail-1,
+body.performance-mode .hot-model .plasma-trail-2,
+body.performance-mode .hot-model .plasma-trail-3,
+body.performance-mode .hot-model .plasma-spark,
+body.performance-mode .hot-model .plasma-corner {
+    display: none !important;
+}
+body.power-saver-active .hot-model .whimsical-flame-effect {
+    visibility: hidden !important;
 }
 
 .elements-selected-container {
@@ -10489,3 +10573,74 @@ body.performance-mode .model-filter-container {
     animation: eml-spin 0.7s linear infinite;
     box-shadow: 0 0 10px rgba(255, 175, 30, 0.3);
 }
+
+.model-card { will-change: auto; }
+.model-card:hover, .model-card.active { will-change: transform, box-shadow, filter; }
+.gallery-item { will-change: auto; }
+.gallery-item:hover { will-change: transform, opacity; }
+.app-card { will-change: auto; }
+.app-card:hover { will-change: transform, box-shadow; }
+.mg-card { will-change: auto; }
+.mg-card:hover { will-change: transform; }
+
+.confirm-modal:not(.active),
+.gallery-modal:not(.active),
+.feature-modal:not(.active) {
+    content-visibility: hidden;
+    pointer-events: none;
+}
+.confirm-modal.active,
+.gallery-modal.active,
+.feature-modal.active {
+    content-visibility: visible !important;
+    pointer-events: auto;
+}
+
+#gallery-grid, #showcase-grid { contain: layout style; }
+.model-selector { contain: layout; }
+
+.gf-select-dropdown:not(.open),
+.gf-custom-select:not(.open) .gf-select-dropdown {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+[data-vo-paused] {
+    animation-play-state: paused !important;
+    will-change: auto !important;
+}
+[data-vo-paused]::before,
+[data-vo-paused]::after {
+    animation-play-state: paused !important;
+}
+
+.gallery-item img, .showcase-item img, .mg-card img { content-visibility: auto; }
+#lightbox-img { content-visibility: visible; }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+    .glitch-text { animation: none !important; text-shadow: 0 0 20px #00ff88 !important; }
+    .model-card.active { animation: none !important; }
+    .plasma-ring, [class*="plasma"] { animation: none !important; opacity: 0.5; }
+}
+
+.model-card.active, .gallery-item.selected, .mg-card.active { isolation: isolate; }
+
+.background-text { contain: strict; pointer-events: none; }
+
+.glitch-text, .model-name, .flag-item {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+@supports (contain: paint) {
+    .model-card, .gallery-item, .mg-card, .char-card { contain: layout paint; }
+    .model-card:hover, .model-card.active, .gallery-item:hover, .mg-card:hover { contain: layout; }
+}
+
+

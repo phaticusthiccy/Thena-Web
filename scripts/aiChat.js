@@ -1399,6 +1399,7 @@ if (userProfileBtn) {
                 let displayModel = modelKey;
                 if (modelKey === 'fast') displayModel = t.modelFast || 'Fast';
                 else if (modelKey === 'thinking') displayModel = t.modelThinking || 'Thinking';
+                else if (modelKey === 'ultra') displayModel = 'Ultra';
                 modelEl.textContent = displayModel;
             }
             
@@ -1931,3 +1932,39 @@ function adjustAvatarAspectRatio(img) {
     } else {
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const detailImg = document.getElementById('detail-char-img');
+    const lightbox = document.getElementById('char-img-lightbox');
+    const lightboxImg = document.getElementById('char-lightbox-img');
+    const closeLightbox = document.getElementById('close-char-lightbox');
+
+    if (detailImg && lightbox && lightboxImg) {
+        detailImg.addEventListener('click', () => {
+            if (!detailImg.src) return;
+            lightboxImg.src = detailImg.src;
+            lightbox.style.opacity = '1';
+            lightbox.style.visibility = 'visible';
+            lightbox.style.pointerEvents = 'all';
+            lightboxImg.style.transform = 'scale(1)';
+        });
+
+        if (closeLightbox) {
+            closeLightbox.addEventListener('click', () => {
+                lightbox.style.opacity = '0';
+                lightbox.style.visibility = 'hidden';
+                lightbox.style.pointerEvents = 'none';
+                lightboxImg.style.transform = 'scale(0.8)';
+            });
+        }
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightbox.style.opacity = '0';
+                lightbox.style.visibility = 'hidden';
+                lightbox.style.pointerEvents = 'none';
+                lightboxImg.style.transform = 'scale(0.8)';
+            }
+        });
+    }
+});

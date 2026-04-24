@@ -79,7 +79,8 @@ const modelTranslationsTR = {
     "019d2154-7c24-74a1-806d-0fa8274a41d4": "Thena Nyx ile karanlık, büyüleyici ve atmosferik anime portreleri yaratın. Derin gölgeler, keskin ışıklar ve çarpıcı parlama efektleriyle karakterlerinize gizemli bir hava katın.",
     "5ac14b95-8600-46d7-a966-a6de2e951995": "Klasik film noir estetiğini yakalayın. Yüksek kontrastlı aydınlatma, derin gölgeler ve sinematik portreler oluşturun. Vintage hissi veren dramatik sahneler ve karakterler yaratmak için mükemmeldir.",
     "5d697de8-f9b1-45a0-abfa-3c6da84529d1": "Thena Photoreal V2, fotogerçekçiliğin yeni standardı. Kısa istemlerle bile çarpıcı detay ve netliğe sahip, nefes kesici derecede gerçekçi görüntüler üretir.",
-    "3c7a94a0-c844-471f-ae98-0f8c8508baf7": "Thena Ultra'dan ilham alan, gürültü tabanlı akıl yürütme yeteneğine sahip yeni nesil yapay zeka modeli. Geliştirilen ikinci akıl yürütme odaklı sürüm."
+    "3c7a94a0-c844-471f-ae98-0f8c8508baf7": "Thena Ultra'dan ilham alan, gürültü tabanlı akıl yürütme yeteneğine sahip yeni nesil yapay zeka modeli. Geliştirilen ikinci akıl yürütme odaklı sürüm.",
+    "b85483f-b998-4dee-b9b8-f3e1dcfb4a6d": "Thena Toonish, keskin gölgelendirmeler ve canlı renklere sahip temiz, modern anime estetiği üzerine uzmanlaşmıştır. Aşırı sade karakter portreleri, günlük yaşam sahneleri ve klasik animasyon stilleri yaratmada öne çıkar."
 };
 const UNSUPPORTED_FAST_MODELS = ["551ks 8g6g8 16gga 1h8h8 6b4a5 5060"];
 const MOVIE_FILTER_SUPPORTED_MODELS = ["8gg12 61812 6628 19729 6b4a5 5060", "551ks 8g6g8 16gga 1h8h8 6b4a5 5060", "771ks 71g6g8 hlh8h8 6b4a5 77b4a5 5060", "3fb0b43e-ef78-44cf-82da-c3e0d6e0a5a7", "019d2154-7c24-74a1-806d-0fa8274a41d4"];
@@ -120,6 +121,8 @@ const MODEL_STATS = {
     "bb8acd44-9e3f-4a9e-9b99-cee4a52f5ae7": { intel: 3, qual: 4, speed: 2 },
     // Thena Pastel
     "e4cf240b-a8aa-4033-b87c-9c9a60cf456e": { intel: 3, qual: 3, speed: 4 },
+    // Thena Toonish
+    "b85483f-b998-4dee-b9b8-f3e1dcfb4a6d": { intel: 2, qual: 2, speed: 2 },
     // Thena Pro
     "3c7a94a0-c844-471f-ae98-0f8c8508baf7": { intel: 5, qual: 5, speed: 5 },
     // Thena Nyx
@@ -134,33 +137,92 @@ const MODEL_STATS = {
 const HOT_MODELS = ["81ggz 7j661 66281 yy161 1f4f4 21143", "3c7a94a0-c844-471f-ae98-0f8c8508baf7", "8gg12 61812 6628 19729 6b4a5 5060"];
 
 const WHIMSICAL_FLAME_SVG = `
+<style>
+@keyframes lw-spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+@keyframes lw-spin-reverse {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(-360deg); }
+}
+@keyframes lw-pulse {
+    0% { box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.2), inset 0 0 10px rgba(var(--primary-rgb), 0.1); border-color: rgba(var(--primary-rgb), 0.4); }
+    50% { box-shadow: 0 0 35px rgba(var(--primary-rgb), 0.8), inset 0 0 20px rgba(var(--primary-rgb), 0.5); border-color: var(--primary); }
+    100% { box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.2), inset 0 0 10px rgba(var(--primary-rgb), 0.1); border-color: rgba(var(--primary-rgb), 0.4); }
+}
+
+.lw-flame-wrapper {
+    position: absolute;
+    inset: -3px;
+    border-radius: 11px;
+    padding: 3px;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 10;
+    overflow: hidden;
+}
+
+.lw-flame-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 250%;
+    height: 250%;
+    background: conic-gradient(
+        transparent 0%, 
+        transparent 25%, 
+        rgba(var(--primary-rgb), 0.5) 40%, 
+        var(--primary) 48%, 
+        #ffffff 50%, 
+        transparent 52%,
+        transparent 75%,
+        rgba(var(--primary-rgb), 0.5) 90%,
+        var(--primary) 98%,
+        #ffffff 100%
+    );
+    animation: lw-spin 3s linear infinite;
+    pointer-events: none;
+}
+
+.lw-flame-spinner-2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 250%;
+    height: 250%;
+    background: conic-gradient(
+        transparent 0%, 
+        transparent 35%, 
+        rgba(var(--primary-rgb), 0.3) 45%, 
+        #ffffff 50%, 
+        transparent 55%,
+        transparent 85%,
+        rgba(var(--primary-rgb), 0.3) 95%,
+        #ffffff 100%
+    );
+    animation: lw-spin-reverse 5s linear infinite;
+    pointer-events: none;
+}
+
+.lw-flame-glow {
+    position: absolute;
+    inset: -2px;
+    border-radius: 10px;
+    border: 2px solid var(--primary);
+    animation: lw-pulse 2s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 9;
+}
+</style>
 <div class="whimsical-flame-effect" style="position: absolute; inset: 0; z-index: 10; pointer-events: none;">
-    <svg width="100%" height="100%" style="overflow:visible">
-        <defs>
-            <filter id="plasma-glow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="3" result="blur"></feGaussianBlur>
-                <feMerge><feMergeNode in="blur"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge>
-            </filter>
-            <filter id="plasma-glow-soft" x="-40%" y="-40%" width="180%" height="180%">
-                <feGaussianBlur stdDeviation="6" result="blur"></feGaussianBlur>
-                <feMerge><feMergeNode in="blur"></feMergeNode></feMerge>
-            </filter>
-        </defs>
-        <rect x="1" y="1" width="calc(100% - 2px)" height="calc(100% - 2px)" rx="8" fill="none"
-              class="plasma-base-glow" filter="url(#plasma-glow-soft)"></rect>
-        <rect x="2" y="2" width="calc(100% - 4px)" height="calc(100% - 4px)" rx="8" fill="none"
-              class="plasma-edge plasma-trail-1" filter="url(#plasma-glow)"></rect>
-        <rect x="2" y="2" width="calc(100% - 4px)" height="calc(100% - 4px)" rx="8" fill="none"
-              class="plasma-edge plasma-trail-2" filter="url(#plasma-glow)"></rect>
-        <rect x="2" y="2" width="calc(100% - 4px)" height="calc(100% - 4px)" rx="8" fill="none"
-              class="plasma-edge plasma-trail-3" filter="url(#plasma-glow)"></rect>
-        <rect x="2" y="2" width="calc(100% - 4px)" height="calc(100% - 4px)" rx="8" fill="none"
-              class="plasma-spark" filter="url(#plasma-glow)"></rect>
-        <circle cx="2" cy="2" r="3.5" class="plasma-corner c-tl"></circle>
-        <circle cx="calc(100% - 2px)" cy="2" r="3.5" class="plasma-corner c-tr"></circle>
-        <circle cx="2" cy="calc(100% - 2px)" r="3.5" class="plasma-corner c-bl"></circle>
-        <circle cx="calc(100% - 2px)" cy="calc(100% - 2px)" r="3.5" class="plasma-corner c-br"></circle>
-    </svg>
+    <div class="lw-flame-glow"></div>
+    <div class="lw-flame-wrapper">
+        <div class="lw-flame-spinner"></div>
+        <div class="lw-flame-spinner-2"></div>
+    </div>
 </div>
 `;
 
@@ -4917,6 +4979,12 @@ function setTheme(color, rgb, gradient = null, notify = true) {
     const themeBg = gradient ? gradient : color;
     root.style.setProperty('--theme-bg', themeBg);
 
+    root.style.setProperty('--titanium-1', `color-mix(in srgb, ${color} 15%, #5c6169)`);
+    root.style.setProperty('--titanium-2', `color-mix(in srgb, ${color} 20%, #878e99)`);
+    root.style.setProperty('--titanium-3', `color-mix(in srgb, ${color} 25%, #c3c9d1)`);
+    root.style.setProperty('--titanium-4', `color-mix(in srgb, ${color} 15%, #ebeef2)`);
+    root.style.setProperty('--titanium-5', '#ffffff');
+
     if (color == "#00ff88") {
         // green theme
         root.style.setProperty('--dot-filled-1', '#e6fff2');
@@ -6649,7 +6717,8 @@ async function loadGalleryStatistics() {
             "Image Editor (NeuralFlow)": "imageEditorV2",
             "Image Editor (Synapse)": "imageEditorV3",
             "Image Editor (PixelFusion)": "imageEditorV1",
-            "Outpaint": "thenaOutpaint"
+            "Outpaint": "thenaOutpaint",
+            "Thena Toonish": "thenaToonish"
         };
         
         const t = translations[currentLang];

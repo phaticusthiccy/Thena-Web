@@ -266,7 +266,7 @@ window.toggleShowAllModels = async function(e) {
             if(sortBtnText) sortBtnText.innerText = currentLang == 'tr' ? 'Varsayılan' : 'Default';
         } else {
             btnShowAllModels.classList.add('active');
-            if(btnSpan) btnSpan.innerText = currentLang == "tr" ? "Sadece Temel Modeller" : "Base Models Only";
+            if(btnSpan) btnSpan.innerText = currentLang == "tr" ? "Temel Modeller" : "Base Models";
             if(typeof playSuccessSound === "function") playSuccessSound();
             if(typeof showNotification === "function") showNotification(currentLang == "tr" ? translations.tr.msgAllModelsLoaded : translations.en.msgAllModelsLoaded, "success");
             

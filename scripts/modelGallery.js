@@ -73,7 +73,8 @@
         "Thena Pastel": "thenaPastel",
         "Thena Noir": "thenaNoir",
         "Thena Pixel": "thenaPixel",
-        "Image Editor": "imageEditor"
+        "Image Editor": "imageEditor",
+        "Thena Toonish": "thenaToonish"
     };
 
     async function fetchModels() {

@@ -91,13 +91,49 @@ async function downloadGeneratedImage(btnElement, filename) {
     setButtonLoading(btnElement, true);
 
     try {
-        const isTelegramWebApp = window.Telegram && window.Telegram.WebApp;
+        const isTelegram = /Telegram/i.test(navigator.userAgent) || window.TelegramWebviewProxy;
         const isMobile = MOBILE_REGEX.test(navigator.userAgent);
         
-        if (isTelegramWebApp || isMobile) {
+        if (isTelegram) {
+            let base64Data = img.src;
+            if (base64Data.startsWith('data:image')) {
+                const rawBase64 = base64Data.split(',')[1];
+                const apiKeyInput = document.getElementById('api-key');
+                var currentConversationInfo = await chatDbHelper.getConversation(currentConversationId);
+                const response = await fetch('https://create.thena.workers.dev/temproryUpload', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(typeof uploadHeaders !== 'undefined' ? uploadHeaders : {})
+                    },
+                    body: JSON.stringify({
+                        image: rawBase64,
+                        apikey: apiKeyInput ? apiKeyInput.value.trim() : "",
+                        prompt: "Chat Generated Image - " + currentConversationInfo.userInfo.charName,
+                        model: "8gg12 61812 6628 19729 6b4a5 5060",
+                        ratio: "auto",
+                        moderation: "high",
+                        features: [],
+                        info: window.Telegram?.WebApp?.initDataUnsafe || {}
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.status === 200 && data.image) {
+                    if (typeof showNotification === "function") showNotification((typeof currentLang !== 'undefined' && currentLang === 'tr') ? translations.tr.msgTelegramSent : translations.en.msgTelegramSent, "success");
+                    if (typeof playSuccessSound === "function") playSuccessSound();
+                } else {
+                    if (typeof showNotification === "function") showNotification((typeof currentLang !== 'undefined' && currentLang === 'tr') ? translations.tr.msgTelegramErr : translations.en.msgTelegramErr, "error");
+                    if (typeof playErrorSound === "function") playErrorSound();
+                }
+            } else {
+                window.location.href = base64Data;
+            }
+        } else if (isMobile) {
             const blob = base64ToBlob(img.src);
             
-            if (isMobile && navigator.share) {
+            if (navigator.share) {
                 const shared = await handleShare(blob, filename);
                 if (!shared) {
                     downloadBlob(blob, filename);

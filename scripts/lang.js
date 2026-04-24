@@ -1159,7 +1159,7 @@ function updateLanguage(lang) {
 
              if (btnText && btn) {
                 if (btn.classList.contains('active')) {
-                    btnText.textContent = lang === 'tr' ? "Sadece Temel Modeller" : "Base Models Only";
+                    btnText.textContent = lang === 'tr' ? "Temel Modeller" : "Base Models";
                 } else {
                     btnText.textContent = lang === 'tr' ? "Tüm Modelleri Göster" : "Show All Models";
                 }
