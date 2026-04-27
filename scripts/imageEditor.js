@@ -422,7 +422,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const toggleViewBtn = document.getElementById('btn-toggle-preset-view');
     if (toggleViewBtn && presetsContainer) {
-        const viewModes = ['default', 'grid', 'large', 'list'];
+        const viewModes = ['default', 'grid', 'large', 'list', 'compact'];
         let currentMode = localStorage.getItem('editorViewMode');
         if (!viewModes.includes(currentMode)) {
             currentMode = 'default';
@@ -432,7 +432,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const updateView = (mode) => {
-            presetsContainer.classList.remove('grid-view', 'large-view', 'list-view');
+            presetsContainer.classList.remove('grid-view', 'large-view', 'list-view', 'compact-view');
             toggleViewBtn.classList.remove('active');
             
             if (scrollLeftBtn) scrollLeftBtn.style.display = mode === 'default' ? 'flex' : 'none';
@@ -476,13 +476,30 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (mode === 'list') {
                 presetsContainer.classList.add('list-view');
                 toggleViewBtn.classList.add('active');
-                nextMode = 'default';
+                nextMode = 'compact';
                 toggleViewBtn.innerHTML = `
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="2" y="6" width="14" height="12" rx="2"></rect>
                     <path d="M22 6v12"></path>
                 </svg>`;
                 toggleViewBtn.title = (typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Yatay Görünüm' : 'Horizontal View';
+            } else if (mode === 'compact') {
+                presetsContainer.classList.add('compact-view');
+                toggleViewBtn.classList.add('active');
+                nextMode = 'default';
+                toggleViewBtn.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="4" height="4"></rect>
+                    <rect x="10" y="3" width="4" height="4"></rect>
+                    <rect x="17" y="3" width="4" height="4"></rect>
+                    <rect x="3" y="10" width="4" height="4"></rect>
+                    <rect x="10" y="10" width="4" height="4"></rect>
+                    <rect x="17" y="10" width="4" height="4"></rect>
+                    <rect x="3" y="17" width="4" height="4"></rect>
+                    <rect x="10" y="17" width="4" height="4"></rect>
+                    <rect x="17" y="17" width="4" height="4"></rect>
+                </svg>`;
+                toggleViewBtn.title = (typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Kompakt Görünüm' : 'Compact View';
             }
             
             localStorage.setItem('editorViewMode', mode);
@@ -503,6 +520,14 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', async (e) => {
             if (e.target.closest('.editor-model-info-btn')) return;
             const targetModel = btn.dataset.model || 'v1';
+
+            if (btn.classList.contains('active')) {
+                btn.classList.remove('active');
+                editorSelectedModel = null;
+                if (typeof playInformationSound === 'function') playInformationSound();
+                if (typeof checkEditorFormReady === 'function') checkEditorFormReady();
+                return;
+            }
 
             if (targetModel === 'v3') {
                 btn.classList.add('editor-model-btn-checking');
@@ -528,6 +553,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.classList.add('active');
             editorSelectedModel = targetModel;
             if (typeof playInformationSound === 'function') playInformationSound();
+            if (typeof checkEditorFormReady === 'function') checkEditorFormReady();
         });
     });
 
@@ -636,9 +662,10 @@ function checkEditorFormReady() {
     const apiKey = apiKeyInput ? apiKeyInput.value.trim() : '';
     const prompt = promptInput ? promptInput.value.trim() : '';
     const hasFile = !!editorSelectedFile;
+    const hasModel = !!editorSelectedModel;
 
     if (generateBtn) {
-        if (apiKey && prompt && hasFile) {
+        if (apiKey && prompt && hasFile && hasModel) {
             generateBtn.classList.add('ready');
         } else {
             generateBtn.classList.remove('ready');
