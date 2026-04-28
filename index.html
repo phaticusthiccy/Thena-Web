@@ -771,6 +771,20 @@
                     </div>
                 </div>
             </div>
+            <div id="view-ai-stories" class="app-view" style="display: none;">
+                <div class="coming-soon-container">
+                    <div class="stories-coming-content">
+                        <div class="stories-animation-box" id="stories-animation-box">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="stories-central-icon">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                        </div>
+                        <h1 id="txt-stories-ready-soon" class="premium-gradient-text">AI Stories will be ready soon!</h1>
+                        <p id="txt-stories-subtitle" class="coming-soon-subtitle">Get ready for a new dimension of interactive storytelling.</p>
+                    </div>
+                </div>
+            </div>
             <div class="input-group">
                 <label>Aspect Ratio</label>
                 <div class="aspect-ratio-selector">
@@ -1222,6 +1236,17 @@
                     <div class="app-card-title" id="txt-app-chat-title">AI Chat Bots</div>
                     <div class="app-status" id="txt-app-chat-status">Start</div>
                 </div>
+                <div class="app-card" id="btn-goto-stories">
+                    <div class="app-card-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
+                            <line x1="16" y1="8" x2="2" y2="22"></line>
+                            <line x1="17.5" y1="15" x2="9" y2="15"></line>
+                        </svg>
+                    </div>
+                    <div class="app-card-title" id="txt-app-stories-title">AI Stories</div>
+                    <div class="app-status" id="txt-app-stories-status">Soon</div>
+                </div>
             </div>
 
             <button id="btn-close-app-switch"
@@ -1544,21 +1569,6 @@
             </div>
 
             <div class="setting-group" style="margin-bottom: 25px; text-align: left;">
-                <label id="lbl-data-mgmt"
-                    style="display:block; color:#888; margin-bottom:10px; font-size:13px; font-weight:600;">DATA
-                    MANAGEMENT</label>
-                <div style="display:flex; gap:10px; margin-bottom:10px;">
-                    <button id="btn-export-data"
-                        style="flex:1; padding:10px; background:#333; color:#fff; border:1px solid #444; border-radius:8px; cursor:pointer;">
-                    </button>
-                    <button id="btn-import-data"
-                        style="flex:1; padding:10px; background:#333; color:#fff; border:1px solid #444; border-radius:8px; cursor:pointer;">
-                    </button>
-                    <input type="file" id="import-file-input" accept=".json" style="display:none;">
-                </div>
-
-                <p id="desc-data-mgmt" style="font-size:12px; color:#666; margin-bottom:10px;">Clear all local data
-                    including API key, settings, and image gallery.</p>
                 <button id="btn-hard-reset"
                     style="width:100%; padding:12px; background:rgba(255,68,68,0.1); color:#ff4444; border:1px solid rgba(255,68,68,0.3); border-radius:8px; cursor:pointer; font-size:13px; font-weight:600; transition:all 0.2s;">
                     Reset Application Data

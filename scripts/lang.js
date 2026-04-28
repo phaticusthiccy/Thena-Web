@@ -516,7 +516,11 @@ const translations = {
         "appCardEditName": "Image Editing",
         "appCardEditDesc": "Transform your image with AI, reshape with prompts.",
         "appCardOutpaintName": "Outpaint",
-        "appCardOutpaintDesc": "Expand image borders with AI, add new areas."
+        "appCardOutpaintDesc": "Expand image borders with AI, add new areas.",
+        "appCardStoriesName": "AI Stories",
+        "appCardStoriesDesc": "Create interactive stories with AI.",
+        "storiesReadySoon": "AI Stories will be ready soon!",
+        "storiesSubtitle": "Get ready for a new dimension of interactive storytelling."
     },
     "tr": {
         "generateBtn": "Görüntü Oluştur",
@@ -1035,7 +1039,11 @@ const translations = {
         "appCardEditName": "Resim Düzenleme",
         "appCardEditDesc": "Görselini AI ile dönüştür, prompt ile yeniden şekillendir.",
         "appCardOutpaintName": "Outpaint",
-        "appCardOutpaintDesc": "Görselin kenarlarını AI ile genişlet, yeni alanlar ekle."
+        "appCardOutpaintDesc": "Görselin kenarlarını AI ile genişlet, yeni alanlar ekle.",
+        "appCardStoriesName": "AI Hikayeleri",
+        "appCardStoriesDesc": "Yapay zeka ile etkileşimli hikayeler oluşturun.",
+        "storiesReadySoon": "AI Hikayeleri yakında hazır olacak!",
+        "storiesSubtitle": "Yapay zeka destekli etkileşimli hikaye anlatımının yeni boyutuna hazır olun."
     }
 };
 
@@ -1051,7 +1059,7 @@ function initDomCache() {
     if (domElementCache.initialized) return;
 
     const ids = [
-        'lbl-intel', 'lbl-qual', 'lbl-speed', 'btn-export-data', 'btn-import-data',
+        'lbl-intel', 'lbl-qual', 'lbl-speed',
         'btn-language', 'prompt', 'api-key', 'generate-btn', 'gallery-btn',
         'label-api-key', 'lbl-model-text', 'txt-show-all', 'btn-show-all-models',
         'txt-fast', 'txt-creative', 'txt-dense', 'txt-movie', 'txt-highres', 'txt-enhance',
@@ -1059,7 +1067,7 @@ function initDomCache() {
         'lbl-perf-mode', 'desc-perf-mode', 'lbl-silent-mode', 'desc-silent-mode',
         "lbl-adv-mode", "desc-adv-mode", "lbl-auto-mode", "desc-auto-mode",
         "lbl-perf-monitor", "desc-perf-monitor",
-        "lbl-data-mgmt", "desc-data-mgmt", "btn-hard-reset", "btn-close-settings",
+        "lbl-data-mgmt", "btn-hard-reset", "btn-close-settings",
         "lbl-skip-intro", "desc-skip-intro",
         "lbl-power-saver", "desc-power-saver",
         'btn-share-copy', 'btn-img2prompt-generate', 'chat-back-btn',
@@ -1170,8 +1178,6 @@ function updateLanguage(lang) {
     if (cache['lbl-intel']) cache['lbl-intel'].textContent = t.lblIntel;
     if (cache['lbl-qual']) cache['lbl-qual'].textContent = t.lblQual;
     if (cache['lbl-speed']) cache['lbl-speed'].textContent = t.lblSpeed;
-    if (cache['btn-export-data']) cache['btn-export-data'].textContent = t.btnBackup;
-    if (cache['btn-import-data']) cache['btn-import-data'].textContent = t.btnRestore;
 
     if (cache['btn-language']) {
         cache['btn-language'].title = lang === 'en' ? "Language: English" : "Dil: Türkçe";
@@ -1221,7 +1227,7 @@ function updateLanguage(lang) {
         ["lbl-gradient-themes", t.lblGradient], ["desc-perf-mode", t.lblPerfDesc], ["desc-silent-mode", t.lblSilentDesc], ["desc-adv-mode", t.lblAdvDesc],
         ["desc-auto-mode", t.lblAutoDesc], ["desc-perf-monitor", t.lblPerfMonDesc], ["desc-prompt-preview", t.lblPromptPreviewDesc],
         ["opt-preset-all", t.presetFilterAll], ["opt-preset-safe", t.presetFilterSafe], ["opt-preset-18plus", t.presetFilterPlus18],
-        ["prompt-preview-title", t.promptPreviewTitle], ["lbl-data-mgmt", t.lblData], ["desc-data-mgmt", t.lblDataDesc], ["desc-skip-intro", t.lblSkipIntroDesc],
+        ["prompt-preview-title", t.promptPreviewTitle], ["lbl-data-mgmt", t.lblData], ["desc-skip-intro", t.lblSkipIntroDesc],
         ["desc-power-saver", t.lblPowerSaverDesc],
         ["lbl-crop-title", t.editorCropLabel], ["btn-crop-cancel", t.editorCropCancel], ["btn-crop-apply", t.editorCropApply],
         ["gallery-stats-title", t.galleryStatsTitle], ["stats-models-title", t.statsModelsTitle], ["stats-extras-title", t.statsExtrasTitle], ["stats-cost-title", t.statsCostTitle],
@@ -1360,7 +1366,6 @@ function updateLanguage(lang) {
         }
         if (cleanTxt.includes("DATA MANAGEMENT") || cleanTxt.includes("VERİ YÖNETİMİ")) {
             l.textContent = t.lblData;
-            if (l.nextElementSibling && l.nextElementSibling.tagName === 'P') l.nextElementSibling.textContent = t.lblDataDesc;
         }
     });
 
@@ -1536,6 +1541,8 @@ const appSwitcherTranslations = {
         chatStatus: "Start",
         editorTitle: "Image Editor",
         editorStatus: "Start",
+        storiesTitle: "AI Stories",
+        storiesStatus: "Soon",
         close: "Close"
     },
     tr: {
@@ -1546,6 +1553,8 @@ const appSwitcherTranslations = {
         chatStatus: "Başlat",
         editorTitle: "Resim Editörü",
         editorStatus: "Başlat",
+        storiesTitle: "AI Hikayeleri",
+        storiesStatus: "Yakında",
         close: "Kapat"
     }
 };
@@ -1562,6 +1571,7 @@ function updateAppSwitcherLang(lang) {
     const currentMode = localStorage.getItem('thena-last-app-mode') || 'image';
     const txtActive = t.genStatus; 
     const txtStart = t.chatStatus;
+    const txtSoon = t.storiesStatus;
 
     const safelySetTextById = (id, text) => {
         const el = document.getElementById(id);
@@ -1575,7 +1585,19 @@ function updateAppSwitcherLang(lang) {
     safelySetTextById('txt-app-chat-status', (currentMode === 'chat') ? txtActive : txtStart);
     safelySetTextById('txt-app-editor-title', t.editorTitle);
     safelySetTextById('txt-app-editor-status', (currentMode === 'editor') ? txtActive : txtStart);
+    safelySetTextById('txt-app-stories-title', t.storiesTitle);
+    safelySetTextById('txt-app-stories-status', (currentMode === 'stories') ? txtActive : txtSoon);
     safelySetTextById('txt-app-close', t.close);
+
+    const storiesReadyText = document.getElementById('txt-stories-ready-soon');
+    if (storiesReadyText) {
+        storiesReadyText.innerText = (lang === 'tr') ? translations.tr.storiesReadySoon : translations.en.storiesReadySoon;
+    }
+
+    const storiesSubtitleText = document.getElementById('txt-stories-subtitle');
+    if (storiesSubtitleText) {
+        storiesSubtitleText.innerText = (lang === 'tr') ? translations.tr.storiesSubtitle : translations.en.storiesSubtitle;
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

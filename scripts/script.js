@@ -4478,7 +4478,7 @@ settingsBtn.addEventListener('click', () => {
     const autocompleteGroup = document.getElementById('setting-group-autocomplete');
     const promptPreviewGroup = document.getElementById('setting-group-prompt-preview');
     
-    if (currentAppMode === 'chat' || currentAppMode === 'editor') {
+    if (currentAppMode === 'chat' || currentAppMode === 'editor' || currentAppMode === 'stories') {
         if (advancedGroup) advancedGroup.style.display = 'none';
         if (autocompleteGroup) autocompleteGroup.style.display = 'none';
         if (promptPreviewGroup) promptPreviewGroup.style.display = 'none';
@@ -6160,6 +6160,7 @@ function applyChatFilters() {
 }
 
 const viewEditor = document.getElementById('view-image-editor');
+const viewStories = document.getElementById('view-ai-stories');
 
 function switchAppMode(mode) {
     playSuccessSound();
@@ -6168,16 +6169,24 @@ function switchAppMode(mode) {
     const btnGotoChat = document.getElementById('btn-goto-chat');
     const btnGotoImage = document.getElementById('btn-goto-image');
     const btnGotoEditor = document.getElementById('btn-goto-editor');
+    const btnGotoStories = document.getElementById('btn-goto-stories');
     const galleryBtn = document.getElementById('gallery-btn');
     const modelSuggestionSetting = document.getElementById('setting-group-model-suggestion');
+    const advancedSetting = document.getElementById('setting-group-advanced');
+    const autocompleteSetting = document.getElementById('setting-group-autocomplete');
+    const previewSetting = document.getElementById('setting-group-prompt-preview');
 
     if (modelSuggestionSetting) {
         modelSuggestionSetting.style.display = mode === 'image' ? 'block' : 'none';
     }
+    
+    if (advancedSetting) advancedSetting.style.display = (mode === 'stories' || mode === 'chat' || mode === 'editor') ? 'none' : 'block';
+    if (autocompleteSetting) autocompleteSetting.style.display = (mode === 'stories' || mode === 'chat' || mode === 'editor') ? 'none' : 'block';
+    if (previewSetting) previewSetting.style.display = (mode === 'stories' || mode === 'chat' || mode === 'editor') ? 'none' : 'block';
 
-    const activeView = mode === 'chat' ? viewChat : mode === 'editor' ? viewEditor : viewImage;
+    const activeView = mode === 'chat' ? viewChat : mode === 'editor' ? viewEditor : mode === 'stories' ? viewStories : viewImage;
 
-    [viewImage, viewChat, viewEditor].forEach(view => {
+    [viewImage, viewChat, viewEditor, viewStories].forEach(view => {
         if(view && view !== activeView) {
             view.classList.remove('active-view');
             view.classList.add('hidden-view');
@@ -6188,6 +6197,7 @@ function switchAppMode(mode) {
     if (btnGotoChat) btnGotoChat.classList.remove('active');
     if (btnGotoImage) btnGotoImage.classList.remove('active');
     if (btnGotoEditor) btnGotoEditor.classList.remove('active');
+    if (btnGotoStories) btnGotoStories.classList.remove('active');
 
     if (mode === 'chat') {
         if(viewChat) {
@@ -6217,6 +6227,23 @@ function switchAppMode(mode) {
         
         if(typeof loadEditorPresets === 'function') loadEditorPresets();
         if(typeof loadEditorGallery === 'function') loadEditorGallery();
+
+    } else if (mode === 'stories') {
+        if(viewStories) {
+            viewStories.style.display = 'flex';
+            requestAnimationFrame(() => {
+               viewStories.classList.remove('hidden-view');
+               viewStories.classList.add('active-view');
+           });
+           
+           const animBox = document.getElementById('stories-animation-box');
+           if (animBox && !animBox.querySelector('.lw-flame-wrapper')) {
+               animBox.insertAdjacentHTML('beforeend', WHIMSICAL_FLAME_SVG);
+           }
+       }
+       
+       if (btnGotoStories) btnGotoStories.classList.add('active');
+       if (galleryBtn) galleryBtn.style.display = 'none';
 
     } else {
         if(viewImage) {
@@ -6377,12 +6404,23 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnGotoChat) btnGotoChat.onclick = () => switchAppMode('chat');
     if (btnGotoImage) btnGotoImage.onclick = () => switchAppMode('image');
     if (btnGotoEditor) btnGotoEditor.onclick = () => switchAppMode('editor');
+    const btnGotoStories = document.getElementById('btn-goto-stories');
+    if (btnGotoStories) btnGotoStories.onclick = () => switchAppMode('stories');
 
     const lastAppMode = localStorage.getItem('thena-last-app-mode') || 'image';
     const modelSuggestionSetting = document.getElementById('setting-group-model-suggestion');
+    const advancedSetting = document.getElementById('setting-group-advanced');
+    const autocompleteSetting = document.getElementById('setting-group-autocomplete');
+    const previewSetting = document.getElementById('setting-group-prompt-preview');
+
     if (modelSuggestionSetting) {
         modelSuggestionSetting.style.display = lastAppMode === 'image' ? 'block' : 'none';
     }
+
+    const isHiddenMode = lastAppMode === 'stories' || lastAppMode === 'chat' || lastAppMode === 'editor';
+    if (advancedSetting) advancedSetting.style.display = isHiddenMode ? 'none' : 'block';
+    if (autocompleteSetting) autocompleteSetting.style.display = isHiddenMode ? 'none' : 'block';
+    if (previewSetting) previewSetting.style.display = isHiddenMode ? 'none' : 'block';
 
     if (lastAppMode === 'chat') {
         const galleryBtn = document.getElementById('gallery-btn');
@@ -6398,8 +6436,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (btnGotoChat) btnGotoChat.classList.add('active');
-        if (btnGotoImage) btnGotoImage.classList.remove('active');
+        if (btnGotoChat) btnGotoChat.classList.remove('active');
         if (btnGotoEditor) btnGotoEditor.classList.remove('active');
+        if (btnGotoStories) btnGotoStories.classList.remove('active');
         if (galleryBtn) galleryBtn.style.display = 'none';
 
         if (!isCharactersLoaded) fetchCharacters();
@@ -6419,10 +6458,34 @@ document.addEventListener('DOMContentLoaded', () => {
         if (btnGotoEditor) btnGotoEditor.classList.add('active');
         if (btnGotoImage) btnGotoImage.classList.remove('active');
         if (btnGotoChat) btnGotoChat.classList.remove('active');
+        if (btnGotoStories) btnGotoStories.classList.remove('active');
         if (galleryBtn) galleryBtn.style.display = '';
          
         if(typeof loadEditorPresets === 'function') loadEditorPresets();
         if(typeof loadEditorGallery === 'function') loadEditorGallery();
+    } else if (lastAppMode === 'stories') {
+        const galleryBtn = document.getElementById('gallery-btn');
+        
+        viewImage.classList.remove('active-view');
+        viewImage.classList.add('hidden-view');
+        setTimeout(() => viewImage.style.display = 'none', 300);
+
+        viewStories.style.display = 'flex';
+        requestAnimationFrame(() => {
+           viewStories.classList.remove('hidden-view');
+           viewStories.classList.add('active-view');
+       });
+       
+       const animBox = document.getElementById('stories-animation-box');
+       if (animBox && !animBox.querySelector('.lw-flame-wrapper')) {
+           animBox.insertAdjacentHTML('beforeend', WHIMSICAL_FLAME_SVG);
+       }
+       
+       if (btnGotoStories) btnGotoStories.classList.add('active');
+       if (btnGotoImage) btnGotoImage.classList.remove('active');
+       if (btnGotoChat) btnGotoChat.classList.remove('active');
+       if (btnGotoEditor) btnGotoEditor.classList.remove('active');
+       if (galleryBtn) galleryBtn.style.display = 'none';
     } else {
         if (btnGotoImage) btnGotoImage.classList.add('active');
     }

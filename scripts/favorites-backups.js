@@ -1,8 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
     const DOMCache = {
-        btnExport: document.getElementById('btn-export-data'),
-        btnImport: document.getElementById('btn-import-data'),
-        fileInputImport: document.getElementById('import-file-input'),
         langBtn: document.getElementById('btn-language'),
         dataModal: document.getElementById('data-selection-modal'),
         btnDataCancel: document.getElementById('btn-data-cancel'),
@@ -29,8 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
         const t = translations[currentLang] || translations['en'];
 
-        if (DOMCache.btnExport && t.btnBackup) DOMCache.btnExport.textContent = t.btnBackup;
-        if (DOMCache.btnImport && t.btnRestore) DOMCache.btnImport.textContent = t.btnRestore;
 
         if (DOMCache.modalTitle && t.dataModalTitle) DOMCache.modalTitle.textContent = t.dataModalTitle;
         if (DOMCache.lblDesc && t.dataModalDesc) DOMCache.lblDesc.textContent = t.dataModalDesc;
@@ -85,52 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 100);
         });
     }
-
-    if (DOMCache.btnExport) {
-        DOMCache.btnExport.onclick = (e) => {
-            e.preventDefault();
-            openDataModal('backup');
-        };
-    }
-
-
-    if (DOMCache.btnImport) {
-        DOMCache.btnImport.onclick = (e) => {
-            e.preventDefault();
-            if (DOMCache.fileInputImport) {
-                DOMCache.fileInputImport.value = ''; 
-                DOMCache.fileInputImport.click();
-            }
-        };
-    }
-
-
-    if (DOMCache.fileInputImport) {
-        DOMCache.fileInputImport.onchange = (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            
-            reader.onload = (event) => {
-                try {
-                    const importedData = JSON.parse(event.target.result);
-                    pendingImportData = importedData;
-                    openDataModal('restore');
-
-                } catch (err) {
-                    console.error("JSON Hatası:", err);
-                    if (typeof playErrorSound === "function") playErrorSound();
-                    
-                    const t = translations[currentLang] || translations['en'];
-                    if(typeof showNotification === "function") 
-                        showNotification(t.msgBackupError, "error");
-                }
-            };
-            reader.readAsText(file);
-        };
-    }
-
 
     function openDataModal(mode) {
         if (!DOMCache.dataModal) return;
