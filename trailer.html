@@ -29,6 +29,7 @@
             <a href="#feat-imagegen" class="nav-link" data-i18n="navLinkImages">Images</a>
             <a href="#feat-chat" class="nav-link" data-i18n="navLinkChat">Chat</a>
             <a href="#feat-editor" class="nav-link" data-i18n="navLinkEditor">Editor</a>
+            <a href="#feat-stories" class="nav-link" data-i18n="navLinkStories">Stories</a>
             <a href="#tech" class="nav-link" data-i18n="navLinkTech">Tech</a>
         </nav>
         <a href="index.html" onclick="localStorage.setItem('firstTime','false')" class="nav-cta" id="nav-cta-btn">
@@ -49,7 +50,7 @@
                 <span class="dot"></span>
                 <span data-i18n="heroBadge">Introducing Thena</span>
                 <span class="hero-badge-sep">·</span>
-                <span class="hero-badge-ver">v3.4</span>
+                <span class="hero-badge-ver">v3.5</span>
             </div>
             <h1 class="hero-title">
                 <span class="gradient-text">THENA</span>
@@ -229,6 +230,37 @@
         </div>
     </section>
 
+    <div class="light-line"></div>
+
+    <section class="feature-section feat-stories" id="feat-stories">
+        <div class="feature-inner reversed">
+            <div class="feature-text reveal-right">
+                <div class="feature-number">04</div>
+                <div class="feature-icon-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
+                    </svg>
+                    <span data-i18n="feat4Badge">AI Stories</span>
+                </div>
+                <h2 class="feature-title" data-i18n="feat4Title">Immersive Webtoon <span class="text-gradient-red">Reader.</span></h2>
+                <p class="feature-desc" data-i18n="feat4Desc">Dive into curated visual stories with a dedicated reading interface. Experience dynamic chapter navigation, lazy-loaded image sequences, and whimsical end-of-episode animations.</p>
+                <div class="feature-specs">
+                    <span class="spec-chip" data-i18n="specWebtoon">📖 Visual Reader</span>
+                    <span class="spec-chip" data-i18n="specLazyLoad">⚡ Lazy Loading</span>
+                    <span class="spec-chip" data-i18n="specStatus">🔄 Status Tracking</span>
+                    <span class="spec-chip" data-i18n="specMultilingual">💬 Multilingual UI</span>
+                </div>
+            </div>
+            <div class="feature-visual reveal-left">
+                <div class="feature-glow"></div>
+                <div class="feature-img-wrapper">
+                    <img src="src/thena_comic_page.webp" alt="Thena AI Stories Webtoon" loading="lazy">
+                    <div class="feature-img-tag" data-i18n="feat4Tag">Webtoon Reader</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <div class="divider-statement">
         <div class="big-text reveal" data-i18n="divider2Big">Your data stays<br><span class="text-gradient-blue">on your device.</span></div>
         <p class="sub-text reveal" data-i18n="divider2Sub">IndexedDB-powered. No hidden uploads. Zero tracking. Complete privacy.</p>
@@ -237,9 +269,9 @@
     <div class="light-line"></div>
 
     <section class="feature-section feat-gallery" id="feat-gallery">
-        <div class="feature-inner reversed">
-            <div class="feature-text reveal-right">
-                <div class="feature-number">04</div>
+        <div class="feature-inner">
+            <div class="feature-text reveal-left">
+                <div class="feature-number">05</div>
                 <div class="feature-icon-badge">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="7" height="7"></rect>
@@ -247,10 +279,10 @@
                         <rect x="14" y="14" width="7" height="7"></rect>
                         <rect x="3" y="14" width="7" height="7"></rect>
                     </svg>
-                    <span data-i18n="feat4Badge">Gallery &amp; Management</span>
+                    <span data-i18n="feat5Badge">Gallery &amp; Management</span>
                 </div>
-                <h2 class="feature-title" data-i18n="feat4Title">Organize your <span class="text-gradient-blue">masterpieces.</span></h2>
-                <p class="feature-desc" data-i18n="feat4Desc">Filter by model, ratio, or date. Sort newest to oldest. Multi-select for batch operations. Drag-to-dismiss gestures. Your gallery, your way — powered by local-first architecture.</p>
+                <h2 class="feature-title" data-i18n="feat5Title">Organize your <span class="text-gradient-blue">masterpieces.</span></h2>
+                <p class="feature-desc" data-i18n="feat5Desc">Filter by model, ratio, or date. Sort newest to oldest. Multi-select for batch operations. Drag-to-dismiss gestures. Your gallery, your way — powered by local-first architecture.</p>
                 <div class="feature-specs">
                     <span class="spec-chip" data-i18n="specSmartSearch">🔍 Smart Search</span>
                     <span class="spec-chip" data-i18n="specAdvancedFilters">📊 Advanced Filters</span>
@@ -259,11 +291,11 @@
                     <span class="spec-chip" data-i18n="specDragDismiss">👆 Drag to Dismiss</span>
                 </div>
             </div>
-            <div class="feature-visual reveal-left">
+            <div class="feature-visual reveal-right">
                 <div class="feature-glow"></div>
                 <div class="feature-img-wrapper">
                     <img src="src/gallery.webp" alt="Thena Gallery" loading="lazy">
-                    <div class="feature-img-tag" data-i18n="feat4Tag">Gallery</div>
+                    <div class="feature-img-tag" data-i18n="feat5Tag">Gallery</div>
                 </div>
             </div>
         </div>
@@ -272,19 +304,19 @@
     <div class="light-line"></div>
 
     <section class="feature-section feat-outpaint" id="feat-outpaint">
-        <div class="feature-inner">
-            <div class="feature-text reveal-left">
-                <div class="feature-number">05</div>
+        <div class="feature-inner reversed">
+            <div class="feature-text reveal-right">
+                <div class="feature-number">06</div>
                 <div class="feature-icon-badge">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                         <path d="M12 8v8"></path>
                         <path d="M8 12h8"></path>
                     </svg>
-                    <span data-i18n="feat5Badge">AI Outpaint</span>
+                    <span data-i18n="feat6Badge">AI Outpaint</span>
                 </div>
-                <h2 class="feature-title" data-i18n="feat5Title">Expand your <span class="text-gradient-purple">horizons.</span></h2>
-                <p class="feature-desc" data-i18n="feat5Desc">Seamlessly extend any image beyond its original borders. Select specific directions, use intuitive size presets, and watch AI intelligently fill the canvas with perfectly matching context.</p>
+                <h2 class="feature-title" data-i18n="feat6Title">Expand your <span class="text-gradient-purple">horizons.</span></h2>
+                <p class="feature-desc" data-i18n="feat6Desc">Seamlessly extend any image beyond its original borders. Select specific directions, use intuitive size presets, and watch AI intelligently fill the canvas with perfectly matching context.</p>
                 <div class="feature-specs">
                     <span class="spec-chip" data-i18n="specDirectional">⬅️ Directional Expansion</span>
                     <span class="spec-chip" data-i18n="specQuickSize">📐 Quick Size Presets</span>
@@ -292,11 +324,11 @@
                     <span class="spec-chip" data-i18n="specSeamless">🔄 Seamless Blending</span>
                 </div>
             </div>
-            <div class="feature-visual reveal-right">
+            <div class="feature-visual reveal-left">
                 <div class="feature-glow"></div>
                 <div class="feature-img-wrapper">
                     <img src="src/outpaint_editor.webp" alt="Thena Outpaint Interface" loading="lazy">
-                    <div class="feature-img-tag" data-i18n="feat5Tag">AI Outpaint</div>
+                    <div class="feature-img-tag" data-i18n="feat6Tag">AI Outpaint</div>
                 </div>
             </div>
         </div>

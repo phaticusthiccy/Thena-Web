@@ -772,16 +772,141 @@
                 </div>
             </div>
             <div id="view-ai-stories" class="app-view" style="display: none;">
-                <div class="coming-soon-container">
-                    <div class="stories-coming-content">
-                        <div class="stories-animation-box" id="stories-animation-box">
-                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="stories-central-icon">
-                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                            </svg>
+                <div class="toon-filter-bar" id="toon-filter-bar">
+                    <button class="toon-filter-btn active" data-cat="all" id="toon-cat-all">Tümü</button>
+                </div>
+                <div class="toon-section">
+                    <div class="toon-section-header">
+                        <span class="toon-section-title" id="toon-section-title">Popüler Hikayeler</span>
+                        <span class="toon-story-count" id="toon-story-count"></span>
+                    </div>
+                    <div class="toon-grid" id="toon-grid">
+                        <div class="toon-card-skeleton"></div>
+                        <div class="toon-card-skeleton"></div>
+                        <div class="toon-card-skeleton"></div>
+                        <div class="toon-card-skeleton"></div>
+                        <div class="toon-card-skeleton"></div>
+                        <div class="toon-card-skeleton"></div>
+                    </div>
+                    <div class="toon-error" id="toon-error" style="display:none;">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <p id="toon-error-msg">Hikayeler yüklenemedi. Lütfen tekrar deneyin.</p>
+                        <button class="toon-retry-btn" id="toon-retry-btn">Tekrar Dene</button>
+                    </div>
+                </div>
+                <div class="toon-detail" id="toon-detail" style="display:none;">
+                    <button class="toon-detail-back" id="toon-detail-back">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </button>
+                    <div class="toon-detail-hero" id="toon-detail-hero">
+                        <div class="toon-detail-hero-gradient"></div>
+                        <div class="toon-detail-hero-info">
+                            <div class="toon-detail-categories" id="toon-detail-cats"></div>
+                            <h2 class="toon-detail-title" id="toon-detail-title"></h2>
+                            <p class="toon-detail-desc" id="toon-detail-desc"></p>
                         </div>
-                        <h1 id="txt-stories-ready-soon" class="premium-gradient-text">AI Stories will be ready soon!</h1>
-                        <p id="txt-stories-subtitle" class="coming-soon-subtitle">Get ready for a new dimension of interactive storytelling.</p>
+                    </div>
+                    <div class="toon-detail-author-row">
+                        <div class="toon-detail-author-avatar" id="toon-detail-avatar">
+                            <img id="toon-detail-avatar-img" src="" alt="" style="display:none;">
+                            <span id="toon-detail-avatar-initial"></span>
+                        </div>
+                        <div class="toon-detail-author-meta">
+                            <span class="toon-detail-author-label" id="toon-detail-author-label">Author / Writer</span>
+                            <div class="toon-detail-author-name-row">
+                                <span class="toon-detail-author-name" id="toon-detail-author-name"></span>
+                                <button class="toon-detail-info-btn" id="toon-detail-info-btn" title="Author Info">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="toon-detail-views" id="toon-detail-views">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            <span id="toon-detail-views-count"></span>
+                        </div>
+
+                    </div>
+                    <div class="toon-detail-episodes-header">
+                        <div class="toon-detail-ep-info">
+                            <span id="toon-detail-ep-label">Episodes</span>
+                            <span class="toon-detail-ep-count" id="toon-detail-ep-count"></span>
+                        </div>
+                        <div class="toon-custom-season-wrapper" id="toon-season-dropdown-wrapper" style="display:none;">
+                            <div class="toon-season-trigger" id="toon-season-trigger">
+                                <span id="toon-season-trigger-text">Season 1</span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                            <div class="toon-season-dropdown" id="toon-season-options"></div>
+                        </div>
+                    </div>
+                    <div class="toon-episodes-list" id="toon-episodes-list">
+                    </div>
+                    <div class="toon-detail-ep-error" id="toon-detail-ep-error" style="display:none;">
+                        <p id="toon-detail-ep-error-msg">Bölümler yüklenemedi.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="toon-reader" id="toon-reader" style="display:none;">
+                <div class="toon-reader-header">
+                    <button class="toon-reader-back-btn" id="toon-reader-back-btn" title="Back">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                    </button>
+                    <h2 class="toon-reader-title" id="toon-reader-title">Episode</h2>
+                    <div class="toon-reader-nav">
+                        <button class="toon-reader-nav-btn" id="toon-reader-prev-btn" title="Previous Episode">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                        </button>
+                        <button class="toon-reader-nav-btn" id="toon-reader-next-btn" title="Next Episode">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="toon-reader-content" id="toon-reader-content">
+                    <div class="toon-reader-loading" id="toon-reader-loading" style="display:none;">
+                        <div class="toon-loader-ring"></div>
+                    </div>
+                    <div class="toon-reader-images" id="toon-reader-images"></div>
+                    
+                    <div class="toon-reader-end-message" id="toon-reader-end-message" style="display:none;">
+                        <div class="toon-end-whimsical-container">
+                            <svg class="toon-whim-star toon-whim-star-1" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 1L14.6 9.4L23 12L14.6 14.6L12 23L9.4 14.6L1 12L9.4 9.4L12 1Z"/>
+                            </svg>
+                            <svg class="toon-whim-star toon-whim-star-2" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 1L14.6 9.4L23 12L14.6 14.6L12 23L9.4 14.6L1 12L9.4 9.4L12 1Z"/>
+                            </svg>
+                            <svg class="toon-whim-star toon-whim-star-3" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 1L14.6 9.4L23 12L14.6 14.6L12 23L9.4 14.6L1 12L9.4 9.4L12 1Z"/>
+                            </svg>
+                            <div class="toon-whim-glow"></div>
+                        </div>
+                        <span id="toon-reader-end-text" class="toon-reader-end-text-glow"></span>
+                        <div class="toon-end-divider">
+                            <span></span><span></span><span></span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2686,5 +2811,34 @@
     <script src="scripts/modelGallery.js" defer></script>
     <script src="scripts/customSelect.js"></script>
     <script src="scripts/elements.js"></script>
+    <script src="scripts/aiStories.js" defer></script>
+    <div class="toon-author-popup" id="toon-author-popup" style="display:none;">
+        <div class="toon-author-popup-backdrop" id="toon-author-popup-backdrop"></div>
+        <div class="toon-author-popup-sheet">
+            <button class="toon-author-popup-close" id="toon-author-popup-close">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div class="toon-author-popup-handle"></div>
+            <div class="toon-author-popup-body">
+                <div class="toon-author-popup-header">
+                    <div class="toon-author-popup-avatar">
+                        <img id="toon-author-popup-avatar-img" src="" alt="" style="display:none;">
+                        <span id="toon-author-popup-avatar-initial"></span>
+                    </div>
+                    <div class="toon-author-popup-header-text">
+                        <span class="toon-author-section-label" id="toon-author-written-by">Written by</span>
+                        <div class="toon-author-name-social-row">
+                            <h3 class="toon-author-section-name" id="toon-author-popup-name"></h3>
+                            <a class="toon-author-social-icon" id="toon-author-popup-link" href="" target="_blank" rel="noopener" style="display:none;"></a>
+                        </div>
+                    </div>
+                </div>
+                <p class="toon-author-popup-desc" id="toon-author-popup-desc"></p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

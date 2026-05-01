@@ -520,7 +520,20 @@ const translations = {
         "appCardStoriesName": "AI Stories",
         "appCardStoriesDesc": "Create interactive stories with AI.",
         "storiesReadySoon": "AI Stories will be ready soon!",
-        "storiesSubtitle": "Get ready for a new dimension of interactive storytelling."
+        "storiesSubtitle": "Get ready for a new dimension of interactive storytelling.",
+        "toonHeaderBadge": "AI Toons",
+        "toonHeaderTitle": "Thena Toons",
+        "toonHeaderSub": "AI-generated comic stories",
+        "toonSectionTitle": "Popular Stories",
+        "toonCatAll": "All",
+        "toonStoryCount": "{0} stories",
+        "toonErrorMsg": "Failed to load stories. Please try again.",
+        "toonRetryBtn": "Retry",
+        "toonEmptyCategory": "No stories in this category.",
+        "toonReaderFirstEp": "You are at the first episode.",
+        "toonReaderSeasonEnd": "You are at the end of the season. Please switch to the next season.",
+        "toonReaderEpEnded": "Episode Ended",
+        "toonReaderSeasonEnded": "Season Ended"
     },
     "tr": {
         "generateBtn": "Görüntü Oluştur",
@@ -1043,7 +1056,20 @@ const translations = {
         "appCardStoriesName": "AI Hikayeleri",
         "appCardStoriesDesc": "Yapay zeka ile etkileşimli hikayeler oluşturun.",
         "storiesReadySoon": "AI Hikayeleri yakında hazır olacak!",
-        "storiesSubtitle": "Yapay zeka destekli etkileşimli hikaye anlatımının yeni boyutuna hazır olun."
+        "storiesSubtitle": "Yapay zeka destekli etkileşimli hikaye anlatımının yeni boyutuna hazır olun.",
+        "toonHeaderBadge": "AI Toons",
+        "toonHeaderTitle": "Thena Toons",
+        "toonHeaderSub": "AI ile oluşturulmuş çizgi roman hikayeleri",
+        "toonSectionTitle": "Popüler Hikayeler",
+        "toonCatAll": "Tümü",
+        "toonStoryCount": "{0} hikaye",
+        "toonErrorMsg": "Hikayeler yüklenemedi. Lütfen tekrar deneyin.",
+        "toonRetryBtn": "Tekrar Dene",
+        "toonEmptyCategory": "Bu kategoride hikaye yok.",
+        "toonReaderFirstEp": "İlk bölümdesiniz.",
+        "toonReaderSeasonEnd": "Sezonun sonundasınız. Lütfen sonraki sezona geçin.",
+        "toonReaderEpEnded": "Bölüm Bitti",
+        "toonReaderSeasonEnded": "Sezon Bitti"
     }
 };
 
@@ -1466,6 +1492,14 @@ function updateLanguage(lang) {
 
     safelySetText('txt-filter-chip-all', t.filterAll);
 
+    safelySetText('toon-header-badge-txt', t.toonHeaderBadge);
+    safelySetText('toon-header-title-txt', t.toonHeaderTitle);
+    safelySetText('toon-header-sub-txt', t.toonHeaderSub);
+    safelySetText('toon-section-title', t.toonSectionTitle);
+    safelySetText('toon-cat-all', t.toonCatAll);
+    safelySetText('toon-error-msg', t.toonErrorMsg);
+    safelySetText('toon-retry-btn', t.toonRetryBtn);
+
     if (typeof window.updateModelSortLanguage === 'function') {
         window.updateModelSortLanguage();
     }
@@ -1476,6 +1510,10 @@ function updateLanguage(lang) {
 
     if (typeof window.updateModelGalleryLanguage === 'function') {
         window.updateModelGalleryLanguage();
+    }
+
+    if (typeof window.aiStoriesUpdateLang === 'function') {
+        window.aiStoriesUpdateLang(lang);
     }
 }
 
@@ -1542,7 +1580,7 @@ const appSwitcherTranslations = {
         editorTitle: "Image Editor",
         editorStatus: "Start",
         storiesTitle: "AI Stories",
-        storiesStatus: "Soon",
+        storiesStatus: "Start",
         close: "Close"
     },
     tr: {
@@ -1554,7 +1592,7 @@ const appSwitcherTranslations = {
         editorTitle: "Resim Editörü",
         editorStatus: "Başlat",
         storiesTitle: "AI Hikayeleri",
-        storiesStatus: "Yakında",
+        storiesStatus: "Başlat",
         close: "Kapat"
     }
 };

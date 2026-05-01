@@ -11,7 +11,7 @@
   </a>
 
   <h1>THENA</h1>
-  <h3>Next-Generation AI Image Generator, Roleplay Chat & Creative Suite</h3>
+  <h3>Next-Generation AI Image Generator, Roleplay Chat, Image Editor & Visual Stories</h3>
 
   <p>
     <a href="https://github.com/phaticusthiccy/Thena-Web/issues">
@@ -58,20 +58,21 @@
 
 **Thena** is a browser-native, high-performance AI creative platform engineered entirely with **Vanilla JavaScript, HTML5, and CSS3** — no React, no Vue, no heavy frameworks. It harnesses the full power of modern browser APIs (IndexedDB, Web Audio API, Canvas API, Service Workers) to deliver a desktop-grade experience straight from the tab.
 
-It unifies three powerful pillars into one seamless **Progressive Web App (PWA)**:
+It unifies four powerful pillars into one seamless **Progressive Web App (PWA)**:
 
 | Pillar | Description |
 |---|---|
 | 🎨 **AI Image Generation** | Multi-model, multi-style image synthesis with live prompt feedback |
 | 🤖 **AI Roleplay Chat** | Deep narrative conversations with emotion-aware AI characters |
-| 🖼️ **Image Editor** | Professional-grade canvas tools, filters, crop, resize & markup |
+| 🖼️ **Image Editor** | Professional-grade canvas tools, AI outpainting, filters & markup |
+| 📖 **AI Stories (Thena Toons)** | Immersive visual webtoon reader with dynamic chapter navigation |
 
 ---
 
 ## ✨ Key Features
 
 ### 🎨 Advanced Image Generation
-- **Multi-Model Support** — Choose from Photorealism, Anime, Cinematic, and other creative models with unique visual styles.
+- **Multi-Model Support** — Choose from Photorealism, Anime, Cinematic, Thena Toonish (cel-shaded modern anime), and other creative models with unique visual styles.
 - **Flexible Aspect Ratios** — Square (1:1), Portrait (3:4, 9:16), and Widescreen (16:9, 4:3) formats supported out of the box.
 - **Smart Generation Parameters** — Fast Mode for speed, Creative & Dense for depth, and HighRes scaling for crisp output.
 - **Expanded Presets & Styles** — Instantly apply community-crafted prompts and curated aesthetic styles with a single click.
@@ -79,20 +80,27 @@ It unifies three powerful pillars into one seamless **Progressive Web App (PWA)*
 - **Magic Wand ✨** — Transforms short, vague prompts into rich, detailed descriptions automatically.
 
 ### 🤖 AI Roleplay Chat
-- **Immersive Characters** — Engage in deep, story-driven conversations with AI personas featuring fully fleshed-out lore and backstories.
+- **Immersive Characters** — Engage in deep, story-driven conversations with AI personas (including dating simulation characters) featuring fully fleshed-out lore and backstories.
 - **Three Intelligence Tiers** — Switch between Fast, Balanced, and Ultra (Advanced) AI models to match your narrative needs.
 - **Real-Time Emotion Engine** — Live sentiment analysis dynamically updates the character's facial expression to reflect the story's emotional tone.
-- **Personalized User Profiles** — Create your own profile (Name, Age, Gender). Characters adapt their tone, memory, and responses specifically to you.
+- **Personalized User Profiles** — Create your own profile (Name, Age, Gender). The system uses advanced context metadata extraction to ensure characters adapt their tone, memory, and responses specifically to you.
 - **Flexible Library Layouts** — Organize your character roster in Grid, List, or Compact view — switch effortlessly.
 - **Narrative Awareness** — The AI detects story completion via the `[FINISH]` signal and guides arcs to natural conclusions.
 - **The Warden — Content Moderation** — Integrated moderation layer with real-time intensity indicators (Low / Medium / High).
 
 ### 🖼️ Professional Image Editor
+- **AI Outpainting** — Seamlessly expand the borders of your generated images using intelligent AI outpainting, adding new areas contextually.
+- **Advanced Model Selection** — Choose the right AI model for your edits using dynamic "FAST" (PixelFusion), "BEST" (NeuralFlow), and "MAX" (Synapse) badges, complete with pros/cons insights.
 - **Instant Filter Presets** — Apply Instagram-inspired filters with a real-time localized search bar to find the perfect look.
 - **Manual Fine-Tuning** — Full control over brightness, contrast, saturation, temperature, and more.
 - **Crop & Resize** — Prepare your generated art for any platform or resolution — all within the browser.
 - **Markup Tools** — Draw, annotate, and overlay text on generated images for creative or instructional use.
-- **Workspace Preferences** — Save your preferred panel layout and toggle editor views to match your workflow.
+
+### 📖 AI Stories (Thena Toons)
+- **Immersive Webtoon Reader** — Dive into curated, multi-chapter visual stories with a dedicated, distraction-free reading interface.
+- **Dynamic Episode Navigation** — Seamlessly navigate between chapters with an intuitive UI, complete with "Ongoing" and "Completed" status tracking.
+- **Optimized Performance** — Lazy-loaded high-resolution image sequences ensure fast load times and minimal memory usage.
+- **Whimsical UI Animations** — Enjoy polished, custom animations and multi-language status messages upon finishing a chapter.
 
 ### 📊 Performance & Optimization
 - **Real-Time System Stats** — Monitor CPU load, RAM usage, FPS, and average render times via a live performance HUD.
@@ -131,11 +139,21 @@ It unifies three powerful pillars into one seamless **Progressive Web App (PWA)*
   <table>
     <tr>
       <td align="center"><b>AI Roleplay Chat</b></td>
-      <td align="center"><b>Gallery & Filters</b></td>
+      <td align="center"><b>AI Stories (Webtoon Reader)</b></td>
     </tr>
     <tr>
       <td><a href="src/chatbot.webp"><img src="src/chatbot.webp" alt="AI Chat" /></a></td>
+      <td><a href="src/thena_comic_page.webp"><img src="src/thena_comic_page.webp" alt="AI Stories Webtoon Reader" /></a></td>
+    </tr>
+  </table>
+  <table>
+    <tr>
+      <td align="center"><b>Gallery & Filters</b></td>
+      <td align="center"><b>AI Outpainting</b></td>
+    </tr>
+    <tr>
       <td><a href="src/gallery.webp"><img src="src/gallery.webp" alt="Gallery" /></a></td>
+      <td><a href="src/outpaint_editor.webp"><img src="src/outpaint_editor.webp" alt="AI Outpainting" /></a></td>
     </tr>
   </table>
 

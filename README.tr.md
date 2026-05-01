@@ -11,7 +11,7 @@
   </a>
 
   <h1>THENA</h1>
-  <h3>Yeni Nesil Yapay Zeka Görsel Üreticisi, Rol Yapma Sohbeti ve Yaratıcı Suite</h3>
+  <h3>Yeni Nesil Yapay Zeka Görsel Üreticisi, Rol Yapma Sohbeti, Görüntü Düzenleyici ve Görsel Hikayeler</h3>
 
   <p>
     <a href="https://github.com/phaticusthiccy/Thena-Web/issues">
@@ -58,20 +58,21 @@
 
 **Thena**, tamamen **Vanilla JavaScript, HTML5 ve CSS3** ile inşa edilmiş, tarayıcı-yerel, yüksek performanslı bir Yapay Zeka yaratıcı platformudur — React yok, Vue yok, ağır framework yok. Modern tarayıcı API'lerinin (IndexedDB, Web Audio API, Canvas API, Service Workers) tüm gücünden yararlanarak, sekme içinden masaüstü kalitesinde bir deneyim sunar.
 
-Üç güçlü sütunu tek bir kusursuz **Aşamalı Web Uygulamasında (PWA)** birleştirir:
+Dört güçlü sütunu tek bir kusursuz **Aşamalı Web Uygulamasında (PWA)** birleştirir:
 
 | Sütun | Açıklama |
 |---|---|
 | 🎨 **Yapay Zeka Görsel Üretimi** | Canlı komut geri bildirimiyle çok modelli, çok stilli görsel sentezi |
 | 🤖 **Yapay Zeka Rol Yapma Sohbeti** | Duygu farkındalıklı yapay zeka karakterleriyle derin anlatı sohbetleri |
-| 🖼️ **Görüntü Düzenleyici** | Profesyonel düzeyde canvas araçları, filtreler, kırpma, yeniden boyutlandırma ve işaretleme |
+| 🖼️ **Görüntü Düzenleyici** | Profesyonel düzeyde canvas araçları, yapay zeka outpaint, filtreler ve işaretleme |
+| 📖 **Yapay Zeka Hikayeleri (Thena Toons)** | Dinamik bölüm navigasyonuna sahip sürükleyici görsel webtoon okuyucu |
 
 ---
 
 ## ✨ Temel Özellikler
 
 ### 🎨 Gelişmiş Görüntü Üretimi
-- **Çoklu Model Desteği** — Benzersiz görsel stillere sahip Fotorealizm, Anime, Sinematik ve diğer yaratıcı modeller arasından seçim yapın.
+- **Çoklu Model Desteği** — Benzersiz görsel stillere sahip Fotorealizm, Anime, Sinematik, Thena Toonish (cel-shaded modern anime) ve diğer yaratıcı modeller arasından seçim yapın.
 - **Esnek En Boy Oranları** — Kare (1:1), Dikey (3:4, 9:16) ve Geniş Ekran (16:9, 4:3) formatları hazır olarak desteklenir.
 - **Akıllı Üretim Parametreleri** — Hız için Hızlı Mod (Fast Mode), derinlik için Yaratıcı & Yoğun modlar ve keskin çıktılar için HighRes ölçekleme.
 - **Genişletilmiş Şablonlar & Stiller** — Topluluk tarafından hazırlanmış komutları ve seçilmiş estetik stilleri tek tıklamayla anında uygulayın.
@@ -79,20 +80,27 @@
 - **Sihirli Değnek ✨** — Kısa ve belirsiz komutları otomatik olarak zengin, ayrıntılı açıklamalara dönüştürür.
 
 ### 🤖 Yapay Zeka Rol Yapma Sohbeti
-- **Sürükleyici Karakterler** — Tam anlamıyla işlenmiş lore ve arka plan hikayelerine sahip Yapay Zeka kişilikleriyle derin, hikaye odaklı sohbetlere dalın.
+- **Sürükleyici Karakterler** — Tam anlamıyla işlenmiş lore ve arka plan hikayelerine sahip Yapay Zeka kişilikleriyle (flört simülasyon karakterleri dahil) derin, hikaye odaklı sohbetlere dalın.
 - **Üç Zeka Kademesi** — Anlatı ihtiyaçlarınıza göre Hızlı (Fast), Dengeli (Balanced) ve Ultra (Gelişmiş) yapay zeka modelleri arasında geçiş yapın.
 - **Gerçek Zamanlı Duygu Motoru** — Canlı duygu analizi, karakterin yüz ifadesini hikayenin duygusal tonunu yansıtacak şekilde dinamik olarak günceller.
-- **Kişiselleştirilmiş Kullanıcı Profilleri** — Kendi profilinizi oluşturun (İsim, Yaş, Cinsiyet). Karakterler, ton, hafıza ve yanıtlarını özellikle size göre uyarlar.
+- **Kişiselleştirilmiş Kullanıcı Profilleri** — Kendi profilinizi oluşturun (İsim, Yaş, Cinsiyet). Sistem, karakterlerin tonlarını, hafızalarını ve yanıtlarını size özel olarak uyarlamak için gelişmiş bağlam meta verisi çıkarımını kullanır.
 - **Esnek Kütüphane Düzenleri** — Karakter kadronuzu Izgara (Grid), Liste veya Kompakt görünümde düzenleyin — zahmetsizce geçiş yapın.
 - **Anlatı Farkındalığı** — Yapay Zeka, `[FINISH]` sinyali aracılığıyla hikaye tamamlanmasını algılar ve yayları doğal sonuçlara yönlendirir.
 - **The Warden — İçerik Denetimi** — Gerçek zamanlı yoğunluk göstergeleriyle (Düşük / Orta / Yüksek) entegre denetleme katmanı.
 
 ### 🖼️ Profesyonel Görüntü Düzenleyici
+- **Yapay Zeka Outpaint** — Oluşturduğunuz görsellerin sınırlarını akıllı yapay zeka outpaint ile genişleterek bağlamsal olarak yeni alanlar ekleyin.
+- **Gelişmiş Model Seçimi** — "FAST" (PixelFusion), "BEST" (NeuralFlow) ve "MAX" (Synapse) dinamik rozetleri ve avantaj/dezavantaj bilgileriyle düzenlemeleriniz için doğru yapay zeka modelini seçin.
 - **Anlık Filtre Şablonları** — Mükemmel görünümü bulmak için gerçek zamanlı yerelleştirilmiş arama çubuğuyla Instagram'dan ilham alınan filtreler uygulayın.
 - **Manuel İnce Ayar** — Parlaklık, kontrast, doygunluk, sıcaklık ve daha fazlası üzerinde tam kontrol.
 - **Kırpma ve Yeniden Boyutlandırma** — Oluşturulan sanatınızı her platform veya çözünürlük için hazırlayın — tamamı tarayıcı içinde.
 - **İşaretleme Araçları** — Yaratıcı veya öğretici kullanım için oluşturulan görsellere çizim yapın, not ekleyin ve metin yerleştirin.
-- **Çalışma Alanı Tercihleri** — Tercih ettiğiniz panel düzenini kaydedin ve iş akışınıza uyum sağlamak için editör görünümlerini değiştirin.
+
+### 📖 Yapay Zeka Hikayeleri (Thena Toons)
+- **Sürükleyici Webtoon Okuyucu** — Dikkatinizi dağıtmayan özel bir okuma arayüzü ile özenle hazırlanmış, çok bölümlü görsel hikayelere dalın.
+- **Dinamik Bölüm Navigasyonu** — "Devam Ediyor" (Ongoing) ve "Tamamlandı" (Completed) durum takibiyle bölümler arasında sezgisel bir arayüz ile sorunsuzca gezinin.
+- **Optimize Edilmiş Performans** — Tembel yüklenen (lazy-loaded) yüksek çözünürlüklü görüntü dizileri, hızlı yükleme süreleri ve minimum bellek kullanımı sağlar.
+- **Eğlenceli Arayüz Animasyonları** — Bir bölümü bitirdiğinizde şık, özel animasyonların ve çok dilli durum mesajlarının keyfini çıkarın.
 
 ### 📊 Performans ve Optimizasyon
 - **Gerçek Zamanlı Sistem İstatistikleri** — Canlı performans HUD'u aracılığıyla CPU yükünü, RAM kullanımını, FPS'i ve ortalama render sürelerini izleyin.
@@ -131,11 +139,21 @@
   <table>
     <tr>
       <td align="center"><b>Yapay Zeka Rol Yapma Sohbeti</b></td>
-      <td align="center"><b>Galeri ve Filtreler</b></td>
+      <td align="center"><b>Yapay Zeka Hikayeleri (Webtoon)</b></td>
     </tr>
     <tr>
       <td><a href="src/chatbot.webp"><img src="src/chatbot.webp" alt="Yapay Zeka Sohbeti" /></a></td>
+      <td><a href="src/thena_comic_page.webp"><img src="src/thena_comic_page.webp" alt="Yapay Zeka Hikayeleri Webtoon" /></a></td>
+    </tr>
+  </table>
+  <table>
+    <tr>
+      <td align="center"><b>Galeri ve Filtreler</b></td>
+      <td align="center"><b>Yapay Zeka Outpaint</b></td>
+    </tr>
+    <tr>
       <td><a href="src/gallery.webp"><img src="src/gallery.webp" alt="Galeri" /></a></td>
+      <td><a href="src/outpaint_editor.webp"><img src="src/outpaint_editor.webp" alt="Yapay Zeka Outpaint" /></a></td>
     </tr>
   </table>
 

@@ -6235,11 +6235,8 @@ function switchAppMode(mode) {
                viewStories.classList.remove('hidden-view');
                viewStories.classList.add('active-view');
            });
-           
-           const animBox = document.getElementById('stories-animation-box');
-           if (animBox && !animBox.querySelector('.lw-flame-wrapper')) {
-               animBox.insertAdjacentHTML('beforeend', WHIMSICAL_FLAME_SVG);
-           }
+
+           if (typeof window.aiStoriesInit === 'function') window.aiStoriesInit();
        }
        
        if (btnGotoStories) btnGotoStories.classList.add('active');
@@ -6475,12 +6472,9 @@ document.addEventListener('DOMContentLoaded', () => {
            viewStories.classList.remove('hidden-view');
            viewStories.classList.add('active-view');
        });
-       
-       const animBox = document.getElementById('stories-animation-box');
-       if (animBox && !animBox.querySelector('.lw-flame-wrapper')) {
-           animBox.insertAdjacentHTML('beforeend', WHIMSICAL_FLAME_SVG);
-       }
-       
+
+       setTimeout(() => { if (typeof window.aiStoriesInit === 'function') window.aiStoriesInit(); }, 50);
+
        if (btnGotoStories) btnGotoStories.classList.add('active');
        if (btnGotoImage) btnGotoImage.classList.remove('active');
        if (btnGotoChat) btnGotoChat.classList.remove('active');

@@ -1571,7 +1571,7 @@ body.performance-mode .whimsical-flame-effect {
     gap: 12px;
     box-shadow: 0 0px 30px rgba(var(--primary-rgb), 0.5);
     max-width: 350px;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px) brightness(0.1);
 }
 
 .notification-spinner {
@@ -3531,6 +3531,14 @@ body.performance-mode .whimsical-flame-effect {
     --titanium-5: #ffffff;
 }
 
+:root.reader-mode-active,
+:root.reader-mode-active body {
+    overflow: hidden !important;
+}
+
+:root.reader-mode-active .top-nav {
+    display: none !important;
+}
 
 .glitch-text {
     text-shadow: 0 0 20px var(--primary), 0 0 40px var(--primary) !important;
@@ -4118,8 +4126,8 @@ input+.slider[data-state="0"]:before {
         width: 100% !important;
         max-width: 100% !important;
         justify-content: flex-start !important;
-        backdrop-filter: blur(16px) !important;
-        -webkit-backdrop-filter: blur(16px) !important;
+        backdrop-filter: blur(16px) brightness(0.1) !important;
+        -webkit-backdrop-filter: blur(16px) brightness(0.1) !important;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8) !important;
     }
 
@@ -10762,74 +10770,1344 @@ body.power-saver-active .hot-model .whimsical-flame-effect {
     width: 100%;
     min-height: 85vh;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+    justify-content: flex-start;
+    align-items: flex-start;
+    text-align: left;
     padding: 0;
     margin: 0;
     animation: fadeIn 0.5s ease;
 }
 
-.coming-soon-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.toon-card--enter {
+    animation: toonCardIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) both;
 }
 
-.stories-coming-content {
-    max-width: 500px;
+.toon-header {
+    position: relative;
+    width: 100%;
+    min-height: 200px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    border-radius: 16px;
+    margin-bottom: 20px;
+}
+
+.toon-header-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center top;
+    background-color: #0d0d0d;
+    filter: blur(0px) brightness(0.45) saturate(1.3);
+    transform: scale(1.05);
+    transition: background-image 0.8s ease;
+}
+
+.toon-header-content {
+    position: relative;
+    z-index: 2;
+    padding: 28px 24px;
+    text-align: left;
+    width: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
+}
+
+.toon-header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(var(--primary-rgb), 0.2);
+    border: 1px solid rgba(var(--primary-rgb), 0.4);
+    color: var(--primary);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+.toon-header-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.8);
+    margin: 0 0 6px 0;
+}
+
+.toon-header-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    margin: 0;
+}
+
+.toon-filter-bar {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 0 0 4px 0;
+    margin-bottom: 20px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.toon-filter-bar::-webkit-scrollbar { display: none; }
+
+.toon-filter-btn {
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #aaa;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 7px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.toon-filter-btn:hover {
+    border-color: rgba(var(--primary-rgb), 0.5);
+    color: #fff;
+}
+
+.toon-filter-btn.active {
+    background: rgba(var(--primary-rgb), 0.15);
+    border-color: var(--primary);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.toon-filter-more {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: transparent;
+    border: 1px dashed rgba(255,255,255,0.18);
+    color: #777;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 7px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.toon-filter-more::after {
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid currentColor;
+    transition: transform 0.25s ease;
+    margin-top: 1px;
+}
+
+.toon-filter-more--open::after {
+    transform: rotate(180deg);
+}
+
+.toon-filter-more:hover {
+    border-color: rgba(var(--primary-rgb), 0.4);
+    color: var(--primary);
+}
+
+.toon-section {
+    width: 100%;
+}
+
+.toon-section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.toon-section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.toon-story-count {
+    font-size: 12px;
+    color: #555;
+}
+
+.toon-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+@media (max-width: 520px) {
+    .toon-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .toon-header-title { font-size: 22px; }
+}
+
+.toon-card {
+    background: #111;
+    border: 1px solid #1c1c1c;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.28s cubic-bezier(0.165, 0.84, 0.44, 1),
+                border-color 0.2s ease,
+                box-shadow 0.28s ease;
+    animation: toonCardIn 0.35s ease both;
+}
+
+@keyframes toonCardIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.toon-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    border-color: rgba(var(--primary-rgb), 0.45);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(var(--primary-rgb), 0.15);
+}
+
+.toon-card-thumb {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background: #0d0d0d;
+}
+
+.toon-card-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.toon-card:hover .toon-card-thumb img {
+    transform: scale(1.07);
+}
+
+.toon-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0) 55%);
+    pointer-events: none;
+}
+
+.toon-card-info {
+    padding: 8px 10px 10px;
+}
+
+.toon-card-cat {
+    display: block;
+    font-size: 10px;
+    color: var(--primary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.toon-card-name {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #e8e8e8;
+    margin: 0 0 4px 0;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.toon-card-desc {
+    font-size: 11px;
+    color: #666;
+    margin: 0 0 6px 0;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.toon-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #666;
+    font-size: 11px;
+}
+
+.toon-card-meta svg {
+    flex-shrink: 0;
+    opacity: 0.7;
+}
+
+.toon-card-skeleton {
+    border-radius: 10px;
+    overflow: hidden;
+    aspect-ratio: 3 / 5.5;
+    background: linear-gradient(
+        90deg,
+        #161616 25%,
+        #222 50%,
+        #161616 75%
+    );
+    background-size: 200% 100%;
+    animation: toonSkeleton 1.5s infinite;
+}
+
+@keyframes toonSkeleton {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.toon-error {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 30px;
-    padding-top: 20px;
+    justify-content: center;
+    gap: 14px;
+    padding: 60px 20px;
+    color: #555;
 }
 
-.stories-animation-box {
-    width: 120px;
-    height: 120px;
+.toon-error svg {
+    color: #444;
+}
+
+.toon-error p {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+    text-align: center;
+}
+
+.toon-retry-btn {
+    background: rgba(var(--primary-rgb), 0.1);
+    border: 1px solid rgba(var(--primary-rgb), 0.35);
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.toon-retry-btn:hover {
+    background: rgba(var(--primary-rgb), 0.2);
+    transform: translateY(-1px);
+}
+
+.toon-empty {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 50px 20px;
+    color: #555;
+}
+
+.toon-empty svg { opacity: 0.4; }
+.toon-empty p { font-size: 13px; margin: 0; }
+
+.toon-detail {
+    position: absolute;
+    inset: 0;
+    background: #000;
+    overflow-y: auto;
+    overflow-x: hidden;
+    opacity: 0;
+    transform: translateX(24px);
+    transition: opacity 0.32s cubic-bezier(0.165, 0.84, 0.44, 1),
+                transform 0.32s cubic-bezier(0.165, 0.84, 0.44, 1);
+    z-index: 10;
+    scrollbar-width: thin;
+    scrollbar-color: #222 transparent;
+}
+
+#view-ai-stories { position: relative; }
+
+.toon-detail--in {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.toon-detail-back {
+    position: sticky;
+    top: 0;
+    z-index: 20;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 38px;
+    height: 38px;
+    margin: 14px 0 0 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid #222;
+    border-radius: 50%;
+    color: #ccc;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.toon-detail-back:hover {
+    background: rgba(var(--primary-rgb), 0.15);
+    border-color: rgba(var(--primary-rgb), 0.5);
+    color: var(--primary);
+}
+
+.toon-detail-hero {
+    width: 95%;
+    justify-self: center;
+    min-height: 220px;
+    max-height: 340px;
+    background-size: cover;
+    background-position: center top;
+    background-color: #0d0d0d;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-top: -46px;
+}
+
+.toon-detail-hero-gradient {
+    position: absolute;
+    inset: 0px 0px -10px 0px;
+    background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.05) 0%,
+        rgba(0,0,0,0.5)  50%,
+        rgba(0,0,0,0.92) 100%
+    );
+}
+
+.toon-detail-hero-info {
+    position: relative;
+    z-index: 2;
+    padding: 20px 18px 22px;
+    width: 100%;
+}
+
+.toon-detail-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.toon-detail-cat-badge {
+    display: inline-block;
+    background: rgba(var(--primary-rgb), 0.18);
+    border: 1px solid rgba(var(--primary-rgb), 0.4);
+    backdrop-filter: brightness(0.5);
+    color: var(--primary);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 20px;
+}
+
+.toon-detail-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin: 0 0 6px 0;
+    text-shadow: 0 2px 16px rgba(0,0,0,0.8);
+}
+
+.toon-detail-desc {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    margin: 0;
+    line-height: 1.5;
+    display: -webkit-box;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.toon-detail-author-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 2px 16px 20px;
+    border-bottom: 1px solid #1a1a1a;
+    margin-bottom: 20px;
     position: relative;
 }
 
-.stories-animation-box svg {
-    width: 80%;
-    filter: drop-shadow(0 0 20px rgba(var(--primary-rgb), 0.5));
+.toon-detail-views {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: auto;
+    flex-shrink: 0;
+    color: #555;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 5px 10px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid #1e1e1e;
+    border-radius: 20px;
 }
 
-.premium-gradient-text {
-    font-size: 32px;
-    font-weight: 800;
-    background: linear-gradient(135deg, #fff 30%, var(--primary) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: -0.5px;
+.toon-detail-views svg {
+    color: #444;
+    flex-shrink: 0;
 }
 
-.coming-soon-subtitle {
+.toon-detail-author-avatar {
+    width: 47px;
+    height: 47px;
+    min-width: 47px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%,
+        rgba(var(--primary-rgb), 0.45),
+        rgba(var(--primary-rgb), 0.08) 70%,
+        transparent);
+    border: 1.5px solid rgba(var(--primary-rgb), 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 16px;
-    color: #888;
-    line-height: 1.6;
-    max-width: 400px;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.stories-central-icon {
+    font-weight: 700;
     color: var(--primary);
-    filter: drop-shadow(0 0 15px rgba(var(--primary-rgb), 0.6));
-    z-index: 5;
-    animation: book-float 3s ease-in-out infinite;
+    overflow: hidden;
+    flex-shrink: 0;
+    animation: avatarNeonPulse 2.8s ease-in-out infinite;
 }
 
-@keyframes book-float {
-    0%, 100% { transform: translateY(0) rotate(0); }
-    50% { transform: translateY(-10px) rotate(2deg); }
+@keyframes avatarNeonPulse {
+    0%, 100% {
+        box-shadow:
+            0 0 6px  rgba(var(--primary-rgb), 0.5),
+            0 0 14px rgba(var(--primary-rgb), 0.25),
+            0 0 28px rgba(var(--primary-rgb), 0.1),
+            inset 0 0 8px rgba(var(--primary-rgb), 0.12);
+        border-color: rgba(var(--primary-rgb), 0.5);
+    }
+    50% {
+        box-shadow:
+            0 0 10px rgba(var(--primary-rgb), 0.8),
+            0 0 24px rgba(var(--primary-rgb), 0.45),
+            0 0 48px rgba(var(--primary-rgb), 0.2),
+            inset 0 0 14px rgba(var(--primary-rgb), 0.25);
+        border-color: rgba(var(--primary-rgb), 0.9);
+    }
+}
+
+
+.toon-detail-author-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+}
+
+.toon-detail-author-meta {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.toon-detail-author-label {
+    font-size: 10px;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+}
+
+.toon-detail-author-name-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+}
+
+.toon-detail-author-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #ddd;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.toon-detail-info-btn {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid #333;
+    border-radius: 50%;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.toon-detail-info-btn:hover {
+    background: rgba(var(--primary-rgb), 0.12);
+    border-color: rgba(var(--primary-rgb), 0.4);
+    color: var(--primary);
+}
+
+.toon-author-popup {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.toon-popup--in {
+    opacity: 1 !important;
+}
+
+.toon-popup--in .toon-author-popup-sheet {
+    transform: scale(1) translateY(0) !important;
+}
+
+.toon-author-popup-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    cursor: pointer;
+    transition: background 0.3s ease, backdrop-filter 0.3s ease, -webkit-backdrop-filter 0.3s ease;
+}
+
+.toon-popup--in .toon-author-popup-backdrop {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.toon-author-popup-sheet {
+    position: relative;
+    z-index: 2;
+    background: #141414;
+    border: 1px solid #242424;
+    border-radius: 18px;
+    width: 100%;
+    max-width: 440px;
+    max-height: 80vh;
+    overflow-y: auto;
+    transform: scale(0.94) translateY(8px);
+    transition: transform 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+    scrollbar-width: none;
+}
+
+.toon-author-popup-sheet::-webkit-scrollbar { display: none; }
+
+.toon-author-popup-handle { display: none; }
+
+.toon-author-popup-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #222;
+    border: 1px solid #2e2e2e;
+    border-radius: 50%;
+    color: #777;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    z-index: 3;
+}
+
+.toon-author-popup-close:hover {
+    background: #2e2e2e;
+    color: #fff;
+}
+
+.toon-author-popup-body {
+    padding: 20px 24px 28px;
+}
+
+.toon-author-popup-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.toon-author-popup-avatar {
+    width: 68px;
+    height: 68px;
+    min-width: 68px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%,
+        rgba(var(--primary-rgb), 0.45),
+        rgba(var(--primary-rgb), 0.08) 70%,
+        transparent);
+    border: 1.5px solid rgba(var(--primary-rgb), 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--primary);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.toon-author-popup-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.toon-author-popup-header-text {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+.toon-author-section-label {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    font-weight: 500;
+    margin-bottom: 4px;
+    margin-top: 0;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+.toon-author-section-name {
+    font-size: 24px;
+    font-weight: 800;
+    color: #f0f0f0;
+    letter-spacing: -0.02em;
+    margin: 0 0 10px 0;
+    line-height: 1.15;
+}
+
+.toon-author-name-social-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 0;
+}
+
+.toon-author-social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    margin-bottom: 14px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    text-decoration: none;
+}
+
+.toon-author-social-icon:hover {
+    transform: scale(1.1);
+    opacity: 0.85;
+}
+
+.toon-author-popup-desc {
+    font-size: 14px;
+    color: #aaa;
+    line-height: 1.65;
+    margin: 0;
+    white-space: pre-line;
+}
+
+.toon-detail-episodes-header {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.toon-detail-ep-info {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.toon-custom-season-wrapper {
+    position: relative;
+    user-select: none;
+}
+
+.toon-season-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.toon-season-trigger:hover {
+    background-color: #242424;
+    border-color: #444;
+}
+
+.toon-season-trigger svg {
+    color: #888;
+    transition: transform 0.2s ease;
+}
+
+.toon-custom-season-wrapper.is-open .toon-season-trigger {
+    border-color: var(--primary);
+    background-color: rgba(var(--primary-rgb), 0.05);
+}
+
+.toon-custom-season-wrapper.is-open .toon-season-trigger svg {
+    transform: rotate(180deg);
+    color: var(--primary);
+}
+
+.toon-season-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    width: max-content;
+    min-width: 110px;
+    background: #141414;
+    border: 1px solid #2a2a2a;
+    border-radius: 10px;
+    padding: 6px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+}
+
+.toon-custom-season-wrapper.is-open .toon-season-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.toon-season-option {
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #aaa;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.toon-season-option:hover {
+    background: #242424;
+    color: #fff;
+}
+
+.toon-season-option.active {
+    background: rgba(var(--primary-rgb), 0.1);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.toon-detail-ep-count {
+    font-size: 12px;
+    font-weight: 400;
+    color: #555;
+}
+
+.toon-episodes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-right: 10px;
+    padding-bottom: 32px;
+}
+
+.toon-season-header {
+    font-size: 16px;
+    font-weight: 700;
+    color: #dedede;
+    margin-top: 14px;
+    margin-bottom: 2px;
+    padding-left: 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 8px;
+}
+
+.toon-season-header:first-child {
+    margin-top: 0;
+}
+
+.toon-episode-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #0e0e0e;
+    border: 1px solid #1c1c1c;
+    border-radius: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    padding-left: 20px;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    animation: toonEpRowIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) both;
+}
+
+.toon-ep-row--enter {
+    animation: toonEpRowIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) both;
+}
+
+@keyframes toonEpRowIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.toon-episode-row:hover {
+    background: #141414;
+    border-color: rgba(var(--primary-rgb), 0.3);
+    transform: translateX(3px);
+}
+
+.toon-episode-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.toon-episode-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #ddd;
+}
+
+.toon-episode-date {
+    font-size: 11px;
+    color: #555;
+}
+
+.toon-episode-arrow {
+    color: #444;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.toon-ep-skeleton {
+    height: 76px;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #111 25%, #1c1c1c 50%, #111 75%);
+    background-size: 200% 100%;
+    animation: toonSkeleton 1.5s infinite;
+}
+
+.toon-ep-num-wrap {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toon-ep-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1.5px solid rgba(var(--primary-rgb), 0.25);
+    pointer-events: none;
+}
+
+.toon-ep-ring--0 {
+    width: 100%; height: 100%;
+    animation: toonRingSpin 4s linear infinite;
+    border-top-color: rgba(var(--primary-rgb), 0.6);
+}
+
+.toon-ep-ring--1 {
+    width: 72%; height: 72%;
+    animation: toonRingSpin 3s linear infinite reverse;
+    border-right-color: rgba(var(--primary-rgb), 0.5);
+}
+
+.toon-ep-ring--2 {
+    width: 44%; height: 44%;
+    animation: toonRingPulse 2s ease-in-out infinite alternate;
+    border-color: rgba(var(--primary-rgb), 0.4);
+}
+
+@keyframes toonRingSpin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+@keyframes toonRingPulse {
+    from { opacity: 0.3; transform: scale(0.8); }
+    to   { opacity: 1;   transform: scale(1.1); }
+}
+
+.toon-ep-num-orb {
+    position: relative;
+    z-index: 2;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%,
+        rgba(var(--primary-rgb), 0.35),
+        rgba(var(--primary-rgb), 0.08));
+    border: 1px solid rgba(var(--primary-rgb), 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 12px rgba(var(--primary-rgb), 0.2),
+                inset 0 0 6px rgba(var(--primary-rgb), 0.1);
+    animation: toonOrbFloat 3s ease-in-out infinite;
+}
+
+@keyframes toonOrbFloat {
+    0%, 100% { transform: translateY(0); box-shadow: 0 0 12px rgba(var(--primary-rgb), 0.2); }
+    50%       { transform: translateY(-3px); box-shadow: 0 4px 18px rgba(var(--primary-rgb), 0.35); }
+}
+
+.toon-ep-num-text {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--primary);
+    line-height: 1;
+    text-shadow: 0 0 8px rgba(var(--primary-rgb), 0.6);
+}
+
+.toon-detail-ep-error {
+    text-align: center;
+    padding: 30px 20px;
+    color: #555;
+    font-size: 13px;
+}
+
+.toon-reader {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: #000;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.toon-reader-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    padding: 0 20px;
+    background: rgba(10, 10, 10, 0.95);
+    border-bottom: 1px solid #1a1a1a;
+    backdrop-filter: blur(10px);
+    z-index: 10;
+}
+
+.toon-reader-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+    text-align: center;
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.toon-reader-back-btn,
+.toon-reader-nav-btn {
+    background: none;
+    border: none;
+    color: #e0e0e0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: background 0.2s, color 0.2s;
+}
+
+.toon-reader-back-btn:hover,
+.toon-reader-nav-btn:hover {
+    background: #2a2a2a;
+    color: #fff;
+}
+
+.toon-reader-nav {
+    display: flex;
+    gap: 8px;
+}
+
+.toon-reader-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.toon-reader-images {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 720px;
+    background: #050505;
+}
+
+.toon-reader-images img {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0;
+    padding: 0;
+    min-height: 200px;
+}
+
+.toon-reader-loading {
+    display: flex;
+    justify-content: center;
+    padding: 40px 0;
+    width: 100%;
+}
+
+.toon-reader-end-message {
+    width: 100%;
+    max-width: 720px;
+    text-align: center;
+    padding: 80px 20px;
+    background: transparent;
+    margin-bottom: 60px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+}
+
+.toon-end-whimsical-container {
+    position: relative;
+    width: 100%;
+    height: 60px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toon-whim-glow {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle at center, rgba(var(--primary-rgb), 0.25) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: whimGlowPulse 4s ease-in-out infinite alternate;
+    z-index: 0;
+}
+
+.toon-whim-star {
+    position: absolute;
+    color: var(--primary);
+    filter: drop-shadow(0 0 8px rgba(var(--primary-rgb), 0.6));
+    z-index: 1;
+}
+
+.toon-whim-star-1 {
+    width: 32px;
+    height: 32px;
+    animation: whimStarAnim1 8s ease-in-out infinite;
+}
+
+.toon-whim-star-2 {
+    width: 18px;
+    height: 18px;
+    margin-left: -50px;
+    margin-top: 20px;
+    opacity: 0.7;
+    animation: whimStarAnim2 6s ease-in-out infinite;
+}
+
+.toon-whim-star-3 {
+    width: 22px;
+    height: 22px;
+    margin-left: 60px;
+    margin-top: -10px;
+    opacity: 0.85;
+    animation: whimStarAnim3 9s ease-in-out infinite;
+}
+
+.toon-reader-end-text-glow {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(var(--primary-rgb), 0.5), 0 0 20px rgba(var(--primary-rgb), 0.3);
+    letter-spacing: 0.05em;
+    z-index: 2;
+}
+
+.toon-end-divider {
+    display: flex;
+    gap: 8px;
+    margin-top: 24px;
+    z-index: 2;
+}
+
+.toon-end-divider span {
+    width: 6px;
+    height: 6px;
+    background: rgba(var(--primary-rgb), 0.5);
+    border-radius: 50%;
+    animation: whimDotFade 2s infinite alternate;
+}
+
+.toon-end-divider span:nth-child(2) {
+    animation-delay: 0.4s;
+    background: rgba(var(--primary-rgb), 0.8);
+    transform: scale(1.2);
+}
+
+.toon-end-divider span:nth-child(3) {
+    animation-delay: 0.8s;
+}
+
+@keyframes whimStarAnim1 {
+    0% { transform: translateY(0) rotate(0deg) scale(1); }
+    50% { transform: translateY(-12px) rotate(180deg) scale(1.1); }
+    100% { transform: translateY(0) rotate(360deg) scale(1); }
+}
+
+@keyframes whimStarAnim2 {
+    0% { transform: translateY(0) rotate(0deg) scale(0.9); }
+    50% { transform: translateY(10px) rotate(-180deg) scale(1.05); }
+    100% { transform: translateY(0) rotate(-360deg) scale(0.9); }
+}
+
+@keyframes whimStarAnim3 {
+    0% { transform: translateY(0) rotate(0deg) scale(1.1); }
+    50% { transform: translateY(-8px) rotate(90deg) scale(0.9); }
+    100% { transform: translateY(0) rotate(180deg) scale(1.1); }
+}
+
+@keyframes whimGlowPulse {
+    0% { transform: scale(0.8); opacity: 0.6; }
+    100% { transform: scale(1.2); opacity: 1; }
+}
+
+@keyframes whimDotFade {
+    0% { opacity: 0.3; }
+    100% { opacity: 1; box-shadow: 0 0 8px rgba(var(--primary-rgb), 0.8); }
+}
+@media (max-width: 520px) {
+    .toon-detail-title { font-size: 19px; }
+    .toon-detail-hero  { min-height: 160px; }
+    .toon-detail-desc { font-size: 11px; line-height: 1.4; opacity: 0.8; }
+    .toon-detail-hero-info { padding: 15px 14px 18px; }
+    .toon-detail-cat-badge:not(.toon-detail-status-badge) { display: none; }
+}
+
+
+.toon-card-status-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 3;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px) brightness(0.5);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.toon-status-ongoing {
+    background: rgba(var(--primary-rgb), 0.2);
+    border: 1px solid rgba(var(--primary-rgb), 0.5);
+    color: var(--primary);
+}
+
+.toon-status-ended {
+    background: rgba(255, 68, 68, 0.2);
+    border: 1px solid rgba(255, 68, 68, 0.5);
+    color: #ff4444;
+}
+
+.toon-detail-status-badge {
+    margin-left: auto;
+}
+
+span.toon-detail-status-badge.toon-status-ended {
+    background: rgba(255, 68, 68, 0.18);
+    border-color: rgba(255, 68, 68, 0.4);
+    color: #ff4444;
+}
+
+span.toon-detail-status-badge.toon-status-ongoing {
+    background: rgba(var(--primary-rgb), 0.18);
+    border-color: rgba(var(--primary-rgb), 0.4);
+    color: var(--primary);
 }
