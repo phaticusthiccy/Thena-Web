@@ -1,4 +1,4 @@
-﻿.mg-overlay {
+.mg-overlay {
     display: none;
     position: fixed;
     inset: 0;
@@ -904,13 +904,14 @@
     
     .mg-filters {
         width: 100%;
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
         gap: 8px;
+        overflow: visible;
     }
     
     .mg-custom-select {
-        flex: 1;
-        min-width: 0;
+        flex: 1 1 calc(50% - 4px);
+        min-width: 100px;
     }
     
     .mg-select-trigger {

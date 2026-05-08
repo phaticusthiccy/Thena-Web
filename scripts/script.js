@@ -79,6 +79,7 @@ const modelTranslationsTR = {
     "019d2154-7c24-74a1-806d-0fa8274a41d4": "Thena Nyx ile karanlık, büyüleyici ve atmosferik anime portreleri yaratın. Derin gölgeler, keskin ışıklar ve çarpıcı parlama efektleriyle karakterlerinize gizemli bir hava katın.",
     "5ac14b95-8600-46d7-a966-a6de2e951995": "Klasik film noir estetiğini yakalayın. Yüksek kontrastlı aydınlatma, derin gölgeler ve sinematik portreler oluşturun. Vintage hissi veren dramatik sahneler ve karakterler yaratmak için mükemmeldir.",
     "5d697de8-f9b1-45a0-abfa-3c6da84529d1": "Thena Photoreal V2, fotogerçekçiliğin yeni standardı. Kısa istemlerle bile çarpıcı detay ve netliğe sahip, nefes kesici derecede gerçekçi görüntüler üretir.",
+    "6cf0e882-7ff7-4c53-be5e-4ee6fff779eb": "Rüya gibi hikayeler anlatmak için tasarlanmış çok yönlü bir model. Thena Analog, yumuşak sinematik gerçekçiliği stilize sanatsal illüstrasyonlarla harmanlayarak sıcak ve nostaljik bir atmosfer sunar.",
     "3c7a94a0-c844-471f-ae98-0f8c8508baf7": "Thena Ultra'dan ilham alan, gürültü tabanlı akıl yürütme yeteneğine sahip yeni nesil yapay zeka modeli. Geliştirilen ikinci akıl yürütme odaklı sürüm.",
     "b85483f-b998-4dee-b9b8-f3e1dcfb4a6d": "Thena Toonish, keskin gölgelendirmeler ve canlı renklere sahip temiz, modern anime estetiği üzerine uzmanlaşmıştır. Aşırı sade karakter portreleri, günlük yaşam sahneleri ve klasik animasyon stilleri yaratmada öne çıkar."
 };
@@ -129,6 +130,8 @@ const MODEL_STATS = {
     "019d2154-7c24-74a1-806d-0fa8274a41d4": { intel: 2, qual: 5, speed: 3 },
     // Thena Photoreal V2
     "5d697de8-f9b1-45a0-abfa-3c6da84529d1": { intel: 4, qual: 4, speed: 3 },
+    // Thena Analog
+    "6cf0e882-7ff7-4c53-be5e-4ee6fff779eb": { intel: 3, qual: 2, speed: 3 },
     // Thena Noir
     "5ac14b95-8600-46d7-a966-a6de2e951995": { intel: 3, qual: 4, speed: 2 },
     // Default 
@@ -510,13 +513,36 @@ const dbHelper = {
                     if (filters.isFavorite && !item.isFavorite) matches = false;
                     if (matches && filters.model) {
                         const fm = filters.model;
-                        if (fm === 'Image Editor') {
-                            if (!item.model || !item.model.toUpperCase().startsWith('IMAGE EDITOR')) matches = false;
+                        if (Array.isArray(fm)) {
+                            if (fm.length === 0) {
+                                matches = false;
+                            } else {
+                                let itemModelMatches = false;
+                                if (item.model) {
+                                    if (fm.includes(item.model)) {
+                                        itemModelMatches = true;
+                                    } else if (fm.includes('Image Editor') && item.model.toUpperCase().startsWith('IMAGE EDITOR')) {
+                                        itemModelMatches = true;
+                                    }
+                                }
+                                if (!itemModelMatches) matches = false;
+                            }
                         } else {
-                            if (item.model !== fm) matches = false;
+                            if (fm === 'Image Editor') {
+                                if (!item.model || !item.model.toUpperCase().startsWith('IMAGE EDITOR')) matches = false;
+                            } else {
+                                if (item.model !== fm) matches = false;
+                            }
                         }
                     }
-                    if (matches && filters.ratio && item.size !== filters.ratio) matches = false;
+                    if (matches && filters.ratio) {
+                        if (Array.isArray(filters.ratio)) {
+                            if (filters.ratio.length === 0) matches = false;
+                            else if (!filters.ratio.includes(item.size)) matches = false;
+                        } else {
+                            if (item.size !== filters.ratio) matches = false;
+                        }
+                    }
                     if (matches && filters.search) {
                          if (!item.prompt.toLowerCase().includes(filters.search)) matches = false;
                     }
@@ -848,7 +874,8 @@ const LS_KEYS = {
     MODEL: 'thena-last-model',
     RATIO: 'thena-last-ratio',
     SIZE: 'thena-last-size',
-    MODEL_SUGGESTION: 'thena-model-suggestion'
+    MODEL_SUGGESTION: 'thena-model-suggestion',
+    EXTRAS: 'thena-last-extras'
 };
 const apiKeyInput = document.getElementById('api-key');
 const promptInput = document.getElementById('prompt');
@@ -1780,6 +1807,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 checkFormReady();
             }
+
+            const activeExtras = allExtraBtns
+                .filter(b => b.classList.contains('active'))
+                .map(b => b.id);
+            if (activeExtras.length > 0) {
+                localStorage.setItem(LS_KEYS.EXTRAS, JSON.stringify(activeExtras));
+            } else {
+                localStorage.removeItem(LS_KEYS.EXTRAS);
+            }
         });
     });
     const aspectRatioData = {
@@ -1938,6 +1974,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 app.classList.add('visible');
                 loadModels();
                 restoreAspectRatio();
+                restoreExtras();
             }, 300);
         }
     }, 100);
@@ -1954,6 +1991,12 @@ async function loadModels() {
     modelSelector.innerHTML = models.map(model => {
         var previewImage = model.examples?.portraits?.[0] || '';
         const isHot = typeof HOT_MODELS !== 'undefined' && HOT_MODELS.includes(model.id);
+        const isFlorence = model.id === '7367ab 279dbf 417a8 51fe3 5050';
+        const showExclusiveBadge = isHot || isFlorence;
+        const exclusiveLabelText = translations[currentLang].exclusiveLabel;
+        const exclusiveSvg = isFlorence 
+            ? `<svg class="flag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`
+            : `<svg class="flag-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 8c-.83 0-1.5-.67-1.5-1.5S4.67 5 5.5 5 7 5.67 7 6.5 6.33 8 5.5 8z"/></svg>`;
 
         return `
                         <div class="model-card ${isHot ? 'hot-model' : ''}" data-model-id="${model.id}" data-preview="${previewImage}">
@@ -1965,7 +2008,7 @@ async function loadModels() {
                                     <line x1="12" y1="8" x2="12.01" y2="8"></line>
                                 </svg>
                             </div>
-                            ${isHot ? `<div class="flag-item bg-exclusive"><svg class="flag-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 8c-.83 0-1.5-.67-1.5-1.5S4.67 5 5.5 5 7 5.67 7 6.5 6.33 8 5.5 8z"/></svg><span class="flag-text line-one">${translations[currentLang].exclusiveLabel}</span></div>` : ''}
+                            ${showExclusiveBadge ? `<div class="flag-item bg-exclusive">${exclusiveSvg}<span class="flag-text line-one">${exclusiveLabelText}</span></div>` : ''}
                             <div class="model-name">${model.model}</div>
                         </div>
                     `;
@@ -2120,6 +2163,20 @@ function restoreAspectRatio() {
         const targetBtn = document.querySelector(`.aspect-btn[data-ratio="${lastRatio}"]`);
         if (targetBtn) targetBtn.click();
     }
+}
+
+function restoreExtras() {
+    const savedExtras = localStorage.getItem(LS_KEYS.EXTRAS);
+    if (!savedExtras) return;
+    let extraIds;
+    try { extraIds = JSON.parse(savedExtras); } catch (e) { return; }
+    if (!Array.isArray(extraIds)) return;
+    extraIds.forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn && !btn.disabled && !btn.classList.contains('active')) {
+            btn.click();
+        }
+    });
 }
 
 function createConfetti(element) {
@@ -2599,11 +2656,20 @@ generateBtn.addEventListener('click', async () => {
                 return;
             }
             if ((data.status == 401 && data.content.includes('not allowed')) || (data.status == 204)) {
+                const _modIconSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;display:inline-block;vertical-align:middle;margin:0 3px 1px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`;
                 if (moderationLevel === 'low') {
-                    showNotification(currentLang == "tr" ? translations.tr.msgNotAllowedLow : translations.en.msgNotAllowedLow, 'error');
+                    showNotification(`${_modIconSvg} ` + (currentLang == "tr" ? translations.tr.msgNotAllowedLow : translations.en.msgNotAllowedLow), 'error');
                 } else {
-                    showNotification(currentLang == "tr" ? translations.tr.msgNotAllowed : translations.en.msgNotAllowed, 'error');
+                    showNotification(`${_modIconSvg} ` + (currentLang == "tr" ? translations.tr.msgNotAllowed : translations.en.msgNotAllowed), 'error');
                 }
+                const _modBtn = document.getElementById('moderation-btn');
+                if (_modBtn) {
+                    _modBtn.classList.remove('mod-btn-alert');
+                    void _modBtn.offsetWidth;
+                    _modBtn.classList.add('mod-btn-alert');
+                    setTimeout(() => _modBtn.classList.remove('mod-btn-alert'), 4200);
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
                 isGeneratingImage = false;
                 const placeholder = document.getElementById('active-generation-placeholder');
                 if (placeholder) {
@@ -3093,21 +3159,30 @@ galleryModal.addEventListener('click', (e) => {
 
 let _allModelsCache = null;
 async function populateModelFilter() {
-    const currentVal = filterModel.value;
-    filterModel.innerHTML = '<option value="">All Models</option>';
+    const currentValsStr = filterModel.dataset.selectedValues;
+    const currentVals = currentValsStr ? JSON.parse(currentValsStr) : null;
+    filterModel.innerHTML = '';
 
     const gfModelDropdown = document.getElementById('gf-model-dropdown');
     if (gfModelDropdown) {
-        gfModelDropdown.innerHTML = '<div class="gf-select-option active" data-value="">All Models</div>';
+        gfModelDropdown.innerHTML = '';
+        const allDiv = document.createElement('div');
+        const isAllActive = currentVals === null || currentVals.includes('');
+        allDiv.className = 'gf-select-option' + (isAllActive ? ' active' : '');
+        allDiv.dataset.value = '';
+        const allLabel = typeof currentLang !== 'undefined' && currentLang === 'tr' ? 'Tüm Modeller' : 'All Models';
+        allDiv.innerHTML = `<span>${allLabel}</span><svg class="gf-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+        gfModelDropdown.appendChild(allDiv);
     }
 
     const appendModel = (value, label, isSub = false) => {
         filterModel.appendChild(new Option(label, value));
         if (gfModelDropdown) {
             const div = document.createElement('div');
-            div.className = 'gf-select-option' + (isSub ? ' gf-sub-option' : '');
+            const isActive = currentVals && currentVals.includes(value) && !currentVals.includes('');
+            div.className = 'gf-select-option' + (isSub ? ' gf-sub-option' : '') + (isActive ? ' active' : '');
             div.dataset.value = value;
-            div.textContent = label;
+            div.innerHTML = `<span>${label}</span><svg class="gf-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
             gfModelDropdown.appendChild(div);
         }
     };
@@ -3133,11 +3208,21 @@ async function populateModelFilter() {
     appendModel('Image Editor (PixelFusion)', '↳ PixelFusion', true);
     appendModel('Image Editor (NeuralFlow)', '↳ NeuralFlow', true);
     appendModel('Image Editor (Synapse)', '↳ Synapse ✦', true);
+    appendModel('Outpaint', 'Outpaint');
 
-    if (currentVal) {
-        filterModel.value = currentVal;
+    if (currentValsStr) {
         const gfModelValue = document.getElementById('gf-model-value');
-        if (gfModelValue && currentVal) gfModelValue.textContent = currentVal;
+        if (gfModelValue) {
+            const activeOpts = Array.from(document.querySelectorAll('#gf-model-dropdown .gf-select-option.active'));
+            const isAllActive = activeOpts.some(o => o.dataset.value === '');
+            if (isAllActive || activeOpts.length === 0) {
+                gfModelValue.textContent = typeof currentLang !== 'undefined' && currentLang === 'tr' ? "Tüm Modeller" : "All Models";
+            } else if (activeOpts.length === 1) {
+                gfModelValue.textContent = activeOpts[0].textContent.trim();
+            } else {
+                gfModelValue.textContent = activeOpts.length + (typeof currentLang !== 'undefined' && currentLang === 'tr' ? " Model" : " Models");
+            }
+        }
     }
 
     if (typeof _bindGfModelOptions === 'function') _bindGfModelOptions();
@@ -3230,11 +3315,31 @@ async function applyFilters(withAnimation = false) {
     const searchText = searchInput.value.toLowerCase().trim();
     if (searchText) filters.search = searchText;
     
-    const modelVal = filterModel.value;
-    if (modelVal) filters.model = modelVal;
+    const modelValsStr = filterModel.dataset.selectedValues;
+    if (modelValsStr) {
+        const modelVals = JSON.parse(modelValsStr);
+        if (modelVals.length > 0 && !modelVals.includes('')) {
+            filters.model = modelVals;
+        } else if (modelVals.length === 0) {
+            filters.model = [];
+        }
+    } else {
+        const modelVal = filterModel.value;
+        if (modelVal) filters.model = modelVal;
+    }
     
-    const ratioVal = filterRatio.value;
-    if (ratioVal) filters.ratio = ratioVal;
+    const ratioValsStr = filterRatio.dataset.selectedValues;
+    if (ratioValsStr) {
+        const ratioVals = JSON.parse(ratioValsStr);
+        if (ratioVals.length > 0 && !ratioVals.includes('')) {
+            filters.ratio = ratioVals;
+        } else if (ratioVals.length === 0) {
+            filters.ratio = [];
+        }
+    } else {
+        const ratioVal = filterRatio.value;
+        if (ratioVal) filters.ratio = ratioVal;
+    }
     
     const startDateStr = filterDateStart.value;
     const endDateStr = filterDateEnd.value;
@@ -3368,10 +3473,33 @@ async function loadMoreItems() {
     if (showFavsOnly) filters.isFavorite = true;
     const searchText = searchInput.value.toLowerCase().trim();
     if (searchText) filters.search = searchText;
-    const modelVal = filterModel.value;
-    if (modelVal) filters.model = modelVal;
-    const ratioVal = filterRatio.value;
-    if (ratioVal) filters.ratio = ratioVal;
+
+    const modelValsStr = filterModel.dataset.selectedValues;
+    if (modelValsStr) {
+        const modelVals = JSON.parse(modelValsStr);
+        if (modelVals.length > 0 && !modelVals.includes('')) {
+            filters.model = modelVals;
+        } else if (modelVals.length === 0) {
+            filters.model = [];
+        }
+    } else {
+        const modelVal = filterModel.value;
+        if (modelVal) filters.model = modelVal;
+    }
+
+    const ratioValsStr = filterRatio.dataset.selectedValues;
+    if (ratioValsStr) {
+        const ratioVals = JSON.parse(ratioValsStr);
+        if (ratioVals.length > 0 && !ratioVals.includes('')) {
+            filters.ratio = ratioVals;
+        } else if (ratioVals.length === 0) {
+            filters.ratio = [];
+        }
+    } else {
+        const ratioVal = filterRatio.value;
+        if (ratioVal) filters.ratio = ratioVal;
+    }
+
     const startDateStr = filterDateStart.value;
     const endDateStr = filterDateEnd.value;
     if (startDateStr) filters.dateStart = new Date(startDateStr).setHours(0, 0, 0, 0);
@@ -3416,6 +3544,27 @@ toggleFilterBtn.addEventListener('click', () => {
     filterPanel.classList.toggle('active');
     toggleFilterBtn.classList.toggle('active');
 });
+
+const toggleBlurBtn = document.getElementById('toggle-blur-btn');
+const blurIcon = document.getElementById('blur-icon');
+let isGalleryUnblurred = false;
+
+if (toggleBlurBtn) {
+    toggleBlurBtn.addEventListener('click', () => {
+        isGalleryUnblurred = !isGalleryUnblurred;
+        
+        if (isGalleryUnblurred) {
+            galleryGrid.classList.add('unblur-sensitive');
+            toggleBlurBtn.classList.add('active');
+            blurIcon.innerHTML = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path><line x1="1" y1="1" x2="23" y2="23"></line>`;
+        } else {
+            galleryGrid.classList.remove('unblur-sensitive');
+            toggleBlurBtn.classList.remove('active');
+            blurIcon.innerHTML = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>`;
+        }
+    });
+}
+
 toggleSortBtn.addEventListener('click', () => {
     sortNewestFirst = !sortNewestFirst;
     sortText.textContent = sortNewestFirst ? currentLang == "tr" ? "En Yeni" : "Newest" : currentLang == "tr" ? "En Eski" : "Oldest";
@@ -3430,15 +3579,23 @@ resetFiltersBtn.addEventListener('click', () => {
     filterDateStart.value = '';
     filterDateEnd.value = '';
     const gfModelValue = document.getElementById('gf-model-value');
-    if (gfModelValue) gfModelValue.textContent = 'All Models';
+    if (gfModelValue) gfModelValue.textContent = typeof currentLang !== 'undefined' && currentLang === 'tr' ? "Tüm Modeller" : "All Models";
     const gfRatioValue = document.getElementById('gf-ratio-value');
-    if (gfRatioValue) gfRatioValue.textContent = 'All Sizes';
+    if (gfRatioValue) gfRatioValue.textContent = typeof currentLang !== 'undefined' && currentLang === 'tr' ? "Tüm Boyutlar" : "All Sizes";
     document.querySelectorAll('#gf-model-dropdown .gf-select-option').forEach(o => o.classList.remove('active'));
-    const firstModelOpt = document.querySelector('#gf-model-dropdown .gf-select-option');
-    if (firstModelOpt) firstModelOpt.classList.add('active');
+    const allOpt = document.querySelector('#gf-model-dropdown .gf-select-option[data-value=""]');
+    if (allOpt) allOpt.classList.add('active');
+    const filterModelEl = document.getElementById('filter-model');
+    if (filterModelEl) {
+        filterModelEl.dataset.selectedValues = JSON.stringify(['']);
+    }
     document.querySelectorAll('#gf-ratio-dropdown .gf-select-option').forEach(o => o.classList.remove('active'));
-    const firstRatioOpt = document.querySelector('#gf-ratio-dropdown .gf-select-option');
-    if (firstRatioOpt) firstRatioOpt.classList.add('active');
+    const allRatioOpt = document.querySelector('#gf-ratio-dropdown .gf-select-option[data-value=""]');
+    if (allRatioOpt) allRatioOpt.classList.add('active');
+    const filterRatioEl = document.getElementById('filter-ratio');
+    if (filterRatioEl) {
+        filterRatioEl.dataset.selectedValues = JSON.stringify(['']);
+    }
     applyFilters();
 });
 
@@ -3460,16 +3617,79 @@ resetFiltersBtn.addEventListener('click', () => {
             dropdownEl.querySelectorAll('.gf-select-option').forEach(opt => {
                 opt.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    const val  = opt.dataset.value;
-                    const text = opt.textContent.trim();
-                    selectEl.value = val;
-                    valueEl.textContent = text;
-                    dropdownEl.querySelectorAll('.gf-select-option').forEach(o => o.classList.remove('active'));
-                    opt.classList.add('active');
-                    close();
-                    selectEl.dispatchEvent(new Event('change'));
+                    if (customId === 'gf-model-custom' || customId === 'gf-ratio-custom') {
+                        const clickedVal = opt.dataset.value;
+                        if (clickedVal === '') {
+                            dropdownEl.querySelectorAll('.gf-select-option').forEach(o => o.classList.remove('active'));
+                            opt.classList.add('active');
+                        } else {
+                            const allOpt = dropdownEl.querySelector('.gf-select-option[data-value=""]');
+                            if (allOpt) allOpt.classList.remove('active');
+                            opt.classList.toggle('active');
+                            const isActive = opt.classList.contains('active');
+                            
+                            if (customId === 'gf-model-custom') {
+                                if (!opt.classList.contains('gf-sub-option')) {
+                                    let next = opt.nextElementSibling;
+                                    while (next && next.classList.contains('gf-sub-option')) {
+                                        if (isActive) next.classList.add('active');
+                                        else next.classList.remove('active');
+                                        next = next.nextElementSibling;
+                                    }
+                                } else {
+                                    if (!isActive) {
+                                        let prev = opt.previousElementSibling;
+                                        while (prev && prev.classList.contains('gf-sub-option')) {
+                                            prev = prev.previousElementSibling;
+                                        }
+                                        if (prev && prev.dataset.value !== '') {
+                                            prev.classList.remove('active');
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            const anyActive = dropdownEl.querySelector('.gf-select-option.active');
+                            if (!anyActive && allOpt) allOpt.classList.add('active');
+                        }
+                        
+                        const activeOpts = Array.from(dropdownEl.querySelectorAll('.gf-select-option.active'));
+                        const vals = activeOpts.map(o => o.dataset.value);
+                        selectEl.dataset.selectedValues = JSON.stringify(vals);
+                        
+                        if (vals.includes('') || activeOpts.length === 0) {
+                            if (customId === 'gf-model-custom') {
+                                valueEl.textContent = typeof currentLang !== 'undefined' && currentLang === 'tr' ? "Tüm Modeller" : "All Models";
+                            } else {
+                                valueEl.textContent = typeof currentLang !== 'undefined' && currentLang === 'tr' ? "Tüm Boyutlar" : "All Sizes";
+                            }
+                        } else if (activeOpts.length === 1) {
+                            valueEl.textContent = activeOpts[0].textContent.trim();
+                        } else {
+                            if (customId === 'gf-model-custom') {
+                                valueEl.textContent = activeOpts.length + (typeof currentLang !== 'undefined' && currentLang === 'tr' ? " Model" : " Models");
+                            } else {
+                                valueEl.textContent = activeOpts.length + (typeof currentLang !== 'undefined' && currentLang === 'tr' ? " Boyut" : " Sizes");
+                            }
+                        }
+                        selectEl.dispatchEvent(new Event('change'));
+                    } else {
+                        const val  = opt.dataset.value;
+                        const text = opt.textContent.trim();
+                        selectEl.value = val;
+                        valueEl.textContent = text;
+                        dropdownEl.querySelectorAll('.gf-select-option').forEach(o => o.classList.remove('active'));
+                        opt.classList.add('active');
+                        close();
+                        selectEl.dispatchEvent(new Event('change'));
+                    }
                 });
             });
+            if (customId === 'gf-model-custom') {
+                const activeOpts = Array.from(dropdownEl.querySelectorAll('.gf-select-option.active'));
+                const vals = activeOpts.map(o => o.dataset.value);
+                selectEl.dataset.selectedValues = JSON.stringify(vals);
+            }
         }
 
         bindOptions();
@@ -3832,6 +4052,12 @@ function openLightbox(data) {
              originalPreview.style.display = 'block';
              originalPreview.onclick = (e) => {
                  e.stopPropagation();
+                 const originalModal = document.getElementById('original-image-modal');
+                 const originalModalImg = document.getElementById('original-image-modal-img');
+                 if(originalModal && originalModalImg) {
+                     originalModalImg.src = data.originalImage;
+                     originalModal.classList.add('active');
+                 }
              };
         } else {
              originalPreview.style.display = 'none';
@@ -3885,6 +4111,12 @@ confirmModal.addEventListener('click', (e) => {
         confirmModal.classList.remove('active');
     }
 });
+const originalImageModal = document.getElementById('original-image-modal');
+if (originalImageModal) {
+    originalImageModal.addEventListener('click', () => {
+        originalImageModal.classList.remove('active');
+    });
+}
 btnConfirm.addEventListener('click', async () => {
     try {
         if (currentImageTimestamp) {
@@ -6764,12 +6996,13 @@ async function loadGalleryStatistics() {
             "Thena Portraits": "thenaPortraits",
             "Thena Florence": "thenaFlorence",
             "Thena Alchemy": "thenaAlchemy",
-            "Thena Pixel": "thenapixel",
+            "Thena Pixel": "thenaPixel",
             "Thena Nyx": "thenaNyx",
             "Thena Photoreal V2": "thenaPhotorealV2",
             "Thena Rewave": "thenaRewave",
             "Thena Pastel": "thenaPastel",
             "Thena Noir": "thenaNoir",
+            "Thena Analog": "thenaAnalog",
             "Image Editor": "imageEditorV1",
             "Image Editor (NeuralFlow)": "imageEditorV2",
             "Image Editor (Synapse)": "imageEditorV3",
@@ -6798,9 +7031,23 @@ async function loadGalleryStatistics() {
         
         modelsList.innerHTML = '';
         Object.entries(modelCounts).sort((a,b)=>b[1]-a[1]).forEach(([mName, count]) => {
+            const propKey = modelKeyMapping[mName];
+            let costPerItem = 0;
+            if (propKey && prices[propKey]) {
+                costPerItem = prices[propKey][currentLang] || 0;
+            } else if (prices[mName]) { 
+                costPerItem = prices[mName][currentLang] || 0;
+            }
+            
+            const totalModelCost = costPerItem * count;
+            const formattedCost = (currentLang === 'tr' ? '₺' : '$') + totalModelCost.toFixed(4).replace(".", ",");
+            
             modelsList.innerHTML += `<div class="stat-card">
                 <div class="stat-card-value">${count}</div>
-                <div class="stat-card-label">${mName}</div>
+                <div class="stat-card-label" style="display: flex; flex-direction: column; align-items: center;">
+                    <span>${mName}</span>
+                    <span style="font-size: 10px; font-style: italic; color: #666; margin-top: 4px; text-transform: none; letter-spacing: normal;">${formattedCost}</span>
+                </div>
             </div>`;
         });
         if (Object.keys(modelCounts).length === 0) {

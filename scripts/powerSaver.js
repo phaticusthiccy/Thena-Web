@@ -3,7 +3,6 @@
 
     const IDLE_TIMEOUT = 20000;
     const LOW_FPS_INTERVAL = 1000 / 30;
-    const LOW_BATTERY_THRESHOLD = 0.20;
 
     let _enabled = false;
     let _isIdle = false;
@@ -14,7 +13,6 @@
     let _rafPatched = false;
     let _statusIndicator = null;
     let _batteryRef = null;
-    let _batteryAutoEnabled = false;
     let _gpuStyleSheet = null;
     let _oledOverlay = null;
     let _wasMutedBefore = false;
@@ -536,7 +534,6 @@
     }
 
     let _batteryMonitoringStarted = false;
-    let _lastBatteryLowState = false;
 
     function _startBatteryMonitoring() {
         if (!('getBattery' in navigator)) return;
@@ -553,32 +550,6 @@
     }
 
     function _checkBatteryLevel(battery) {
-        const isLow = battery.level <= LOW_BATTERY_THRESHOLD && !battery.charging;
-
-        if (isLow && !_lastBatteryLowState) {
-            _lastBatteryLowState = true;
-            
-            if (!_enabled) {
-                setPowerSaverEnabled(true);
-                const toggle = document.getElementById('toggle-power-saver');
-                if (toggle) toggle.checked = true;
-            }
-
-            if (!_isIdle) {
-                _batteryAutoEnabled = true;
-                _goIdle();
-
-                const msg = typeof currentLang !== 'undefined' && currentLang === 'tr'
-                    ? translations.tr.msgBatteryLow1 + Math.round(battery.level * 100) + translations.tr.msgBatteryLow2
-                    : translations.en.msgBatteryLow1 + Math.round(battery.level * 100) + translations.en.msgBatteryLow2;
-                if (typeof showNotification === 'function') {
-                    showNotification(msg, 'info');
-                }
-            }
-        } else if (!isLow) {
-            _lastBatteryLowState = false;
-        }
-
         if (_enabled) {
             _updateBatteryIndicator(battery);
         }
@@ -602,7 +573,7 @@
         return {
             level: Math.round(_batteryRef.level * 100),
             charging: _batteryRef.charging,
-            isLow: _batteryRef.level <= LOW_BATTERY_THRESHOLD && !_batteryRef.charging
+            isLow: _batteryRef.level <= 0.20 && !_batteryRef.charging
         };
     }
 

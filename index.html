@@ -52,6 +52,7 @@
                     <line x1="10" y1="1" x2="10" y2="4"></line>
                     <line x1="14" y1="1" x2="14" y2="4"></line>
                 </svg>
+                <span class="nav-btn-text" id="txt-nav-donate">Destek</span>
             </button>
             <button class="nav-btn" id="btn-showcase" title="Community Showcase">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -62,6 +63,7 @@
                         d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
                     </path>
                 </svg>
+                <span class="nav-btn-text" id="txt-nav-showcase">Vitrin</span>
             </button>
             <button class="nav-btn" id="btn-open-owner" title="Developer">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -69,6 +71,7 @@
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>
+                <span class="nav-btn-text" id="txt-nav-developer">Geliştirici</span>
             </button>
             <button class="nav-btn" id="btn-switch-apps" title="Switch App">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -78,6 +81,7 @@
                     <rect x="14" y="14" width="7" height="7"></rect>
                     <rect x="3" y="14" width="7" height="7"></rect>
                 </svg>
+                <span class="nav-btn-text" id="txt-nav-apps">Uygulamalar</span>
             </button>
             <button class="nav-btn" id="btn-open-settings" title="Settings">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -87,6 +91,7 @@
                         d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
                     </path>
                 </svg>
+                <span class="nav-btn-text" id="txt-nav-settings">Ayarlar</span>
             </button>
             <button class="nav-btn" id="btn-language" title="Switch Language">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -94,6 +99,7 @@
                         d="M5 8L10 13M4 14L10 8L12 5M2 5H14M7 2H8M12.913 17H20.087M12.913 17L11 21M12.913 17L15.7783 11.009C16.0092 10.5263 16.1246 10.2849 16.2826 10.2086C16.4199 10.1423 16.5801 10.1423 16.7174 10.2086C16.8754 10.2849 16.9908 10.5263 17.2217 11.009L20.087 17M20.087 17L22 21"
                         stroke-linejoin="round" />
                 </svg>
+                <span class="nav-btn-text" id="txt-nav-language">Dil</span>
             </button>
         </div>
         <div class="background-text">THENA</div>
@@ -964,7 +970,7 @@
                 <label>Extra Features</label>
                 <div class="extras-selector">
 
-                    <button class="extra-btn active" id="feat-fast" data-feat="fastMode">
+                    <button class="extra-btn" id="feat-fast" data-feat="fastMode">
                         <span class="info-icon-wrapper" title="Info">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1087,6 +1093,12 @@
                     </svg>
                     <input type="text" id="search-input" class="search-input" placeholder="Search prompts...">
                 </div>
+                <button class="control-btn" id="toggle-blur-btn" title="Toggle NSFW Blur">
+                    <svg id="blur-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg> <span id="txt-blur-toggle">Reveal</span>
+                </button>
                 <button class="control-btn" id="toggle-filter-btn">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
@@ -1174,21 +1186,29 @@
                             <svg class="gf-select-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                         </div>
                         <div class="gf-select-dropdown" id="gf-ratio-dropdown">
-                            <div class="gf-select-option active" data-value="">All Sizes</div>
+                            <div class="gf-select-option active" data-value="">
+                                <span>All Sizes</span>
+                                <svg class="gf-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
                             <div class="gf-select-option" data-value="1024x1024">
-                                <span class="gf-ratio-icon gf-ratio-square"></span>1:1 Square
+                                <div style="display:flex;align-items:center;gap:9px;"><span class="gf-ratio-icon gf-ratio-square"></span>1:1 Square</div>
+                                <svg class="gf-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                             </div>
                             <div class="gf-select-option" data-value="768x1024">
-                                <span class="gf-ratio-icon gf-ratio-portrait"></span>3:4 Portrait
+                                <div style="display:flex;align-items:center;gap:9px;"><span class="gf-ratio-icon gf-ratio-portrait"></span>3:4 Portrait</div>
+                                <svg class="gf-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                             </div>
                             <div class="gf-select-option" data-value="1024x768">
-                                <span class="gf-ratio-icon gf-ratio-landscape"></span>4:3 Landscape
+                                <div style="display:flex;align-items:center;gap:9px;"><span class="gf-ratio-icon gf-ratio-landscape"></span>4:3 Landscape</div>
+                                <svg class="gf-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                             </div>
                             <div class="gf-select-option" data-value="576x1024">
-                                <span class="gf-ratio-icon gf-ratio-mobile"></span>9:16 Mobile
+                                <div style="display:flex;align-items:center;gap:9px;"><span class="gf-ratio-icon gf-ratio-mobile"></span>9:16 Mobile</div>
+                                <svg class="gf-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                             </div>
                             <div class="gf-select-option" data-value="1024x576">
-                                <span class="gf-ratio-icon gf-ratio-cinematic"></span>16:9 Cinematic
+                                <div style="display:flex;align-items:center;gap:9px;"><span class="gf-ratio-icon gf-ratio-cinematic"></span>16:9 Cinematic</div>
+                                <svg class="gf-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                             </div>
                         </div>
                         <select id="filter-ratio" style="display:none;">
@@ -1294,6 +1314,11 @@
                 <div class="lightbox-meta" id="lightbox-meta"></div>
                 <div class="lightbox-elements-section" id="lightbox-elements-section"></div>
             </div>
+        </div>
+    </div>
+    <div id="original-image-modal" class="confirm-modal" style="z-index: 25000;">
+        <div class="confirm-content" style="max-width: 90%; max-height: 90vh; background: transparent; border: none; padding: 0; box-shadow: none; display: flex; align-items: center; justify-content: center;">
+            <img id="original-image-modal-img" src="" style="max-width: 100%; max-height: 90vh; border-radius: 8px; object-fit: contain;">
         </div>
     </div>
     <div id="confirm-modal" class="confirm-modal">
@@ -2586,6 +2611,19 @@
                             <div class="mg-select-option active" data-value="all" id="mg-opt-all-cats">All</div>
                         </div>
                         <select id="mg-cat-select" style="display:none;">
+                            <option value="all">All</option>
+                        </select>
+                    </div>
+                    <div class="mg-custom-select" id="mg-prov-custom">
+                        <div class="mg-select-trigger">
+                            <span class="mg-select-label" id="mg-prov-label">Provider:</span>
+                            <span class="mg-select-value" id="mg-prov-value">All</span>
+                            <svg class="mg-select-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </div>
+                        <div class="mg-select-dropdown" id="mg-prov-dropdown">
+                            <div class="mg-select-option active" data-value="all" id="mg-opt-all-provs">All</div>
+                        </div>
+                        <select id="mg-prov-select" style="display:none;">
                             <option value="all">All</option>
                         </select>
                     </div>

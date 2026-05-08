@@ -81,6 +81,7 @@ const translations = {
         "lblAnalyzing": "Analyzing...",
         "lblFilter": "Filter",
         "btnDelAll": "Delete All",
+        "btnRevealBlur": "Reveal",
         "cfgTitle": "🎚️ CFG Scale",
         "cfgDesc": "<b>Classifier Free Guidance Scale.</b><br><br>Controls how strictly the AI follows your prompt.<br>• <b>Low (1-6):</b> More creative freedom, softer look.<br>• <b>Standard (7):</b> Balanced.<br>• <b>High (8-20):</b> Strictly follows prompt, but too high can burn the image.",
         "stepsTitle": "👣 Sampling Steps",
@@ -331,8 +332,6 @@ const translations = {
         "msgImgDeleteErr": "An error occurred during the deletion process.",
         "msgAutocompleteOff": "Autocomplete Disabled",
         "msgAutocompleteOn": "Autocomplete Enabled",
-        "msgBatteryLow1": "Low battery (",
-        "msgBatteryLow2": "%) – Power saver auto-activated",
         "msgBaseModelsLoaded": "Reverted to base models.",
         "msgAllModelsLoaded": "All models loaded!",
         "msgModelUpdateErr": "Failed to update models.",
@@ -380,10 +379,12 @@ const translations = {
         "mgSearchPlaceholder": "Search models...",
         "mgSortLabel": "Sort:",
         "mgCatLabel": "Category:",
+        "mgProvLabel": "Provider:",
         "mgOptDefault": "Default",
         "mgOptNameAsc": "Name (A-Z)",
         "mgOptNameDesc": "Name (Z-A)",
         "mgCatAll": "All",
+        "mgProvAll": "All Providers",
         "mgNoResults": "No models found.",
         "mgBadge": "Custom Model",
         "mgModels": "Model Gallery",
@@ -533,7 +534,13 @@ const translations = {
         "toonReaderFirstEp": "You are at the first episode.",
         "toonReaderSeasonEnd": "You are at the end of the season. Please switch to the next season.",
         "toonReaderEpEnded": "Episode Ended",
-        "toonReaderSeasonEnded": "Season Ended"
+        "toonReaderSeasonEnded": "Season Ended",
+        "navDonate": "Donate",
+        "navShowcase": "Showcase",
+        "navDeveloper": "Developer",
+        "navApps": "Apps",
+        "navSettings": "Settings",
+        "navLanguage": "Language"
     },
     "tr": {
         "generateBtn": "Görüntü Oluştur",
@@ -617,6 +624,7 @@ const translations = {
         "lblAnalyzing": "Analiz ediliyor...",
         "lblFilter": "Filtrele",
         "btnDelAll": "Hepsini Sil",
+        "btnRevealBlur": "Göster",
         "cfgTitle": "🎚️ CFG Ölçeği",
         "cfgDesc": "<b>Sınıflandırıcıdan Bağımsız Rehberlik Ölçeği.</b><br><br>Yapay zekanın isteminize ne kadar sıkı uyacağını kontrol eder.<br>• <b>Düşük (1-6):</b> Daha fazla yaratıcı özgürlük, daha yumuşak görünüm.<br>• <b>Standart (7):</b> Dengeli.<br>• <b>Yüksek (8-20):</b> İsteme sıkı sıkıya uyar, ancak çok yüksek olması görüntüyü bozabilir.",
         "stepsTitle": "👣 Örnekleme Adımları",
@@ -867,8 +875,6 @@ const translations = {
         "msgImgDeleteErr": "Silme işleminde bir hata olustu.",
         "msgAutocompleteOff": "Autocomplete Deaktif Edildi",
         "msgAutocompleteOn": "Autocomplete Aktif Edildi",
-        "msgBatteryLow1": "Düşük pil (",
-        "msgBatteryLow2": "%) – Güç tasarrufu otomatik devreye girdi",
         "msgBaseModelsLoaded": "Varsayılan modellere dönüldü.",
         "msgAllModelsLoaded": "Tüm modeller yüklendi!",
         "msgModelUpdateErr": "Modeller güncellenemedi.",
@@ -916,10 +922,12 @@ const translations = {
         "mgSearchPlaceholder": "Model ara...",
         "mgSortLabel": "Sırala:",
         "mgCatLabel": "Kategori:",
+        "mgProvLabel": "Sağlayıcı:",
         "mgOptDefault": "Varsayılan",
         "mgOptNameAsc": "İsim (A-Z)",
         "mgOptNameDesc": "İsim (Z-A)",
         "mgCatAll": "Tümü",
+        "mgProvAll": "Tüm Sağlayıcılar",
         "mgNoResults": "Model bulunamadı.",
         "mgBadge": "Özel Model",
         "mgLblDescription": "Açıklama",
@@ -1069,7 +1077,13 @@ const translations = {
         "toonReaderFirstEp": "İlk bölümdesiniz.",
         "toonReaderSeasonEnd": "Sezonun sonundasınız. Lütfen sonraki sezona geçin.",
         "toonReaderEpEnded": "Bölüm Bitti",
-        "toonReaderSeasonEnded": "Sezon Bitti"
+        "toonReaderSeasonEnded": "Sezon Bitti",
+        "navDonate": "Destek",
+        "navShowcase": "Vitrin",
+        "navDeveloper": "Geliştirici",
+        "navApps": "Uygulamalar",
+        "navSettings": "Ayarlar",
+        "navLanguage": "Dil"
     }
 };
 
@@ -1136,7 +1150,9 @@ function initDomCache() {
         'lbl-editor-v2-cons-title', 'lbl-editor-v2-con-1', 'lbl-editor-v2-con-2',
         'lbl-editor-v3-pros-title', 'lbl-editor-v3-pro-1', 'lbl-editor-v3-pro-2', 'lbl-editor-v3-pro-3',
         'lbl-editor-v3-cons-title', 'lbl-editor-v3-con-1', 'lbl-editor-v3-con-2',
-        'txt-editor-model-v1-badge', 'txt-editor-model-v2-badge'
+        'txt-editor-model-v1-badge', 'txt-editor-model-v2-badge',
+        'txt-nav-donate', 'txt-nav-showcase', 'txt-nav-developer', 
+        'txt-nav-apps', 'txt-nav-settings', 'txt-nav-language'
     ];
 
     ids.forEach(id => {
@@ -1294,7 +1310,10 @@ function updateLanguage(lang) {
         ["lbl-editor-v3-cons-title", t.editorConsTitle], ["lbl-editor-v3-con-1", t.editorV3Con1],
         ["lbl-editor-v3-con-2", t.editorV3Con2],
         ["txt-editor-model-v1-badge", t.editorModelV1Badge],
-        ["txt-editor-model-v2-badge", t.editorModelV2Badge]
+        ["txt-editor-model-v2-badge", t.editorModelV2Badge],
+        ["txt-nav-donate", t.navDonate], ["txt-nav-showcase", t.navShowcase],
+        ["txt-nav-developer", t.navDeveloper], ["txt-nav-apps", t.navApps],
+        ["txt-nav-settings", t.navSettings], ["txt-nav-language", t.navLanguage]
     ]
     
     idsToSetTextSafely.forEach(([id, text]) => {
@@ -1491,6 +1510,7 @@ function updateLanguage(lang) {
     safelySetText('editor-search-no-results-text', t.editorSearchNoResults);
 
     safelySetText('txt-filter-chip-all', t.filterAll);
+    safelySetText('txt-blur-toggle', t.btnRevealBlur);
 
     safelySetText('toon-header-badge-txt', t.toonHeaderBadge);
     safelySetText('toon-header-title-txt', t.toonHeaderTitle);

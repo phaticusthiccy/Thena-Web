@@ -7,6 +7,7 @@
     const searchInput       = document.getElementById('mg-search-input');
     const sortSelect        = document.getElementById('mg-sort-select');
     const catSelect         = document.getElementById('mg-cat-select');
+    const provSelect        = document.getElementById('mg-prov-select');
     const grid              = document.getElementById('mg-grid');
 
     const detailPanel       = document.getElementById('model-detail-panel');
@@ -72,6 +73,7 @@
         "Thena Rewave": "thenaRewave",
         "Thena Pastel": "thenaPastel",
         "Thena Noir": "thenaNoir",
+        "Thena Analog": "thenaAnalog",
         "Thena Pixel": "thenaPixel",
         "Image Editor": "imageEditor",
         "Thena Toonish": "thenaToonish"
@@ -149,11 +151,31 @@
             opt.textContent = cat;
             catSelect.appendChild(opt);
         });
+
+        if (provSelect) {
+            provSelect.innerHTML = `<option value="all" id="mg-opt-all-provs">${getLang('mgProvAll', 'All Providers')}</option>`;
+            let provsSet = new Set();
+            allModels.forEach(m => {
+                if (m.provider) {
+                    provsSet.add(m.provider);
+                } else {
+                    provsSet.add('Thena');
+                }
+            });
+            const provs = [...provsSet];
+            provs.sort().forEach(prov => {
+                const opt = document.createElement('option');
+                opt.value = prov;
+                opt.textContent = prov;
+                provSelect.appendChild(opt);
+            });
+        }
     }
 
     function getFilteredModels() {
         const q = searchInput.value.trim().toLowerCase();
         const cat = catSelect.value;
+        const prov = provSelect ? provSelect.value : 'all';
         let list = allModels.filter(m => {
             const matchQ = !q || (m.model || '').toLowerCase().includes(q) ||
                            (m.description || '').toLowerCase().includes(q) ||
@@ -167,7 +189,10 @@
             }
             
             const matchCat = cat === 'all' || itemCats.includes(cat);
-            return matchQ && matchCat;
+            const itemProv = m.provider || 'Thena';
+            const matchProv = prov === 'all' || itemProv === prov;
+            
+            return matchQ && matchCat && matchProv;
         });
 
         function getPriceForModel(m) {
@@ -626,6 +651,7 @@
     searchInput?.addEventListener('input', debouncedRender);
     sortSelect?.addEventListener('change', renderModels);
     catSelect?.addEventListener('change', renderModels);
+    provSelect?.addEventListener('change', renderModels);
 
     function openRequestModal() {
         requestForm?.reset();
@@ -717,6 +743,8 @@
         if (sortLbl) sortLbl.textContent = getLang('mgSortLabel', 'Sort:');
         const catLbl = document.getElementById('mg-cat-label');
         if (catLbl) catLbl.textContent = getLang('mgCatLabel', 'Category:');
+        const provLbl = document.getElementById('mg-prov-label');
+        if (provLbl) provLbl.textContent = getLang('mgProvLabel', 'Provider:');
         const opts = {
             'mg-opt-default':   getLang('mgOptDefault', 'Default'),
             'mg-opt-name-asc':  getLang('mgOptNameAsc', 'Name (A-Z)'),
@@ -732,6 +760,8 @@
         });
         const allCatsOpt = document.getElementById('mg-opt-all-cats');
         if (allCatsOpt) allCatsOpt.textContent = getLang('mgCatAll', 'All');
+        const allProvsOpt = document.getElementById('mg-opt-all-provs');
+        if (allProvsOpt) allProvsOpt.textContent = getLang('mgProvAll', 'All Providers');
 
         const lang = typeof currentLang !== 'undefined' ? currentLang : 'en';
 

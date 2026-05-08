@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setupCustomSelect('mg-sort-custom', 'mg-sort-select', 'mg-sort-value', 'mg-sort-dropdown');
     setupCustomSelect('mg-cat-custom', 'mg-cat-select', 'mg-cat-value', 'mg-cat-dropdown');
+    setupCustomSelect('mg-prov-custom', 'mg-prov-select', 'mg-prov-value', 'mg-prov-dropdown');
 
     document.addEventListener('click', () => {
         document.querySelectorAll('.mg-custom-select').forEach(el => el.classList.remove('open'));
@@ -40,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const catDropdown = document.getElementById('mg-cat-dropdown');
     const catValue = document.getElementById('mg-cat-value');
 
-    const observer = new MutationObserver(() => {
+    const catObserver = new MutationObserver(() => {
         catDropdown.innerHTML = '';
         Array.from(catSelect.options).forEach((opt, idx) => {
             const div = document.createElement('div');
@@ -55,7 +56,28 @@ document.addEventListener('DOMContentLoaded', () => {
         if (selectedOpt) catValue.textContent = selectedOpt.textContent;
     });
 
-    observer.observe(catSelect, { childList: true, subtree: true });
+    catObserver.observe(catSelect, { childList: true, subtree: true });
+
+    const provSelect = document.getElementById('mg-prov-select');
+    const provDropdown = document.getElementById('mg-prov-dropdown');
+    const provValue = document.getElementById('mg-prov-value');
+
+    const provObserver = new MutationObserver(() => {
+        provDropdown.innerHTML = '';
+        Array.from(provSelect.options).forEach((opt, idx) => {
+            const div = document.createElement('div');
+            div.className = 'mg-select-option' + (opt.selected ? ' active' : '');
+            div.dataset.value = opt.value;
+            if (opt.id && opt.id !== 'mg-opt-all-provs') div.id = opt.id;
+            if (opt.value === 'all') div.id = 'mg-opt-all-provs';
+            div.textContent = opt.textContent;
+            provDropdown.appendChild(div);
+        });
+        const selectedOpt = provSelect.options[provSelect.selectedIndex];
+        if (selectedOpt) provValue.textContent = selectedOpt.textContent;
+    });
+
+    if (provSelect) provObserver.observe(provSelect, { childList: true, subtree: true });
 
     setTimeout(() => {
         const originalUpdate = window.updateModelGalleryLanguage;
@@ -68,6 +90,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const activeCat = document.querySelector('#mg-cat-dropdown .mg-select-option.active');
                     if (activeCat) document.getElementById('mg-cat-value').textContent = activeCat.textContent;
+
+                    const activeProv = document.querySelector('#mg-prov-dropdown .mg-select-option.active');
+                    if (activeProv && document.getElementById('mg-prov-value')) document.getElementById('mg-prov-value').textContent = activeProv.textContent;
                 }, 50);
             };
         }

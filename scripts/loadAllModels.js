@@ -51,6 +51,9 @@ const modelSpecs = {
     "5ac14b95-8600-46d7-a966-a6de2e951995": {
         usedTechniques: ["General", "Photorealism"]
     },
+    "6cf0e882-7ff7-4c53-be5e-4ee6fff779eb": {
+        usedTechniques: ["General"]
+    },
     "a7a7faa7-d391-4cae-a1ac-d4d793da2ecd": {
         usedTechniques: ["Anime"]
     },
@@ -95,6 +98,12 @@ function renderModels(modelsToRender) {
         let previewImage = model.examples?.portraits?.[0] || '';
         const delay = index * 50;
         const isHot = typeof HOT_MODELS !== 'undefined' && HOT_MODELS.includes(model.id);
+        const isFlorence = model.id === '7367ab 279dbf 417a8 51fe3 5050';
+        const showExclusiveBadge = isHot || isFlorence;
+        const exclusiveLabelText = translations[currentLang].exclusiveLabel;
+        const exclusiveSvg = isFlorence 
+            ? `<svg class="flag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`
+            : `<svg class="flag-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 8c-.83 0-1.5-.67-1.5-1.5S4.67 5 5.5 5 7 5.67 7 6.5 6.33 8 5.5 8z"/></svg>`;
         
         return `
             <div class="model-card animate-in ${isHot ? 'hot-model' : ''}" 
@@ -109,7 +118,7 @@ function renderModels(modelsToRender) {
                         <line x1="12" y1="8" x2="12.01" y2="8"></line>
                     </svg>
                 </div>
-                ${isHot ? `<div class="flag-item bg-exclusive"><svg class="flag-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 8c-.83 0-1.5-.67-1.5-1.5S4.67 5 5.5 5 7 5.67 7 6.5 6.33 8 5.5 8z"/></svg><span class="flag-text line-one">${translations[currentLang].exclusiveLabel}</span></div>` : ''}
+                ${showExclusiveBadge ? `<div class="flag-item bg-exclusive">${exclusiveSvg}<span class="flag-text line-one">${exclusiveLabelText}</span></div>` : ''}
                 <div class="model-name">${model.model}</div>
             </div>
         `;
