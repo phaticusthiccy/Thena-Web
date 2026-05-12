@@ -66,6 +66,10 @@ async function openCharacterChat(characterData) {
                 imgGenBtn.title = (typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Bu karakter resim oluşturmayı desteklemiyor' : 'This character does not support image generation';
             }
 
+            if (!currentConversationId || !currentCharacter) {
+                imgGenBtn.disabled = true;
+            }
+
             imgGenBtn.onclick = async () => {
                  if (!currentConversationId || !currentCharacter) {
                     showNotification((typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Lütfen önce bir sohbet seçin.' : 'Please select a conversation first.', 'error');
@@ -108,7 +112,10 @@ async function openCharacterChat(characterData) {
                         return;
                     }
 
-                    imgGenBtn.disabled = true;
+                    if (String(currentConversationId) === "null" || currentConversationId === undefined) {
+                        imgGenBtn.disabled = true;
+                    }
+
                     isChatGeneratingImage = true;
                     
                     const headerEl = document.querySelector('.chat-screen-header');

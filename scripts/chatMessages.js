@@ -129,12 +129,13 @@ function createMessageHTML(msg, t, currentLang) {
         }
     }
 
-    const emotionLower = (msg.emotion || '').replace(/[\[\]]/g, '').trim().toLowerCase();
+    let emotionLower = (msg.emotion || '').replace(/[\[\]]/g, '').trim().toLowerCase();
     let emotionClass = '';
     let emotionIconHtml = '';
     let emotionLabelHtml = '';
 
     if (emotionLower) {
+        emotionLower = emotionLower.replace("&ZeroWidthSpace;", "");
         emotionClass = ' emotion-' + emotionLower;
         const emotionNames = t.emotionNames || {};
         const emotionName = emotionNames[emotionLower] || (emotionLower.charAt(0).toUpperCase() + emotionLower.slice(1));
@@ -161,6 +162,13 @@ function renderMessages(messages) {
     if (!container) return;
 
     const t = translations[currentLang] || translations['en'];
+
+    
+    const imgGenBtn = document.getElementById('chat-img-gen-btn');
+    imgGenBtn.disabled = false;
+
+    const skipBtn = document.getElementById('chat-skip-btn');
+    skipBtn.disabled = false;
 
     if (messages.length === 0) {
         container.innerHTML = `<div class="no-messages">${t.chatNoMessages}</div>`;

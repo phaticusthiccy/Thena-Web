@@ -6853,6 +6853,50 @@ body.performance-mode .model-filter-container {
     gap: 8px;
 }
 
+.chat-skip-btn {
+    width: 48px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(255, 180, 0, 0.08);
+    border: 1px solid rgba(255, 180, 0, 0.25);
+    color: rgba(255, 180, 0, 0.65);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.chat-skip-btn span {
+    line-height: 1;
+}
+
+.chat-skip-btn:hover {
+    background: rgba(255, 180, 0, 0.18);
+    border-color: rgba(255, 180, 0, 0.55);
+    color: rgba(255, 200, 0, 1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(255, 180, 0, 0.2);
+}
+
+.chat-skip-btn:active {
+    transform: scale(0.94);
+}
+
+.chat-skip-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
 .chat-img-gen-btn {
     width: 48px;
     height: 40px;

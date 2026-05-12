@@ -6786,6 +6786,17 @@ document.addEventListener('DOMContentLoaded', () => {
             sendMessage();
         }
     });
+
+    const skipBtn = document.getElementById('chat-skip-btn');
+    skipBtn.disabled = true;
+    if (skipBtn) skipBtn.addEventListener('click', () => {
+        const input = document.getElementById('chat-message-input');
+        if (input && !input.disabled) {
+            input.value = '***';
+            sendMessage();
+        }
+    });
+
     if (msgInput) {
         msgInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
