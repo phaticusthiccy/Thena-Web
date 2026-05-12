@@ -13,7 +13,10 @@
     let currentStoryEps = [];
     let currentSeason   = 1;
     let currentReaderEpIndex = -1;
-    const EPS_PER_SEASON = 6;
+    const EPS_PER_SEASON_DEFAULT = 5;
+    function getEpsPerSeason() {
+        return (currentStory && currentStory.episode_per_season) ? currentStory.episode_per_season : EPS_PER_SEASON_DEFAULT;
+    }
 
     const $  = (id) => document.getElementById(id);
     const el = (tag, cls) => { const e = document.createElement(tag); if (cls) e.className = cls; return e; };
@@ -493,7 +496,7 @@
 
         if (!wrapper || !trigger || !optionsContainer) return;
         
-        const totalSeasons = Math.ceil(currentStoryEps.length / EPS_PER_SEASON);
+        const totalSeasons = Math.ceil(currentStoryEps.length / getEpsPerSeason());
         if (totalSeasons <= 1) {
             wrapper.style.display = 'none';
             return;
@@ -555,8 +558,8 @@
         if (!list) return;
         
         list.innerHTML = '';
-        const startIdx = (currentSeason - 1) * EPS_PER_SEASON;
-        const endIdx = startIdx + EPS_PER_SEASON;
+        const startIdx = (currentSeason - 1) * getEpsPerSeason();
+        const endIdx = startIdx + getEpsPerSeason();
         const seasonEps = currentStoryEps.slice(startIdx, endIdx);
 
         seasonEps.forEach((ep, i) => {
@@ -704,7 +707,7 @@
                         imgContainer.appendChild(img);
                     });
                     
-                    const isSeasonEnd = (ep.episode % EPS_PER_SEASON === 0) || (index === currentStoryEps.length - 1);
+                    const isSeasonEnd = (ep.episode % getEpsPerSeason() === 0) || (index === currentStoryEps.length - 1);
                     $('toon-reader-end-text').textContent = isSeasonEnd ? t('toonReaderSeasonEnded') : t('toonReaderEpEnded');
                     $('toon-reader-end-message').style.display = '';
                 }
@@ -716,7 +719,7 @@
                     imgContainer.appendChild(img);
                 });
                 
-                const isSeasonEnd = (ep.episode % EPS_PER_SEASON === 0) || (index === currentStoryEps.length - 1);
+                const isSeasonEnd = (ep.episode % getEpsPerSeason() === 0) || (index === currentStoryEps.length - 1);
                 $('toon-reader-end-text').textContent = isSeasonEnd ? t('toonReaderSeasonEnded') : t('toonReaderEpEnded');
                 $('toon-reader-end-message').style.display = '';
             }
@@ -762,7 +765,7 @@
                 }
                 
                 const currentEpData = currentStoryEps[currentReaderEpIndex];
-                if (currentEpData.episode % EPS_PER_SEASON === 0) {
+                if (currentEpData.episode % getEpsPerSeason() === 0) {
                     playInformationSound()
                     if (typeof showNotification === 'function') showNotification(t('toonReaderSeasonEnd'), 'info');
                     return;

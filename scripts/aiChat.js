@@ -568,6 +568,18 @@ function renderUserInfoStep() {
                            <input type="text" id="user-info-input" class="chat-message-input" style="width:100% !important; border-radius:8px; padding:10px; padding-right:50px; background:#222; border:1px solid #444; color:#fff; min-height: 40px;" placeholder="Name..." autocomplete="off" maxlength="10">
                            <span id="name-char-count" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); color:rgb(255, 107, 107); font-size:11px; font-weight:500;">0/10</span>
                        </div>
+                       <div id="name-invalid-warn" style="
+                           display:none; overflow:hidden; max-height:0; opacity:0;
+                           background:rgba(255,80,80,0.12); border:1px solid rgba(255,80,80,0.35);
+                           border-radius:7px; padding:0 10px; margin-top:6px;
+                           font-size:12px; color:#ff8080; transition: max-height 0.35s ease, opacity 0.35s ease, padding 0.35s ease;
+                       ">${currentLang === 'tr' ? '⚠ Sadece Latin harflere izin verilmektedir.' : '⚠ Only Latin letters are allowed.'}</div>
+                       <div id="name-limit-warn" style="
+                           display:none; overflow:hidden; max-height:0; opacity:0;
+                           background:rgba(255,160,0,0.12); border:1px solid rgba(255,160,0,0.35);
+                           border-radius:7px; padding:0 10px; margin-top:6px;
+                           font-size:12px; color:#ffb347; transition: max-height 0.35s ease, opacity 0.35s ease, padding 0.35s ease;
+                       ">${currentLang === 'tr' ? '⚠ Maksimum karakter sayısına ulaşıldı (10).' : '⚠ Maximum character limit reached (10).'}</div>
                        <button id="user-info-next" class="chat-send-btn" style="width:100%; height:40px; margin-top:5px; border-radius:8px; font-weight:700;">${t.userInfoNext}</button>`;
     } else if (userInfoStep === 1) {
         labelText = t.userInfoCharName;
@@ -576,6 +588,12 @@ function renderUserInfoStep() {
                            <input type="text" id="user-info-input" class="chat-message-input" style="width:100% !important; border-radius:8px; padding:10px; padding-right:50px; background:#222; border:1px solid #444; color:#fff; min-height: 40px;" placeholder="${currentLang === 'tr' ? 'Karakter adı...' : 'Character name...'}" autocomplete="off" maxlength="15" value="${defaultCharName}">
                            <span id="name-char-count" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); color:#666; font-size:11px; font-weight:500;">${defaultCharName.length}/15</span>
                        </div>
+                       <div id="name-limit-warn" style="
+                           display:none; overflow:hidden; max-height:0; opacity:0;
+                           background:rgba(255,160,0,0.12); border:1px solid rgba(255,160,0,0.35);
+                           border-radius:7px; padding:0 10px; margin-top:6px;
+                           font-size:12px; color:#ffb347; transition: max-height 0.35s ease, opacity 0.35s ease, padding 0.35s ease;
+                       ">${currentLang === 'tr' ? '⚠ Maksimum karakter sayısına ulaşıldı (15).' : '⚠ Maximum character limit reached (15).'}</div>
                        <button id="user-info-next" class="chat-send-btn" style="width:100%; height:40px; margin-top:5px; border-radius:8px; font-weight:700;">${t.userInfoNext}</button>`;
     } else if (userInfoStep === 2) {
         labelText = t.userInfoAge;
@@ -601,7 +619,19 @@ function renderUserInfoStep() {
                                <button class="gender-select-btn" data-value="${t.genderGenderqueer}">${t.genderGenderqueer}</button>
                                <button class="gender-select-btn" data-value="${t.genderGenderfluid}">${t.genderGenderfluid}</button>
                                <button class="gender-select-btn" data-value="${t.genderAgender}">${t.genderAgender}</button>
-                               <button class="gender-select-btn" data-value="${t.genderOther}">${t.genderOther}</button>
+                               <button class="gender-select-btn" data-value="${t.genderOther}" style="
+                                   width: 100%; margin-top: 6px;
+                                   background: rgba(160,100,255,0.07);
+                                   border: 1.5px dashed rgba(160,100,255,0.45);
+                                   color: #c084fc;
+                                   display: flex; align-items: center; justify-content: center; gap: 6px;
+                                   font-size: 12px; letter-spacing: 0.03em;
+                               ">
+                                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                                   ${t.genderOther}
+                                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                               </button>
+
                            </div>`;
         }
     } else if (userInfoStep === 4) {
@@ -673,11 +703,74 @@ function renderUserInfoStep() {
             const charCount = wrapper.querySelector('#name-char-count');
             const maxLen = userInfoStep === 0 ? 10 : 15;
             const minLen = userInfoStep === 0 ? 3 : 2;
+
+            if (userInfoStep === 0) {
+                const warnEl = wrapper.querySelector('#name-invalid-warn');
+                let warnTimer = null;
+
+                const showInvalidWarn = () => {
+                    if (!warnEl) return;
+                    clearTimeout(warnTimer);
+                    warnEl.style.display = 'block';
+                    requestAnimationFrame(() => {
+                        warnEl.style.maxHeight = '60px';
+                        warnEl.style.opacity = '1';
+                        warnEl.style.padding = '8px 10px';
+                    });
+                    warnTimer = setTimeout(() => {
+                        warnEl.style.maxHeight = '0';
+                        warnEl.style.opacity = '0';
+                        warnEl.style.padding = '0 10px';
+                        setTimeout(() => { warnEl.style.display = 'none'; }, 380);
+                    }, 5000);
+                };
+
+                input.addEventListener('beforeinput', (e) => {
+                    if (!e.data) return;
+                    if (/[^A-Za-zÇçĞğİıÖöŞşÜü '\-]/.test(e.data)) {
+                        e.preventDefault();
+                        showInvalidWarn();
+                    }
+                });
+                input.addEventListener('input', () => {
+                    const cleaned = input.value.replace(/[^A-Za-zÇçĞğİıÖöŞşÜü '\-]/g, '');
+                    if (cleaned !== input.value) {
+                        const sel = input.selectionStart - (input.value.length - cleaned.length);
+                        input.value = cleaned;
+                        input.setSelectionRange(sel, sel);
+                        showInvalidWarn();
+                    }
+                });
+            }
             
             if (charCount) {
+                const limitWarnEl = wrapper.querySelector('#name-limit-warn');
+                let limitWarnTimer = null;
+
+                const showLimitWarn = () => {
+                    if (!limitWarnEl) return;
+                    clearTimeout(limitWarnTimer);
+                    limitWarnEl.style.display = 'block';
+                    requestAnimationFrame(() => {
+                        limitWarnEl.style.maxHeight = '60px';
+                        limitWarnEl.style.opacity = '1';
+                        limitWarnEl.style.padding = '8px 10px';
+                    });
+                    limitWarnTimer = setTimeout(() => {
+                        limitWarnEl.style.maxHeight = '0';
+                        limitWarnEl.style.opacity = '0';
+                        limitWarnEl.style.padding = '0 10px';
+                        setTimeout(() => { limitWarnEl.style.display = 'none'; }, 380);
+                    }, 5000);
+                };
+
                 const updateCharCount = () => {
+                    const prevLen = parseInt(charCount.textContent);
                     charCount.textContent = `${input.value.length}/${maxLen}`;
-                    if (input.value.length >= maxLen || input.value.length < minLen) {
+                    if (input.value.length >= maxLen) {
+                        charCount.style.color = '#ff6b6b';
+                        if (prevLen < maxLen) showLimitWarn();
+                    } else if (input.value.length < minLen) {
                         charCount.style.color = '#ff6b6b';
                     } else if (input.value.length >= maxLen - 3) {
                         charCount.style.color = '#ffa500';
@@ -696,7 +789,15 @@ function renderUserInfoStep() {
 
         btn.onclick = () => {
             const val = input.value.trim();
-            if (!val) return;
+            if (!val) {
+                if (userInfoStep === 0 || userInfoStep === 1) {
+                    return showNotification(userInfoStep == 0 ? t.userInfoNameError : t.userInfoCharNameError, 'error');
+                } else if (userInfoStep === 2) {
+                    return showNotification(t.userInfoAgeError, 'error');
+                } else {
+                    return
+                }
+            }
             
             if (userInfoStep === 0) {
                 if (val.length < 3 || val.length > 10) {

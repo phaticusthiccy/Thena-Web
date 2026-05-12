@@ -72,6 +72,10 @@ function createMessageHTML(msg, t, currentLang) {
     if (msg.content === null || msg.content === undefined) content = '';
     else if (typeof msg.content === 'object') content = JSON.stringify(msg.content);
     else content = String(msg.content);
+
+    try {
+        content = content.replace(/\b([A-Za-zÇçĞğİıÖöŞşÜü][A-Za-zÇçĞğİıÖöŞşÜü0-9 ]*)\([^,)]+,\d+yo\.\)/g, '$1');
+    } catch {}
     
     let parsed = null;
     let isJson = false;
