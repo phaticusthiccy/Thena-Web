@@ -81,7 +81,8 @@ const modelTranslationsTR = {
     "5d697de8-f9b1-45a0-abfa-3c6da84529d1": "Thena Photoreal V2, fotogerçekçiliğin yeni standardı. Kısa istemlerle bile çarpıcı detay ve netliğe sahip, nefes kesici derecede gerçekçi görüntüler üretir.",
     "6cf0e882-7ff7-4c53-be5e-4ee6fff779eb": "Rüya gibi hikayeler anlatmak için tasarlanmış çok yönlü bir model. Thena Analog, yumuşak sinematik gerçekçiliği stilize sanatsal illüstrasyonlarla harmanlayarak sıcak ve nostaljik bir atmosfer sunar.",
     "3c7a94a0-c844-471f-ae98-0f8c8508baf7": "Thena Ultra'dan ilham alan, gürültü tabanlı akıl yürütme yeteneğine sahip yeni nesil yapay zeka modeli. Geliştirilen ikinci akıl yürütme odaklı sürüm.",
-    "b85483f-b998-4dee-b9b8-f3e1dcfb4a6d": "Thena Toonish, keskin gölgelendirmeler ve canlı renklere sahip temiz, modern anime estetiği üzerine uzmanlaşmıştır. Aşırı sade karakter portreleri, günlük yaşam sahneleri ve klasik animasyon stilleri yaratmada öne çıkar."
+    "db85483f-b998-4dee-b9b8-f3e1dcfb4a6d": "Thena Toonish, keskin gölgelendirmeler ve canlı renklere sahip temiz, modern anime estetiği üzerine uzmanlaşmıştır. Aşırı sade karakter portreleri, günlük yaşam sahneleri ve klasik animasyon stilleri yaratmada öne çıkar.",
+    "00ac5ccc-3698-4083-abfc-885c850d4c03": "Keskin, renkli ve son derece stilize anime estetiğine adanmış bir model. Thena Vivid, dinamik gölgelendirme ve zengin renk paletlerinde öne çıkarak hafif roman (light novel) kapakları ve premium illüstrasyonlar için ideal bir deneyim sunar."
 };
 const UNSUPPORTED_FAST_MODELS = ["551ks 8g6g8 16gga 1h8h8 6b4a5 5060"];
 const MOVIE_FILTER_SUPPORTED_MODELS = ["8gg12 61812 6628 19729 6b4a5 5060", "551ks 8g6g8 16gga 1h8h8 6b4a5 5060", "771ks 71g6g8 hlh8h8 6b4a5 77b4a5 5060", "3fb0b43e-ef78-44cf-82da-c3e0d6e0a5a7", "019d2154-7c24-74a1-806d-0fa8274a41d4"];
@@ -122,8 +123,10 @@ const MODEL_STATS = {
     "bb8acd44-9e3f-4a9e-9b99-cee4a52f5ae7": { intel: 3, qual: 4, speed: 2 },
     // Thena Pastel
     "e4cf240b-a8aa-4033-b87c-9c9a60cf456e": { intel: 3, qual: 3, speed: 4 },
+    // Thena Apex
+    "00ac5ccc-3698-4083-abfc-885c850d4c03": { intel: 2, qual: 2, speed: 2 },
     // Thena Toonish
-    "b85483f-b998-4dee-b9b8-f3e1dcfb4a6d": { intel: 2, qual: 2, speed: 2 },
+    "db85483f-b998-4dee-b9b8-f3e1dcfb4a6d": { intel: 2, qual: 2, speed: 2 },
     // Thena Pro
     "3c7a94a0-c844-471f-ae98-0f8c8508baf7": { intel: 5, qual: 5, speed: 5 },
     // Thena Nyx
@@ -7019,7 +7022,8 @@ async function loadGalleryStatistics() {
             "Image Editor (Synapse)": "imageEditorV3",
             "Image Editor (PixelFusion)": "imageEditorV1",
             "Outpaint": "thenaOutpaint",
-            "Thena Toonish": "thenaToonish"
+            "Thena Toonish": "thenaToonish",
+            "Thena Apex": "thenaApex"
         };
         
         const t = translations[currentLang];
