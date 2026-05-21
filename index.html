@@ -1775,6 +1775,31 @@
                 Upload an image or paste from clipboard (Ctrl+V) to generate a prompt.
             </p>
 
+            <button id="btn-mobile-paste" style="
+                display: none;
+                width: 100%;
+                padding: 11px 16px;
+                margin-bottom: 14px;
+                background: rgba(var(--primary-rgb), 0.08);
+                color: var(--primary);
+                border: 1.5px dashed rgba(var(--primary-rgb), 0.4);
+                border-radius: 10px;
+                cursor: pointer;
+                font-size: 13px;
+                font-weight: 600;
+                letter-spacing: 0.3px;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                transition: background 0.2s, border-color 0.2s;
+            ">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                </svg>
+                <span id="lbl-mobile-paste">Panodan Yapıştır</span>
+            </button>
+
             <div id="img-upload-area" class="upload-area">
                 <input type="file" id="img-file-input" accept="image/*" hidden>
                 <div id="upload-placeholder">

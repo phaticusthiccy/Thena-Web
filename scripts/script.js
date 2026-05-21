@@ -82,12 +82,13 @@ const modelTranslationsTR = {
     "6cf0e882-7ff7-4c53-be5e-4ee6fff779eb": "Rüya gibi hikayeler anlatmak için tasarlanmış çok yönlü bir model. Thena Analog, yumuşak sinematik gerçekçiliği stilize sanatsal illüstrasyonlarla harmanlayarak sıcak ve nostaljik bir atmosfer sunar.",
     "3c7a94a0-c844-471f-ae98-0f8c8508baf7": "Thena Ultra'dan ilham alan, gürültü tabanlı akıl yürütme yeteneğine sahip yeni nesil yapay zeka modeli. Geliştirilen ikinci akıl yürütme odaklı sürüm.",
     "db85483f-b998-4dee-b9b8-f3e1dcfb4a6d": "Thena Toonish, keskin gölgelendirmeler ve canlı renklere sahip temiz, modern anime estetiği üzerine uzmanlaşmıştır. Aşırı sade karakter portreleri, günlük yaşam sahneleri ve klasik animasyon stilleri yaratmada öne çıkar.",
-    "00ac5ccc-3698-4083-abfc-885c850d4c03": "Keskin, renkli ve son derece stilize anime estetiğine adanmış bir model. Thena Vivid, dinamik gölgelendirme ve zengin renk paletlerinde öne çıkarak hafif roman (light novel) kapakları ve premium illüstrasyonlar için ideal bir deneyim sunar."
+    "00ac5ccc-3698-4083-abfc-885c850d4c03": "Keskin, renkli ve son derece stilize anime estetiğine adanmış bir model. Thena Apex, dinamik gölgelendirme ve zengin renk paletlerinde öne çıkarak hafif roman (light novel) kapakları ve premium illüstrasyonlar için ideal bir deneyim sunar."
 };
 const UNSUPPORTED_FAST_MODELS = ["551ks 8g6g8 16gga 1h8h8 6b4a5 5060"];
 const MOVIE_FILTER_SUPPORTED_MODELS = ["8gg12 61812 6628 19729 6b4a5 5060", "551ks 8g6g8 16gga 1h8h8 6b4a5 5060", "771ks 71g6g8 hlh8h8 6b4a5 77b4a5 5060", "3fb0b43e-ef78-44cf-82da-c3e0d6e0a5a7", "019d2154-7c24-74a1-806d-0fa8274a41d4"];
 const NO_EXTRA_FEATURES_MODELS = ["81ggz 7j661 66281 yy161 1f4f4 21143"];
 const NO_PRO_RATE_LIMIT_MODELS = ["3c7a94a0-c844-471f-ae98-0f8c8508baf7"];
+const HIGH_MODERATION_ONLY_MODELS = ["81ggz 7j661 66281 yy161 1f4f4 21143"];
 const MODEL_STATS = {
     // Thena Movie
     "8gg12 61812 6628 19729 6b4a5 5060": { intel: 5, qual: 5, speed: 3 },
@@ -1185,6 +1186,19 @@ let moderationLevel = 'high';
 
 if (moderationBtn) {
     moderationBtn.addEventListener('click', () => {
+        if (typeof HIGH_MODERATION_ONLY_MODELS !== 'undefined' && typeof selectedModel !== 'undefined'
+            && selectedModel && HIGH_MODERATION_ONLY_MODELS.includes(selectedModel)) {
+            showNotification(
+                currentLang == "tr"
+                    ? translations.tr.msgModUltraLocked
+                    : translations.en.msgModUltraLocked,
+                'info'
+            );
+            moderationBtn.style.transform = 'scale(0.9)';
+            setTimeout(() => moderationBtn.style.transform = '', 150);
+            return;
+        }
+
         if (moderationLevel === 'high') {
             moderationLevel = 'medium';
             showNotification(currentLang == "tr" ? translations.tr.msgModMedium : translations.en.msgModMedium, 'info');
@@ -1199,9 +1213,9 @@ if (moderationBtn) {
         moderationBtn.setAttribute('data-level', moderationLevel);
 
         const titles = {
-            high: currentLang == "tr" ? "Moderasyon: Yüksek" : "Moderation: High (Strict)",
+            high: currentLang == "tr" ? "Moderasyon: Yüksek" : "Moderation: High (Strict)",
             medium: currentLang == "tr" ? "Moderasyon: Ortalama" : "Moderation: Medium (Balanced)",
-            low: currentLang == "tr" ? "Moderasyon: Düşük" : "Moderation: Low (Permissive)"
+            low: currentLang == "tr" ? "Moderasyon: Düşük" : "Moderation: Low (Permissive)"
         };
         moderationBtn.title = titles[moderationLevel];
 
@@ -2107,6 +2121,17 @@ async function loadModels() {
                     if (typeof checkExtraFeaturesAvailability === 'function') checkExtraFeaturesAvailability(clickedId);
                     if (typeof updateAdvancedSettingsConstraints === 'function') updateAdvancedSettingsConstraints(clickedId);
 
+                    if (typeof HIGH_MODERATION_ONLY_MODELS !== 'undefined' && HIGH_MODERATION_ONLY_MODELS.includes(clickedId)) {
+                        const _modBtn = document.getElementById('moderation-btn');
+                        if (moderationLevel !== 'high') {
+                            moderationLevel = 'high';
+                            if (_modBtn) {
+                                _modBtn.setAttribute('data-level', 'high');
+                                _modBtn.title = currentLang == "tr" ? "Moderasyon: Yüksek" : "Moderation: High (Strict)";
+                            }
+                        }
+                    }
+
                     if (typeof NO_EXTRA_FEATURES_MODELS !== 'undefined' && NO_EXTRA_FEATURES_MODELS.includes(clickedId)) {
                         if (typeof checkUltraRateLimit === 'function') {
                             const allowed = await checkUltraRateLimit(clickedId, card);
@@ -2145,6 +2170,17 @@ async function loadModels() {
             checkExtraFeaturesAvailability(lastModelId);
             updateAdvancedSettingsConstraints(lastModelId);
             checkFormReady();
+
+            if (HIGH_MODERATION_ONLY_MODELS.includes(lastModelId)) {
+                const _modBtnInit = document.getElementById('moderation-btn');
+                moderationLevel = 'high';
+                if (_modBtnInit) {
+                    _modBtnInit.setAttribute('data-level', 'high');
+                    _modBtnInit.title = typeof currentLang !== 'undefined' && currentLang == "tr"
+                        ? "Moderasyon: Yüksek"
+                        : "Moderation: High (Strict)";
+                }
+            }
 
             if (NO_EXTRA_FEATURES_MODELS.includes(lastModelId)) {
                 checkUltraRateLimit(lastModelId, targetCard);
@@ -2363,20 +2399,20 @@ generateBtn.addEventListener('click', async () => {
         document.getElementById('generation-progress-label').textContent = translations[currentLang].msgQueued;
     }
     let busyNotification = null;
-    const BUSY_THRESHOLD = 25000;
-    const busyTimer = setTimeout(() => {
+    let busyTimer = null;
+    let _busyFired = false;
+
+    function _triggerBusyState() {
+        if (_busyFired) return;
+        _busyFired = true;
         playBusySound();
 
         const container = document.getElementById('notification-container');
-
         if (!container || container.children.length === 0) return;
 
         const activeLoader = container.lastElementChild;
-
         if (activeLoader && !activeLoader.classList.contains('notification-exit')) {
-
             activeLoader.classList.add('busy-state');
-
             activeLoader.innerHTML = `
                             <div class="notification-spinner"></div>
                             <div style="display:flex; flex-direction:column; gap:2px;">
@@ -2385,7 +2421,7 @@ generateBtn.addEventListener('click', async () => {
                             </div>
                         `;
         }
-    }, BUSY_THRESHOLD);
+    }
     const isFast = btnFast.classList.contains('active');
     const isCreative = btnCreative.classList.contains('active');
     const isDense = btnDense.classList.contains('active');
@@ -2515,11 +2551,25 @@ generateBtn.addEventListener('click', async () => {
         }
     }
 
+    let _imageReadySince = null;
+
     const _etaInterval = setInterval(() => {
         if (_etaPhase === 'done') return;
         if (_etaCountdown > 0) _etaCountdown--;
         _updateEtaLabel();
+
+        if (_etaPhase === 'image' && _etaCountdown <= 0 && !_busyFired) {
+            if (_imageReadySince === null) {
+                _imageReadySince = Date.now();
+            } else if (Date.now() - _imageReadySince >= 10000) {
+                _triggerBusyState();
+            }
+        }
     }, 1000);
+
+    if (_imgGenSec === 0) {
+        busyTimer = setTimeout(_triggerBusyState, 25000);
+    }
 
     _updateEtaLabel();
     
@@ -5821,6 +5871,61 @@ document.addEventListener('paste', (e) => {
         }
     }
 });
+
+const mobilePasteBtn = document.getElementById('btn-mobile-paste');
+const mobilePasteLbl = document.getElementById('lbl-mobile-paste');
+
+const isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && !window.MSStream);
+
+if (isMobileDevice && mobilePasteBtn) {
+    mobilePasteBtn.style.display = 'flex';
+}
+
+if (mobilePasteBtn) {
+    mobilePasteBtn.addEventListener('click', async () => {
+        if (!navigator.clipboard || !navigator.clipboard.read) {
+            if (typeof showNotification === 'function') {
+                const t = translations[currentLang] || translations['en'];
+                showNotification(t.msgClipboardNoSupport, 'error');
+            }
+            fileInput.click();
+            return;
+        }
+
+        try {
+            const clipboardItems = await navigator.clipboard.read();
+            let found = false;
+
+            for (const clipboardItem of clipboardItems) {
+                for (const type of clipboardItem.types) {
+                    if (type.startsWith('image/')) {
+                        const blob = await clipboardItem.getType(type);
+                        handleImageFile(blob);
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) break;
+            }
+
+            if (!found) {
+                if (typeof showNotification === 'function') {
+                    const t = translations[currentLang] || translations['en'];
+                    showNotification(t.msgClipboardNoImage, 'error');
+                }
+            }
+        } catch (err) {
+            if (err.name === 'NotAllowedError') {
+                if (typeof showNotification === 'function') {
+                    const t = translations[currentLang] || translations['en'];
+                    showNotification(t.msgClipboardDenied, 'error');
+                }
+            } else {
+                fileInput.click();
+            }
+        }
+    });
+}
 
 clearImgBtn.addEventListener('click', (e) => {
     e.stopPropagation();
