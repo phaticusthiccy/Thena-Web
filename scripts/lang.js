@@ -519,10 +519,15 @@ const translations = {
         "outpaintSuccess": "Outpaint completed successfully!",
         "outpaintQueued": "Outpaint queued. ",
         "outpaintPixelRequired": "Please enter at least one direction pixel value.",
+        "torealBtn": "Generate Variation",
         "appCardEditName": "Image Editing",
         "appCardEditDesc": "Transform your image with AI, reshape with prompts.",
         "appCardOutpaintName": "Outpaint",
         "appCardOutpaintDesc": "Expand image borders with AI, add new areas.",
+        "appCardAnythingToRealName": "Anything to Real",
+        "appCardAnythingToRealDesc": "Transform any sketch or 3D view into a realistic image.",
+        "appCardShowAll": "Show All",
+        "appCardShowLess": "Show Less",
         "appCardStoriesName": "AI Stories",
         "appCardStoriesDesc": "Create interactive stories with AI.",
         "storiesReadySoon": "AI Stories will be ready soon!",
@@ -1067,10 +1072,15 @@ const translations = {
         "outpaintSuccess": "Outpaint başarıyla tamamlandı!",
         "outpaintQueued": "Outpaint sıraya alındı. ",
         "outpaintPixelRequired": "Lütfen en az bir yön için piksel değeri girin.",
+        "torealBtn": "Varyasyon Oluştur",
         "appCardEditName": "Resim Düzenleme",
         "appCardEditDesc": "Görselini AI ile dönüştür, prompt ile yeniden şekillendir.",
         "appCardOutpaintName": "Outpaint",
         "appCardOutpaintDesc": "Görselin kenarlarını AI ile genişlet, yeni alanlar ekle.",
+        "appCardAnythingToRealName": "Anything to Real",
+        "appCardAnythingToRealDesc": "Çizimleri veya 3D görselleri gerçekçi fotoğraflara dönüştür.",
+        "appCardShowAll": "Tümünü Göster",
+        "appCardShowLess": "Daha Az Göster",
         "appCardStoriesName": "AI Hikayeleri",
         "appCardStoriesDesc": "Yapay zeka ile etkileşimli hikayeler oluşturun.",
         "storiesReadySoon": "AI Hikayeleri yakında hazır olacak!",
@@ -1498,15 +1508,29 @@ function updateLanguage(lang) {
     safelySetText('txt-outpaint-btn', t.outpaintBtn);
     safelySetText('txt-outpaint-reset', t.outpaintReset);
     safelySetText('txt-outpaint-presets', t.outpaintPresetsTitle);
+    safelySetText('txt-toreal-btn', t.torealBtn);
     safelySetText('txt-app-card-edit', t.appCardEditName);
     safelySetText('txt-app-card-edit-desc', t.appCardEditDesc);
     safelySetText('txt-app-card-outpaint', t.appCardOutpaintName);
     safelySetText('txt-app-card-outpaint-desc', t.appCardOutpaintDesc);
+    safelySetText('txt-app-card-anythingtoreal', t.appCardAnythingToRealName);
+    safelySetText('txt-app-card-anythingtoreal-desc', t.appCardAnythingToRealDesc);
+
+    const showAllBtn = document.getElementById('editor-app-show-all-btn');
+    if (showAllBtn) {
+        const isShowAll = document.getElementById('editor-app-popup')?.classList.contains('show-all');
+        safelySetText('txt-app-show-all', isShowAll ? t.appCardShowLess : t.appCardShowAll);
+    }
+
 
     if (typeof editorCurrentMode !== 'undefined') {
         const selectorLabel = document.getElementById('editor-app-selector-label');
         if (selectorLabel) {
-            selectorLabel.textContent = editorCurrentMode === 'outpaint' ? t.appCardOutpaintName : t.appCardEditName;
+            selectorLabel.textContent = editorCurrentMode === 'outpaint' 
+                ? t.appCardOutpaintName 
+                : editorCurrentMode === 'anythingtoreal'
+                    ? t.appCardAnythingToRealName
+                    : t.appCardEditName;
         }
     }
 

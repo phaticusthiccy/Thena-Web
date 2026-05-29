@@ -525,7 +525,7 @@ const dbHelper = {
                                 if (item.model) {
                                     if (fm.includes(item.model)) {
                                         itemModelMatches = true;
-                                    } else if (fm.includes('Image Editor') && item.model.toUpperCase().startsWith('IMAGE EDITOR')) {
+                                    } else if (fm.includes('Image Editor') && item.model.toUpperCase().startsWith('IMAGE EDITOR') || item.model.toUpperCase().startsWith('ANYTHING TO REAL')) {
                                         itemModelMatches = true;
                                     }
                                 }
@@ -4098,8 +4098,9 @@ function openLightbox(data) {
     lightbox.classList.add('active');
 
     const originalPreview = document.getElementById('lightbox-original-preview');
+    console.log(data)
     if(originalPreview) {
-        const isEditorApp = data.model && (data.model.toUpperCase().includes('IMAGE EDITOR') || data.model.toUpperCase().includes('OUTPAINT'));
+        const isEditorApp = data.model && (data.model.toUpperCase().includes('IMAGE EDITOR') || data.model.toUpperCase().includes('OUTPAINT') || data.model.toUpperCase().includes("ANYTHING TO REAL"));
         if(data.originalImage && isEditorApp) {
              originalPreview.innerHTML = `<img src="${data.originalImage}" alt="Original">`;
              originalPreview.style.display = 'block';
@@ -4130,7 +4131,7 @@ function openLightbox(data) {
     else {
         document.querySelector(".lightbox-delete-btn").style.display = "flex"
         
-        const isEditorApp = data.model && (data.model.toUpperCase().includes('IMAGE EDITOR') || data.model.toUpperCase().includes('OUTPAINT'));
+        const isEditorApp = data.model && (data.model.toUpperCase().includes('IMAGE EDITOR') || data.model.toUpperCase().includes('OUTPAINT') || data.model.toUpperCase().includes("ANYTHING TO REAL"));
         if (isEditorApp) {
             document.querySelector(".lightbox-share-btn").style.display = "none"
             document.querySelector(".lightbox-copy-btn").style.display = "none"
@@ -7128,7 +7129,8 @@ async function loadGalleryStatistics() {
             "Image Editor (PixelFusion)": "imageEditorV1",
             "Outpaint": "thenaOutpaint",
             "Thena Toonish": "thenaToonish",
-            "Thena Apex": "thenaApex"
+            "Thena Apex": "thenaApex",
+            "Anything to Real": "thenaToReal"
         };
         
         const t = translations[currentLang];

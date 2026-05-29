@@ -388,6 +388,7 @@
     transition: all 0.22s ease;
     position: relative;
     overflow: hidden;
+    flex-shrink: 0;
 }
 
 .editor-app-card::before {
@@ -728,4 +729,91 @@
     border-color: rgba(168, 85, 247, 0.5) !important;
     box-shadow: 0 0 0 1px rgba(168,85,247,0.2), inset 0 0 30px rgba(168,85,247,0.03);
 }
+
+.editor-app-popup-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 188px;
+    overflow-y: hidden;
+    padding-right: 2px;
+}
+
+.editor-app-popup-list #editor-app-card-anythingtoreal {
+    display: none;
+}
+
+.editor-app-popup.show-all .editor-app-popup-list {
+    overflow-y: auto;
+}
+
+.editor-app-popup.show-all .editor-app-popup-list #editor-app-card-anythingtoreal {
+    display: flex;
+}
+
+.editor-app-show-all-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 10px 0;
+    margin-top: 4px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    color: #888;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.editor-app-show-all-btn:hover {
+    color: var(--primary, #00ff88);
+    background: rgba(var(--primary-rgb, 0, 255, 136), 0.05);
+    border-color: rgba(var(--primary-rgb, 0, 255, 136), 0.2);
+}
+
+.editor-app-show-all-caret {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #666;
+}
+
+.editor-app-show-all-btn:hover .editor-app-show-all-caret {
+    color: var(--primary, #00ff88);
+}
+
+.editor-app-popup.show-all .editor-app-show-all-caret {
+    transform: rotate(180deg);
+}
+
+#editor-app-card-anythingtoreal.active {
+    border-color: #f59e0b;
+    background: rgba(245, 158, 11, 0.06);
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.12);
+}
+
+#editor-app-card-anythingtoreal.active .editor-app-card-name {
+    color: #f59e0b;
+}
+
+@keyframes arsvg-divider-pulse {
+    0%, 100% { stroke-opacity: 0.8; filter: drop-shadow(0 0 2px rgba(245,158,11,0.4)); }
+    50% { stroke-opacity: 1; filter: drop-shadow(0 0 6px rgba(245,158,11,0.8)); }
+}
+
+@keyframes arsvg-sketch-fade {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+.editor-app-card .arsvg-divider {
+    animation: arsvg-divider-pulse 2s ease-in-out infinite;
+}
+
+.editor-app-card .arsvg-sketch {
+    animation: arsvg-sketch-fade 3s ease-in-out infinite;
+}
+
 

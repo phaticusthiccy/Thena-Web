@@ -4,6 +4,7 @@ let editorSelectedModel = 'v1';
 let editorCurrentMode = 'edit';
 
 
+
 function loadEditorPresets() {
     const presetsContainer = document.getElementById('presets-container');
     if (!presetsContainer) return;
@@ -143,6 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof updateOutpaintPreview === 'function') updateOutpaintPreview();
             if (typeof updateOutpaintPresets === 'function') updateOutpaintPresets();
             if (typeof checkOutpaintFormReady === 'function') checkOutpaintFormReady();
+            if (typeof checkToRealFormReady === 'function') checkToRealFormReady();
         });
     }
 
@@ -216,15 +218,16 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const canvas = editorCropper.getCroppedCanvas();
             if (canvas) {
-                editorSelectedFile = canvas.toDataURL('image/jpeg', 0.9);
+                const croppedData = canvas.toDataURL('image/jpeg', 0.9);
                 
+                editorSelectedFile = croppedData;
                 previewImg.onload = () => {
                     if (typeof checkEditorFormReady === 'function') checkEditorFormReady();
                     if (typeof checkOutpaintFormReady === 'function') checkOutpaintFormReady();
+                    if (typeof checkToRealFormReady === 'function') checkToRealFormReady();
                     if (typeof updateOutpaintPreview === 'function') updateOutpaintPreview();
                     if (typeof updateOutpaintPresets === 'function') updateOutpaintPresets();
                 };
-                
                 previewImg.src = editorSelectedFile;
                 previewImg.classList.remove('hidden');
                 clearBtn.classList.remove('hidden');
@@ -283,10 +286,19 @@ document.addEventListener('DOMContentLoaded', () => {
     if (generateBtn) {
         generateBtn.addEventListener('click', generateVariation);
     }
+    const toRealGenerateBtn = document.getElementById('toReal-generate-btn');
+    if (toRealGenerateBtn) {
+        toRealGenerateBtn.addEventListener('click', generateToReal);
+    }
     const editorApiKeyInput = document.getElementById('api-key');
     const editorPromptInput = document.getElementById('editor-prompt');
 
-    if (editorApiKeyInput) editorApiKeyInput.addEventListener('input', checkEditorFormReady);
+    if (editorApiKeyInput) {
+        editorApiKeyInput.addEventListener('input', () => {
+            if (typeof checkEditorFormReady === 'function') checkEditorFormReady();
+            if (typeof checkToRealFormReady === 'function') checkToRealFormReady();
+        });
+    }
     if (editorPromptInput) editorPromptInput.addEventListener('input', checkEditorFormReady);
 
     const presetsContainer = document.getElementById('presets-container');
@@ -824,7 +836,7 @@ async function pollEditorGeneration(id, apiKey, prompt, genNotif, originalImage,
 
                     await dbHelper.add({
                         url: finalUrl,
-                        prompt: prompt,
+                        prompt: "",
                         model: `Image Editor (${editorSelectedModel === 'v2' ? 'NeuralFlow' : editorSelectedModel === 'v3' ? 'Synapse' : 'PixelFusion'})`,
                         size: 'Auto',
                         timestamp: new Date().toISOString(),
@@ -912,8 +924,13 @@ function initEditorAppSelector() {
         const isOpen = popup.style.display !== 'none';
         if (isOpen) {
             popup.style.display = 'none';
+            popup.classList.remove('show-all');
             selectorBtn.classList.remove('open');
             selectorBtn.setAttribute('aria-expanded', 'false');
+            const btnSpan = document.getElementById('txt-app-show-all');
+            if (btnSpan && typeof translations !== 'undefined') {
+                btnSpan.textContent = translations[currentLang]?.appCardShowAll || 'Show All';
+            }
         } else {
             popup.style.display = 'block';
             selectorBtn.classList.add('open');
@@ -927,10 +944,31 @@ function initEditorAppSelector() {
             !popup.contains(e.target) &&
             !selectorBtn.contains(e.target)) {
             popup.style.display = 'none';
+            popup.classList.remove('show-all');
             selectorBtn.classList.remove('open');
             selectorBtn.setAttribute('aria-expanded', 'false');
+            const btnSpan = document.getElementById('txt-app-show-all');
+            if (btnSpan && typeof translations !== 'undefined') {
+                btnSpan.textContent = translations[currentLang]?.appCardShowAll || 'Show All';
+            }
         }
     });
+
+    const showAllBtn = document.getElementById('editor-app-show-all-btn');
+    if (showAllBtn) {
+        showAllBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            popup.classList.toggle('show-all');
+            const isShowAll = popup.classList.contains('show-all');
+            const btnSpan = showAllBtn.querySelector('#txt-app-show-all');
+            if (btnSpan && typeof translations !== 'undefined') {
+                const trShowAll = translations[currentLang]?.appCardShowAll || 'Show All';
+                const trShowLess = translations[currentLang]?.appCardShowLess || 'Show Less';
+                btnSpan.textContent = isShowAll ? trShowLess : trShowAll;
+            }
+            if (typeof playInformationSound === 'function') playInformationSound();
+        });
+    }
 
     cards.forEach(card => {
         card.addEventListener('click', () => {
@@ -964,6 +1002,7 @@ function switchEditorMode(mode) {
     editorCurrentMode = mode;
     const editControls = document.getElementById('editor-edit-mode-controls');
     const outpaintControls = document.getElementById('editor-outpaint-mode-controls');
+    const torealControls = document.getElementById('editor-anythingtoreal-mode-controls');
     const selectorLabel = document.getElementById('editor-app-selector-label');
     const selectorIcon = document.querySelector('.editor-app-selector-icon svg');
     const uploadArea = document.getElementById('editor-upload-area');
@@ -971,6 +1010,7 @@ function switchEditorMode(mode) {
 
     if (mode === 'outpaint') {
         if (editControls) editControls.style.display = 'none';
+        if (torealControls) torealControls.style.display = 'none';
         if (outpaintControls) outpaintControls.style.display = 'block';
         if (selectorLabel) selectorLabel.textContent = 'Outpaint';
         if (uploadArea) uploadArea.classList.add('outpaint-mode');
@@ -980,9 +1020,21 @@ function switchEditorMode(mode) {
         }
         if (typeof updateOutpaintPreview === 'function') updateOutpaintPreview();
         if (typeof updateOutpaintPresets === 'function') updateOutpaintPresets();
+    } else if (mode === 'anythingtoreal') {
+        if (editControls) editControls.style.display = 'none';
+        if (outpaintControls) outpaintControls.style.display = 'none';
+        if (torealControls) torealControls.style.display = 'block';
+        if (selectorLabel) selectorLabel.textContent = 'Anything to Real';
+        if (uploadArea) uploadArea.classList.remove('outpaint-mode');
+        if (moderationBtn) moderationBtn.style.display = 'none';
+        if (selectorIcon) {
+            selectorIcon.innerHTML = `<rect x="10" y="10" width="60" height="60" rx="6" stroke="currentColor" stroke-width="2" fill="none"/>`;
+        }
+        if (typeof checkToRealFormReady === 'function') checkToRealFormReady();
     } else {
         if (editControls) editControls.style.display = 'block';
         if (outpaintControls) outpaintControls.style.display = 'none';
+        if (torealControls) torealControls.style.display = 'none';
         if (selectorLabel) selectorLabel.textContent = currentLang === 'tr' ? 'Resim Düzenleme' : 'Image Editing';
         if (uploadArea) uploadArea.classList.remove('outpaint-mode');
         if (moderationBtn) moderationBtn.style.display = 'flex';
@@ -1429,5 +1481,198 @@ document.addEventListener('DOMContentLoaded', () => {
     const apiKeyInput = document.getElementById('api-key');
     if (apiKeyInput) {
         apiKeyInput.addEventListener('input', checkOutpaintFormReady);
+        apiKeyInput.addEventListener('input', checkToRealFormReady);
     }
 });
+
+function checkToRealFormReady() {
+    const apiKeyInput = document.getElementById('api-key');
+    const generateBtn = document.getElementById('toReal-generate-btn');
+    const apiKey = apiKeyInput ? apiKeyInput.value.trim() : '';
+    const hasFile = !!editorSelectedFile;
+
+    if (generateBtn) {
+        if (apiKey && hasFile) {
+            generateBtn.classList.add('ready');
+            generateBtn.disabled = false;
+        } else {
+            generateBtn.classList.remove('ready');
+            generateBtn.disabled = true;
+        }
+    }
+}
+
+function setToRealLoadingState(isLoading) {
+    const generateBtn = document.getElementById('toReal-generate-btn');
+    const fileInput = document.getElementById('editor-file-input');
+    const clearBtn = document.getElementById('editor-clear-btn');
+    const uploadArea = document.getElementById('editor-upload-area');
+
+    const disabledState = !!isLoading;
+
+    if (generateBtn) {
+        generateBtn.disabled = disabledState;
+        if (disabledState) {
+            generateBtn.innerText = (typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'İşleniyor...' : 'Generating...';
+        } else {
+            generateBtn.innerText = (typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Varyasyon Oluştur' : 'Generate Variation';
+        }
+    }
+
+    if (fileInput) fileInput.disabled = disabledState;
+
+    const pointerEvents = disabledState ? 'none' : '';
+    const opacity = disabledState ? '0.5' : '';
+
+    if (clearBtn) {
+        clearBtn.style.pointerEvents = pointerEvents;
+        clearBtn.style.opacity = opacity;
+    }
+
+    if (uploadArea) {
+        uploadArea.style.pointerEvents = pointerEvents;
+        uploadArea.style.opacity = disabledState ? '0.7' : '';
+    }
+}
+
+async function generateToReal() {
+    const apiKeyInput = document.getElementById('api-key');
+    const apiKey = apiKeyInput ? apiKeyInput.value.trim() : '';
+
+    if (!apiKey) {
+        if (typeof playErrorSound === 'function') playErrorSound();
+        showNotification(currentLang === 'tr' ? translations.tr.msgApiKeyRequired : translations.en.msgApiKeyRequired, 'error');
+        return;
+    }
+
+    if (!editorSelectedFile) {
+        if (typeof playErrorSound === 'function') playErrorSound();
+        showNotification(currentLang === 'tr' ? translations.tr.msgImgRequired : translations.en.msgImgRequired, 'error');
+        return;
+    }
+
+    setToRealLoadingState(true);
+
+    if (typeof playStartSound === 'function') playStartSound();
+    let pleaseWaitMsg = typeof translations !== 'undefined' ? (currentLang === 'tr' ? translations.tr.msgPleaseWait : translations.en.msgPleaseWait) : (currentLang === 'tr' ? 'Lütfen sayfayı kapatmayınız.' : 'Please do not close the page.');
+    let genNotif = showNotification((currentLang === 'tr') ? 'İşlem başlatıldı. Sıraya alındı. - ' + pleaseWaitMsg : 'Process started. Queued. - ' + pleaseWaitMsg, 'info', null, 120000, 0);
+
+    try {
+        const payload = {
+            image: editorSelectedFile
+        };
+
+        const response = await fetch('https://create.thena.workers.dev/toRealApp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': apiKey
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.status === 200 && data.image) {
+            await pollToRealGeneration(data.image, apiKey, genNotif, editorSelectedFile);
+        } else {
+            if (genNotif) genNotif();
+            setToRealLoadingState(false);
+            if (typeof playErrorSound === 'function') playErrorSound();
+            if (data.status === 429) {
+                showNotification(currentLang === 'tr' ? translations.tr.msgLimitWait.replace('{0}', data.remainingSeconds) : translations.en.msgLimitWait.replace('{0}', data.remainingSeconds), 'error');
+                return;
+            }
+            if (data.status === 401) {
+                showNotification(currentLang === 'tr' ? translations.tr.invalidApiKey : translations.en.invalidApiKey, 'error');
+                return;
+            }
+            if (data.status === 423) {
+                showNotification(currentLang === 'tr' ? translations.tr.msgThenaOverloaded : translations.en.msgThenaOverloaded, 'error');
+                return;
+            }
+            showNotification(`Error: ${data.content || 'Unknown Error'}`, 'error');
+        }
+    } catch (error) {
+        if (genNotif) genNotif();
+        console.error('ToReal Generation Error:', error);
+        if (typeof playErrorSound === 'function') playErrorSound();
+        showNotification((currentLang === 'tr' ? translations.tr.msgErrorPrefix : translations.en.msgErrorPrefix) + error.message, 'error');
+        setToRealLoadingState(false);
+    }
+}
+
+async function pollToRealGeneration(id, apiKey, genNotif, originalImage) {
+    const generateBtn = document.getElementById('toReal-generate-btn');
+
+    await new Promise(r => setTimeout(r, 2000));
+
+    const checkStatus = async () => {
+        try {
+            const response = await fetch(`https://create.thena.workers.dev/status?id=${id}`, {
+                headers: { 'apikey': apiKey }
+            });
+            const data = await response.json();
+
+            if (data.status === 202) {
+                if (data.progress && generateBtn) {
+                    generateBtn.innerText = currentLang === 'tr' ? `İşleniyor... ${data.progress}%` : `Generating... ${data.progress}%`;
+                }
+                if (genNotif && typeof genNotif.update === 'function') {
+                    const pleaseWaitMsg = typeof translations !== 'undefined' ? (currentLang === 'tr' ? translations.tr.msgPleaseWait : translations.en.msgPleaseWait) : (currentLang === 'tr' ? 'Lütfen sayfayı kapatmayınız.' : 'Please do not close the page.');
+                    genNotif.update(
+                        (currentLang === 'tr') ? `Oluşturuluyor... %${data.progress} - ${pleaseWaitMsg}` : `Generating... ${data.progress}% - ${pleaseWaitMsg}`,
+                        'info',
+                        data.progress
+                    );
+                }
+                setTimeout(checkStatus, 5000);
+
+            } else if (data.status === 200) {
+                if (genNotif) genNotif();
+                if (typeof playSuccessSound === 'function') playSuccessSound();
+
+                let finalUrl = data.image;
+                if (!finalUrl.startsWith('data:image') && !finalUrl.startsWith('http')) {
+                    finalUrl = `data:image/png;base64,${finalUrl}`;
+                }
+
+                showNotification(currentLang === 'tr' ? translations.tr.msgVariationSuccess : translations.en.msgVariationSuccess, 'success', finalUrl);
+
+                if (typeof dbHelper !== 'undefined') {
+                    let originalResized = null;
+                    if (originalImage && originalImage.startsWith('data:image')) {
+                        try {
+                            originalResized = await resizeBase64Image(originalImage, 0.5);
+                        } catch (e) { console.error('Error resizing original image:', e); }
+                    }
+
+                    await dbHelper.add({
+                        url: finalUrl,
+                        prompt: 'Anything to Real',
+                        model: 'Anything to Real',
+                        size: 'Auto',
+                        timestamp: new Date().toISOString(),
+                        moderation: 'high',
+                        features: { type: 'anything_to_real' },
+                        originalImage: originalResized
+                    });
+                }
+
+                setToRealLoadingState(false);
+            } else {
+                if (genNotif) genNotif();
+                if (typeof playErrorSound === 'function') playErrorSound();
+                showNotification((currentLang === 'tr' ? translations.tr.msgErrorPrefix : translations.en.msgErrorPrefix) + data.content, 'error');
+                setToRealLoadingState(false);
+            }
+        } catch (error) {
+            if (genNotif) genNotif();
+            console.error('ToReal Polling Error:', error);
+            if (typeof playErrorSound === 'function') playErrorSound();
+            showNotification((currentLang === 'tr' ? translations.tr.msgErrorPrefix : translations.en.msgErrorPrefix) + error.message, 'error');
+            setToRealLoadingState(false);
+        }
+    };
+    checkStatus();
+}
