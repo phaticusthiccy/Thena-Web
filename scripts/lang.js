@@ -520,12 +520,24 @@ const translations = {
         "outpaintQueued": "Outpaint queued. ",
         "outpaintPixelRequired": "Please enter at least one direction pixel value.",
         "torealBtn": "Generate Variation",
+        "uhdBtn": "4K Upscale",
         "appCardEditName": "Image Editing",
         "appCardEditDesc": "Transform your image with AI, reshape with prompts.",
         "appCardOutpaintName": "Outpaint",
         "appCardOutpaintDesc": "Expand image borders with AI, add new areas.",
         "appCardAnythingToRealName": "Anything to Real",
         "appCardAnythingToRealDesc": "Transform any sketch or 3D view into a realistic image.",
+        "appCardUhdUpscaleName": "4K Upscale",
+        "appCardUhdUpscaleDesc": "Upscale your images to 4K quality.",
+        "appCardFusionName": "Fusion",
+        "appCardFusionDesc": "Fuse two images together using AI.",
+        "editorFusionUploadLabel": "Upload Two Images",
+        "fusionBtn": "Fusion",
+        "fusionUpload1": "Click to upload Image 1",
+        "fusionUpload2": "Click to upload Image 2",
+        "fusionBlendRatio": "Blend Ratio",
+        "fusionImage1": "Image 1",
+        "fusionImage2": "Image 2",
         "appCardShowAll": "Show All",
         "appCardShowLess": "Show Less",
         "appCardStoriesName": "AI Stories",
@@ -1073,12 +1085,24 @@ const translations = {
         "outpaintQueued": "Outpaint sıraya alındı. ",
         "outpaintPixelRequired": "Lütfen en az bir yön için piksel değeri girin.",
         "torealBtn": "Varyasyon Oluştur",
+        "uhdBtn": "4K Upscale",
         "appCardEditName": "Resim Düzenleme",
         "appCardEditDesc": "Görselini AI ile dönüştür, prompt ile yeniden şekillendir.",
         "appCardOutpaintName": "Outpaint",
         "appCardOutpaintDesc": "Görselin kenarlarını AI ile genişlet, yeni alanlar ekle.",
         "appCardAnythingToRealName": "Anything to Real",
         "appCardAnythingToRealDesc": "Çizimleri veya 3D görselleri gerçekçi fotoğraflara dönüştür.",
+        "appCardUhdUpscaleName": "4K Upscale",
+        "appCardUhdUpscaleDesc": "Görsellerinizi 4K kalitesine yükseltin.",
+        "appCardFusionName": "Fusion",
+        "appCardFusionDesc": "İki görseli yapay zeka ile harmanlayarak birleştir.",
+        "editorFusionUploadLabel": "İki Görsel Yükle",
+        "fusionBtn": "Birleştir (Fusion)",
+        "fusionUpload1": "Görsel 1 yüklemek için tıklayın",
+        "fusionUpload2": "Görsel 2 yüklemek için tıklayın",
+        "fusionBlendRatio": "Karışım Oranı",
+        "fusionImage1": "Görsel 1",
+        "fusionImage2": "Görsel 2",
         "appCardShowAll": "Tümünü Göster",
         "appCardShowLess": "Daha Az Göster",
         "appCardStoriesName": "AI Hikayeleri",
@@ -1509,12 +1533,25 @@ function updateLanguage(lang) {
     safelySetText('txt-outpaint-reset', t.outpaintReset);
     safelySetText('txt-outpaint-presets', t.outpaintPresetsTitle);
     safelySetText('txt-toreal-btn', t.torealBtn);
+    safelySetText('txt-uhd-btn', t.uhdBtn);
     safelySetText('txt-app-card-edit', t.appCardEditName);
     safelySetText('txt-app-card-edit-desc', t.appCardEditDesc);
     safelySetText('txt-app-card-outpaint', t.appCardOutpaintName);
     safelySetText('txt-app-card-outpaint-desc', t.appCardOutpaintDesc);
     safelySetText('txt-app-card-anythingtoreal', t.appCardAnythingToRealName);
     safelySetText('txt-app-card-anythingtoreal-desc', t.appCardAnythingToRealDesc);
+    safelySetText('txt-app-card-uhdupscale', t.appCardUhdUpscaleName);
+    safelySetText('txt-app-card-uhdupscale-desc', t.appCardUhdUpscaleDesc);
+    safelySetText('txt-app-card-fusion', t.appCardFusionName);
+    safelySetText('txt-app-card-fusion-desc', t.appCardFusionDesc);
+    safelySetText('label-editor-fusion-upload', t.editorFusionUploadLabel);
+    safelySetText('txt-fusion-btn', t.fusionBtn);
+    safelySetText('txt-fusion-upload-1', t.fusionUpload1);
+    safelySetText('txt-fusion-upload-2', t.fusionUpload2);
+    safelySetText('label-fusion-strength', t.fusionBlendRatio || 'Blend Ratio');
+    if (typeof updateFusionSliderLabel === 'function') {
+        updateFusionSliderLabel();
+    }
 
     const showAllBtn = document.getElementById('editor-app-show-all-btn');
     if (showAllBtn) {
@@ -1530,7 +1567,11 @@ function updateLanguage(lang) {
                 ? t.appCardOutpaintName 
                 : editorCurrentMode === 'anythingtoreal'
                     ? t.appCardAnythingToRealName
-                    : t.appCardEditName;
+                    : editorCurrentMode === 'uhdupscale'
+                        ? t.appCardUhdUpscaleName
+                        : editorCurrentMode === 'fusion'
+                            ? t.appCardFusionName
+                            : t.appCardEditName;
         }
     }
 

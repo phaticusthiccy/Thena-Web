@@ -64,7 +64,7 @@ It unifies four powerful pillars into one seamless **Progressive Web App (PWA)**
 |---|---|
 | 🎨 **AI Image Generation** | Multi-model, multi-style image synthesis with live prompt feedback |
 | 🤖 **AI Roleplay Chat** | Deep narrative conversations with emotion-aware AI characters |
-| 🖼️ **Image Editor** | Professional-grade canvas tools, AI outpainting, filters & markup |
+| 🖼️ **Image Editor** | Professional-grade canvas tools, AI outpainting, 4K upscaling, image fusion, filters & markup |
 | 📖 **AI Stories (Thena Toons)** | Immersive visual webtoon reader with dynamic chapter navigation |
 
 ---
@@ -90,6 +90,8 @@ It unifies four powerful pillars into one seamless **Progressive Web App (PWA)**
 
 ### 🖼️ Professional Image Editor
 - **AI Outpainting** — Seamlessly expand the borders of your generated images using intelligent AI outpainting, adding new areas contextually.
+- **4K Upscaling** — Upscale your images to high-resolution 4K quality with a single click.
+- **Image Fusion** — Blend and fuse two different images together using AI with a customizable blend ratio slider.
 - **Advanced Model Selection** — Choose the right AI model for your edits using dynamic "FAST" (PixelFusion), "BEST" (NeuralFlow), and "MAX" (Synapse) badges, complete with pros/cons insights.
 - **Instant Filter Presets** — Apply Instagram-inspired filters with a real-time localized search bar to find the perfect look.
 - **Manual Fine-Tuning** — Full control over brightness, contrast, saturation, temperature, and more.

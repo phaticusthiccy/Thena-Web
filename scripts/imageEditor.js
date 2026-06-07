@@ -2,6 +2,9 @@ let editorSelectedFile = null;
 let editorModerationLevel = 'high';
 let editorSelectedModel = 'v1';
 let editorCurrentMode = 'edit';
+let fusionSelectedFile1 = null;
+let fusionSelectedFile2 = null;
+let activeFusionUploadIndex = null;
 
 
 
@@ -132,6 +135,116 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Fusion uploads
+    const fusionUpload1 = document.getElementById('editor-fusion-upload-1');
+    const fusionFileInput1 = document.getElementById('editor-fusion-file-input-1');
+    const fusionUpload2 = document.getElementById('editor-fusion-upload-2');
+    const fusionFileInput2 = document.getElementById('editor-fusion-file-input-2');
+
+    if (fusionUpload1 && fusionFileInput1) {
+        fusionUpload1.addEventListener('click', (e) => {
+            if (e.target.closest('#editor-fusion-clear-1')) return;
+            activeFusionUploadIndex = 1;
+            fusionFileInput1.click();
+        });
+
+        fusionUpload1.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fusionUpload1.classList.add('drag-over');
+        });
+
+        fusionUpload1.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            fusionUpload1.classList.remove('drag-over');
+        });
+
+        fusionUpload1.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fusionUpload1.classList.remove('drag-over');
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                activeFusionUploadIndex = 1;
+                handleEditorFile(e.dataTransfer.files[0]);
+            }
+        });
+
+        fusionFileInput1.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+                activeFusionUploadIndex = 1;
+                handleEditorFile(e.target.files[0]);
+            }
+        });
+    }
+
+    if (fusionUpload2 && fusionFileInput2) {
+        fusionUpload2.addEventListener('click', (e) => {
+            if (e.target.closest('#editor-fusion-clear-2')) return;
+            activeFusionUploadIndex = 2;
+            fusionFileInput2.click();
+        });
+
+        fusionUpload2.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fusionUpload2.classList.add('drag-over');
+        });
+
+        fusionUpload2.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            fusionUpload2.classList.remove('drag-over');
+        });
+
+        fusionUpload2.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fusionUpload2.classList.remove('drag-over');
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                activeFusionUploadIndex = 2;
+                handleEditorFile(e.dataTransfer.files[0]);
+            }
+        });
+
+        fusionFileInput2.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+                activeFusionUploadIndex = 2;
+                handleEditorFile(e.target.files[0]);
+            }
+        });
+    }
+
+    const fusionClear1 = document.getElementById('editor-fusion-clear-1');
+    const fusionPreview1 = document.getElementById('editor-fusion-preview-1');
+    const fusionPlaceholder1 = document.getElementById('editor-fusion-placeholder-1');
+    if (fusionClear1) {
+        fusionClear1.addEventListener('click', (e) => {
+            e.stopPropagation();
+            fusionSelectedFile1 = null;
+            if (fusionPreview1) {
+                fusionPreview1.src = '';
+                fusionPreview1.classList.add('hidden');
+            }
+            fusionClear1.classList.add('hidden');
+            if (fusionPlaceholder1) fusionPlaceholder1.style.display = 'flex';
+            if (fusionFileInput1) fusionFileInput1.value = '';
+            checkFusionFormReady();
+        });
+    }
+
+    const fusionClear2 = document.getElementById('editor-fusion-clear-2');
+    const fusionPreview2 = document.getElementById('editor-fusion-preview-2');
+    const fusionPlaceholder2 = document.getElementById('editor-fusion-placeholder-2');
+    if (fusionClear2) {
+        fusionClear2.addEventListener('click', (e) => {
+            e.stopPropagation();
+            fusionSelectedFile2 = null;
+            if (fusionPreview2) {
+                fusionPreview2.src = '';
+                fusionPreview2.classList.add('hidden');
+            }
+            fusionClear2.classList.add('hidden');
+            if (fusionPlaceholder2) fusionPlaceholder2.style.display = 'flex';
+            if (fusionFileInput2) fusionFileInput2.value = '';
+            checkFusionFormReady();
+        });
+    }
+
     if (clearBtn) {
         clearBtn.addEventListener('click', (e) => {
              e.stopPropagation();
@@ -145,6 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof updateOutpaintPresets === 'function') updateOutpaintPresets();
             if (typeof checkOutpaintFormReady === 'function') checkOutpaintFormReady();
             if (typeof checkToRealFormReady === 'function') checkToRealFormReady();
+            if (typeof checkUhdUpscaleFormReady === 'function') checkUhdUpscaleFormReady();
         });
     }
 
@@ -195,7 +309,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             cropImageTarget.src = '';
             cropModal.classList.remove('active');
-            fileInput.value = '';
+            if (editorCurrentMode === 'fusion') {
+                const fInput1 = document.getElementById('editor-fusion-file-input-1');
+                const fInput2 = document.getElementById('editor-fusion-file-input-2');
+                if (fInput1) fInput1.value = '';
+                if (fInput2) fInput2.value = '';
+            } else {
+                fileInput.value = '';
+            }
         });
     }
 
@@ -208,7 +329,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             cropImageTarget.src = '';
             cropModal.classList.remove('active');
-            fileInput.value = '';
+            if (editorCurrentMode === 'fusion') {
+                const fInput1 = document.getElementById('editor-fusion-file-input-1');
+                const fInput2 = document.getElementById('editor-fusion-file-input-2');
+                if (fInput1) fInput1.value = '';
+                if (fInput2) fInput2.value = '';
+            } else {
+                fileInput.value = '';
+            }
         });
     }
 
@@ -220,21 +348,51 @@ document.addEventListener('DOMContentLoaded', () => {
             if (canvas) {
                 const croppedData = canvas.toDataURL('image/jpeg', 0.9);
                 
-                editorSelectedFile = croppedData;
-                previewImg.onload = () => {
-                    if (typeof checkEditorFormReady === 'function') checkEditorFormReady();
-                    if (typeof checkOutpaintFormReady === 'function') checkOutpaintFormReady();
-                    if (typeof checkToRealFormReady === 'function') checkToRealFormReady();
-                    if (typeof updateOutpaintPreview === 'function') updateOutpaintPreview();
-                    if (typeof updateOutpaintPresets === 'function') updateOutpaintPresets();
-                };
-                previewImg.src = editorSelectedFile;
-                previewImg.classList.remove('hidden');
-                clearBtn.classList.remove('hidden');
-                placeholder.style.display = 'none';
-                
-                if (typeof playSuccessSound === 'function') playSuccessSound();
-                showNotification(typeof currentLang !== 'undefined' && currentLang === 'tr' ? translations.tr.msgImgUploadSuccess : translations.en.msgImgUploadSuccess, 'success');
+                if (editorCurrentMode === 'fusion') {
+                    if (activeFusionUploadIndex === 1) {
+                        fusionSelectedFile1 = croppedData;
+                        const pImg = document.getElementById('editor-fusion-preview-1');
+                        const pClear = document.getElementById('editor-fusion-clear-1');
+                        const pPlaceholder = document.getElementById('editor-fusion-placeholder-1');
+                        if (pImg) {
+                            pImg.src = fusionSelectedFile1;
+                            pImg.classList.remove('hidden');
+                        }
+                        if (pClear) pClear.classList.remove('hidden');
+                        if (pPlaceholder) pPlaceholder.style.display = 'none';
+                    } else if (activeFusionUploadIndex === 2) {
+                        fusionSelectedFile2 = croppedData;
+                        const pImg = document.getElementById('editor-fusion-preview-2');
+                        const pClear = document.getElementById('editor-fusion-clear-2');
+                        const pPlaceholder = document.getElementById('editor-fusion-placeholder-2');
+                        if (pImg) {
+                            pImg.src = fusionSelectedFile2;
+                            pImg.classList.remove('hidden');
+                        }
+                        if (pClear) pClear.classList.remove('hidden');
+                        if (pPlaceholder) pPlaceholder.style.display = 'none';
+                    }
+                    if (typeof playSuccessSound === 'function') playSuccessSound();
+                    showNotification(typeof currentLang !== 'undefined' && currentLang === 'tr' ? translations.tr.msgImgUploadSuccess : translations.en.msgImgUploadSuccess, 'success');
+                    if (typeof checkFusionFormReady === 'function') checkFusionFormReady();
+                } else {
+                    editorSelectedFile = croppedData;
+                    previewImg.onload = () => {
+                        if (typeof checkEditorFormReady === 'function') checkEditorFormReady();
+                        if (typeof checkOutpaintFormReady === 'function') checkOutpaintFormReady();
+                        if (typeof checkToRealFormReady === 'function') checkToRealFormReady();
+                        if (typeof checkUhdUpscaleFormReady === 'function') checkUhdUpscaleFormReady();
+                        if (typeof updateOutpaintPreview === 'function') updateOutpaintPreview();
+                        if (typeof updateOutpaintPresets === 'function') updateOutpaintPresets();
+                    };
+                    previewImg.src = editorSelectedFile;
+                    previewImg.classList.remove('hidden');
+                    clearBtn.classList.remove('hidden');
+                    placeholder.style.display = 'none';
+                    
+                    if (typeof playSuccessSound === 'function') playSuccessSound();
+                    showNotification(typeof currentLang !== 'undefined' && currentLang === 'tr' ? translations.tr.msgImgUploadSuccess : translations.en.msgImgUploadSuccess, 'success');
+                }
             }
             
             if (editorCropper) {
@@ -243,7 +401,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             cropImageTarget.src = '';
             cropModal.classList.remove('active');
-            fileInput.value = '';
+            if (editorCurrentMode === 'fusion') {
+                const fInput1 = document.getElementById('editor-fusion-file-input-1');
+                const fInput2 = document.getElementById('editor-fusion-file-input-2');
+                if (fInput1) fInput1.value = '';
+                if (fInput2) fInput2.value = '';
+            } else {
+                fileInput.value = '';
+            }
         });
     }
 
@@ -290,6 +455,19 @@ document.addEventListener('DOMContentLoaded', () => {
     if (toRealGenerateBtn) {
         toRealGenerateBtn.addEventListener('click', generateToReal);
     }
+    const toUHDGenerateBtn = document.getElementById('toUHD-generate-btn');
+    if (toUHDGenerateBtn) {
+        toUHDGenerateBtn.addEventListener('click', generateUhdUpscale);
+    }
+    const fusionGenerateBtn = document.getElementById('fusion-generate-btn');
+    if (fusionGenerateBtn) {
+        fusionGenerateBtn.addEventListener('click', generateFusion);
+    }
+    const fusionSlider = document.getElementById('fusion-weight-slider');
+    if (fusionSlider) {
+        fusionSlider.addEventListener('input', updateFusionSliderLabel);
+        updateFusionSliderLabel();
+    }
     const editorApiKeyInput = document.getElementById('api-key');
     const editorPromptInput = document.getElementById('editor-prompt');
 
@@ -297,6 +475,8 @@ document.addEventListener('DOMContentLoaded', () => {
         editorApiKeyInput.addEventListener('input', () => {
             if (typeof checkEditorFormReady === 'function') checkEditorFormReady();
             if (typeof checkToRealFormReady === 'function') checkToRealFormReady();
+            if (typeof checkUhdUpscaleFormReady === 'function') checkUhdUpscaleFormReady();
+            if (typeof checkFusionFormReady === 'function') checkFusionFormReady();
         });
     }
     if (editorPromptInput) editorPromptInput.addEventListener('input', checkEditorFormReady);
@@ -1003,6 +1183,10 @@ function switchEditorMode(mode) {
     const editControls = document.getElementById('editor-edit-mode-controls');
     const outpaintControls = document.getElementById('editor-outpaint-mode-controls');
     const torealControls = document.getElementById('editor-anythingtoreal-mode-controls');
+    const uhdupscaleControls = document.getElementById('editor-uhdupscale-mode-controls');
+    const fusionControls = document.getElementById('editor-fusion-mode-controls');
+    const normalUploadGroup = document.getElementById('editor-normal-upload-group');
+    const fusionUploadGroup = document.getElementById('editor-fusion-upload-group');
     const selectorLabel = document.getElementById('editor-app-selector-label');
     const selectorIcon = document.querySelector('.editor-app-selector-icon svg');
     const uploadArea = document.getElementById('editor-upload-area');
@@ -1011,7 +1195,11 @@ function switchEditorMode(mode) {
     if (mode === 'outpaint') {
         if (editControls) editControls.style.display = 'none';
         if (torealControls) torealControls.style.display = 'none';
+        if (uhdupscaleControls) uhdupscaleControls.style.display = 'none';
+        if (fusionControls) fusionControls.style.display = 'none';
         if (outpaintControls) outpaintControls.style.display = 'block';
+        if (normalUploadGroup) normalUploadGroup.style.display = 'block';
+        if (fusionUploadGroup) fusionUploadGroup.style.display = 'none';
         if (selectorLabel) selectorLabel.textContent = 'Outpaint';
         if (uploadArea) uploadArea.classList.add('outpaint-mode');
         if (moderationBtn) moderationBtn.style.display = 'none';
@@ -1023,18 +1211,56 @@ function switchEditorMode(mode) {
     } else if (mode === 'anythingtoreal') {
         if (editControls) editControls.style.display = 'none';
         if (outpaintControls) outpaintControls.style.display = 'none';
+        if (uhdupscaleControls) uhdupscaleControls.style.display = 'none';
+        if (fusionControls) fusionControls.style.display = 'none';
         if (torealControls) torealControls.style.display = 'block';
+        if (normalUploadGroup) normalUploadGroup.style.display = 'block';
+        if (fusionUploadGroup) fusionUploadGroup.style.display = 'none';
         if (selectorLabel) selectorLabel.textContent = 'Anything to Real';
         if (uploadArea) uploadArea.classList.remove('outpaint-mode');
         if (moderationBtn) moderationBtn.style.display = 'none';
         if (selectorIcon) {
-            selectorIcon.innerHTML = `<rect x="10" y="10" width="60" height="60" rx="6" stroke="currentColor" stroke-width="2" fill="none"/>`;
+            selectorIcon.innerHTML = `<circle cx="12" cy="12" r="9" stroke-dasharray="3 2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/><line x1="12" y1="3" x2="12" y2="21"/>`;
         }
         if (typeof checkToRealFormReady === 'function') checkToRealFormReady();
+    } else if (mode === 'uhdupscale') {
+        if (editControls) editControls.style.display = 'none';
+        if (outpaintControls) outpaintControls.style.display = 'none';
+        if (torealControls) torealControls.style.display = 'none';
+        if (fusionControls) fusionControls.style.display = 'none';
+        if (uhdupscaleControls) uhdupscaleControls.style.display = 'block';
+        if (normalUploadGroup) normalUploadGroup.style.display = 'block';
+        if (fusionUploadGroup) fusionUploadGroup.style.display = 'none';
+        if (selectorLabel) selectorLabel.textContent = 'UHD Upscale';
+        if (uploadArea) uploadArea.classList.remove('outpaint-mode');
+        if (moderationBtn) moderationBtn.style.display = 'none';
+        if (selectorIcon) {
+            selectorIcon.innerHTML = `<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="2" fill="none"/><polyline points="17 8 12 3 7 8" stroke="currentColor" stroke-width="2" fill="none"/><line x1="12" y1="3" x2="12" y2="15" stroke="currentColor" stroke-width="2"/>`;
+        }
+        if (typeof checkUhdUpscaleFormReady === 'function') checkUhdUpscaleFormReady();
+    } else if (mode === 'fusion') {
+        if (editControls) editControls.style.display = 'none';
+        if (outpaintControls) outpaintControls.style.display = 'none';
+        if (torealControls) torealControls.style.display = 'none';
+        if (uhdupscaleControls) uhdupscaleControls.style.display = 'none';
+        if (fusionControls) fusionControls.style.display = 'block';
+        if (normalUploadGroup) normalUploadGroup.style.display = 'none';
+        if (fusionUploadGroup) fusionUploadGroup.style.display = 'block';
+        if (selectorLabel) selectorLabel.textContent = 'Fusion';
+        if (uploadArea) uploadArea.classList.remove('outpaint-mode');
+        if (moderationBtn) moderationBtn.style.display = 'none';
+        if (selectorIcon) {
+            selectorIcon.innerHTML = `<circle cx="9" cy="12" r="6" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="15" cy="12" r="6" stroke="currentColor" stroke-width="2" fill="none"/>`;
+        }
+        if (typeof checkFusionFormReady === 'function') checkFusionFormReady();
     } else {
         if (editControls) editControls.style.display = 'block';
         if (outpaintControls) outpaintControls.style.display = 'none';
         if (torealControls) torealControls.style.display = 'none';
+        if (uhdupscaleControls) uhdupscaleControls.style.display = 'none';
+        if (fusionControls) fusionControls.style.display = 'none';
+        if (normalUploadGroup) normalUploadGroup.style.display = 'block';
+        if (fusionUploadGroup) fusionUploadGroup.style.display = 'none';
         if (selectorLabel) selectorLabel.textContent = currentLang === 'tr' ? 'Resim Düzenleme' : 'Image Editing';
         if (uploadArea) uploadArea.classList.remove('outpaint-mode');
         if (moderationBtn) moderationBtn.style.display = 'flex';
@@ -1672,6 +1898,441 @@ async function pollToRealGeneration(id, apiKey, genNotif, originalImage) {
             if (typeof playErrorSound === 'function') playErrorSound();
             showNotification((currentLang === 'tr' ? translations.tr.msgErrorPrefix : translations.en.msgErrorPrefix) + error.message, 'error');
             setToRealLoadingState(false);
+        }
+    };
+    checkStatus();
+}
+
+function checkUhdUpscaleFormReady() {
+    const apiKeyInput = document.getElementById('api-key');
+    const generateBtn = document.getElementById('toUHD-generate-btn');
+    const apiKey = apiKeyInput ? apiKeyInput.value.trim() : '';
+    const hasFile = !!editorSelectedFile;
+
+    if (generateBtn) {
+        if (apiKey && hasFile) {
+            generateBtn.classList.add('ready');
+            generateBtn.disabled = false;
+        } else {
+            generateBtn.classList.remove('ready');
+            generateBtn.disabled = true;
+        }
+    }
+}
+
+function setUhdUpscaleLoadingState(isLoading) {
+    const generateBtn = document.getElementById('toUHD-generate-btn');
+    const fileInput = document.getElementById('editor-file-input');
+    const clearBtn = document.getElementById('editor-clear-btn');
+    const uploadArea = document.getElementById('editor-upload-area');
+
+    const disabledState = !!isLoading;
+
+    if (generateBtn) {
+        generateBtn.disabled = disabledState;
+        if (disabledState) {
+            generateBtn.innerText = (typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'İşleniyor...' : 'Generating...';
+        } else {
+            generateBtn.innerText = (typeof translations !== 'undefined' && translations[currentLang]) ? (translations[currentLang].uhdBtn || 'UHD Upscale') : 'UHD Upscale';
+        }
+    }
+
+    if (fileInput) fileInput.disabled = disabledState;
+
+    const pointerEvents = disabledState ? 'none' : '';
+    const opacity = disabledState ? '0.5' : '';
+
+    if (clearBtn) {
+        clearBtn.style.pointerEvents = pointerEvents;
+        clearBtn.style.opacity = opacity;
+    }
+
+    if (uploadArea) {
+        uploadArea.style.pointerEvents = pointerEvents;
+        uploadArea.style.opacity = disabledState ? '0.7' : '';
+    }
+}
+
+async function generateUhdUpscale() {
+    const apiKeyInput = document.getElementById('api-key');
+    const apiKey = apiKeyInput ? apiKeyInput.value.trim() : '';
+
+    if (!apiKey) {
+        if (typeof playErrorSound === 'function') playErrorSound();
+        showNotification(currentLang === 'tr' ? translations.tr.msgApiKeyRequired : translations.en.msgApiKeyRequired, 'error');
+        return;
+    }
+
+    if (!editorSelectedFile) {
+        if (typeof playErrorSound === 'function') playErrorSound();
+        showNotification(currentLang === 'tr' ? translations.tr.msgImgRequired : translations.en.msgImgRequired, 'error');
+        return;
+    }
+
+    setUhdUpscaleLoadingState(true);
+
+    if (typeof playStartSound === 'function') playStartSound();
+    let pleaseWaitMsg = typeof translations !== 'undefined' ? (currentLang === 'tr' ? translations.tr.msgPleaseWait : translations.en.msgPleaseWait) : (currentLang === 'tr' ? 'Lütfen sayfayı kapatmayınız.' : 'Please do not close the page.');
+    let genNotif = showNotification((currentLang === 'tr') ? 'İşlem başlatıldı. Sıraya alındı. - ' + pleaseWaitMsg : 'Process started. Queued. - ' + pleaseWaitMsg, 'info', null, 120000, 0);
+
+    try {
+        const payload = {
+            image: editorSelectedFile
+        };
+
+        const response = await fetch('https://create.thena.workers.dev/toUHDApp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': apiKey
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.status === 200 && data.image) {
+            await pollUhdUpscaleGeneration(data.image, apiKey, genNotif, editorSelectedFile);
+        } else {
+            if (genNotif) genNotif();
+            setUhdUpscaleLoadingState(false);
+            if (typeof playErrorSound === 'function') playErrorSound();
+            if (data.status === 429) {
+                showNotification(currentLang === 'tr' ? translations.tr.msgLimitWait.replace('{0}', data.remainingSeconds) : translations.en.msgLimitWait.replace('{0}', data.remainingSeconds), 'error');
+                return;
+            }
+            if (data.status === 401) {
+                showNotification(currentLang === 'tr' ? translations.tr.invalidApiKey : translations.en.invalidApiKey, 'error');
+                return;
+            }
+            if (data.status === 423) {
+                showNotification(currentLang === 'tr' ? translations.tr.msgThenaOverloaded : translations.en.msgThenaOverloaded, 'error');
+                return;
+            }
+            showNotification(`Error: ${data.content || 'Unknown Error'}`, 'error');
+        }
+    } catch (error) {
+        if (genNotif) genNotif();
+        console.error('UHD Upscale Generation Error:', error);
+        if (typeof playErrorSound === 'function') playErrorSound();
+        showNotification((currentLang === 'tr' ? translations.tr.msgErrorPrefix : translations.en.msgErrorPrefix) + error.message, 'error');
+        setUhdUpscaleLoadingState(false);
+    }
+}
+
+async function pollUhdUpscaleGeneration(id, apiKey, genNotif, originalImage) {
+    const generateBtn = document.getElementById('toUHD-generate-btn');
+
+    await new Promise(r => setTimeout(r, 2000));
+
+    const checkStatus = async () => {
+        try {
+            const response = await fetch(`https://create.thena.workers.dev/status?id=${id}`, {
+                headers: { 'apikey': apiKey }
+            });
+            const data = await response.json();
+
+            if (data.status === 202) {
+                if (data.progress && generateBtn) {
+                    generateBtn.innerText = currentLang === 'tr' ? `İşleniyor... ${data.progress}%` : `Generating... ${data.progress}%`;
+                }
+                if (genNotif && typeof genNotif.update === 'function') {
+                    const pleaseWaitMsg = typeof translations !== 'undefined' ? (currentLang === 'tr' ? translations.tr.msgPleaseWait : translations.en.msgPleaseWait) : (currentLang === 'tr' ? 'Lütfen sayfayı kapatmayınız.' : 'Please do not close the page.');
+                    genNotif.update(
+                        (currentLang === 'tr') ? `Oluşturuluyor... %${data.progress} - ${pleaseWaitMsg}` : `Generating... ${data.progress}% - ${pleaseWaitMsg}`,
+                        'info',
+                        data.progress
+                    );
+                }
+                setTimeout(checkStatus, 5000);
+
+            } else if (data.status === 200) {
+                if (genNotif) genNotif();
+                if (typeof playSuccessSound === 'function') playSuccessSound();
+
+                let finalUrl = data.image;
+                if (!finalUrl.startsWith('data:image') && !finalUrl.startsWith('http')) {
+                    finalUrl = `data:image/png;base64,${finalUrl}`;
+                }
+
+                showNotification(currentLang === 'tr' ? translations.tr.msgVariationSuccess : translations.en.msgVariationSuccess, 'success', finalUrl);
+
+                if (typeof dbHelper !== 'undefined') {
+                    let originalResized = null;
+                    if (originalImage && originalImage.startsWith('data:image')) {
+                        try {
+                            originalResized = await resizeBase64Image(originalImage, 0.5);
+                        } catch (e) { console.error('Error resizing original image:', e); }
+                    }
+
+                    await dbHelper.add({
+                        url: finalUrl,
+                        prompt: '4K Upscale',
+                        model: '4K Upscale',
+                        size: 'Auto',
+                        timestamp: new Date().toISOString(),
+                        moderation: 'high',
+                        features: { type: 'uhd_upscale', highRes: true },
+                        originalImage: originalResized
+                    });
+                }
+
+                setUhdUpscaleLoadingState(false);
+            } else {
+                if (genNotif) genNotif();
+                if (typeof playErrorSound === 'function') playErrorSound();
+                showNotification((currentLang === 'tr' ? translations.tr.msgErrorPrefix : translations.en.msgErrorPrefix) + data.content, 'error');
+                setUhdUpscaleLoadingState(false);
+            }
+        } catch (error) {
+            if (genNotif) genNotif();
+            console.error('UHD Upscale Polling Error:', error);
+            if (typeof playErrorSound === 'function') playErrorSound();
+            showNotification((currentLang === 'tr' ? translations.tr.msgErrorPrefix : translations.en.msgErrorPrefix) + error.message, 'error');
+            setUhdUpscaleLoadingState(false);
+        }
+    };
+    checkStatus();
+}
+
+function updateFusionSliderLabel() {
+    const slider = document.getElementById('fusion-weight-slider');
+    const label = document.getElementById('txt-fusion-weight-label');
+    if (!slider || !label) return;
+
+    const val = parseInt(slider.value, 10);
+    const w2 = val;
+    const w1 = 100 - val;
+
+    const isTR = (typeof currentLang !== 'undefined' && currentLang === 'tr');
+    const img1Label = (typeof translations !== 'undefined' && translations[currentLang]?.fusionImage1) 
+        ? translations[currentLang].fusionImage1 
+        : (isTR ? 'Görsel 1' : 'Image 1');
+    const img2Label = (typeof translations !== 'undefined' && translations[currentLang]?.fusionImage2) 
+        ? translations[currentLang].fusionImage2 
+        : (isTR ? 'Görsel 2' : 'Image 2');
+
+    if (isTR) {
+        label.innerText = `${img1Label}: %${w1} - ${img2Label}: %${w2}`;
+    } else {
+        label.innerText = `${img1Label}: ${w1}% - ${img2Label}: ${w2}%`;
+    }
+}
+
+function checkFusionFormReady() {
+    const apiKeyInput = document.getElementById('api-key');
+    const generateBtn = document.getElementById('fusion-generate-btn');
+    const apiKey = apiKeyInput ? apiKeyInput.value.trim() : '';
+    const hasFiles = !!fusionSelectedFile1 && !!fusionSelectedFile2;
+
+    if (generateBtn) {
+        if (apiKey && hasFiles) {
+            generateBtn.classList.add('ready');
+            generateBtn.disabled = false;
+        } else {
+            generateBtn.classList.remove('ready');
+            generateBtn.disabled = true;
+        }
+    }
+}
+
+function setFusionLoadingState(isLoading) {
+    const generateBtn = document.getElementById('fusion-generate-btn');
+    const fileInput1 = document.getElementById('editor-fusion-file-input-1');
+    const fileInput2 = document.getElementById('editor-fusion-file-input-2');
+    const clearBtn1 = document.getElementById('editor-fusion-clear-1');
+    const clearBtn2 = document.getElementById('editor-fusion-clear-2');
+    const uploadArea1 = document.getElementById('editor-fusion-upload-1');
+    const uploadArea2 = document.getElementById('editor-fusion-upload-2');
+
+    const disabledState = !!isLoading;
+
+    if (generateBtn) {
+        generateBtn.disabled = disabledState;
+        if (disabledState) {
+            generateBtn.innerText = (typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'İşleniyor...' : 'Generating...';
+        } else {
+            generateBtn.innerText = (typeof translations !== 'undefined' && translations[currentLang]) ? (translations[currentLang].fusionBtn || 'Fusion') : 'Fusion';
+        }
+    }
+
+    if (fileInput1) fileInput1.disabled = disabledState;
+    if (fileInput2) fileInput2.disabled = disabledState;
+
+    const pointerEvents = disabledState ? 'none' : '';
+    const opacity = disabledState ? '0.5' : '';
+
+    if (clearBtn1) {
+        clearBtn1.style.pointerEvents = pointerEvents;
+        clearBtn1.style.opacity = opacity;
+    }
+    if (clearBtn2) {
+        clearBtn2.style.pointerEvents = pointerEvents;
+        clearBtn2.style.opacity = opacity;
+    }
+
+    if (uploadArea1) {
+        uploadArea1.style.pointerEvents = pointerEvents;
+        uploadArea1.style.opacity = disabledState ? '0.7' : '';
+    }
+    if (uploadArea2) {
+        uploadArea2.style.pointerEvents = pointerEvents;
+        uploadArea2.style.opacity = disabledState ? '0.7' : '';
+    }
+}
+
+async function generateFusion() {
+    const apiKeyInput = document.getElementById('api-key');
+    const apiKey = apiKeyInput ? apiKeyInput.value.trim() : '';
+
+    if (!apiKey) {
+        if (typeof playErrorSound === 'function') playErrorSound();
+        showNotification(currentLang === 'tr' ? translations.tr.msgApiKeyRequired : translations.en.msgApiKeyRequired, 'error');
+        return;
+    }
+
+    if (!fusionSelectedFile1 || !fusionSelectedFile2) {
+        if (typeof playErrorSound === 'function') playErrorSound();
+        showNotification(currentLang === 'tr' ? 'Lütfen iki adet resim yükleyin.' : 'Please upload two images.', 'error');
+        return;
+    }
+
+    setFusionLoadingState(true);
+
+    if (typeof playStartSound === 'function') playStartSound();
+    let pleaseWaitMsg = typeof translations !== 'undefined' ? (currentLang === 'tr' ? translations.tr.msgPleaseWait : translations.en.msgPleaseWait) : (currentLang === 'tr' ? 'Lütfen sayfayı kapatmayınız.' : 'Please do not close the page.');
+    let genNotif = showNotification((currentLang === 'tr') ? 'İşlem başlatıldı. Sıraya alındı. - ' + pleaseWaitMsg : 'Process started. Queued. - ' + pleaseWaitMsg, 'info', null, 120000, 0);
+
+    try {
+        const slider = document.getElementById('fusion-weight-slider');
+        const sliderVal = slider ? parseInt(slider.value, 10) : 50;
+        const weight2 = sliderVal / 100;
+        const weight1 = (100 - sliderVal) / 100;
+
+        const payload = {
+            image1: fusionSelectedFile1,
+            image2: fusionSelectedFile2,
+            weight1: weight1,
+            weight2: weight2
+        };
+
+        const response = await fetch('https://create.thena.workers.dev/fusionApp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': apiKey
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.status === 200 && data.image) {
+            await pollFusionGeneration(data.image, apiKey, genNotif, fusionSelectedFile1, fusionSelectedFile2);
+        } else {
+            if (genNotif) genNotif();
+            setFusionLoadingState(false);
+            if (typeof playErrorSound === 'function') playErrorSound();
+            if (data.status === 429) {
+                showNotification(currentLang === 'tr' ? translations.tr.msgLimitWait.replace('{0}', data.remainingSeconds) : translations.en.msgLimitWait.replace('{0}', data.remainingSeconds), 'error');
+                return;
+            }
+            if (data.status === 401) {
+                showNotification(currentLang === 'tr' ? translations.tr.invalidApiKey : translations.en.invalidApiKey, 'error');
+                return;
+            }
+            if (data.status === 423) {
+                showNotification(currentLang === 'tr' ? translations.tr.msgThenaOverloaded : translations.en.msgThenaOverloaded, 'error');
+                return;
+            }
+            showNotification(`Error: ${data.content || 'Unknown Error'}`, 'error');
+        }
+    } catch (error) {
+        if (genNotif) genNotif();
+        console.error('Fusion Generation Error:', error);
+        if (typeof playErrorSound === 'function') playErrorSound();
+        showNotification((currentLang === 'tr' ? translations.tr.msgErrorPrefix : translations.en.msgErrorPrefix) + error.message, 'error');
+        setFusionLoadingState(false);
+    }
+}
+
+async function pollFusionGeneration(id, apiKey, genNotif, originalImage1, originalImage2) {
+    const generateBtn = document.getElementById('fusion-generate-btn');
+
+    await new Promise(r => setTimeout(r, 2000));
+
+    const checkStatus = async () => {
+        try {
+            const response = await fetch(`https://create.thena.workers.dev/status?id=${id}`, {
+                headers: { 'apikey': apiKey }
+            });
+            const data = await response.json();
+
+            if (data.status === 202) {
+                if (data.progress && generateBtn) {
+                    generateBtn.innerText = currentLang === 'tr' ? `İşleniyor... ${data.progress}%` : `Generating... ${data.progress}%`;
+                }
+                if (genNotif && typeof genNotif.update === 'function') {
+                    const pleaseWaitMsg = typeof translations !== 'undefined' ? (currentLang === 'tr' ? translations.tr.msgPleaseWait : translations.en.msgPleaseWait) : (currentLang === 'tr' ? 'Lütfen sayfayı kapatmayınız.' : 'Please do not close the page.');
+                    genNotif.update(
+                        (currentLang === 'tr') ? `Oluşturuluyor... %${data.progress} - ${pleaseWaitMsg}` : `Generating... ${data.progress}% - ${pleaseWaitMsg}`,
+                        'info',
+                        data.progress
+                    );
+                }
+                setTimeout(checkStatus, 5000);
+
+            } else if (data.status === 200) {
+                if (genNotif) genNotif();
+                if (typeof playSuccessSound === 'function') playSuccessSound();
+
+                let finalUrl = data.image;
+                if (!finalUrl.startsWith('data:image') && !finalUrl.startsWith('http')) {
+                    finalUrl = `data:image/png;base64,${finalUrl}`;
+                }
+
+                showNotification(currentLang === 'tr' ? translations.tr.msgVariationSuccess : translations.en.msgVariationSuccess, 'success', finalUrl);
+
+                if (typeof dbHelper !== 'undefined') {
+                    let originalResized1 = null;
+                    let originalResized2 = null;
+                    if (originalImage1 && originalImage1.startsWith('data:image')) {
+                        try {
+                            originalResized1 = await resizeBase64Image(originalImage1, 0.5);
+                        } catch (e) { console.error('Error resizing original image 1:', e); }
+                    }
+                    if (originalImage2 && originalImage2.startsWith('data:image')) {
+                        try {
+                            originalResized2 = await resizeBase64Image(originalImage2, 0.5);
+                        } catch (e) { console.error('Error resizing original image 2:', e); }
+                    }
+
+                    await dbHelper.add({
+                        url: finalUrl,
+                        prompt: 'Fusion',
+                        model: 'Fusion',
+                        size: 'Auto',
+                        timestamp: new Date().toISOString(),
+                        moderation: 'high',
+                        features: { type: 'fusion' },
+                        originalImage: originalResized1,
+                        originalImage2: originalResized2
+                    });
+                }
+
+                setFusionLoadingState(false);
+            } else {
+                if (genNotif) genNotif();
+                if (typeof playErrorSound === 'function') playErrorSound();
+                showNotification((currentLang === 'tr' ? translations.tr.msgErrorPrefix : translations.en.msgErrorPrefix) + data.content, 'error');
+                setFusionLoadingState(false);
+            }
+        } catch (error) {
+            if (genNotif) genNotif();
+            console.error('Fusion Polling Error:', error);
+            if (typeof playErrorSound === 'function') playErrorSound();
+            showNotification((currentLang === 'tr' ? translations.tr.msgErrorPrefix : translations.en.msgErrorPrefix) + error.message, 'error');
+            setFusionLoadingState(false);
         }
     };
     checkStatus();

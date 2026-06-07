@@ -77,8 +77,7 @@
         "Thena Pixel": "thenaPixel",
         "Image Editor": "imageEditor",
         "Thena Toonish": "thenaToonish",
-        "Thena Apex": "thenaApex",
-        "Anything to Real": "thenaToReal"
+        "Thena Apex": "thenaApex"
     };
 
     async function fetchModels() {

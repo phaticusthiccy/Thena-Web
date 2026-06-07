@@ -737,18 +737,42 @@
     max-height: 188px;
     overflow-y: hidden;
     padding-right: 2px;
+    transition: max-height 0.3s ease-in-out;
 }
 
-.editor-app-popup-list #editor-app-card-anythingtoreal {
-    display: none;
+.editor-app-popup-list #editor-app-card-anythingtoreal,
+.editor-app-popup-list #editor-app-card-uhdupscale,
+.editor-app-popup-list #editor-app-card-fusion {
+    max-height: 0;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    border-color: transparent;
+    margin-bottom: -8px;
+    overflow: hidden;
+    pointer-events: none;
+    transition: all 0.3s ease-in-out;
 }
 
 .editor-app-popup.show-all .editor-app-popup-list {
+    max-height: 50vh;
     overflow-y: auto;
 }
 
-.editor-app-popup.show-all .editor-app-popup-list #editor-app-card-anythingtoreal {
-    display: flex;
+.editor-app-popup.show-all .editor-app-popup-list #editor-app-card-anythingtoreal,
+.editor-app-popup.show-all .editor-app-popup-list #editor-app-card-uhdupscale,
+.editor-app-popup.show-all .editor-app-popup-list #editor-app-card-fusion {
+    max-height: 90px;
+    opacity: 1;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-color: rgba(255,255,255,0.05);
+    margin-bottom: 0;
+    pointer-events: auto;
 }
 
 .editor-app-show-all-btn {
@@ -814,6 +838,115 @@
 
 .editor-app-card .arsvg-sketch {
     animation: arsvg-sketch-fade 3s ease-in-out infinite;
+}
+
+#editor-app-card-uhdupscale.active {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.06);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.12);
+}
+
+#editor-app-card-uhdupscale.active .editor-app-card-name {
+    color: #3b82f6;
+}
+
+@keyframes uhdsvg-arrow-pulse {
+    0%, 100% { stroke-opacity: 0.8; filter: drop-shadow(0 0 2px rgba(0, 195, 255, 0.4)); }
+    50% { stroke-opacity: 1; filter: drop-shadow(0 0 6px rgba(0, 195, 255, 0.8)); }
+}
+
+.editor-app-card .uhdsvg-arrow {
+    animation: uhdsvg-arrow-pulse 2s ease-in-out infinite;
+}
+
+#editor-app-card-fusion.active {
+    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.06);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.12);
+}
+
+#editor-app-card-fusion.active .editor-app-card-name {
+    color: #10b981;
+}
+
+.fusion-slider-container {
+    margin-bottom: 20px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 14px 16px;
+    box-sizing: border-box;
+}
+
+.fusion-slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    font-family: 'Inter', sans-serif;
+}
+
+#label-fusion-strength {
+    color: #e2e8f0;
+    text-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+}
+
+#txt-fusion-weight-label {
+    color: #a78bfa;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    text-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
+}
+
+.fusion-slider-input {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(to right, #10b981, #8b5cf6);
+    outline: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.fusion-slider-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid #8b5cf6;
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.8), 0 0 20px rgba(16, 185, 129, 0.4);
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.fusion-slider-input::-webkit-slider-thumb:hover {
+    transform: scale(1.25);
+    border-color: #10b981;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.9), 0 0 25px rgba(139, 92, 246, 0.6);
+}
+
+.fusion-slider-input::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid #8b5cf6;
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.8), 0 0 20px rgba(16, 185, 129, 0.4);
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.fusion-slider-input::-moz-range-thumb:hover {
+    transform: scale(1.25);
+    border-color: #10b981;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.9), 0 0 25px rgba(139, 92, 246, 0.6);
 }
 
 

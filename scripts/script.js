@@ -525,7 +525,7 @@ const dbHelper = {
                                 if (item.model) {
                                     if (fm.includes(item.model)) {
                                         itemModelMatches = true;
-                                    } else if (fm.includes('Image Editor') && item.model.toUpperCase().startsWith('IMAGE EDITOR') || item.model.toUpperCase().startsWith('ANYTHING TO REAL')) {
+                                    } else if (fm.includes('Image Editor') && (item.model.toUpperCase().startsWith('IMAGE EDITOR') || item.model.toUpperCase().startsWith('ANYTHING TO REAL') || item.model.toUpperCase().startsWith('4K UPSCALE') || item.model.toUpperCase().startsWith('FUSION'))) {
                                         itemModelMatches = true;
                                     }
                                 }
@@ -4100,19 +4100,41 @@ function openLightbox(data) {
     const originalPreview = document.getElementById('lightbox-original-preview');
     console.log(data)
     if(originalPreview) {
-        const isEditorApp = data.model && (data.model.toUpperCase().includes('IMAGE EDITOR') || data.model.toUpperCase().includes('OUTPAINT') || data.model.toUpperCase().includes("ANYTHING TO REAL"));
-        if(data.originalImage && isEditorApp) {
-             originalPreview.innerHTML = `<img src="${data.originalImage}" alt="Original">`;
-             originalPreview.style.display = 'block';
-             originalPreview.onclick = (e) => {
-                 e.stopPropagation();
-                 const originalModal = document.getElementById('original-image-modal');
-                 const originalModalImg = document.getElementById('original-image-modal-img');
-                 if(originalModal && originalModalImg) {
-                     originalModalImg.src = data.originalImage;
-                     originalModal.classList.add('active');
-                 }
-             };
+        const isEditorApp = data.model && (data.model.toUpperCase().includes('IMAGE EDITOR') || data.model.toUpperCase().includes('OUTPAINT') || data.model.toUpperCase().includes("ANYTHING TO REAL") || data.model.toUpperCase().includes("4K UPSCALE") || data.model.toUpperCase().includes("FUSION"));
+        if((data.originalImage || data.originalImage2) && isEditorApp) {
+             if (data.originalImage2) {
+                 originalPreview.innerHTML = `
+                     <div class="lightbox-original-duo" style="display: flex; width: 100%; height: 100%;">
+                         <img src="${data.originalImage}" alt="Original 1" style="width: 50%; height: 100%; object-fit: cover;">
+                         <img src="${data.originalImage2}" alt="Original 2" style="width: 50%; height: 100%; object-fit: cover; border-left: 1px solid rgba(255,255,255,0.2);">
+                     </div>
+                 `;
+                 originalPreview.style.display = 'block';
+                 originalPreview.onclick = (e) => {
+                     e.stopPropagation();
+                     const clickedImg = e.target.closest('img');
+                     if (clickedImg) {
+                         const originalModal = document.getElementById('original-image-modal');
+                         const originalModalImg = document.getElementById('original-image-modal-img');
+                         if(originalModal && originalModalImg) {
+                             originalModalImg.src = clickedImg.src;
+                             originalModal.classList.add('active');
+                         }
+                     }
+                 };
+             } else {
+                 originalPreview.innerHTML = `<img src="${data.originalImage}" alt="Original">`;
+                 originalPreview.style.display = 'block';
+                 originalPreview.onclick = (e) => {
+                     e.stopPropagation();
+                     const originalModal = document.getElementById('original-image-modal');
+                     const originalModalImg = document.getElementById('original-image-modal-img');
+                     if(originalModal && originalModalImg) {
+                         originalModalImg.src = data.originalImage;
+                         originalModal.classList.add('active');
+                     }
+                 };
+             }
         } else {
              originalPreview.style.display = 'none';
              originalPreview.innerHTML = '';
@@ -4131,7 +4153,7 @@ function openLightbox(data) {
     else {
         document.querySelector(".lightbox-delete-btn").style.display = "flex"
         
-        const isEditorApp = data.model && (data.model.toUpperCase().includes('IMAGE EDITOR') || data.model.toUpperCase().includes('OUTPAINT') || data.model.toUpperCase().includes("ANYTHING TO REAL"));
+        const isEditorApp = data.model && (data.model.toUpperCase().includes('IMAGE EDITOR') || data.model.toUpperCase().includes('OUTPAINT') || data.model.toUpperCase().includes("ANYTHING TO REAL") || data.model.toUpperCase().includes("4K UPSCALE") || data.model.toUpperCase().includes("FUSION"));
         if (isEditorApp) {
             document.querySelector(".lightbox-share-btn").style.display = "none"
             document.querySelector(".lightbox-copy-btn").style.display = "none"
@@ -7130,7 +7152,9 @@ async function loadGalleryStatistics() {
             "Outpaint": "thenaOutpaint",
             "Thena Toonish": "thenaToonish",
             "Thena Apex": "thenaApex",
-            "Anything to Real": "thenaToReal"
+            "Anything to Real": "thenaToReal",
+            "4K Upscale": "thenaUpscale",
+            "Fusion": "thenaFusion"
         };
         
         const t = translations[currentLang];

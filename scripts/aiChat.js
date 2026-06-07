@@ -1807,6 +1807,14 @@ function renderCharacterDetailsInChat(container, character) {
                     </svg>
                     IMG
                 </div>` : ''}
+                
+                <button class="char-placeholder-info-btn" title="${currentLang === 'tr' ? 'Değişkenler Bilgisi' : 'Variables Info'}">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                </button>
             </div>
             
             <h2 class="chat-empty-name">${character.name}</h2>
@@ -1823,8 +1831,61 @@ function renderCharacterDetailsInChat(container, character) {
                 `).join('') : ''}
             </div>
 
+            <div class="char-variables-backdrop"></div>
+            
+            <div class="char-variables-popover">
+                <button class="char-variables-popover-close" style="position: absolute; top: 12px; right: 15px; background: none; border: none; color: #888; font-size: 20px; cursor: pointer; line-height: 1; transition: color 0.2s ease; outline: none; padding: 0;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'">&times;</button>
+                <div style="font-weight: 700; font-size: 14px; margin-bottom: 15px; color: var(--primary); display: flex; align-items: center; gap: 8px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    <span>${currentLang === 'tr' ? 'Değişkenler Bilgisi' : 'Variables Info'}</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13px; color: #ccc; line-height: 1.6;">
+                    <div>
+                        <strong style="color: var(--primary); font-family: 'Consolas', monospace; background: rgba(var(--primary-rgb), 0.15); border: 1px solid rgba(var(--primary-rgb), 0.3); padding: 2px 6px; border-radius: 6px; margin-right: 5px;">{{char}}</strong> 
+                        <span>${currentLang === 'tr' ? 'Karakterin adını temsil eder (örn. Yapay Zeka).' : 'Represents the character\'s name (the AI).'}</span>
+                    </div>
+                    <div style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px;">
+                        <strong style="color: var(--primary); font-family: 'Consolas', monospace; background: rgba(var(--primary-rgb), 0.15); border: 1px solid rgba(var(--primary-rgb), 0.3); padding: 2px 6px; border-radius: 6px; margin-right: 5px;">{{user}}</strong> 
+                        <span>${currentLang === 'tr' ? 'Sizin (kullanıcının) adınızı temsil eder.' : 'Represents your (the user\'s) name.'}</span>
+                    </div>
+                </div>
+            </div>
         </div>
     `;
+
+    const infoBtn = container.querySelector('.char-placeholder-info-btn');
+    const popover = container.querySelector('.char-variables-popover');
+    const backdrop = container.querySelector('.char-variables-backdrop');
+    const popoverClose = container.querySelector('.char-variables-popover-close');
+
+    if (infoBtn && popover && backdrop) {
+        infoBtn.onclick = (e) => {
+            e.stopPropagation();
+            const isActive = popover.classList.contains('active');
+            if (isActive) {
+                popover.classList.remove('active');
+                backdrop.classList.remove('active');
+            } else {
+                popover.classList.add('active');
+                backdrop.classList.add('active');
+            }
+            if (typeof playButtonSound === "function") playButtonSound();
+        };
+
+        const closeAll = (e) => {
+            if (e) e.stopPropagation();
+            popover.classList.remove('active');
+            backdrop.classList.remove('active');
+            if (typeof playButtonSound === "function") playButtonSound();
+        };
+
+        if (popoverClose) popoverClose.onclick = closeAll;
+        backdrop.onclick = closeAll;
+    }
 }
 
 
@@ -2075,4 +2136,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    document.addEventListener('click', (e) => {
+        const activePopover = document.querySelector('.char-variables-popover.active');
+        if (activePopover) {
+            const activeBackdrop = document.querySelector('.char-variables-backdrop.active');
+            const infoBtn = document.querySelector('.char-placeholder-info-btn');
+            if (!activePopover.contains(e.target) && (!infoBtn || !infoBtn.contains(e.target))) {
+                activePopover.classList.remove('active');
+                if (activeBackdrop) activeBackdrop.classList.remove('active');
+                if (typeof playButtonSound === "function") playButtonSound();
+            }
+        }
+    });
 });

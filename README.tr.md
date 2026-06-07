@@ -64,7 +64,7 @@ Dört güçlü sütunu tek bir kusursuz **Aşamalı Web Uygulamasında (PWA)** b
 |---|---|
 | 🎨 **Yapay Zeka Görsel Üretimi** | Canlı komut geri bildirimiyle çok modelli, çok stilli görsel sentezi |
 | 🤖 **Yapay Zeka Rol Yapma Sohbeti** | Duygu farkındalıklı yapay zeka karakterleriyle derin anlatı sohbetleri |
-| 🖼️ **Görüntü Düzenleyici** | Profesyonel düzeyde canvas araçları, yapay zeka outpaint, filtreler ve işaretleme |
+| 🖼️ **Görüntü Düzenleyici** | Profesyonel düzeyde canvas araçları, yapay zeka outpaint, 4K yükseltme (Upscale), görsel birleştirme (Fusion), filtreler ve işaretleme |
 | 📖 **Yapay Zeka Hikayeleri (Thena Toons)** | Dinamik bölüm navigasyonuna sahip sürükleyici görsel webtoon okuyucu |
 
 ---
@@ -90,6 +90,8 @@ Dört güçlü sütunu tek bir kusursuz **Aşamalı Web Uygulamasında (PWA)** b
 
 ### 🖼️ Profesyonel Görüntü Düzenleyici
 - **Yapay Zeka Outpaint** — Oluşturduğunuz görsellerin sınırlarını akıllı yapay zeka outpaint ile genişleterek bağlamsal olarak yeni alanlar ekleyin.
+- **4K Yükseltme (4K Upscale)** — Tek bir tıklamayla görsellerinizi yüksek çözünürlüklü 4K kalitesine yükseltin.
+- **Görsel Birleştirme (Fusion)** — İki farklı görseli, ayarlanabilir karışım oranı (blend ratio) kaydırıcısı ile yapay zekayı kullanarak harmanlayıp birleştirin.
 - **Gelişmiş Model Seçimi** — "FAST" (PixelFusion), "BEST" (NeuralFlow) ve "MAX" (Synapse) dinamik rozetleri ve avantaj/dezavantaj bilgileriyle düzenlemeleriniz için doğru yapay zeka modelini seçin.
 - **Anlık Filtre Şablonları** — Mükemmel görünümü bulmak için gerçek zamanlı yerelleştirilmiş arama çubuğuyla Instagram'dan ilham alınan filtreler uygulayın.
 - **Manuel İnce Ayar** — Parlaklık, kontrast, doygunluk, sıcaklık ve daha fazlası üzerinde tam kontrol.
