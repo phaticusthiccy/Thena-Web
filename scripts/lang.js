@@ -112,8 +112,6 @@ const translations = {
         "btnShareCopied": "Copied!",
         "btnShareError": "Error",
         "msgUploading": "Uploading to server...",
-        "modelSuggestionLabel": "MODEL SUGGESTION",
-        "modelSuggestionDesc": "Suggests the best model based on your prompt.",
         "msgUploadFail": "Upload failed. Please try again.",
         "btnDownload": "Download",
         "msgProcessing": "Processing...",
@@ -377,8 +375,6 @@ const translations = {
         "statsApproxCents": "({0} Cents Approx)",
         "statsNoModels": "No images in gallery yet.",
         "statsNoExtras": "No extras used yet.",
-        "modelSuggestionEnabled": "Model Suggestion Enabled",
-        "modelSuggestionDisabled": "Model Suggestion Disabled",
         "mgTitle": "Select Finetuned Model",
         "mgRequestNewModel": "Request New Model",
         "mgSearchPlaceholder": "Search models...",
@@ -424,7 +420,6 @@ const translations = {
         "mgOptUsageAsc": "Least Used",
         "mgPrevImg": "Previous Image",
         "mgNextImg": "Next Image",
-        "suggestingModel": "Suggesting Model...",
         "msgServerBusy": "Server Busy",
         "msgServerBusyDesc": "Thena is very busy right now. Image generation may take a while.",
         "mgShowMoreStats": "Show more",
@@ -521,6 +516,10 @@ const translations = {
         "outpaintPixelRequired": "Please enter at least one direction pixel value.",
         "torealBtn": "Generate Variation",
         "uhdBtn": "4K Upscale",
+        "genderSwapBtn": "Gender Swap",
+        "appCardGenderSwapName": "Gender Swap",
+        "appCardGenderSwapDesc": "Swap the gender of the person in the image.",
+        "msgNoHumanFound": "No human detected in the uploaded image.",
         "appCardEditName": "Image Editing",
         "appCardEditDesc": "Transform your image with AI, reshape with prompts.",
         "appCardOutpaintName": "Outpaint",
@@ -677,8 +676,6 @@ const translations = {
         "btnShareCopied": "Kopyalandı!",
         "btnShareError": "Hata",
         "msgUploading": "Sunucuya yükleniyor...",
-        "modelSuggestionLabel": "MODEL ÖNERİSİ",
-        "modelSuggestionDesc": "Yazdığınız prompta göre en uygun modeli önerir.",
         "msgUploadFail": "Yükleme başarısız. Tekrar deneyin.",
         "btnDownload": "İndir",
         "msgProcessing": "İşleniyor...",
@@ -942,8 +939,6 @@ const translations = {
         "statsApproxCents": "(Yaklaşık {0} Kuruş)",
         "statsNoModels": "Henüz galeride görsel yok.",
         "statsNoExtras": "Henüz ekstra kullanılmadı.",
-        "modelSuggestionEnabled": "Model Önerisi Aktif Edildi",
-        "modelSuggestionDisabled": "Model Önerisi Deaktif Edildi",
         "mgTitle": "İnce Ayarlı Model Seç",
         "mgRequestNewModel": "Yeni Model İste",
         "mgSearchPlaceholder": "Model ara...",
@@ -989,7 +984,6 @@ const translations = {
         "mgModels": "Model Galerisi",
         "mgPrevImg": "Önceki Resim",
         "mgNextImg": "Sonraki Resim",
-        "suggestingModel": "Model Öneriliyor...",
         "msgServerBusy": "Sunucu Meşgul",
         "msgServerBusyDesc": "Thena şu an çok yoğun. Görsel oluşturma biraz zaman alabilir.",
         "mgShowMoreStats": "Daha fazla göster",
@@ -1086,6 +1080,10 @@ const translations = {
         "outpaintPixelRequired": "Lütfen en az bir yön için piksel değeri girin.",
         "torealBtn": "Varyasyon Oluştur",
         "uhdBtn": "4K Upscale",
+        "genderSwapBtn": "Gender Swap",
+        "appCardGenderSwapName": "Gender Swap",
+        "appCardGenderSwapDesc": "Görseldeki kişinin cinsiyetini değiştirin.",
+        "msgNoHumanFound": "Yüklenen görselde insan bulunamadı.",
         "appCardEditName": "Resim Düzenleme",
         "appCardEditDesc": "Görselini AI ile dönüştür, prompt ile yeniden şekillendir.",
         "appCardOutpaintName": "Outpaint",
@@ -1166,7 +1164,6 @@ function initDomCache() {
         'txt-filter-chip-all', 'opt-preset-all', 'opt-preset-safe', 'opt-preset-18plus', 'btn-preset-filter',
         'lbl-crop-title', 'btn-crop-cancel', 'btn-crop-apply',
         'gallery-stats-title', 'stats-models-title', 'stats-extras-title', 'stats-cost-title', 'stats-approx-cost',
-        'lbl-model-suggestion', 'desc-model-suggestion',
         'lbl-elinfo-title', 'lbl-elinfo-sub',
         'lbl-elinfo-i1-title', 'lbl-elinfo-i1-desc',
         'lbl-elinfo-i2-title', 'lbl-elinfo-i2-desc',
@@ -1317,7 +1314,6 @@ function updateLanguage(lang) {
         ["desc-power-saver", t.lblPowerSaverDesc],
         ["lbl-crop-title", t.editorCropLabel], ["btn-crop-cancel", t.editorCropCancel], ["btn-crop-apply", t.editorCropApply],
         ["gallery-stats-title", t.galleryStatsTitle], ["stats-models-title", t.statsModelsTitle], ["stats-extras-title", t.statsExtrasTitle], ["stats-cost-title", t.statsCostTitle],
-        ["desc-model-suggestion", t.modelSuggestionDesc],
         ["lbl-img2prompt-detail", t.lblImg2PromptDetail], ["btn-detail-low", t.btnDetailLow], ["btn-detail-medium", t.btnDetailMedium], ["btn-detail-high", t.btnDetailHigh],
         ["lbl-elinfo-title", t.elInfoTitle], ["lbl-elinfo-sub", t.elInfoSub],
         ["lbl-elinfo-i1-title", t.elInfoI1Title], ["lbl-elinfo-i1-desc", t.elInfoI1Desc],
@@ -1380,8 +1376,7 @@ function updateLanguage(lang) {
     var idsToSetSvgTextSafely = [
         ["lbl-perf-mode", t.lblPerf], ["lbl-silent-mode", t.lblSilent], ["lbl-adv-mode", t.lblAdv],
         ["lbl-auto-mode", t.lblAuto], ["lbl-perf-monitor", t.lblPerfMon], ["lbl-prompt-preview", t.lblPromptPreview],
-        ["lbl-skip-intro", t.lblSkipIntro], ["lbl-power-saver", t.lblPowerSaver],
-        ["lbl-model-suggestion", t.modelSuggestionLabel]
+        ["lbl-skip-intro", t.lblSkipIntro], ["lbl-power-saver", t.lblPowerSaver]
     ]
     
     idsToSetSvgTextSafely.forEach(([id, text]) => {
@@ -1534,6 +1529,7 @@ function updateLanguage(lang) {
     safelySetText('txt-outpaint-presets', t.outpaintPresetsTitle);
     safelySetText('txt-toreal-btn', t.torealBtn);
     safelySetText('txt-uhd-btn', t.uhdBtn);
+    safelySetText('txt-genderswap-btn', t.genderSwapBtn);
     safelySetText('txt-app-card-edit', t.appCardEditName);
     safelySetText('txt-app-card-edit-desc', t.appCardEditDesc);
     safelySetText('txt-app-card-outpaint', t.appCardOutpaintName);
@@ -1542,6 +1538,8 @@ function updateLanguage(lang) {
     safelySetText('txt-app-card-anythingtoreal-desc', t.appCardAnythingToRealDesc);
     safelySetText('txt-app-card-uhdupscale', t.appCardUhdUpscaleName);
     safelySetText('txt-app-card-uhdupscale-desc', t.appCardUhdUpscaleDesc);
+    safelySetText('txt-app-card-genderswap', t.appCardGenderSwapName);
+    safelySetText('txt-app-card-genderswap-desc', t.appCardGenderSwapDesc);
     safelySetText('txt-app-card-fusion', t.appCardFusionName);
     safelySetText('txt-app-card-fusion-desc', t.appCardFusionDesc);
     safelySetText('label-editor-fusion-upload', t.editorFusionUploadLabel);
@@ -1569,9 +1567,11 @@ function updateLanguage(lang) {
                     ? t.appCardAnythingToRealName
                     : editorCurrentMode === 'uhdupscale'
                         ? t.appCardUhdUpscaleName
-                        : editorCurrentMode === 'fusion'
-                            ? t.appCardFusionName
-                            : t.appCardEditName;
+                        : editorCurrentMode === 'genderswap'
+                            ? t.appCardGenderSwapName
+                            : editorCurrentMode === 'fusion'
+                                ? t.appCardFusionName
+                                : t.appCardEditName;
         }
     }
 

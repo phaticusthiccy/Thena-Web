@@ -259,6 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof checkOutpaintFormReady === 'function') checkOutpaintFormReady();
             if (typeof checkToRealFormReady === 'function') checkToRealFormReady();
             if (typeof checkUhdUpscaleFormReady === 'function') checkUhdUpscaleFormReady();
+            if (typeof checkGenderSwapFormReady === 'function') checkGenderSwapFormReady();
         });
     }
 
@@ -382,6 +383,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (typeof checkOutpaintFormReady === 'function') checkOutpaintFormReady();
                         if (typeof checkToRealFormReady === 'function') checkToRealFormReady();
                         if (typeof checkUhdUpscaleFormReady === 'function') checkUhdUpscaleFormReady();
+                        if (typeof checkGenderSwapFormReady === 'function') checkGenderSwapFormReady();
                         if (typeof updateOutpaintPreview === 'function') updateOutpaintPreview();
                         if (typeof updateOutpaintPresets === 'function') updateOutpaintPresets();
                     };
@@ -459,6 +461,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (toUHDGenerateBtn) {
         toUHDGenerateBtn.addEventListener('click', generateUhdUpscale);
     }
+    const genderSwapGenerateBtn = document.getElementById('genderSwap-generate-btn');
+    if (genderSwapGenerateBtn) {
+        genderSwapGenerateBtn.addEventListener('click', generateGenderSwap);
+    }
     const fusionGenerateBtn = document.getElementById('fusion-generate-btn');
     if (fusionGenerateBtn) {
         fusionGenerateBtn.addEventListener('click', generateFusion);
@@ -476,6 +482,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof checkEditorFormReady === 'function') checkEditorFormReady();
             if (typeof checkToRealFormReady === 'function') checkToRealFormReady();
             if (typeof checkUhdUpscaleFormReady === 'function') checkUhdUpscaleFormReady();
+            if (typeof checkGenderSwapFormReady === 'function') checkGenderSwapFormReady();
             if (typeof checkFusionFormReady === 'function') checkFusionFormReady();
         });
     }
@@ -1016,7 +1023,7 @@ async function pollEditorGeneration(id, apiKey, prompt, genNotif, originalImage,
 
                     await dbHelper.add({
                         url: finalUrl,
-                        prompt: "",
+                        prompt: prompt,
                         model: `Image Editor (${editorSelectedModel === 'v2' ? 'NeuralFlow' : editorSelectedModel === 'v3' ? 'Synapse' : 'PixelFusion'})`,
                         size: 'Auto',
                         timestamp: new Date().toISOString(),
@@ -1184,6 +1191,7 @@ function switchEditorMode(mode) {
     const outpaintControls = document.getElementById('editor-outpaint-mode-controls');
     const torealControls = document.getElementById('editor-anythingtoreal-mode-controls');
     const uhdupscaleControls = document.getElementById('editor-uhdupscale-mode-controls');
+    const genderswapControls = document.getElementById('editor-genderswap-mode-controls');
     const fusionControls = document.getElementById('editor-fusion-mode-controls');
     const normalUploadGroup = document.getElementById('editor-normal-upload-group');
     const fusionUploadGroup = document.getElementById('editor-fusion-upload-group');
@@ -1196,6 +1204,7 @@ function switchEditorMode(mode) {
         if (editControls) editControls.style.display = 'none';
         if (torealControls) torealControls.style.display = 'none';
         if (uhdupscaleControls) uhdupscaleControls.style.display = 'none';
+        if (genderswapControls) genderswapControls.style.display = 'none';
         if (fusionControls) fusionControls.style.display = 'none';
         if (outpaintControls) outpaintControls.style.display = 'block';
         if (normalUploadGroup) normalUploadGroup.style.display = 'block';
@@ -1212,6 +1221,7 @@ function switchEditorMode(mode) {
         if (editControls) editControls.style.display = 'none';
         if (outpaintControls) outpaintControls.style.display = 'none';
         if (uhdupscaleControls) uhdupscaleControls.style.display = 'none';
+        if (genderswapControls) genderswapControls.style.display = 'none';
         if (fusionControls) fusionControls.style.display = 'none';
         if (torealControls) torealControls.style.display = 'block';
         if (normalUploadGroup) normalUploadGroup.style.display = 'block';
@@ -1227,6 +1237,7 @@ function switchEditorMode(mode) {
         if (editControls) editControls.style.display = 'none';
         if (outpaintControls) outpaintControls.style.display = 'none';
         if (torealControls) torealControls.style.display = 'none';
+        if (genderswapControls) genderswapControls.style.display = 'none';
         if (fusionControls) fusionControls.style.display = 'none';
         if (uhdupscaleControls) uhdupscaleControls.style.display = 'block';
         if (normalUploadGroup) normalUploadGroup.style.display = 'block';
@@ -1238,11 +1249,28 @@ function switchEditorMode(mode) {
             selectorIcon.innerHTML = `<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="2" fill="none"/><polyline points="17 8 12 3 7 8" stroke="currentColor" stroke-width="2" fill="none"/><line x1="12" y1="3" x2="12" y2="15" stroke="currentColor" stroke-width="2"/>`;
         }
         if (typeof checkUhdUpscaleFormReady === 'function') checkUhdUpscaleFormReady();
+    } else if (mode === 'genderswap') {
+        if (editControls) editControls.style.display = 'none';
+        if (outpaintControls) outpaintControls.style.display = 'none';
+        if (torealControls) torealControls.style.display = 'none';
+        if (uhdupscaleControls) uhdupscaleControls.style.display = 'none';
+        if (fusionControls) fusionControls.style.display = 'none';
+        if (genderswapControls) genderswapControls.style.display = 'block';
+        if (normalUploadGroup) normalUploadGroup.style.display = 'block';
+        if (fusionUploadGroup) fusionUploadGroup.style.display = 'none';
+        if (selectorLabel) selectorLabel.textContent = (typeof translations !== 'undefined' && translations[currentLang]) ? translations[currentLang].appCardGenderSwapName : 'Gender Swap';
+        if (uploadArea) uploadArea.classList.remove('outpaint-mode');
+        if (moderationBtn) moderationBtn.style.display = 'none';
+        if (selectorIcon) {
+            selectorIcon.innerHTML = `<circle cx="10" cy="12" r="4" stroke="currentColor" stroke-width="2" fill="none"/><line x1="10" y1="16" x2="10" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="8" y1="19" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="12.8" y1="9.2" x2="18" y2="4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><polyline points="14,4 18,4 18,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`;
+        }
+        if (typeof checkGenderSwapFormReady === 'function') checkGenderSwapFormReady();
     } else if (mode === 'fusion') {
         if (editControls) editControls.style.display = 'none';
         if (outpaintControls) outpaintControls.style.display = 'none';
         if (torealControls) torealControls.style.display = 'none';
         if (uhdupscaleControls) uhdupscaleControls.style.display = 'none';
+        if (genderswapControls) genderswapControls.style.display = 'none';
         if (fusionControls) fusionControls.style.display = 'block';
         if (normalUploadGroup) normalUploadGroup.style.display = 'none';
         if (fusionUploadGroup) fusionUploadGroup.style.display = 'block';
@@ -1258,6 +1286,7 @@ function switchEditorMode(mode) {
         if (outpaintControls) outpaintControls.style.display = 'none';
         if (torealControls) torealControls.style.display = 'none';
         if (uhdupscaleControls) uhdupscaleControls.style.display = 'none';
+        if (genderswapControls) genderswapControls.style.display = 'none';
         if (fusionControls) fusionControls.style.display = 'none';
         if (normalUploadGroup) normalUploadGroup.style.display = 'block';
         if (fusionUploadGroup) fusionUploadGroup.style.display = 'none';
@@ -2090,6 +2119,215 @@ async function pollUhdUpscaleGeneration(id, apiKey, genNotif, originalImage) {
             if (typeof playErrorSound === 'function') playErrorSound();
             showNotification((currentLang === 'tr' ? translations.tr.msgErrorPrefix : translations.en.msgErrorPrefix) + error.message, 'error');
             setUhdUpscaleLoadingState(false);
+        }
+    };
+    checkStatus();
+}
+
+function checkGenderSwapFormReady() {
+    const apiKeyInput = document.getElementById('api-key');
+    const generateBtn = document.getElementById('genderSwap-generate-btn');
+    const apiKey = apiKeyInput ? apiKeyInput.value.trim() : '';
+    const hasFile = !!editorSelectedFile;
+
+    if (generateBtn) {
+        if (apiKey && hasFile) {
+            generateBtn.classList.add('ready');
+            generateBtn.disabled = false;
+        } else {
+            generateBtn.classList.remove('ready');
+            generateBtn.disabled = true;
+        }
+    }
+}
+
+function setGenderSwapLoadingState(isLoading) {
+    const generateBtn = document.getElementById('genderSwap-generate-btn');
+    const textSpan = document.getElementById('txt-genderswap-btn');
+    const fileInput = document.getElementById('editor-file-input');
+    const clearBtn = document.getElementById('editor-clear-btn');
+    const uploadArea = document.getElementById('editor-upload-area');
+
+    const disabledState = !!isLoading;
+
+    if (generateBtn) {
+        generateBtn.disabled = disabledState;
+    }
+
+    if (textSpan) {
+        if (disabledState) {
+            textSpan.innerText = (typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'İşleniyor...' : 'Generating...';
+        } else {
+            textSpan.innerText = (typeof translations !== 'undefined' && translations[currentLang]) ? (translations[currentLang].genderSwapBtn || 'Gender Swap') : 'Gender Swap';
+        }
+    } else if (generateBtn) {
+        if (disabledState) {
+            generateBtn.innerText = (typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'İşleniyor...' : 'Generating...';
+        } else {
+            generateBtn.innerText = (typeof translations !== 'undefined' && translations[currentLang]) ? (translations[currentLang].genderSwapBtn || 'Gender Swap') : 'Gender Swap';
+        }
+    }
+
+    if (fileInput) fileInput.disabled = disabledState;
+
+    const pointerEvents = disabledState ? 'none' : '';
+    const opacity = disabledState ? '0.5' : '';
+
+    if (clearBtn) {
+        clearBtn.style.pointerEvents = pointerEvents;
+        clearBtn.style.opacity = opacity;
+    }
+
+    if (uploadArea) {
+        uploadArea.style.pointerEvents = pointerEvents;
+        uploadArea.style.opacity = disabledState ? '0.7' : '';
+    }
+}
+
+async function generateGenderSwap() {
+    const apiKeyInput = document.getElementById('api-key');
+    const apiKey = apiKeyInput ? apiKeyInput.value.trim() : '';
+
+    if (!apiKey) {
+        if (typeof playErrorSound === 'function') playErrorSound();
+        showNotification(currentLang === 'tr' ? translations.tr.msgApiKeyRequired : translations.en.msgApiKeyRequired, 'error');
+        return;
+    }
+
+    if (!editorSelectedFile) {
+        if (typeof playErrorSound === 'function') playErrorSound();
+        showNotification(currentLang === 'tr' ? translations.tr.msgImgRequired : translations.en.msgImgRequired, 'error');
+        return;
+    }
+
+    setGenderSwapLoadingState(true);
+
+    if (typeof playStartSound === 'function') playStartSound();
+    let pleaseWaitMsg = typeof translations !== 'undefined' ? (currentLang === 'tr' ? translations.tr.msgPleaseWait : translations.en.msgPleaseWait) : (currentLang === 'tr' ? 'Lütfen sayfayı kapatmayınız.' : 'Please do not close the page.');
+    let genNotif = showNotification((currentLang === 'tr') ? 'İşlem başlatıldı. Sıraya alındı. - ' + pleaseWaitMsg : 'Process started. Queued. - ' + pleaseWaitMsg, 'info', null, 120000, 0);
+
+    try {
+        const payload = {
+            image: editorSelectedFile
+        };
+
+        const response = await fetch('https://create.thena.workers.dev/genderSwapApp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': apiKey
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.status === 200 && data.image) {
+            await pollGenderSwapGeneration(data.image, apiKey, genNotif, editorSelectedFile);
+        } else {
+            if (genNotif) genNotif();
+            setGenderSwapLoadingState(false);
+            if (typeof playErrorSound === 'function') playErrorSound();
+            if (data.status === 404) {
+                showNotification(currentLang === 'tr' ? (translations.tr.msgNoHumanFound || 'Yüklenen görselde insan bulunamadı.') : (translations.en.msgNoHumanFound || 'No human detected in the uploaded image.'), 'error');
+                return;
+            }
+            if (data.status === 429) {
+                showNotification(currentLang === 'tr' ? translations.tr.msgLimitWait.replace('{0}', data.remainingSeconds) : translations.en.msgLimitWait.replace('{0}', data.remainingSeconds), 'error');
+                return;
+            }
+            if (data.status === 401) {
+                showNotification(currentLang === 'tr' ? translations.tr.invalidApiKey : translations.en.invalidApiKey, 'error');
+                return;
+            }
+            if (data.status === 423) {
+                showNotification(currentLang === 'tr' ? translations.tr.msgThenaOverloaded : translations.en.msgThenaOverloaded, 'error');
+                return;
+            }
+            showNotification(`Error: ${data.content || 'Unknown Error'}`, 'error');
+        }
+    } catch (error) {
+        if (genNotif) genNotif();
+        console.error('Gender Swap Generation Error:', error);
+        if (typeof playErrorSound === 'function') playErrorSound();
+        showNotification((currentLang === 'tr' ? translations.tr.msgErrorPrefix : translations.en.msgErrorPrefix) + error.message, 'error');
+        setGenderSwapLoadingState(false);
+    }
+}
+
+async function pollGenderSwapGeneration(id, apiKey, genNotif, originalImage) {
+    const generateBtn = document.getElementById('genderSwap-generate-btn');
+
+    await new Promise(r => setTimeout(r, 2000));
+
+    const checkStatus = async () => {
+        try {
+            const response = await fetch(`https://create.thena.workers.dev/status?id=${id}`, {
+                headers: { 'apikey': apiKey }
+            });
+            const data = await response.json();
+
+            if (data.status === 202) {
+                const textSpan = document.getElementById('txt-genderswap-btn');
+                if (data.progress && textSpan) {
+                    textSpan.innerText = currentLang === 'tr' ? `İşleniyor... %${data.progress}` : `Generating... ${data.progress}%`;
+                } else if (data.progress && generateBtn) {
+                    generateBtn.innerText = currentLang === 'tr' ? `İşleniyor... ${data.progress}%` : `Generating... ${data.progress}%`;
+                }
+                if (genNotif && typeof genNotif.update === 'function') {
+                    const pleaseWaitMsg = typeof translations !== 'undefined' ? (currentLang === 'tr' ? translations.tr.msgPleaseWait : translations.en.msgPleaseWait) : (currentLang === 'tr' ? 'Lütfen sayfayı kapatmayınız.' : 'Please do not close the page.');
+                    genNotif.update(
+                        (currentLang === 'tr') ? `Oluşturuluyor... %${data.progress} - ${pleaseWaitMsg}` : `Generating... ${data.progress}% - ${pleaseWaitMsg}`,
+                        'info',
+                        data.progress
+                    );
+                }
+                setTimeout(checkStatus, 5000);
+
+            } else if (data.status === 200) {
+                if (genNotif) genNotif();
+                if (typeof playSuccessSound === 'function') playSuccessSound();
+
+                let finalUrl = data.image;
+                if (!finalUrl.startsWith('data:image') && !finalUrl.startsWith('http')) {
+                    finalUrl = `data:image/png;base64,${finalUrl}`;
+                }
+
+                showNotification(currentLang === 'tr' ? translations.tr.msgVariationSuccess : translations.en.msgVariationSuccess, 'success', finalUrl);
+
+                if (typeof dbHelper !== 'undefined') {
+                    let originalResized = null;
+                    if (originalImage && originalImage.startsWith('data:image')) {
+                        try {
+                            originalResized = await resizeBase64Image(originalImage, 0.5);
+                        } catch (e) { console.error('Error resizing original image:', e); }
+                    }
+
+                    await dbHelper.add({
+                        url: finalUrl,
+                        prompt: 'Gender Swap',
+                        model: 'Gender Swap',
+                        size: 'Auto',
+                        timestamp: new Date().toISOString(),
+                        moderation: 'high',
+                        features: { type: 'gender_swap', genderSwap: true },
+                        originalImage: originalResized
+                    });
+                }
+
+                setGenderSwapLoadingState(false);
+            } else {
+                if (genNotif) genNotif();
+                if (typeof playErrorSound === 'function') playErrorSound();
+                showNotification((currentLang === 'tr' ? translations.tr.msgErrorPrefix : translations.en.msgErrorPrefix) + data.content, 'error');
+                setGenderSwapLoadingState(false);
+            }
+        } catch (error) {
+            if (genNotif) genNotif();
+            console.error('Gender Swap Polling Error:', error);
+            if (typeof playErrorSound === 'function') playErrorSound();
+            showNotification((currentLang === 'tr' ? translations.tr.msgErrorPrefix : translations.en.msgErrorPrefix) + error.message, 'error');
+            setGenderSwapLoadingState(false);
         }
     };
     checkStatus();

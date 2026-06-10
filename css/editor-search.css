@@ -742,6 +742,7 @@
 
 .editor-app-popup-list #editor-app-card-anythingtoreal,
 .editor-app-popup-list #editor-app-card-uhdupscale,
+.editor-app-popup-list #editor-app-card-genderswap,
 .editor-app-popup-list #editor-app-card-fusion {
     max-height: 0;
     opacity: 0;
@@ -763,6 +764,7 @@
 
 .editor-app-popup.show-all .editor-app-popup-list #editor-app-card-anythingtoreal,
 .editor-app-popup.show-all .editor-app-popup-list #editor-app-card-uhdupscale,
+.editor-app-popup.show-all .editor-app-popup-list #editor-app-card-genderswap,
 .editor-app-popup.show-all .editor-app-popup-list #editor-app-card-fusion {
     max-height: 90px;
     opacity: 1;
@@ -867,6 +869,16 @@
 
 #editor-app-card-fusion.active .editor-app-card-name {
     color: #10b981;
+}
+
+#editor-app-card-genderswap.active {
+    border-color: #ec4899;
+    background: rgba(236, 72, 153, 0.06);
+    box-shadow: 0 0 20px rgba(236, 72, 153, 0.12);
+}
+
+#editor-app-card-genderswap.active .editor-app-card-name {
+    color: #ec4899;
 }
 
 .fusion-slider-container {

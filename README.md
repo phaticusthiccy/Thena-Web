@@ -5,15 +5,17 @@
 <br/>
 
 <div align="center">
-
   <a href="https://phaticusthiccy.github.io/Thena-Web/">
     <img src="src/icon-512.png" alt="Thena Logo" width="160" />
   </a>
 
   <h1>THENA</h1>
-  <h3>Next-Generation AI Image Generator, Roleplay Chat, Image Editor & Visual Stories</h3>
+  <h3>Next-Generation Client-Side AI Ecosystem: Image Generation, Roleplay Chat, Image Editor & Visual Stories</h3>
 
   <p>
+    <a href="https://github.com/phaticusthiccy/Thena-Web/releases">
+      <img src="https://img.shields.io/badge/Version-3.6.2-blue?style=for-the-badge&logo=git&logoColor=white" alt="Version 3.6.2" />
+    </a>
     <a href="https://github.com/phaticusthiccy/Thena-Web/issues">
       <img src="https://img.shields.io/github/issues/phaticusthiccy/Thena-Web?style=for-the-badge&logo=github&color=e11d48" alt="Issues" />
     </a>
@@ -23,12 +25,12 @@
     <a href="https://github.com/phaticusthiccy/Thena-Web/blob/main/LICENSE">
       <img src="https://img.shields.io/badge/LICENSE-MIT-8b5cf6?style=for-the-badge" alt="License" />
     </a>
-    <img src="https://img.shields.io/badge/Platform-Web%20%26%20PWA-0ea5e9?style=for-the-badge&logo=googlechrome" alt="Platform" />
-    <img src="https://img.shields.io/badge/No_Framework-Vanilla_JS-f97316?style=for-the-badge&logo=javascript&logoColor=white" alt="Vanilla JS" />
+    <img src="https://img.shields.io/badge/Platform-Web%20%26%20PWA-0ea5e9?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Platform" />
+    <img src="https://img.shields.io/badge/Vanilla-JS-f97316?style=for-the-badge&logo=javascript&logoColor=white" alt="Vanilla JS" />
   </p>
 
   <blockquote>
-    <em>Transform your imagination into stunning visuals in seconds — no installation, no backend, entirely in your browser.</em>
+    <strong>Transform your imagination into stunning visuals and interactive stories in seconds — zero server dependencies, entirely running client-side.</strong>
   </blockquote>
 
   <a href="https://phaticusthiccy.github.io/Thena-Web/">
@@ -36,7 +38,6 @@
   </a>
 
   <br /><br />
-
 </div>
 
 ---
@@ -45,9 +46,10 @@
 
 - [About The Project](#-about-the-project)
 - [Key Features](#-key-features)
+- [Codebase Architecture & File Structure](#-codebase-architecture--file-structure)
 - [Screenshots](#-screenshots)
 - [Installation & Usage](#%EF%B8%8F-installation--usage)
-- [Configuration (API Key)](#-configuration-api-key)
+- [Configuration & API Key](#-configuration--api-key)
 - [Tech Stack](#-tech-stack)
 - [Contributing](#-contributing)
 - [License](#-license)
@@ -56,72 +58,93 @@
 
 ## 🚀 About The Project
 
-**Thena** is a browser-native, high-performance AI creative platform engineered entirely with **Vanilla JavaScript, HTML5, and CSS3** — no React, no Vue, no heavy frameworks. It harnesses the full power of modern browser APIs (IndexedDB, Web Audio API, Canvas API, Service Workers) to deliver a desktop-grade experience straight from the tab.
+**Thena** is a high-performance, browser-native AI creative platform engineered entirely with **Vanilla JavaScript, HTML5, and CSS3** (no heavy frameworks, no React/Vue compilation). By harnessing modern Web APIs, it delivers a desktop-grade, zero-backend suite for content creation, narrative generation, and visual storytelling directly inside a web tab.
 
-It unifies four powerful pillars into one seamless **Progressive Web App (PWA)**:
+The platform is designed around four key pillars:
 
-| Pillar | Description |
-|---|---|
-| 🎨 **AI Image Generation** | Multi-model, multi-style image synthesis with live prompt feedback |
-| 🤖 **AI Roleplay Chat** | Deep narrative conversations with emotion-aware AI characters |
-| 🖼️ **Image Editor** | Professional-grade canvas tools, AI outpainting, 4K upscaling, image fusion, filters & markup |
-| 📖 **AI Stories (Thena Toons)** | Immersive visual webtoon reader with dynamic chapter navigation |
+| Pillar | Architecture & Purpose |
+| :--- | :--- |
+| 🎨 **AI Image Generation** | Multi-model, multi-style synthesis utilizing custom API endpoints with real-time prompt feedback. |
+| 🤖 **AI Roleplay Chat** | Fully immersive conversational engine with custom character metadata, memory integration, and sentiment analysis. |
+| 🖼️ **Image Editor** | Canvas-level pixel manipulation, AI outpainting, upscaling, blending (fusion), and human-focused **Gender Swapping**. |
+| 📖 **AI Stories (Thena Toons)** | A smooth webtoon-style graphic novel reader with lazy-loaded image pipelines. |
 
 ---
 
 ## ✨ Key Features
 
 ### 🎨 Advanced Image Generation
-- **Multi-Model Support** — Choose from Photorealism, Anime, Cinematic, Thena Toonish (cel-shaded modern anime), and other creative models with unique visual styles.
-- **Flexible Aspect Ratios** — Square (1:1), Portrait (3:4, 9:16), and Widescreen (16:9, 4:3) formats supported out of the box.
-- **Smart Generation Parameters** — Fast Mode for speed, Creative & Dense for depth, and HighRes scaling for crisp output.
-- **Expanded Presets & Styles** — Instantly apply community-crafted prompts and curated aesthetic styles with a single click.
-- **Live Prompt Preview** — Dynamic visual indicator shows required prompt length and complexity before generation starts.
-- **Magic Wand ✨** — Transforms short, vague prompts into rich, detailed descriptions automatically.
+* **Multi-Model Engine** — Seamlessly toggle between multiple specialized checkpoints (Photorealism, Anime, Cinematic, andcel-shaded *Thena Toonish* style).
+* **Precise Aspect Ratios** — Built-in aspect adapters for Standard (1:1), Portrait (3:4, 9:16), and Widescreen (16:9, 4:3) ratios.
+* **Optimization Modes** — Choose between **Fast Mode** for rapid iterations, **Creative & Dense** for structural complexity, and **HighRes** for supersampled rendering.
+* **Prompt Engineering Tools**:
+  * **Magic Wand ✨** — Automatically expands short, descriptive phrases into highly detailed prompts.
+  * **Live Prompt Preview** — A dynamic indicator analyzing complexity and length constraints.
+  * **Curated Style Presets** — Instantly apply preset community-curated styles.
 
 ### 🤖 AI Roleplay Chat
-- **Immersive Characters** — Engage in deep, story-driven conversations with AI personas (including dating simulation characters) featuring fully fleshed-out lore and backstories.
-- **Three Intelligence Tiers** — Switch between Fast, Balanced, and Ultra (Advanced) AI models to match your narrative needs.
-- **Real-Time Emotion Engine** — Live sentiment analysis dynamically updates the character's facial expression to reflect the story's emotional tone.
-- **Personalized User Profiles** — Create your own profile (Name, Age, Gender). The system uses advanced context metadata extraction to ensure characters adapt their tone, memory, and responses specifically to you.
-- **Flexible Library Layouts** — Organize your character roster in Grid, List, or Compact view — switch effortlessly.
-- **Narrative Awareness** — The AI detects story completion via the `[FINISH]` signal and guides arcs to natural conclusions.
-- **The Warden — Content Moderation** — Integrated moderation layer with real-time intensity indicators (Low / Medium / High).
+* **Contextual Character Lore** — Engage with characters featuring extensive system prompts, narrative settings, and dating-sim mechanics.
+* **Multi-Tier LLM Support** — Switch dynamically between **Fast**, **Balanced**, and **Ultra** intelligence tiers.
+* **Real-Time Sentiment Analysis** — An emotional state engine analyzes the character's narrative output to automatically update their visual facial expression.
+* **Dynamic User Profiles** — Customize username, age, and gender preferences; the system dynamically adapts the AI character's tone, memory boundaries, and response structures.
+* **The Warden Guard** — Built-in local content moderation with adjustable levels (Low / Medium / High).
+* **Interface Settings** — Fluid grid, list, and compact library views with full export/import utilities for chat databases.
 
 ### 🖼️ Professional Image Editor
-- **AI Outpainting** — Seamlessly expand the borders of your generated images using intelligent AI outpainting, adding new areas contextually.
-- **4K Upscaling** — Upscale your images to high-resolution 4K quality with a single click.
-- **Image Fusion** — Blend and fuse two different images together using AI with a customizable blend ratio slider.
-- **Advanced Model Selection** — Choose the right AI model for your edits using dynamic "FAST" (PixelFusion), "BEST" (NeuralFlow), and "MAX" (Synapse) badges, complete with pros/cons insights.
-- **Instant Filter Presets** — Apply Instagram-inspired filters with a real-time localized search bar to find the perfect look.
-- **Manual Fine-Tuning** — Full control over brightness, contrast, saturation, temperature, and more.
-- **Crop & Resize** — Prepare your generated art for any platform or resolution — all within the browser.
-- **Markup Tools** — Draw, annotate, and overlay text on generated images for creative or instructional use.
+* **AI Outpainting** — Extrapolate and extend canvas borders outward, filling newly defined areas seamlessly.
+* **4K Upscaling** — Enhances resolution using advanced super-resolution models.
+* **AI Image Fusion** — Harmonizes two distinct images utilizing blend percentages and targeted model adapters.
+* **Advanced Processing Models** — Segmented with speed/quality indicators: **FAST (PixelFusion)**, **BEST (NeuralFlow)**, and **MAX (Synapse)**.
+* **Gender Swap Tool 🔄** — Swap character features dynamically using cloud-based AI worker pipelines, supporting async polling and automatic result injection.
+* **Non-Destructive Adjustments** — Fine-tune levels for brightness, contrast, temperature, and saturation.
+* **Markup & Annotations** — Built-in canvas brushes, text tools, and filter presets with localized real-time search.
 
 ### 📖 AI Stories (Thena Toons)
-- **Immersive Webtoon Reader** — Dive into curated, multi-chapter visual stories with a dedicated, distraction-free reading interface.
-- **Dynamic Episode Navigation** — Seamlessly navigate between chapters with an intuitive UI, complete with "Ongoing" and "Completed" status tracking.
-- **Optimized Performance** — Lazy-loaded high-resolution image sequences ensure fast load times and minimal memory usage.
-- **Whimsical UI Animations** — Enjoy polished, custom animations and multi-language status messages upon finishing a chapter.
+* **Distraction-Free Reading** — Optimized vertical flow designed for webtoon layout consumption.
+* **Chapter State Manager** — Tracks current episode progression ("Ongoing" and "Completed") cached directly in IndexedDB.
+* **Lazy Loading** — High-resolution comic sequences load on viewport entry, preserving CPU/GPU resources.
 
 ### 📊 Performance & Optimization
-- **Real-Time System Stats** — Monitor CPU load, RAM usage, FPS, and average render times via a live performance HUD.
-- **Smart Power Saver** — Automatically pauses background tasks, mutes audio, and activates Wake Lock API when the app is idle.
-- **Intelligent Rendering Engine** — `IntersectionObserver`-driven animation pausing for off-screen elements drastically reduces GPU/CPU load.
-- **Optimized Chat Rendering** — DOM-efficient message pipeline ensures smooth, lag-free scrolling even across thousands of messages.
-- **Draggable HUD** — Reposition and resize the performance monitor anywhere on screen without interrupting animations.
+* **System Stats HUD** — A draggable, resizable performance overlay tracking estimated FPS, memory usage, and GPU render cycles.
+* **Power Saver API** — Intercepts tab state changes (visibility/idle) to suspend audio synthesis, pause heavy CSS animations, and lock wake states via the Wake Lock API.
+* **DOM Virtualization** — Chat messages are loaded efficiently to avoid memory bloat, keeping scrolling lag-free.
 
-### 🌐 Localization & Accessibility
-- **Full Multi-Language Support** — Complete UI translation in **English** and **Turkish**, including dynamic search logic, gallery labels, and all system notifications.
-- **Audio Feedback System** — Contextual sound effects for interactions, with a dedicated Silent Mode toggle.
-- **Cinematic Intro Experience** — An immersive trailer plays on first launch; skip anytime to jump straight to the app.
-- **Polished Mobile Experience** — Fully responsive layout with drag-to-dismiss bottom sheets and mobile-optimized chat sidebars.
+### 💾 Local-First Privacy
+* **Local Database Storage** — Powered by `IndexedDB`, ensuring all custom characters, generated images, favorites, and transcripts are kept offline on your device.
+* **Privacy by Design** — API keys and personal profile details are saved directly in `LocalStorage` without third-party transit.
 
-### 💾 Local-First Architecture
-- **Advanced Gallery Management** — Filter, sort (Newest / Oldest), and mass-delete images via Long-Press Multi-Select mode.
-- **Drag-to-Dismiss Gesture** — Intuitively close full-screen image views with a fluid swipe gesture.
-- **Zero-Backend Privacy** — All media, conversations, and custom profiles live exclusively in your browser's local storage via IndexedDB.
-- **Your Data Stays Yours** — API keys and generated content never leave your device. No hidden uploads, ever.
+---
+
+## 📂 Codebase Architecture & File Structure
+
+Here is a breakdown of the core script modules that orchestrate the platform:
+
+```
+Thena-Web/
+├── index.html                  # Semantic structural entrypoint and layout framework
+├── manifest.json               # PWA configuration and mobile icons settings
+├── css/
+│   └── style.css               # Unified stylesheets, theme engines, and animations
+└── scripts/
+    ├── script.js               # Main application controller (Orchestrator & Image Gen)
+    ├── elements.js             # CACHED DOM element registry for selector optimization
+    ├── lang.js                 # Localization dictionaries and i18n translation engine
+    ├── aiChat.js               # Chat framework, character database, and chat UI logic
+    ├── chatMessages.js         # Chat bubble template builders and list render controls
+    ├── chatImageDownloader.js  # Async downloader utility for media within chat bubbles
+    ├── imageEditor.js          # Photo filters, Canvas API operations, and Outpaint/Fusion tools
+    ├── aiStories.js            # Webtoon reader controller and episode sequence loader
+    ├── modelGallery.js         # Interactive catalog showcasing different image checkpoints
+    ├── loadAllModels.js        # Details and assets downloader for different synthesis models
+    ├── favorites-backups.js    # Data export/import utility and IndexedDB backup management
+    ├── powerSaver.js           # Idle detector, battery/wake lock state manager
+    ├── visibilityOptimizer.js  # IntersectionObserver engine pausing off-screen animations
+    ├── cpu.js                  # HUD diagnostics parser (FPS, CPU & RAM monitor)
+    ├── promptPreview.js        # Visual prompt length and keyword density indicators
+    ├── promptexpansion.js      # Prompt expansion engine ("Magic Wand" logic)
+    ├── trailer.js              # Introduction trailer video controller
+    └── sw.js                   # Service Worker cache controller for offline PWA usage
+```
 
 ---
 
@@ -162,7 +185,7 @@ It unifies four powerful pillars into one seamless **Progressive Web App (PWA)**
   <br />
 
   <details>
-    <summary><b>Show More Screenshots</b></summary>
+    <summary><b>Show More Screenshots (Click to Expand)</b></summary>
     <br />
     <table>
       <tr>
@@ -221,73 +244,72 @@ It unifies four powerful pillars into one seamless **Progressive Web App (PWA)**
 
 ## 🛠️ Installation & Usage
 
-Thena is entirely client-side. **No server setup or installation is required.**
+Thena runs entirely on the client side. No server configuration or database setup is required.
 
-### Option 1 — Direct Open
-```bash
-git clone https://github.com/phaticusthiccy/Thena-Web.git
-```
-Then simply double-click `index.html` to open it in your browser.
+### Method 1: Local Server (Highly Recommended)
+Serving the application via a local HTTP server is required to bypass browser CORS limitations and enable advanced PWA offline caching.
 
-### Option 2 — Local Dev Server *(Recommended)*
-Running a local server avoids CORS restrictions and enables full PWA features (audio, offline mode, install prompt).
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/phaticusthiccy/Thena-Web.git
+   ```
+2. **Launch a server in the root folder:**
+   * **Python:** `python -m http.server 8000`
+   * **NodeJS:** `npx http-server -p 8000`
+   * **VS Code:** Install the *Live Server* extension and click **"Go Live"**.
+3. Open `http://localhost:8000` in your browser.
 
-| Method | Command |
-|---|---|
-| **VS Code** | Install the *Live Server* extension → click **"Go Live"** |
-| **Python** | `python -m http.server 8000` |
-| **Node.js** | `npx http-server .` |
+### Method 2: Direct Execution
+Simply download the directory and open `index.html` directly in your browser. *Note: Some browser security models may limit IndexedDB access or service worker installs when run from file protocol (`file:///`).*
 
 ---
 
-## 🔑 Configuration (API Key)
+## 🔑 Configuration & API Key
 
-An API key is required to use the image generation features. Getting one is free and takes under a minute.
-
-1. Click the **"Get Your Free API Key"** link inside the app (redirects to the official Telegram Bot).
-2. Paste the key you receive into the `API Key` field in the Settings panel.
-3. Your key is stored securely in your browser's `LocalStorage` — it never leaves your device.
+An API key is required to synthesize images:
+1. Open the application settings (gear icon ⚙️).
+2. Click **"Get Your Free API Key"** to open the associated generation provider bot.
+3. Paste the returned token into the API Key input.
+4. The key is securely cached inside the browser's `LocalStorage` and is only sent directly to model generation endpoints.
 
 ---
 
 ## 🧩 Tech Stack
 
-| Technology | Role |
-|---|---|
-| **HTML5** | Semantic structure, accessibility, and DOM layout |
-| **CSS3** | Animations, Flexbox/Grid, Glassmorphism, and responsive design |
-| **JavaScript (ES6+)** | Core application logic, API communication, and DOM management |
-| **IndexedDB** | Persistent local storage for the image gallery and chat history |
-| **Web Audio API** | Real-time audio synthesis and UI sound effects |
-| **Canvas API** | Image processing, resizing, filtering, and editing |
-| **Service Workers** | PWA offline capabilities and installability |
+| Technology | Implementation Scope |
+| :--- | :--- |
+| **HTML5** | Semantic structure, dynamic template injection, responsive structural components. |
+| **CSS3** | Premium UI aesthetics, Glassmorphism styles, dark/light theme engines, performance-optimized animations. |
+| **JavaScript (ES6+)** | Native asynchronous flow, Canvas manipulations, modular scripts loader, IndexedDB orchestration. |
+| **IndexedDB** | High-capacity offline storage of images, history states, chat rooms, and custom metadata. |
+| **Web Audio API** | Real-time UI audio generation and sound spatialization. |
+| **Canvas API** | Real-time browser-side cropping, filtering, and scaling adjustments. |
+| **Service Workers** | Prefetching, network caching strategies, and standalone Progressive Web App (PWA) installation. |
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome and greatly appreciated. To get started:
+Contributions to improve performance, add new feature modules, or refine styling are welcome:
 
 1. **Fork** the repository.
-2. **Create** a feature branch: `git checkout -b feature/your-feature-name`
-3. **Commit** your changes: `git commit -m 'feat: add your feature description'`
-4. **Push** to your branch: `git push origin feature/your-feature-name`
-5. **Open** a Pull Request and describe what you've changed.
-
-Please follow conventional commit style and keep PRs focused on a single concern.
+2. Create your branch: `git checkout -b feature/amazing-feature`
+3. Commit your changes (using [Conventional Commits](https://www.conventionalcommits.org/)): `git commit -m 'feat: add amazing new feature'`
+4. Push to the branch: `git push origin feature/amazing-feature`
+5. Open a **Pull Request**.
 
 ---
 
 ## 📝 License
 
-This project is distributed under the [MIT](LICENSE) License. See `LICENSE` for more information.
+Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 <div align="center">
-<br />
-<p>Developed with passion by <a href="https://t.me/phaticusthiccy"><b>@phaticusthiccy</b></a></p>
-<p><i>Made with ❤️ and lots of ☕</i></p>
-<br />
-<a href="https://phaticusthiccy.github.io/Thena-Web/">
-  <img src="https://img.shields.io/badge/⭐%20Star%20this%20repo-f59e0b?style=for-the-badge" alt="Star this repo" />
-</a>
+  <br />
+  <p>Developed with passion by <a href="https://t.me/phaticusthiccy"><b>@phaticusthiccy</b></a></p>
+  <p><i>Made with ❤️ and lots of ☕</i></p>
+  <br />
+  <a href="https://phaticusthiccy.github.io/Thena-Web/">
+    <img src="https://img.shields.io/badge/⭐%20Star%20this%20repo-f59e0b?style=for-the-badge" alt="Star this repo" />
+  </a>
 </div>

@@ -39,7 +39,6 @@ const ASSETS_TO_CACHE = [
     './scripts/cpu.js',
     './scripts/trailer.js',
     './scripts/powerSaver.js',
-    './scripts/modelSuggestion.js',
     './scripts/modelGallery.js',
     './scripts/customSelect.js'
 ];

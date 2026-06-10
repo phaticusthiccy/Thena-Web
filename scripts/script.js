@@ -878,7 +878,6 @@ const LS_KEYS = {
     MODEL: 'thena-last-model',
     RATIO: 'thena-last-ratio',
     SIZE: 'thena-last-size',
-    MODEL_SUGGESTION: 'thena-model-suggestion',
     EXTRAS: 'thena-last-extras'
 };
 const apiKeyInput = document.getElementById('api-key');
@@ -913,31 +912,23 @@ promptInput.addEventListener('input', () => {
     checkFormReady();
 
     const isPreviewEnabled = localStorage.getItem('thena-prompt-preview') === 'true';
-    const isSuggestEnabled = localStorage.getItem('thena-model-suggestion') === 'true';
 
-    if (isPreviewEnabled || isSuggestEnabled) {
+    if (isPreviewEnabled) {
         if (promptPreviewTimer) clearTimeout(promptPreviewTimer);
         const val = promptInput.value.trim();
 
         if (val.length >= 10) {
-            if (isPreviewEnabled) setPreviewCardsLoading();
+            setPreviewCardsLoading();
             promptPreviewTimer = setTimeout(() => {
-                const currentAppMode = localStorage.getItem('thena-last-app-mode') || 'image';
-                if (isPreviewEnabled) fetchPromptPreview(val);
-                if (isSuggestEnabled && currentAppMode === 'image' && typeof fetchModelSuggestion === 'function') {
-                    fetchModelSuggestion(val);
-                }
+                fetchPromptPreview(val);
             }, 1000);
         } else {
-            if (isPreviewEnabled) {
-                if (val.length > 0) {
-                    if (promptPreviewAbort) promptPreviewAbort.abort();
-                    setPreviewCountdown(10 - val.length);
-                } else {
-                    renderPreviewResults([]);
-                }
+            if (val.length > 0) {
+                if (promptPreviewAbort) promptPreviewAbort.abort();
+                setPreviewCountdown(10 - val.length);
+            } else {
+                renderPreviewResults([]);
             }
-            if (typeof stopModelSuggestionHighlight === 'function') stopModelSuggestionHighlight();
         }
     }
 });
@@ -6534,14 +6525,9 @@ function switchAppMode(mode) {
     const btnGotoEditor = document.getElementById('btn-goto-editor');
     const btnGotoStories = document.getElementById('btn-goto-stories');
     const galleryBtn = document.getElementById('gallery-btn');
-    const modelSuggestionSetting = document.getElementById('setting-group-model-suggestion');
     const advancedSetting = document.getElementById('setting-group-advanced');
     const autocompleteSetting = document.getElementById('setting-group-autocomplete');
     const previewSetting = document.getElementById('setting-group-prompt-preview');
-
-    if (modelSuggestionSetting) {
-        modelSuggestionSetting.style.display = mode === 'image' ? 'block' : 'none';
-    }
     
     if (advancedSetting) advancedSetting.style.display = (mode === 'stories' || mode === 'chat' || mode === 'editor') ? 'none' : 'block';
     if (autocompleteSetting) autocompleteSetting.style.display = (mode === 'stories' || mode === 'chat' || mode === 'editor') ? 'none' : 'block';
@@ -6768,14 +6754,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnGotoStories) btnGotoStories.onclick = () => switchAppMode('stories');
 
     const lastAppMode = localStorage.getItem('thena-last-app-mode') || 'image';
-    const modelSuggestionSetting = document.getElementById('setting-group-model-suggestion');
     const advancedSetting = document.getElementById('setting-group-advanced');
     const autocompleteSetting = document.getElementById('setting-group-autocomplete');
     const previewSetting = document.getElementById('setting-group-prompt-preview');
-
-    if (modelSuggestionSetting) {
-        modelSuggestionSetting.style.display = lastAppMode === 'image' ? 'block' : 'none';
-    }
 
     const isHiddenMode = lastAppMode === 'stories' || lastAppMode === 'chat' || lastAppMode === 'editor';
     if (advancedSetting) advancedSetting.style.display = isHiddenMode ? 'none' : 'block';
@@ -7154,7 +7135,8 @@ async function loadGalleryStatistics() {
             "Thena Apex": "thenaApex",
             "Anything to Real": "thenaToReal",
             "4K Upscale": "thenaUpscale",
-            "Fusion": "thenaFusion"
+            "Fusion": "thenaFusion",
+            "Gender Swap": "thenaGenderSwap"
         };
         
         const t = translations[currentLang];

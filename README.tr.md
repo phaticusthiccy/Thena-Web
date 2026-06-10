@@ -5,15 +5,17 @@
 <br/>
 
 <div align="center">
-
   <a href="https://phaticusthiccy.github.io/Thena-Web/">
     <img src="src/icon-512.png" alt="Thena Logo" width="160" />
   </a>
 
   <h1>THENA</h1>
-  <h3>Yeni Nesil Yapay Zeka Görsel Üreticisi, Rol Yapma Sohbeti, Görüntü Düzenleyici ve Görsel Hikayeler</h3>
+  <h3>Yeni Nesil İstemci Taraflı Yapay Zeka Ekosistemi: Görsel Üretimi, Rol Yapma Sohbeti, Görüntü Düzenleyici ve Görsel Hikayeler</h3>
 
   <p>
+    <a href="https://github.com/phaticusthiccy/Thena-Web/releases">
+      <img src="https://img.shields.io/badge/S%C3%BCr%C3%BCm-3.6.2-blue?style=for-the-badge&logo=git&logoColor=white" alt="Sürüm 3.6.2" />
+    </a>
     <a href="https://github.com/phaticusthiccy/Thena-Web/issues">
       <img src="https://img.shields.io/github/issues/phaticusthiccy/Thena-Web?style=for-the-badge&logo=github&color=e11d48" alt="Sorunlar" />
     </a>
@@ -23,12 +25,12 @@
     <a href="https://github.com/phaticusthiccy/Thena-Web/blob/main/LICENSE">
       <img src="https://img.shields.io/badge/Lisans-MIT-8b5cf6?style=for-the-badge" alt="Lisans" />
     </a>
-    <img src="https://img.shields.io/badge/Platform-Web%20%26%20PWA-0ea5e9?style=for-the-badge&logo=googlechrome" alt="Platform" />
-    <img src="https://img.shields.io/badge/Framework_Yok-Vanilla_JS-f97316?style=for-the-badge&logo=javascript&logoColor=white" alt="Vanilla JS" />
+    <img src="https://img.shields.io/badge/Platform-Web%20%26%20PWA-0ea5e9?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Platform" />
+    <img src="https://img.shields.io/badge/Vanilla-JS-f97316?style=for-the-badge&logo=javascript&logoColor=white" alt="Vanilla JS" />
   </p>
 
   <blockquote>
-    <em>Hayal gücünüzü saniyeler içinde çarpıcı görsellere dönüştürün — kurulum yok, backend yok, tamamen tarayıcınızda.</em>
+    <strong>Hayal gücünüzü saniyeler içinde çarpıcı görsellere ve etkileşimli hikayelere dönüştürün — sunucu bağımlılığı yok, tamamen istemci tarafında çalışır.</strong>
   </blockquote>
 
   <a href="https://phaticusthiccy.github.io/Thena-Web/">
@@ -36,7 +38,6 @@
   </a>
 
   <br /><br />
-
 </div>
 
 ---
@@ -45,9 +46,10 @@
 
 - [Proje Hakkında](#-proje-hakkında)
 - [Temel Özellikler](#-temel-özellikler)
+- [Kod Tabanı Mimarisi ve Dosya Yapısı](#-kod-tabanı-mimarisi-ve-dosya-yapısı)
 - [Ekran Görüntüleri](#-ekran-görüntüleri)
 - [Kurulum ve Kullanım](#%EF%B8%8F-kurulum-ve-kullanım)
-- [Yapılandırma (API Anahtarı)](#-yapılandırma-api-anahtarı)
+- [Yapılandırma ve API Anahtarı](#-yapılandırma-ve-api-anahtarı)
 - [Teknoloji Yığını](#-teknoloji-yığını)
 - [Katkıda Bulunma](#-katkıda-bulunma)
 - [Lisans](#-lisans)
@@ -56,72 +58,93 @@
 
 ## 🚀 Proje Hakkında
 
-**Thena**, tamamen **Vanilla JavaScript, HTML5 ve CSS3** ile inşa edilmiş, tarayıcı-yerel, yüksek performanslı bir Yapay Zeka yaratıcı platformudur — React yok, Vue yok, ağır framework yok. Modern tarayıcı API'lerinin (IndexedDB, Web Audio API, Canvas API, Service Workers) tüm gücünden yararlanarak, sekme içinden masaüstü kalitesinde bir deneyim sunar.
+**Thena**, tamamen **Vanilla JavaScript, HTML5 ve CSS3** ile inşa edilmiş, tarayıcı-yerel, yüksek performanslı bir Yapay Zeka yaratıcı platformudur (React/Vue gibi ağır çerçeveler veya derleme adımları içermez). Modern Web API'lerinden yararlanarak, doğrudan bir tarayıcı sekmesi içinde içerik üretimi, anlatı oluşturma ve görsel hikaye anlatımı için masaüstü düzeyinde, sunucusuz bir deneyim sunar.
 
-Dört güçlü sütunu tek bir kusursuz **Aşamalı Web Uygulamasında (PWA)** birleştirir:
+Platform dört temel sütun üzerine kurulmuştur:
 
-| Sütun | Açıklama |
-|---|---|
-| 🎨 **Yapay Zeka Görsel Üretimi** | Canlı komut geri bildirimiyle çok modelli, çok stilli görsel sentezi |
-| 🤖 **Yapay Zeka Rol Yapma Sohbeti** | Duygu farkındalıklı yapay zeka karakterleriyle derin anlatı sohbetleri |
-| 🖼️ **Görüntü Düzenleyici** | Profesyonel düzeyde canvas araçları, yapay zeka outpaint, 4K yükseltme (Upscale), görsel birleştirme (Fusion), filtreler ve işaretleme |
-| 📖 **Yapay Zeka Hikayeleri (Thena Toons)** | Dinamik bölüm navigasyonuna sahip sürükleyici görsel webtoon okuyucu |
+| Sütun | Mimari ve Amaç |
+| :--- | :--- |
+| 🎨 **Yapay Zeka Görsel Üretimi** | Canlı komut geri bildirimi ve özel API uç noktaları kullanan çok modelli, çok stilli görsel sentezi. |
+| 🤖 **Yapay Zeka Rol Yapma Sohbeti** | Özel karakter meta verileri, hafıza entegrasyonu ve duygu analizi içeren sürükleyici sohbet motoru. |
+| 🖼️ **Görüntü Düzenleyici** | Canvas düzeyinde piksel manipülasyonu, yapay zeka outpaint, 4K yükseltme (Upscale), harmanlama (Fusion) ve insan odaklı **Cinsiyet Değişimi**. |
+| 📖 **Yapay Zeka Hikayeleri (Thena Toons)** | Tembel yüklemeli (lazy-loaded) görüntü işlem hattına sahip, akıcı webtoon tarzı görsel roman okuyucusu. |
 
 ---
 
 ## ✨ Temel Özellikler
 
-### 🎨 Gelişmiş Görüntü Üretimi
-- **Çoklu Model Desteği** — Benzersiz görsel stillere sahip Fotorealizm, Anime, Sinematik, Thena Toonish (cel-shaded modern anime) ve diğer yaratıcı modeller arasından seçim yapın.
-- **Esnek En Boy Oranları** — Kare (1:1), Dikey (3:4, 9:16) ve Geniş Ekran (16:9, 4:3) formatları hazır olarak desteklenir.
-- **Akıllı Üretim Parametreleri** — Hız için Hızlı Mod (Fast Mode), derinlik için Yaratıcı & Yoğun modlar ve keskin çıktılar için HighRes ölçekleme.
-- **Genişletilmiş Şablonlar & Stiller** — Topluluk tarafından hazırlanmış komutları ve seçilmiş estetik stilleri tek tıklamayla anında uygulayın.
-- **Canlı Komut Önizlemesi** — Üretim başlamadan önce gereken komut uzunluğunu ve karmaşıklığını gösteren dinamik görsel gösterge.
-- **Sihirli Değnek ✨** — Kısa ve belirsiz komutları otomatik olarak zengin, ayrıntılı açıklamalara dönüştürür.
+### 🎨 Gelişmiş Görsel Üretimi
+* **Çoklu Model Motoru** — Özelleşmiş görsel kontrol noktaları (Fotorealizm, Anime, Sinematik ve cel-shaded modern anime stili olan *Thena Toonish*) arasında sorunsuzca geçiş yapın.
+* **Hassas En Boy Oranları** — Kare (1:1), Dikey (3:4, 9:16) ve Geniş Ekran (16:9, 4:3) formatları için hazır en boy oranı adaptörleri.
+* **Optimizasyon Modları** — Hızlı iterasyonlar için **Hızlı Mod (Fast Mode)**, yapısal karmaşıklık için **Yaratıcı & Yoğun** modlar ve süper örneklenmiş çıktılar için **HighRes** ölçekleme.
+* **Komut Mühendisliği Araçları**:
+  * **Sihirli Değnek ✨** — Kısa kelimeleri ve belirsiz komutları otomatik olarak zengin ve ayrıntılı açıklamalara dönüştürür.
+  * **Canlı Komut Önizlemesi** — Komut karmaşıklığını ve uzunluk sınırlarını analiz eden dinamik görsel gösterge.
+  * **Seçilmiş Stil Şablonları** — Topluluk tarafından hazırlanan estetik stilleri tek tıklamayla anında uygulayın.
 
 ### 🤖 Yapay Zeka Rol Yapma Sohbeti
-- **Sürükleyici Karakterler** — Tam anlamıyla işlenmiş lore ve arka plan hikayelerine sahip Yapay Zeka kişilikleriyle (flört simülasyon karakterleri dahil) derin, hikaye odaklı sohbetlere dalın.
-- **Üç Zeka Kademesi** — Anlatı ihtiyaçlarınıza göre Hızlı (Fast), Dengeli (Balanced) ve Ultra (Gelişmiş) yapay zeka modelleri arasında geçiş yapın.
-- **Gerçek Zamanlı Duygu Motoru** — Canlı duygu analizi, karakterin yüz ifadesini hikayenin duygusal tonunu yansıtacak şekilde dinamik olarak günceller.
-- **Kişiselleştirilmiş Kullanıcı Profilleri** — Kendi profilinizi oluşturun (İsim, Yaş, Cinsiyet). Sistem, karakterlerin tonlarını, hafızalarını ve yanıtlarını size özel olarak uyarlamak için gelişmiş bağlam meta verisi çıkarımını kullanır.
-- **Esnek Kütüphane Düzenleri** — Karakter kadronuzu Izgara (Grid), Liste veya Kompakt görünümde düzenleyin — zahmetsizce geçiş yapın.
-- **Anlatı Farkındalığı** — Yapay Zeka, `[FINISH]` sinyali aracılığıyla hikaye tamamlanmasını algılar ve yayları doğal sonuçlara yönlendirir.
-- **The Warden — İçerik Denetimi** — Gerçek zamanlı yoğunluk göstergeleriyle (Düşük / Orta / Yüksek) entegre denetleme katmanı.
+* **Bağlamsal Karakter Hikayeleri** — Kapsamlı sistem komutları, anlatı ayarları ve flört simülasyonu mekanikleri içeren karakterlerle derin sohbetler.
+* **Çok Aşamalı LLM Desteği** — Anlatı ihtiyaçlarınıza göre **Hızlı (Fast)**, **Dengeli (Balanced)** ve **Ultra (Gelişmiş)** yapay zeka modelleri arasında dinamik geçiş yapın.
+* **Gerçek Zamanlı Duygu Analizi** — Canlı duygu analizi motoru, karakterin yanıtlarını analiz ederek yüz ifadesini hikayenin duygusal tonuna göre otomatik günceller.
+* **Dinamik Kullanıcı Profilleri** — İsim, yaş ve cinsiyet tercihlerinizi özelleştirin; yapay zeka karakteri tonunu, hafıza sınırlarını ve yanıt yapılarını size özel olarak uyarlar.
+* **The Warden Denetimi** — Ayarlanabilir seviyelere (Düşük / Orta / Yüksek) sahip entegre yerel içerik moderasyonu.
+* **Arayüz Düzenleri** — Sohbet veritabanları için tam içe/dışa aktarma araçlarıyla birlikte akıcı ızgara, liste ve kompakt kütüphane görünümleri.
 
 ### 🖼️ Profesyonel Görüntü Düzenleyici
-- **Yapay Zeka Outpaint** — Oluşturduğunuz görsellerin sınırlarını akıllı yapay zeka outpaint ile genişleterek bağlamsal olarak yeni alanlar ekleyin.
-- **4K Yükseltme (4K Upscale)** — Tek bir tıklamayla görsellerinizi yüksek çözünürlüklü 4K kalitesine yükseltin.
-- **Görsel Birleştirme (Fusion)** — İki farklı görseli, ayarlanabilir karışım oranı (blend ratio) kaydırıcısı ile yapay zekayı kullanarak harmanlayıp birleştirin.
-- **Gelişmiş Model Seçimi** — "FAST" (PixelFusion), "BEST" (NeuralFlow) ve "MAX" (Synapse) dinamik rozetleri ve avantaj/dezavantaj bilgileriyle düzenlemeleriniz için doğru yapay zeka modelini seçin.
-- **Anlık Filtre Şablonları** — Mükemmel görünümü bulmak için gerçek zamanlı yerelleştirilmiş arama çubuğuyla Instagram'dan ilham alınan filtreler uygulayın.
-- **Manuel İnce Ayar** — Parlaklık, kontrast, doygunluk, sıcaklık ve daha fazlası üzerinde tam kontrol.
-- **Kırpma ve Yeniden Boyutlandırma** — Oluşturulan sanatınızı her platform veya çözünürlük için hazırlayın — tamamı tarayıcı içinde.
-- **İşaretleme Araçları** — Yaratıcı veya öğretici kullanım için oluşturulan görsellere çizim yapın, not ekleyin ve metin yerleştirin.
+* **Yapay Zeka Outpaint** — Canvas sınırlarını dışa doğru genişleterek, yeni tanımlanan alanları yapay zeka ile bağlamsal olarak doldurun.
+* **4K Yükseltme (Upscale)** — Gelişmiş süper-çözünürlük modelleri kullanarak görselleri tek tıklamayla 4K kalitesine yükseltin.
+* **Görsel Birleştirme (Fusion)** — Karışım oranları ve hedef model adaptörleri aracılığıyla iki farklı görseli yapay zeka ile harmanlayıp birleştirin.
+* **Gelişmiş İşleme Modelleri** — Hız/kalite göstergelerine göre rozetlerle ayrılmış modeller: **FAST (PixelFusion)**, **BEST (NeuralFlow)** ve **MAX (Synapse)**.
+* **Cinsiyet Değişimi (Gender Swap) 🔄** — Asenkron sorgulama ve otomatik sonuç yerleştirme desteğiyle, bulut tabanlı yapay zeka worker hatlarını kullanarak insan özelliklerini dinamik olarak değiştirin.
+* **Tahribatsız İnce Ayarlar** — Parlaklık, kontrast, sıcaklık ve doygunluk değerleri üzerinde tam kontrol.
+* **İşaretleme ve Notlar** — Yerelleştirilmiş gerçek zamanlı aramaya sahip dahili fırçalar, metin araçları ve hazır fotoğraf filtreleri.
 
 ### 📖 Yapay Zeka Hikayeleri (Thena Toons)
-- **Sürükleyici Webtoon Okuyucu** — Dikkatinizi dağıtmayan özel bir okuma arayüzü ile özenle hazırlanmış, çok bölümlü görsel hikayelere dalın.
-- **Dinamik Bölüm Navigasyonu** — "Devam Ediyor" (Ongoing) ve "Tamamlandı" (Completed) durum takibiyle bölümler arasında sezgisel bir arayüz ile sorunsuzca gezinin.
-- **Optimize Edilmiş Performans** — Tembel yüklenen (lazy-loaded) yüksek çözünürlüklü görüntü dizileri, hızlı yükleme süreleri ve minimum bellek kullanımı sağlar.
-- **Eğlenceli Arayüz Animasyonları** — Bir bölümü bitirdiğinizde şık, özel animasyonların ve çok dilli durum mesajlarının keyfini çıkarın.
+* **Dikkati Dağıtmayan Okuma** — Webtoon formatına uygun, dikey akışlı okuma deneyimi.
+* **Bölüm Durum Yöneticisi** — Doğrudan IndexedDB üzerinde önbelleğe alınan bölüm ilerlemelerini ("Devam Ediyor" ve "Tamamlandı") izler.
+* **Tembel Yükleme (Lazy Loading)** — Yüksek çözünürlüklü çizgi roman sahneleri sadece ekrana girdiğinde yüklenerek CPU/GPU kaynaklarını korur.
 
 ### 📊 Performans ve Optimizasyon
-- **Gerçek Zamanlı Sistem İstatistikleri** — Canlı performans HUD'u aracılığıyla CPU yükünü, RAM kullanımını, FPS'i ve ortalama render sürelerini izleyin.
-- **Akıllı Güç Tasarrufu** — Uygulama boştayken arka plan görevlerini otomatik duraklatır, sesi kapatır ve Wake Lock API'yi etkinleştirir.
-- **Akıllı Render Motoru** — `IntersectionObserver` destekli animasyon duraklatma, ekran dışı öğeler için GPU/CPU yükünü önemli ölçüde azaltır.
-- **Optimize Edilmiş Sohbet Render'ı** — DOM verimli mesaj hattı, binlerce mesajda bile pürüzsüz, takılmasız kaydırma sağlar.
-- **Sürüklenebilir HUD** — Animasyonları bozmadan performans monitörünü ekranın herhangi bir yerine yeniden konumlandırın ve boyutlandırın.
+* **Sistem HUD Göstergesi** — FPS, RAM kullanımı ve GPU render döngülerini izleyen, sürüklenebilir ve boyutu ayarlanabilir canlı performans paneli.
+* **Güç Tasarrufu Motoru** — Sesi kapatmak, ağır CSS animasyonlarını duraklatmak ve Wake Lock API aracılığıyla ekran uyanıklığını yönetmek için sekme durumunu (görünürlük/boşta kalma) dinler.
+* **DOM Sanallaştırma** — Binlerce mesajda bile takılmasız kaydırma sağlamak için sohbet mesajlarını belleği şişirmeden verimli şekilde yükler.
 
-### 🌐 Yerelleştirme ve Erişilebilirlik
-- **Tam Çok Dilli Destek** — Dinamik arama mantığı, galeri etiketleri ve tüm sistem bildirimleri dahil olmak üzere **İngilizce** ve **Türkçe** dillerinde eksiksiz arayüz çevirisi.
-- **Sesli Geri Bildirim Sistemi** — Etkileşimler için bağlamsal ses efektleri, özel Sessiz Mod geçişiyle.
-- **Sinematik Giriş Deneyimi** — İlk açılışta sürükleyici bir fragman oynatılır; uygulamaya doğrudan atlamak için istediğiniz zaman atlayın.
-- **Şık Mobil Deneyim** — Sürükle-kapat (drag-to-dismiss) alt sayfalar ve mobil için optimize edilmiş sohbet yan çubuklarıyla tam duyarlı düzen.
+### 💾 Önce Yerel (Local-First) Gizlilik
+* **Yerel Veritabanı** — Tüm özel karakterlerin, üretilen görsellerin, favorilerin ve sohbet geçmişinin cihazınızda çevrimdışı kalmasını sağlayan `IndexedDB` desteği.
+* **Gizlilik Odaklı** — API anahtarları ve kişisel profil detayları, üçüncü taraf sunuculara gönderilmeden doğrudan tarayıcının `LocalStorage` alanında saklanır.
 
-### 💾 Önce Yerel (Local-First) Mimarisi
-- **Gelişmiş Galeri Yönetimi** — Uzun Basma (Long-Press) Çoklu Seçim moduyla görselleri filtreleyin, sıralayın (En Yeni / En Eski) ve toplu silin.
-- **Sürükle-Kapat Hareketi** — Akıcı bir kaydırma hareketiyle tam ekran görüntü görünümlerini sezgisel olarak kapatın.
-- **Sıfır-Backend Gizlilik** — Tüm medya, konuşmalar ve özel profiller yalnızca IndexedDB aracılığıyla tarayıcınızın yerel depolamasında yaşar.
-- **Verileriniz Size Ait** — API anahtarları ve oluşturulan içerik asla cihazınızdan ayrılmaz. Gizli yükleme yok, hiçbir zaman.
+---
+
+## 📂 Kod Tabanı Mimarisi ve Dosya Yapısı
+
+Platformu yöneten temel betik modüllerinin ve dosyaların açıklamaları şu şekildedir:
+
+```
+Thena-Web/
+├── index.html                  # Semantik yapısal giriş noktası ve düzen çerçevesi
+├── manifest.json               # PWA yapılandırması ve mobil ikon ayarları
+├── css/
+│   └── style.css               # Birleştirilmiş stil sayfaları, tema motorları ve animasyonlar
+└── scripts/
+    ├── script.js               # Ana uygulama denetleyicisi (Orkestratör ve Görsel Üretimi)
+    ├── elements.js             # Seçici optimizasyonu için ÖNBELLEĞE ALINMIŞ DOM öğesi kaydı
+    ├── lang.js                 # Yerelleştirme sözlükleri ve i18n çeviri motoru
+    ├── aiChat.js               # Sohbet çerçevesi, karakter veritabanı ve sohbet arayüz mantığı
+    ├── chatMessages.js         # Sohbet balonu şablon oluşturucuları ve liste render denetimleri
+    ├── chatImageDownloader.js  # Sohbet balonları içindeki medya için eşzamansız indirme aracı
+    ├── imageEditor.js          # Fotoğraf filtreleri, Canvas API işlemleri ve Outpaint/Fusion/Gender Swap araçları
+    ├── aiStories.js            # Webtoon okuyucu denetleyicisi ve bölüm dizisi yükleyicisi
+    ├── modelGallery.js         # Farklı görsel kontrol noktalarını sergileyen etkileşimli katalog
+    ├── loadAllModels.js        # Sentez modelleri için detaylar ve varlıklar indirme aracı
+    ├── favorites-backups.js    # Veri dışa/içe aktarma aracı ve IndexedDB yedekleme yönetimi
+    ├── powerSaver.js           # Boşta kalma dedektörü, pil/wake lock durum yöneticisi
+    ├── visibilityOptimizer.js  # Ekran dışı animasyonları duraklatan IntersectionObserver motoru
+    ├── cpu.js                  # HUD teşhis ayrıştırıcısı (FPS, CPU ve RAM monitörü)
+    ├── promptPreview.js        # Görsel komut uzunluğu ve anahtar kelime yoğunluğu göstergeleri
+    ├── promptexpansion.js      # Komut genişletme motoru ("Sihirli Değnek" mantığı)
+    ├── trailer.js              # Tanıtım fragmanı video denetleyicisi
+    └── sw.js                   # Çevrimdışı PWA kullanımı için Service Worker önbellek denetleyicisi
+```
 
 ---
 
@@ -162,7 +185,7 @@ Dört güçlü sütunu tek bir kusursuz **Aşamalı Web Uygulamasında (PWA)** b
   <br />
 
   <details>
-    <summary><b>Daha Fazla Ekran Görüntüsü Göster</b></summary>
+    <summary><b>Daha Fazla Ekran Görüntüsü Göster (Açmak için Tıklayın)</b></summary>
     <br />
     <table>
       <tr>
@@ -221,73 +244,72 @@ Dört güçlü sütunu tek bir kusursuz **Aşamalı Web Uygulamasında (PWA)** b
 
 ## 🛠️ Kurulum ve Kullanım
 
-Thena tamamen tarayıcı tarafındadır. **Sunucu kurulumu veya bağımlılık yüklemesi gerekmez.**
+Thena tamamen tarayıcı tarafında çalışır. Sunucu yapılandırması veya veritabanı kurulumu gerekmez.
 
-### Seçenek 1 — Doğrudan Açma
-```bash
-git clone https://github.com/phaticusthiccy/Thena-Web.git
-```
-Ardından tarayıcınızda açmak için `index.html` dosyasına çift tıklamanız yeterlidir.
+### Yöntem 1: Yerel Sunucu (Şiddetle Önerilir)
+Tarayıcının CORS kısıtlamalarını aşmak ve gelişmiş PWA çevrimdışı önbelleklemesini etkinleştirmek için uygulamanın yerel bir HTTP sunucusu üzerinden çalıştırılması gerekir.
 
-### Seçenek 2 — Yerel Geliştirme Sunucusu *(Önerilen)*
-Yerel sunucu çalıştırmak, CORS kısıtlamalarını önler ve tam PWA özelliklerini etkinleştirir (ses, çevrimdışı mod, yükleme isteği).
+1. **Depoyu klonlayın:**
+   ```bash
+   git clone https://github.com/phaticusthiccy/Thena-Web.git
+   ```
+2. **Kök dizinde bir sunucu başlatın:**
+   * **Python:** `python -m http.server 8000`
+   * **NodeJS:** `npx http-server -p 8000`
+   * **VS Code:** *Live Server* eklentisini yükleyin ve **"Go Live"** düğmesine tıklayın.
+3. Tarayıcınızda `http://localhost:8000` adresini açın.
 
-| Yöntem | Komut |
-|---|---|
-| **VS Code** | *Live Server* eklentisini yükleyin → **"Go Live"** düğmesine tıklayın |
-| **Python** | `python -m http.server 8000` |
-| **Node.js** | `npx http-server .` |
+### Yöntem 2: Doğrudan Çalıştırma
+Uygulama klasörünü indirip `index.html` dosyasına çift tıklayarak tarayıcınızda çalıştırabilirsiniz. *Not: Bazı tarayıcı güvenlik modelleri, dosya protokolü (`file:///`) üzerinden çalıştırıldığında IndexedDB erişimini veya service worker yüklemelerini sınırlayabilir.*
 
 ---
 
-## 🔑 Yapılandırma (API Anahtarı)
+## 🔑 Yapılandırma ve API Anahtarı
 
-Görüntü üretme özelliklerini kullanmak için bir API anahtarı gereklidir. Almak ücretsiz ve bir dakikadan az sürer.
-
-1. Uygulama içindeki **"Get Your Free API Key"** bağlantısına tıklayın (resmi Telegram Bot'una yönlendirir).
-2. Aldığınız anahtarı Ayarlar panelindeki `API Key` alanına yapıştırın.
-3. Anahtarınız tarayıcınızın `LocalStorage` alanında güvenli şekilde saklanır — cihazınızdan asla ayrılmaz.
+Görsel üretimi özelliklerini kullanabilmek için bir API anahtarı gereklidir:
+1. Uygulama ayarlarını açın (dişli simgesi ⚙️).
+2. İlişkili botu açmak için **"Get Your Free API Key"** bağlantısına tıklayın.
+3. Size verilen anahtarı kopyalayarak API Key alanına yapıştırın.
+4. Anahtarınız tarayıcınızın `LocalStorage` alanında güvenli bir şekilde saklanır ve sadece doğrudan model üretim uç noktalarına gönderilir.
 
 ---
 
 ## 🧩 Teknoloji Yığını
 
-| Teknoloji | Rol |
-|---|---|
-| **HTML5** | Semantik yapı, erişilebilirlik ve DOM düzeni |
-| **CSS3** | Animasyonlar, Flexbox/Grid, Glassmorphism ve duyarlı tasarım |
-| **JavaScript (ES6+)** | Temel uygulama mantığı, API iletişimi ve DOM yönetimi |
-| **IndexedDB** | Görsel galeri ve sohbet geçmişi için kalıcı yerel depolama |
-| **Web Audio API** | Gerçek zamanlı ses sentezi ve arayüz ses efektleri |
-| **Canvas API** | Görüntü işleme, yeniden boyutlandırma, filtreleme ve düzenleme |
-| **Service Workers** | PWA çevrimdışı yetenekleri ve yüklenebilirlik |
+| Teknoloji | Uygulama Kapsamı |
+| :--- | :--- |
+| **HTML5** | Semantik yapı, dinamik şablon enjeksiyonu ve duyarlı yapısal bileşenler. |
+| **CSS3** | Premium arayüz estetiği, Glassmorphism stilleri, koyu/açık tema motoru ve performans odaklı animasyonlar. |
+| **JavaScript (ES6+)** | Yerel eşzamansız akış, Canvas manipülasyonları, modüler betik yükleyici ve IndexedDB orkestrasyonu. |
+| **IndexedDB** | Üretilen görsellerin, geçmiş durumların, sohbet odalarının ve özel meta verilerin yüksek kapasiteli çevrimdışı depolanması. |
+| **Web Audio API** | Gerçek zamanlı arayüz ses sentezi ve ses mekansallaştırması. |
+| **Canvas API** | Tarayıcı tarafında gerçek zamanlı kırpma, filtreleme ve ölçeklendirme ayarlamaları. |
+| **Service Workers** | Çevrimdışı PWA kullanımı için ön yükleme, ağ önbellekleme stratejileri ve masaüstüne/telefona yüklenebilirlik. |
 
 ---
 
 ## 🤝 Katkıda Bulunma
 
-Katkılar memnuniyetle karşılanır ve büyük takdirle değerlendirilir. Başlamak için:
+Performansı iyileştirmek, yeni özellik modülleri eklemek veya tasarımı hassaslaştırmak için katkılarınızı bekliyoruz:
 
-1. **Fork** edin — Depoyu çatallayın.
-2. **Branch oluşturun** — `git checkout -b feature/ozellik-adiniz`
-3. **Commit edin** — `git commit -m 'feat: ozellik açıklamanızı ekleyin'`
-4. **Push edin** — `git push origin feature/ozellik-adiniz`
-5. **Pull Request açın** — Neyi değiştirdiğinizi açıklayın.
-
-Lütfen geleneksel commit stilini takip edin ve PR'ları tek bir konuya odaklı tutun.
+1. Depoyu **Fork** edin (çatallayın).
+2. Kendi özellik dalınızı oluşturun: `git checkout -b feature/amazing-feature`
+3. Değişikliklerinizi commit edin ([Conventional Commits](https://www.conventionalcommits.org/) formatına uygun olarak): `git commit -m 'feat: add amazing new feature'`
+4. Dalı push edin: `git push origin feature/amazing-feature`
+5. Bir **Pull Request** açın.
 
 ---
 
 ## 📝 Lisans
 
-Bu proje [MIT](LICENSE) Lisansı kapsamında dağıtılmaktadır. Daha fazla bilgi için `LICENSE` dosyasına bakın.
+Bu proje MIT Lisansı altında dağıtılmaktadır. Daha fazla bilgi için [LICENSE](LICENSE) dosyasına bakın.
 
 <div align="center">
-<br />
-<p>Tutku ile geliştirildi: <a href="https://t.me/phaticusthiccy"><b>@phaticusthiccy</b></a></p>
-<p><i>❤️ ve bol bol ☕ ile yapıldı.</i></p>
-<br />
-<a href="https://phaticusthiccy.github.io/Thena-Web/">
-  <img src="https://img.shields.io/badge/⭐%20Bu%20repoyu%20yıldızlayın-f59e0b?style=for-the-badge" alt="Bu repoyu yıldızlayın" />
-</a>
+  <br />
+  <p>Tutkuyla geliştiren: <a href="https://t.me/phaticusthiccy"><b>@phaticusthiccy</b></a></p>
+  <p><i>❤️ ve bolca ☕ ile yapıldı.</i></p>
+  <br />
+  <a href="https://phaticusthiccy.github.io/Thena-Web/">
+    <img src="https://img.shields.io/badge/⭐%20Bu%20repoyu%20y%C4%B1ld%C4%B1zlay%C4%B1n-f59e0b?style=for-the-badge" alt="Bu repoyu yıldızlayın" />
+  </a>
 </div>
