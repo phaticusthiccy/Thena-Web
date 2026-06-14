@@ -1208,3 +1208,39 @@ footer a:hover { color: rgba(255,255,255,0.85); }
     .hero-badge-ver { display: none; }
     .strip-item { width: 180px; }
 }
+
+@media (pointer: coarse), (max-width: 768px) {
+    .trailer-nav {
+        background: rgba(5, 5, 8, 0.94) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+    
+    .trailer-nav.scrolled {
+        background: rgba(5, 5, 8, 0.96) !important;
+    }
+
+    .lang-toggle,
+    .hero-badge,
+    .btn-outline,
+    .feature-img-tag {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    .lang-toggle {
+        background: rgba(255, 255, 255, 0.12) !important;
+    }
+
+    .hero-badge {
+        background: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .btn-outline {
+        background: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .feature-img-tag {
+        background: rgba(0, 0, 0, 0.85) !important;
+    }
+}

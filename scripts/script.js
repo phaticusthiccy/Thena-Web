@@ -68,7 +68,7 @@ const modelTranslationsTR = {
     "4c3e77 uy8g8 16gga 54h8h 999a5 5060": "Thena MiniWa, animasyon stili ve anime görsellerini birleştiren, hızlı, çok yönlü ve stilize edilmiş bir modeldir.",
     "771ks 71g6g8 hlh8h8 6b4a5 77b4a5 5060": "Thena'nın son derece canlı ve parlak anime görselleri oluşturmak için kullandığı model. Basitleştirilmiş bir Anime Core modeli ve son işlem teknikleri kullanır.",
     "911ks fdg6g8 66h8h8 900a5 zxb4a5 9000": "Müstehçen veya NSFW içerik oluşturmak için mutlak doğrulukta bir model. Thena Movie temel modeline dayanmaktadır. İnsanların ve sahnelerin gerçekçi görüntülerini oluşturabilir.",
-    "524ks ffs6g8 091h8h 660a5 1dn55 1000": "Yeni difüzyon mimarisi ile oluşturulan 7. versiyon. Her resim türünde başarılı sonuçlar çıkaran, güçlü ve aşırı hızlı model.",
+    "7ca6e691-cecd-4a8d-bb88-d2c6303576a1": "Akış eşleme (flow matching) ve Qwen3-VL ile birleşik 34 katmanlı DiT mimarisi üzerine kurulu 8. sürüm. İnanılmaz bir prompt uyumu ve olağanüstü görüntü kalitesi sunar.",
     "81ggz 7j661 66281 yy161 1f4f4 21143": "Thena'nın en güçlü gürültü ile akıl yürütme modeli. Saf güç ve benzersiz kalitenin birleşimi.",
     "176ks dd131 81927 a1165 p00183 6000": "Fotorealizmin zirvesi. Her detayı kusursuz bir hassasiyetle yakalayan Thena Portraits, istemlerinizi yüksek kaliteli başyapıtlara dönüştürür.",
     "7367ab 279dbf 417a8 51fe3 5050": "Yüksek çözünürlüklü, sadece açık içerikler için titizlikle tasarlanmış bir model. Yükske netlikte tutarlı görüntüler üretebilir.",
@@ -82,7 +82,8 @@ const modelTranslationsTR = {
     "6cf0e882-7ff7-4c53-be5e-4ee6fff779eb": "Rüya gibi hikayeler anlatmak için tasarlanmış çok yönlü bir model. Thena Analog, yumuşak sinematik gerçekçiliği stilize sanatsal illüstrasyonlarla harmanlayarak sıcak ve nostaljik bir atmosfer sunar.",
     "3c7a94a0-c844-471f-ae98-0f8c8508baf7": "Thena Ultra'dan ilham alan, gürültü tabanlı akıl yürütme yeteneğine sahip yeni nesil yapay zeka modeli. Geliştirilen ikinci akıl yürütme odaklı sürüm.",
     "db85483f-b998-4dee-b9b8-f3e1dcfb4a6d": "Thena Toonish, keskin gölgelendirmeler ve canlı renklere sahip temiz, modern anime estetiği üzerine uzmanlaşmıştır. Aşırı sade karakter portreleri, günlük yaşam sahneleri ve klasik animasyon stilleri yaratmada öne çıkar.",
-    "00ac5ccc-3698-4083-abfc-885c850d4c03": "Keskin, renkli ve son derece stilize anime estetiğine adanmış bir model. Thena Apex, dinamik gölgelendirme ve zengin renk paletlerinde öne çıkarak hafif roman (light novel) kapakları ve premium illüstrasyonlar için ideal bir deneyim sunar."
+    "00ac5ccc-3698-4083-abfc-885c850d4c03": "Keskin, renkli ve son derece stilize anime estetiğine adanmış bir model. Thena Apex, dinamik gölgelendirme ve zengin renk paletlerinde öne çıkarak hafif roman (light novel) kapakları ve premium illüstrasyonlar için ideal bir deneyim sunar.",
+    "524ks ffs6g8 091h8h 660a5 1dn55 1000": "Yeni difüzyon mimarisi ile oluşturulan 7. versiyon. Her resim türünde başarılı sonuçlar çıkaran, güçlü ve aşırı hızlı model."
 };
 const UNSUPPORTED_FAST_MODELS = ["551ks 8g6g8 16gga 1h8h8 6b4a5 5060"];
 const MOVIE_FILTER_SUPPORTED_MODELS = ["8gg12 61812 6628 19729 6b4a5 5060", "551ks 8g6g8 16gga 1h8h8 6b4a5 5060", "771ks 71g6g8 hlh8h8 6b4a5 77b4a5 5060", "3fb0b43e-ef78-44cf-82da-c3e0d6e0a5a7", "019d2154-7c24-74a1-806d-0fa8274a41d4"];
@@ -108,6 +109,8 @@ const MODEL_STATS = {
     "771ks 71g6g8 hlh8h8 6b4a5 77b4a5 5060": { intel: 4, qual: 4, speed: 4 },
     // Thena Bloomlight
     "911ks fdg6g8 66h8h8 900a5 zxb4a5 9000": { intel: 3, qual: 4, speed: 3 },
+    // Thena V8
+    "7ca6e691-cecd-4a8d-bb88-d2c6303576a1": { intel: 4, qual: 4, speed: 5 },
     // Thena V7
     "524ks ffs6g8 091h8h 660a5 1dn55 1000": { intel: 4, qual: 3, speed: 5 },
     // Thena Ultra
@@ -512,7 +515,6 @@ const dbHelper = {
 
                 const item = cursor.value;
                 let matches = true;
-
                 if (hasFilters) {
                     if (filters.isFavorite && !item.isFavorite) matches = false;
                     if (matches && filters.model) {
@@ -522,10 +524,11 @@ const dbHelper = {
                                 matches = false;
                             } else {
                                 let itemModelMatches = false;
+                                
                                 if (item.model) {
                                     if (fm.includes(item.model)) {
                                         itemModelMatches = true;
-                                    } else if (fm.includes('Image Editor') && (item.model.toUpperCase().startsWith('IMAGE EDITOR') || item.model.toUpperCase().startsWith('ANYTHING TO REAL') || item.model.toUpperCase().startsWith('4K UPSCALE') || item.model.toUpperCase().startsWith('FUSION'))) {
+                                    } else if (fm.includes('Image Editor') && (item.model.toUpperCase().startsWith('IMAGE EDITOR') || item.model.toUpperCase().startsWith('ANYTHING TO REAL') || item.model.toUpperCase().startsWith('4K UPSCALE') || item.model.toUpperCase().startsWith('FUSION') || item.model.toUpperCase().startsWith('GENDER'))) {
                                         itemModelMatches = true;
                                     }
                                 }
@@ -1652,6 +1655,28 @@ document.addEventListener('DOMContentLoaded', () => {
             let x = clientX - rect.left;
             x = Math.max(0, Math.min(x, rect.width));
             featSliderOverlay.style.width = x + 'px';
+
+            const lblBefore = document.getElementById('lbl-slider-before');
+            const lblAfter = document.getElementById('lbl-slider-after');
+            if (lblBefore) {
+                if (x < 70) {
+                    lblBefore.style.opacity = '0';
+                    lblBefore.style.visibility = 'hidden';
+                } else {
+                    lblBefore.style.opacity = '1';
+                    lblBefore.style.visibility = 'visible';
+                }
+            }
+            if (lblAfter) {
+                const remainingWidth = rect.width - x;
+                if (remainingWidth < 100) {
+                    lblAfter.style.opacity = '0';
+                    lblAfter.style.visibility = 'hidden';
+                } else {
+                    lblAfter.style.opacity = '1';
+                    lblAfter.style.visibility = 'visible';
+                }
+            }
         };
 
         featSliderHandle.addEventListener('mousedown', (e) => { isDragging = true; e.preventDefault(); });
@@ -1766,6 +1791,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         featSliderOverlay.style.width = '50%';
                         if (featSliderImgBefore) featSliderImgBefore.src = `src/slider/${featureName}/before.webp`;
                         if (featSliderImgAfter) featSliderImgAfter.src = `src/slider/${featureName}/after.webp`;
+
+                        const lblBefore = document.getElementById('lbl-slider-before');
+                        const lblAfter = document.getElementById('lbl-slider-after');
+                        if (lblBefore) {
+                            lblBefore.style.opacity = '1';
+                            lblBefore.style.visibility = 'visible';
+                        }
+                        if (lblAfter) {
+                            lblAfter.style.opacity = '1';
+                            lblAfter.style.visibility = 'visible';
+                        }
                     } else {
                         featSliderContainer.style.display = 'none';
                     }
@@ -3253,6 +3289,10 @@ async function populateModelFilter() {
     appendModel('Image Editor (NeuralFlow)', '↳ NeuralFlow', true);
     appendModel('Image Editor (Synapse)', '↳ Synapse ✦', true);
     appendModel('Outpaint', 'Outpaint');
+    appendModel("Anything to Real", "Anything to Real");
+    appendModel("Fusion", "Fusion");
+    appendModel("Gender Swap", "Gender Swap");
+    appendModel("4K Upscale", "4K Upscale");
 
     if (currentValsStr) {
         const gfModelValue = document.getElementById('gf-model-value');
@@ -3300,10 +3340,6 @@ const galleryVirtualizationObserver = new IntersectionObserver((entries) => {
             }
             item.classList.remove('virtualized');
         } else {
-            if (img.src && !img.src.startsWith('data:image/gif')) {
-                img.dataset.src = img.src;
-                img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-            }
             item.classList.add('virtualized');
         }
     });
@@ -4089,9 +4125,8 @@ function openLightbox(data) {
     lightbox.classList.add('active');
 
     const originalPreview = document.getElementById('lightbox-original-preview');
-    console.log(data)
     if(originalPreview) {
-        const isEditorApp = data.model && (data.model.toUpperCase().includes('IMAGE EDITOR') || data.model.toUpperCase().includes('OUTPAINT') || data.model.toUpperCase().includes("ANYTHING TO REAL") || data.model.toUpperCase().includes("4K UPSCALE") || data.model.toUpperCase().includes("FUSION"));
+        const isEditorApp = data.model && (data.model.toUpperCase().includes('IMAGE EDITOR') || data.model.toUpperCase().includes('OUTPAINT') || data.model.toUpperCase().includes("ANYTHING TO REAL") || data.model.toUpperCase().includes("4K UPSCALE") || data.model.toUpperCase().includes("FUSION") || data.model.toUpperCase().includes("GENDER"));
         if((data.originalImage || data.originalImage2) && isEditorApp) {
              if (data.originalImage2) {
                  originalPreview.innerHTML = `
@@ -4144,7 +4179,7 @@ function openLightbox(data) {
     else {
         document.querySelector(".lightbox-delete-btn").style.display = "flex"
         
-        const isEditorApp = data.model && (data.model.toUpperCase().includes('IMAGE EDITOR') || data.model.toUpperCase().includes('OUTPAINT') || data.model.toUpperCase().includes("ANYTHING TO REAL") || data.model.toUpperCase().includes("4K UPSCALE") || data.model.toUpperCase().includes("FUSION"));
+        const isEditorApp = data.model && (data.model.toUpperCase().includes('IMAGE EDITOR') || data.model.toUpperCase().includes('OUTPAINT') || data.model.toUpperCase().includes("ANYTHING TO REAL") || data.model.toUpperCase().includes("4K UPSCALE") || data.model.toUpperCase().includes("FUSION") || data.model.toUpperCase().includes("GENDER"));
         if (isEditorApp) {
             document.querySelector(".lightbox-share-btn").style.display = "none"
             document.querySelector(".lightbox-copy-btn").style.display = "none"
@@ -7107,6 +7142,7 @@ async function loadGalleryStatistics() {
             "Thena Ultra": "thenaUltra",
             "Thena Pro": "thenaPro",
             "Thena Movie": "thenaMovie",
+            "Thena V8": "thenaV8",
             "Thena V7": "thenaV7",
             "Thena V6": "thenaV6",
             "Thena Max": "thenaMax",

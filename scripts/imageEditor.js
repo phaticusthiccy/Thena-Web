@@ -135,7 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Fusion uploads
     const fusionUpload1 = document.getElementById('editor-fusion-upload-1');
     const fusionFileInput1 = document.getElementById('editor-fusion-file-input-1');
     const fusionUpload2 = document.getElementById('editor-fusion-upload-2');

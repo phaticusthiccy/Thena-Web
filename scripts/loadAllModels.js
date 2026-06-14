@@ -36,6 +36,9 @@ const modelSpecs = {
     "524ks ffs6g8 091h8h 660a5 1dn55 1000": {
         usedTechniques: ["General", "NSFW"]
     },
+    "7ca6e691-cecd-4a8d-bb88-d2c6303576a1": {
+        usedTechniques: ["General", "NSFW"]
+    },
     "176ks dd131 81927 a1165 p00183 6000": {
         usedTechniques: ["NSFW", "Photorealism"]
     },

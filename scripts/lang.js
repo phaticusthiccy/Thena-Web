@@ -1,5 +1,7 @@
 const translations = {
     "en": {
+        "lblSliderBefore": "Before",
+        "lblSliderAfter": "After",
         "generateBtn": "Generate Image",
         "galleryBtn": "Gallery",
         "invalidApiKey": "Invalid API Key! Please check your API key.",
@@ -561,9 +563,62 @@ const translations = {
         "navDeveloper": "Developer",
         "navApps": "Apps",
         "navSettings": "Settings",
-        "navLanguage": "Language"
+        "navLanguage": "Language",
+        "tutorialWelcomeTitle": "Welcome to Thena! ✨",
+        "tutorialWelcomeDesc": "Would you like a quick tour of how Thena works?",
+        "tutorialYes": "Yes, show me!",
+        "tutorialNo": "No thanks",
+        "tutorialApiTitle": "Your API Key 🔑",
+        "tutorialApiDesc": "This is where you enter your Thena API key. Without it, image generation won't work. You can get one for free from Telegram!",
+        "tutorialApiPrompt": "Go ahead — enter your API key now, then click Continue.",
+        "tutorialContinue": "Continue →",
+        "tutorialSkip": "Skip tutorial",
+        "tutorialStep": "Step {0} of {1}",
+        "tutorialBack": "← Back",
+        "tutorialNext": "Next →",
+        "tutorialModelTitle": "Choose Your Model 🎨",
+        "tutorialModelDesc": "This is the model selector. Each card represents a different AI model with unique style and capabilities. Click one to select it before generating.",
+        "tutorialShowAllTitle": "Show All Models 📋",
+        "tutorialShowAllDesc": "Click this to expand and see all available models, including ones that aren\u2019t visible in the default view.",
+        "tutorialGalleryTitle": "Model Gallery 🖼️",
+        "tutorialGalleryDesc": "Open the gallery to browse all models with full previews, descriptions, and comparison details.",
+        "tutorialLayoutTitle": "Switch Layout ⋞",
+        "tutorialLayoutDesc": "Toggle between grid and list view for the model selector. Pick the layout that feels most comfortable to you.",
+        "tutorialPromptTitle": "The Prompt Box ✍️",
+        "tutorialPromptDesc": "This is the heart of Thena! Type a description of the image you want to generate here. Be specific — colors, style, mood, lighting and subject details all help the AI understand you better.",
+        "tutorialCharCountTitle": "Character Counter 🔢",
+        "tutorialCharCountDesc": "Shows how many characters you've used out of the 5000 character limit. Keep an eye on this — longer prompts usually produce richer results, but there's a sweet spot!",
+        "tutorialHistoryTitle": "Prompt History 🕐",
+        "tutorialHistoryDesc": "Click this to access your recently used prompts. You can quickly re-apply any previous prompt without retyping it. Great for iterating on ideas!",
+        "tutorialImg2PromptTitle": "Image to Prompt 🖼️",
+        "tutorialImg2PromptDesc": "Upload any image and Thena's AI will analyze it and generate a descriptive prompt based on what it sees. Perfect for reverse-engineering a style you love!",
+        "tutorialModerationTitle": "Content Moderation 🛡️",
+        "tutorialModerationDesc": "Controls the content safety level of generated images. High = family-friendly only. Medium = allows mild mature content. Low = most permissive. Choose carefully!",
+        "tutorialMagicWandTitle": "Enhance Prompt ✨",
+        "tutorialMagicWandDesc": "Click this magic wand to let AI automatically improve and expand your prompt. It adds detail, style cues, and artistic nuance — like having a pro artist refine your idea!",
+        "tutorialRandomPromptTitle": "Random Prompt 🎲",
+        "tutorialRandomPromptDesc": "Feeling adventurous? Click this to instantly generate a random creative prompt. Great for exploring unexpected ideas and breaking through creative blocks!",
+        "tutorialAspectRatioTitle": "Aspect Ratio 📐",
+        "tutorialAspectRatioDesc": "Choose the dimensions of your generated image. Square is great for social media, Portrait for characters and posters, Landscape for scenes, Mobile for stories and reels, and Cinematic for wide-screen art.",
+        "tutorialExtraFeaturesTitle": "Extra Features ⚡",
+        "tutorialExtraFeaturesDesc": "Boost your generation with special modes! Fast speeds things up, Creative makes results more artistic, Dense maximizes imagination, Movie adds cinematic color grading, High-Res upscales for max clarity, and Magic Prompt auto-enhances your text.",
+        "tutorialElementsTitle": "Elements 🎨",
+        "tutorialElementsDesc": "Elements are LoRA-based style layers tied to the selected model. They add extra artistic style, mood, or character traits on top of your prompt. You can stack up to 2 elements per generation for layered creative control.",
+        "tutorialSwitchAppsTitle": "Switch Apps 🔄",
+        "tutorialSwitchAppsDesc": "Thena is more than just an image generator! Click this button to switch between all available apps: AI Image Generator, Image Editor, AI Chat Bots, and AI Stories.",
+        "tutorialAppGridTitle": "Choose Your App 📱",
+        "tutorialAppGridDesc": "Here you can see all of Thena's apps at a glance. Tap any card to switch instantly — AI Image Gen for creation, Image Editor for editing, AI Chat Bots to chat with characters, and AI Stories for interactive adventures.",
+        "tutorialShowcaseTitle": "Community Showcase 🌍",
+        "tutorialShowcaseDesc": "Explore images created by the Thena community! Get inspired by other creators, discover unique prompts, and see what's possible with Thena's AI models.",
+        "tutorialOwnerTitle": "Meet the Developer 👨‍💻",
+        "tutorialOwnerDesc": "Have questions, feedback, or ideas? Click here to get in touch with the developer directly. We love hearing from our community!",
+        "lblTutorialRestart": "TUTORIAL MODE",
+        "descTutorialRestart": "Replay the onboarding tutorial at any time to revisit Thena\u2019s features.",
+        "btnTutorialRestart": "Start Tutorial"
     },
     "tr": {
+        "lblSliderBefore": "Önce",
+        "lblSliderAfter": "Sonra",
         "generateBtn": "Görüntü Oluştur",
         "galleryBtn": "Galeri",
         "promptPlaceholder": "Resminizi tarif edin... (Min 10 karakter, Maks 5000 karakter)",
@@ -1125,7 +1180,58 @@ const translations = {
         "navDeveloper": "Geliştirici",
         "navApps": "Uygulamalar",
         "navSettings": "Ayarlar",
-        "navLanguage": "Dil"
+        "navLanguage": "Dil",
+        "tutorialWelcomeTitle": "Thena'ya Hoş Geldin! ✨",
+        "tutorialWelcomeDesc": "Thena'nın nasıl çalıştığını hızlıca öğrenmek ister misin?",
+        "tutorialYes": "Evet, göster!",
+        "tutorialNo": "Hayır, teşekkürler",
+        "tutorialApiTitle": "API Anahtarın 🔑",
+        "tutorialApiDesc": "Thena API anahtarını buraya girersin. Anahtarın olmadan görsel oluşturamazsın. Telegram'dan ücretsiz alabilirsin!",
+        "tutorialApiPrompt": "Hadi devam et — API anahtarını şimdi gir, ardından Devam'a tıkla.",
+        "tutorialContinue": "Devam →",
+        "tutorialSkip": "Turu atla",
+        "tutorialStep": "Adım {0} / {1}",
+        "tutorialBack": "← Geri",
+        "tutorialNext": "İleri →",
+        "tutorialModelTitle": "Modelini Seç 🎨",
+        "tutorialModelDesc": "Bu kısımda AI modellerini seçebilirsin. Her kart, farklı bir stile ve kapasiteye sahip bir modeli temsil eder. Görsel oluşturmadan önce birine tıkla.",
+        "tutorialShowAllTitle": "Tüm Modelleri Göster 💻",
+        "tutorialShowAllDesc": "Varsayılan görünümde çıkmayan modeller de dahil olmak üzere tüm modelleri görmek için buna tıkla.",
+        "tutorialGalleryTitle": "Model Galerisi 🖼️",
+        "tutorialGalleryDesc": "Tüm modelleri tam ön izleme, açıklama ve karşılaştırma detaylarıyla görmek için galeriyi aç.",
+        "tutorialLayoutTitle": "Görünüm Değiştir ⋞",
+        "tutorialLayoutDesc": "Model seçiciyi ızgara veya liste görünümü arasında geçiş yap. Sana en rahat gelen düzeni seç.",
+        "tutorialPromptTitle": "Prompt Kutusu ✍️",
+        "tutorialPromptDesc": "Thena'nın kalbi burası! Oluşturmak istediğin görseli buraya tarif et. Ne kadar detaylı olursan o kadar iyi — renkler, stil, atmosfer, ışık ve konu detayları yapay zekanın seni daha iyi anlamasına yardımcı olur.",
+        "tutorialCharCountTitle": "Karakter Sayacı 🔢",
+        "tutorialCharCountDesc": "5000 karakterlik sınırdan ne kadar kullandığını gösterir. Bunu takip et — uzun promptlar genellikle daha zengin sonuçlar üretir, ama bir denge noktası bulmak önemlidir!",
+        "tutorialHistoryTitle": "Prompt Geçmişi 🕐",
+        "tutorialHistoryDesc": "Son kullandığın promptlara buradan erişebilirsin. Herhangi bir önceki promptu tekrar yazmadan kolayca uygulayabilirsin. Fikirler üzerinde çalışmak için harika!",
+        "tutorialImg2PromptTitle": "Görselden Prompt Oluştur 🖼️",
+        "tutorialImg2PromptDesc": "Herhangi bir görsel yükle, Thena'nın yapay zekası görüntüyü analiz edip ne gördüğüne dair açıklayıcı bir prompt oluşturacak. Beğendiğin bir stili tersine mühendislik etmek için mükemmel!",
+        "tutorialModerationTitle": "İçerik Denetimi 🛡️",
+        "tutorialModerationDesc": "Oluşturulan görsellerin içerik güvenlik seviyesini kontrol eder. Yüksek = yalnızca aile dostu. Orta = hafif yetişkin içerik izinli. Düşük = en geniş izin. Dikkatli seç!",
+        "tutorialMagicWandTitle": "Prompt Geliştir ✨",
+        "tutorialMagicWandDesc": "Promptunu yapay zekanın otomatik olarak geliştirmesi için bu sihirli değneğe tıkla. Detaylar, stil ipuçları ve sanatsal nüanslar ekler — bir profesyonelin fikrini rafine etmesi gibi!",
+        "tutorialRandomPromptTitle": "Rastgele Prompt 🎲",
+        "tutorialRandomPromptDesc": "Maceraperest misin? Anında rastgele yaratıcı bir prompt oluşturmak için buna tıkla. Beklenmedik fikirleri keşfetmek ve yaratıcı tıkanıklıkları aşmak için harika!",
+        "tutorialAspectRatioTitle": "En Boy Oranı 📐",
+        "tutorialAspectRatioDesc": "Oluşturulacak görselin boyutlarını seç. Kare sosyal medya için ideal, Portre karakter ve posterler için, Manzara sahneler için, Mobil hikayeler ve reels için, Sinematik ise geniş ekran sanat için harikadır.",
+        "tutorialExtraFeaturesTitle": "Ekstra Özellikler ⚡",
+        "tutorialExtraFeaturesDesc": "Oluşturmayı özel modlarla güçlendir! Hızlı modu süreyi kısaltır, Yaratıcı sonuçları daha sanatsal yapar, Yoğun hayal gücünü üst seviyeye taşır, Film Filtresi sinematik renk tonu katar, Yüksek Çözünürlük görüntüyü büyütür ve Sihirli Prompt metni otomatik geliştirir.",
+        "tutorialElementsTitle": "Elementler 🎨",
+        "tutorialElementsDesc": "Elementler, seçili modele özgü LoRA tabanlı stil katmanlarıdır. Promptunuzun üstüne ekstra sanatsal stil, atmosfer veya karakter özellikleri eklerler. Her oluşturma için en fazla 2 element seçip katmanlı bir yaratıcı kontrol sağlayabilirsin.",
+        "tutorialSwitchAppsTitle": "Uygulama Değiştir 🔄",
+        "tutorialSwitchAppsDesc": "Thena sadece bir görsel üretici değil! Tüm uygulamalar arasında geçiş yapmak için bu butona tıkla: AI Görsel Üreticisi, Görsel Düzeleyici, AI Sohbet Botları ve AI Hikayeler.",
+        "tutorialAppGridTitle": "Uygulama Seç 📱",
+        "tutorialAppGridDesc": "Thena'nın tüm uygulamalarını burada bir arada görebilirsin. Herhangi bir karta dokunarak anında geçiş yap — Oluşturma için AI Görsel, düzenleme için Görsel Düzeleyici, karakterlerle konuşmak için AI Sohbet ve macera için AI Hikayeler.",
+        "tutorialShowcaseTitle": "Topluluk Vitrini 🌍",
+        "tutorialShowcaseDesc": "Thena topluluğu tarafından oluşturulan görselleri keşfet! Diğer kullanıcılardan ilham al, benzersiz promptlar keşff et ve Thena'nın AI modelleriyle neler yapılabildiğini gör.",
+        "tutorialOwnerTitle": "Geliştiriciye Ulaş 👨‍💻",
+        "tutorialOwnerDesc": "Soruların, geri bildirimlerin veya önerilen mi var? Geliştiriciyle doğrudan iletişime geçmek için buraya tıkla. Topluluktan duymayı seviyoruz!",
+        "lblTutorialRestart": "EğİTİM MODU",
+        "descTutorialRestart": "Thena'nın özelliklerini tekrar keşfetmek için eğitim turunu istediğin zaman yeniden başlat.",
+        "btnTutorialRestart": "Eğitimi Başlat"
     }
 };
 
@@ -1141,7 +1247,7 @@ function initDomCache() {
     if (domElementCache.initialized) return;
 
     const ids = [
-        'lbl-intel', 'lbl-qual', 'lbl-speed',
+        'lbl-intel', 'lbl-qual', 'lbl-speed', 'lbl-slider-before', 'lbl-slider-after',
         'btn-language', 'prompt', 'api-key', 'generate-btn', 'gallery-btn',
         'label-api-key', 'lbl-model-text', 'txt-show-all', 'btn-show-all-models',
         'txt-fast', 'txt-creative', 'txt-dense', 'txt-movie', 'txt-highres', 'txt-enhance',
@@ -1305,6 +1411,7 @@ function updateLanguage(lang) {
 
 
     var idsToSetTextSafely = [
+        ["lbl-slider-before", t.lblSliderBefore], ["lbl-slider-after", t.lblSliderAfter],
         ["txt-fast", t.featFast], ["txt-creative", t.featCreative], ["txt-dense", t.featDense], ["txt-movie", t.featMovie], ["txt-highres", t.featHighRes], 
         ["txt-enhance", t.featEnhance], ["txt-filter", t.lblFilter], ["txt-delete-all", t.btnDelAll], ["lbl-solid-colors", t.lblSolid], 
         ["lbl-gradient-themes", t.lblGradient], ["desc-perf-mode", t.lblPerfDesc], ["desc-silent-mode", t.lblSilentDesc], ["desc-adv-mode", t.lblAdvDesc],
@@ -1643,6 +1750,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (typeof window.updateDataManagementLanguage === 'function') {
                 window.updateDataManagementLanguage();
+            }
+
+            if (typeof window.updateTutorialRestartLang === 'function') {
+                window.updateTutorialRestartLang();
+            }
+
+            if (typeof window.updateTutorialStepLang === 'function') {
+                window.updateTutorialStepLang();
             }
 
             document.querySelectorAll('.flag-text').forEach(el => {

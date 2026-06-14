@@ -1,0 +1,661 @@
+#tutorial-welcome-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+#tutorial-welcome-modal.tut-visible {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.tutorial-welcome-card {
+    position: relative;
+    background: linear-gradient(135deg, rgba(10, 10, 10, 0.97), rgba(20, 20, 25, 0.97));
+    border: 1px solid rgba(var(--primary-rgb), 0.35);
+    border-radius: 20px;
+    padding: 44px 40px 36px;
+    max-width: 420px;
+    width: calc(100% - 40px);
+    text-align: center;
+    box-shadow:
+        0 0 60px rgba(var(--primary-rgb), 0.12),
+        0 25px 60px rgba(0, 0, 0, 0.7),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    animation: twCardIn 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    overflow: hidden;
+}
+
+@keyframes twCardIn {
+    from { opacity: 0; transform: scale(0.82) translateY(18px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.tutorial-welcome-sparkles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.tw-spark {
+    position: absolute;
+    color: var(--primary);
+    opacity: 0;
+    font-size: 14px;
+    animation: twSparkFloat 3.5s ease-in-out infinite;
+}
+.tw-spark-1 { top: 18%; left: 12%; animation-delay: 0s;    animation-duration: 3.2s; }
+.tw-spark-2 { top: 25%; right: 14%; animation-delay: 0.8s; animation-duration: 3.8s; font-size: 10px; }
+.tw-spark-3 { bottom: 22%; left: 18%; animation-delay: 1.5s; animation-duration: 4s; font-size: 11px; }
+.tw-spark-4 { bottom: 18%; right: 10%; animation-delay: 2.1s; animation-duration: 3.5s; }
+
+@keyframes twSparkFloat {
+    0%   { opacity: 0; transform: translateY(0) scale(0.5) rotate(0deg); }
+    30%  { opacity: 0.8; }
+    60%  { opacity: 0.5; }
+    100% { opacity: 0; transform: translateY(-30px) scale(1.2) rotate(30deg); }
+}
+
+.tutorial-welcome-icon {
+    font-size: 42px;
+    margin-bottom: 16px;
+    display: block;
+    animation: twIconPop 0.6s 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+    filter: drop-shadow(0 0 16px rgba(var(--primary-rgb), 0.5));
+}
+
+@keyframes twIconPop {
+    from { transform: scale(0) rotate(-15deg); opacity: 0; }
+    to   { transform: scale(1) rotate(0deg);   opacity: 1; }
+}
+
+.tutorial-welcome-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+    text-shadow: 0 0 20px rgba(var(--primary-rgb), 0.3);
+}
+
+.tutorial-welcome-desc {
+    font-size: 14px;
+    color: #aaa;
+    line-height: 1.65;
+    margin-bottom: 30px;
+}
+
+.tutorial-welcome-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.tutorial-btn-yes {
+    background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.9), rgba(var(--primary-rgb), 0.6));
+    color: #000;
+    font-weight: 700;
+    font-size: 14px;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.35);
+    min-width: 140px;
+}
+
+.tutorial-btn-yes:hover {
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 0 35px rgba(var(--primary-rgb), 0.55);
+}
+
+.tutorial-btn-no {
+    background: rgba(255, 255, 255, 0.05);
+    color: #666;
+    font-weight: 500;
+    font-size: 13px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px 24px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    min-width: 120px;
+}
+
+.tutorial-btn-no:hover {
+    color: #aaa;
+    border-color: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+#tutorial-cinematic-overlay {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+#tutorial-cinematic-overlay.tut-cin-visible {
+    opacity: 1;
+    pointer-events: all;
+}
+
+#tutorial-cinematic-overlay.tut-cin-fadeout {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.tut-cin-letters {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+    perspective: 600px;
+}
+
+.tut-cin-letter {
+    font-size: clamp(60px, 14vw, 130px);
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    color: var(--primary);
+    opacity: 0;
+    transform: rotateY(-90deg) scale(0.4);
+    transform-style: preserve-3d;
+    transition: none;
+    text-shadow:
+        0 0 30px rgba(var(--primary-rgb), 0.8),
+        0 0 80px rgba(var(--primary-rgb), 0.4),
+        0 0 3px #fff;
+    display: inline-block;
+    will-change: transform, opacity, text-shadow;
+    filter: brightness(1.5);
+}
+
+.tut-cin-letter.tut-cin-animate {
+    animation: tutLetterIn 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.tut-cin-letter.tut-cin-glow {
+    animation: tutLetterGlow 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes tutLetterIn {
+    0%   { opacity: 0; transform: rotateY(-90deg) scale(0.4) translateZ(-50px); filter: brightness(3) blur(4px); }
+    60%  { opacity: 1; transform: rotateY(8deg)   scale(1.08) translateZ(0); filter: brightness(2) blur(0); }
+    80%  { transform: rotateY(-4deg) scale(0.97); filter: brightness(1.5); }
+    100% { opacity: 1; transform: rotateY(0deg)   scale(1) translateZ(0); filter: brightness(1.5); }
+}
+
+@keyframes tutLetterGlow {
+    0%   { text-shadow: 0 0 20px rgba(var(--primary-rgb), 0.6), 0 0 60px rgba(var(--primary-rgb), 0.3); filter: brightness(1.3); }
+    100% { text-shadow: 0 0 40px rgba(var(--primary-rgb), 1),   0 0 120px rgba(var(--primary-rgb), 0.6), 0 0 4px #fff; filter: brightness(2); }
+}
+
+#tutorial-cinematic-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.06) 2px,
+        rgba(0, 0, 0, 0.06) 4px
+    );
+    pointer-events: none;
+    z-index: 1;
+    animation: tutScanMove 8s linear infinite;
+}
+
+@keyframes tutScanMove {
+    from { background-position: 0 0; }
+    to   { background-position: 0 100px; }
+}
+
+#tutorial-cinematic-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.tut-cin-letters {
+    position: relative;
+    z-index: 3;
+}
+
+#tutorial-spotlight-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.82);
+    z-index: 20001;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.45s ease;
+}
+
+#tutorial-spotlight-overlay.tut-spl-visible {
+    opacity: 1;
+}
+
+#tutorial-spotlight-frame {
+    position: fixed;
+    z-index: 20002;
+    pointer-events: none;
+    border-radius: 12px;
+    opacity: 0;
+    transition: opacity 0.45s ease;
+    box-shadow:
+        0 0 0 3px rgba(var(--primary-rgb), 0.6),
+        0 0 30px rgba(var(--primary-rgb), 0.25),
+        0 0 60px rgba(var(--primary-rgb), 0.1);
+    animation: tutSpotPulse 2s ease-in-out infinite alternate;
+}
+
+#tutorial-spotlight-frame.tut-frame-visible {
+    opacity: 1;
+}
+
+
+@keyframes tutSpotPulse {
+    0%   { box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.5), 0 0 20px rgba(var(--primary-rgb), 0.2); }
+    100% { box-shadow: 0 0 0 5px rgba(var(--primary-rgb), 0.85), 0 0 50px rgba(var(--primary-rgb), 0.45); }
+}
+
+#tutorial-bubble {
+    position: fixed;
+    z-index: 20010;
+    width: min(400px, calc(100vw - 32px));
+    background: linear-gradient(160deg, rgba(12, 12, 18, 0.98), rgba(8, 8, 14, 0.98));
+    border: 1px solid rgba(var(--primary-rgb), 0.4);
+    border-radius: 18px;
+    padding: 24px 24px 20px;
+    box-shadow:
+        0 0 50px rgba(var(--primary-rgb), 0.15),
+        0 20px 50px rgba(0, 0, 0, 0.7),
+        inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(12px) scale(0.96);
+    transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#tutorial-bubble.tut-bbl-visible {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0) scale(1);
+}
+
+#tutorial-bubble::before {
+    content: '';
+    position: absolute;
+    left: 28px;
+    bottom: -10px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid rgba(var(--primary-rgb), 0.4);
+}
+
+#tutorial-bubble::after {
+    content: '';
+    position: absolute;
+    left: 29px;
+    bottom: -9px;
+    width: 0;
+    height: 0;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-top: 9px solid #0c0c12;
+}
+
+#tutorial-bubble.arrow-up::before {
+    bottom: auto;
+    top: -10px;
+    border-top: none;
+    border-bottom: 10px solid rgba(var(--primary-rgb), 0.4);
+}
+#tutorial-bubble.arrow-up::after {
+    bottom: auto;
+    top: -9px;
+    border-top: none;
+    border-bottom: 9px solid #0c0c12;
+}
+
+.tut-bbl-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.tut-bbl-step {
+    font-size: 10px;
+    color: rgba(var(--primary-rgb), 0.7);
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    background: rgba(var(--primary-rgb), 0.1);
+    border: 1px solid rgba(var(--primary-rgb), 0.2);
+    border-radius: 20px;
+    padding: 2px 10px;
+}
+
+.tut-bbl-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+    margin-bottom: 10px;
+    text-shadow: 0 0 15px rgba(var(--primary-rgb), 0.25);
+}
+
+.tut-bbl-desc {
+    font-size: 13px;
+    color: #999;
+    line-height: 1.65;
+    margin-bottom: 16px;
+}
+
+.tut-bbl-prompt {
+    font-size: 13px;
+    color: rgba(var(--primary-rgb), 0.85);
+    line-height: 1.55;
+    margin-bottom: 16px;
+    padding: 10px 14px;
+    background: rgba(var(--primary-rgb), 0.07);
+    border: 1px solid rgba(var(--primary-rgb), 0.18);
+    border-radius: 8px;
+    display: none;
+}
+
+.tut-bbl-prompt.tut-visible {
+    display: block;
+}
+
+.tut-bbl-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.tut-bbl-skip {
+    font-size: 11px;
+    color: #444;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px 0;
+    transition: color 0.2s ease;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.tut-bbl-skip:hover { color: #777; }
+
+.tut-bbl-nav {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.tut-bbl-btn {
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    padding: 9px 20px;
+    transition: all 0.22s ease;
+}
+
+.tut-bbl-btn-primary {
+    background: rgba(var(--primary-rgb), 0.85);
+    color: #000;
+    box-shadow: 0 0 16px rgba(var(--primary-rgb), 0.3);
+}
+
+.tut-bbl-btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 28px rgba(var(--primary-rgb), 0.5);
+    background: rgba(var(--primary-rgb), 1);
+}
+
+.tut-bbl-btn-primary:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.tut-bbl-btn-secondary {
+    background: rgba(255,255,255,0.06);
+    color: #666;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.tut-bbl-btn-secondary:hover {
+    color: #aaa;
+    border-color: rgba(255,255,255,0.2);
+}
+
+@media (max-width: 480px) {
+    .tutorial-welcome-card { padding: 36px 24px 28px; }
+    .tutorial-welcome-title { font-size: 19px; }
+    #tutorial-bubble { padding: 20px 18px 16px; }
+    .tut-bbl-footer { flex-direction: column-reverse; align-items: stretch; }
+    .tut-bbl-nav { justify-content: flex-end; }
+}
+
+
+#tut-celebration {
+    position: fixed;
+    inset: 0;
+    z-index: 100001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+#tut-celebration.tut-cel-visible {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.tut-cel-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center,
+        rgba(0, 20, 10, 0.97) 0%,
+        rgba(0, 0, 0, 0.99) 100%);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+.tut-cel-scene {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    perspective: 800px;
+}
+
+.tut-cel-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid rgba(var(--primary-rgb), 0.5);
+    box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.3);
+}
+
+.tut-cel-ring1 {
+    width: 200px; height: 200px;
+    animation: tutCelRing1 3s linear infinite;
+    border-color: rgba(var(--primary-rgb), 0.6);
+}
+.tut-cel-ring2 {
+    width: 280px; height: 280px;
+    animation: tutCelRing2 4.5s linear infinite reverse;
+    border-color: rgba(0, 195, 255, 0.4);
+}
+.tut-cel-ring3 {
+    width: 360px; height: 360px;
+    animation: tutCelRing3 6s linear infinite;
+    border-color: rgba(168, 85, 247, 0.25);
+}
+
+@keyframes tutCelRing1 {
+    0%   { transform: rotateX(70deg) rotateZ(0deg); }
+    100% { transform: rotateX(70deg) rotateZ(360deg); }
+}
+@keyframes tutCelRing2 {
+    0%   { transform: rotateX(60deg) rotateY(20deg) rotateZ(0deg); }
+    100% { transform: rotateX(60deg) rotateY(20deg) rotateZ(360deg); }
+}
+@keyframes tutCelRing3 {
+    0%   { transform: rotateX(50deg) rotateY(-15deg) rotateZ(0deg); }
+    100% { transform: rotateX(50deg) rotateY(-15deg) rotateZ(360deg); }
+}
+
+.tut-cel-trophy {
+    font-size: clamp(64px, 12vw, 96px);
+    animation: tutCelTrophy 0.7s 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) both,
+               tutCelTrophyFloat 3s 1s ease-in-out infinite;
+    filter: drop-shadow(0 0 30px rgba(var(--primary-rgb), 0.7))
+            drop-shadow(0 0 60px rgba(var(--primary-rgb), 0.4));
+    position: relative;
+    z-index: 2;
+    margin-bottom: 24px;
+}
+
+@keyframes tutCelTrophy {
+    0%   { opacity: 0; transform: scale(0) rotateY(-180deg); }
+    60%  { transform: scale(1.2) rotateY(15deg); }
+    100% { opacity: 1; transform: scale(1) rotateY(0deg); }
+}
+@keyframes tutCelTrophyFloat {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50%       { transform: translateY(-12px) scale(1.04); }
+}
+
+.tut-cel-particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.tut-cel-dot {
+    position: absolute;
+    border-radius: 3px;
+    animation: tutCelDot linear both;
+}
+
+@keyframes tutCelDot {
+    0%   { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+    100% { opacity: 0; transform: translateY(-120px) rotate(720deg) scale(0.3); }
+}
+
+.tut-cel-title {
+    font-size: clamp(22px, 5vw, 32px);
+    font-weight: 800;
+    color: #fff;
+    text-align: center;
+    letter-spacing: -0.5px;
+    text-shadow: 0 0 30px rgba(var(--primary-rgb), 0.5);
+    position: relative;
+    z-index: 2;
+    animation: tutCelFadeUp 0.6s 0.9s both;
+}
+
+.tut-cel-sub {
+    font-size: clamp(13px, 2.5vw, 15px);
+    color: #888;
+    text-align: center;
+    line-height: 1.6;
+    max-width: 340px;
+    margin-top: 10px;
+    position: relative;
+    z-index: 2;
+    animation: tutCelFadeUp 0.6s 1.1s both;
+    padding: 0 16px;
+}
+
+.tut-cel-btn {
+    margin-top: 28px;
+    background: rgba(var(--primary-rgb), 0.9);
+    color: #000;
+    font-weight: 700;
+    font-size: 15px;
+    border: none;
+    padding: 14px 36px;
+    border-radius: 12px;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+    animation: tutCelFadeUp 0.6s 1.3s both;
+    transition: all 0.25s ease;
+    box-shadow: 0 0 30px rgba(var(--primary-rgb), 0.4),
+                0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.tut-cel-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 0 50px rgba(var(--primary-rgb), 0.65),
+                0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes tutCelFadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 480px) {
+    .tut-cel-ring1 { width: 150px; height: 150px; }
+    .tut-cel-ring2 { width: 210px; height: 210px; }
+    .tut-cel-ring3 { width: 270px; height: 270px; }
+}
+
+@media (pointer: coarse), (max-width: 768px) {
+    #tutorial-welcome-modal {
+        background: rgba(0, 0, 0, 0.94) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+    
+    .tut-cel-bg {
+        background: radial-gradient(ellipse at center,
+            rgba(0, 20, 10, 0.99) 0%,
+            rgba(0, 0, 0, 1) 100%) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+}

@@ -24,6 +24,7 @@ const ASSETS_TO_CACHE = [
     './css/editor-search.css',
     './css/trailer.css',
     './css/model-gallery.css',
+    './css/welcome.css',
     './scripts/script.js',
     './scripts/promptexpansion.js',
     './scripts/lang.js',
@@ -40,7 +41,8 @@ const ASSETS_TO_CACHE = [
     './scripts/trailer.js',
     './scripts/powerSaver.js',
     './scripts/modelGallery.js',
-    './scripts/customSelect.js'
+    './scripts/customSelect.js',
+    './scripts/welcome.js',
 ];
 
 self.addEventListener('install', (event) => {

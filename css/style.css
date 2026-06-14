@@ -1193,6 +1193,37 @@ body.performance-mode .whimsical-flame-effect {
     z-index: 2;
 }
 
+.feat-slider-badge {
+    position: absolute;
+    top: 12px;
+    z-index: 5;
+    padding: 5px 10px;
+    background: rgba(0, 0, 0, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 6px;
+    letter-spacing: 0.8px;
+    pointer-events: none;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    white-space: nowrap;
+}
+
+#lbl-slider-before {
+    right: 12px;
+}
+
+#lbl-slider-after {
+    right: 54px;
+    z-index: 1;
+}
+
+
 #feat-slider-img-before {
     height: 100%;
     width: 100cqw;
@@ -12307,3 +12338,82 @@ span.toon-detail-status-badge.toon-status-ongoing {
     border-color: rgba(var(--primary-rgb), 0.4);
     color: var(--primary);
 }
+
+.gallery-item.virtualized {
+    visibility: hidden;
+}
+
+@media (pointer: coarse), (max-width: 768px) {
+    .confirm-modal {
+        background: rgba(10, 10, 10, 0.94) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+    
+    #lightbox {
+        background: rgba(5, 5, 5, 0.95) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    .lightbox-close-btn,
+    .lightbox-delete-btn,
+    .lightbox-fav-btn,
+    .lightbox-download-btn,
+    .gallery-reveal-btn {
+        background: rgba(0, 0, 0, 0.88) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    .confirm-content,
+    .settings-content,
+    .gallery-content,
+    .modal-box,
+    .lightbox-content,
+    .model-info-icon-wrapper,
+    #moderation-btn,
+    #editor-moderation-btn,
+    .gallery-item .gallery-overlay,
+    .feat-info-card,
+    .mg-card,
+    .char-card-inner,
+    .gf-select-dropdown,
+    .gf-custom-select,
+    .theme-btn,
+    .extra-btn,
+    .ratio-btn,
+    .model-card,
+    .custom-dropdown-menu,
+    .app-popup,
+    .chat-char-card,
+    .char-detail-card,
+    .toon-card,
+    .toon-detail,
+    .toon-badge,
+    .custom-select-trigger,
+    .custom-options,
+    .editor-model-btn-premium,
+    .editor-v3-icon-wrap,
+    .editor-panel,
+    .canvas-overlay {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    .gallery-item .gallery-overlay {
+        background: rgba(0, 0, 0, 0.75) !important;
+    }
+    
+    .model-info-icon-wrapper,
+    #moderation-btn,
+    #editor-moderation-btn {
+        background: rgba(20, 20, 20, 0.9) !important;
+    }
+
+    .custom-select-trigger,
+    .custom-options {
+        background: #111 !important;
+    }
+}
+
