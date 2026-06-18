@@ -107,7 +107,13 @@
 
         try {
             const resp = await fetch(`${CREDITS_API_BASE}?key=${encodeURIComponent(apiKey)}`);
-            if (!resp.ok) throw new Error('HTTP ' + resp.status);
+            if (resp.status !== 200) {
+                _lastData = null;
+                updateWidget(null);
+                updateModalBalance(null);
+                updateShareCode(null);
+                throw new Error('HTTP ' + resp.status);
+            }
             const data = await resp.json();
             _lastData = data;
             updateWidget(data);
