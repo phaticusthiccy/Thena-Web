@@ -43,6 +43,7 @@
     let galleryModelPrices = {};
     let galleryModelUsages = {};
     let cachedModelETAs = null;
+    let navLoadSession = 0;
 
     function debounce(func, wait) {
         let timeout;
@@ -58,6 +59,7 @@
         "Kling O1": "klingo1",
         "Flux 2 Pro": "flux2pro",
         "Seedream 4": "seedream4",
+        "Nano Banana 1": "nanobanana1",
         "Thena Ultra": "thenaUltra",
         "Thena Pro": "thenaPro",
         "Thena Movie": "thenaMovie",
@@ -285,6 +287,10 @@
         }
         currentImgIdx = 0;
         
+        detailImg.style.opacity = '1';
+        const loader = document.getElementById('mg-img-loader');
+        if (loader) loader.classList.remove('visible');
+        
         detailImg.src = showcaseImgs[0] || '';
         detailImg.alt = model.model || 'Model Image';
         detailImg.style.display = showcaseImgs.length > 0 ? 'block' : 'none';
@@ -446,35 +452,40 @@
         }
     }
 
-    function navigateImg(dir) {
+    let navigateImg = function(dir) {
         if (showcaseImgs.length <= 1) return;
 
         const loader = document.getElementById('mg-img-loader');
+        const session = ++navLoadSession;
 
         detailImg.style.opacity = '0';
         if (loader) loader.classList.add('visible');
 
-        setTimeout(() => {
-            currentImgIdx = (currentImgIdx + dir + showcaseImgs.length) % showcaseImgs.length;
+        currentImgIdx = (currentImgIdx + dir + showcaseImgs.length) % showcaseImgs.length;
+        const targetSrc = showcaseImgs[currentImgIdx];
 
-            const onLoaded = () => {
-                detailImg.style.opacity = '1';
-                if (loader) loader.classList.remove('visible');
-                detailImg.removeEventListener('load',  onLoaded);
-                detailImg.removeEventListener('error', onError);
-            };
-            const onError = () => {
-                detailImg.style.opacity = '1';
-                if (loader) loader.classList.remove('visible');
-                detailImg.removeEventListener('load',  onLoaded);
-                detailImg.removeEventListener('error', onError);
-            };
+        const tempImg = new Image();
 
-            detailImg.addEventListener('load',  onLoaded);
-            detailImg.addEventListener('error', onError);
-            detailImg.src = showcaseImgs[currentImgIdx];
-        }, 150);
-    }
+        const onLoaded = () => {
+            if (session !== navLoadSession) return;
+
+            detailImg.src = targetSrc;
+            detailImg.style.opacity = '1';
+            if (loader) loader.classList.remove('visible');
+        };
+
+        const onError = () => {
+            if (session !== navLoadSession) return;
+
+            detailImg.src = targetSrc;
+            detailImg.style.opacity = '1';
+            if (loader) loader.classList.remove('visible');
+        };
+
+        tempImg.addEventListener('load', onLoaded);
+        tempImg.addEventListener('error', onError);
+        tempImg.src = targetSrc;
+    };
 
     prevBtn?.addEventListener('click', (e) => { e.stopPropagation(); navigateImg(-1); });
     nextBtn?.addEventListener('click', (e) => { e.stopPropagation(); navigateImg(1); });

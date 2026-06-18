@@ -3370,6 +3370,13 @@
                 </h3>
                 <div class="credits-packages-grid">
                     <div class="credits-package-card" data-package="starter">
+                        <button class="credits-package-info-btn" data-package="starter" title="Paket Detayları">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                        </button>
                         <div class="credits-package-badge" id="lbl-credits-badge-starter">BAŞLANGIÇ</div>
                         <div class="credits-package-icon">⚡</div>
                         <div class="credits-package-amount">50</div>
@@ -3381,6 +3388,13 @@
                         </button>
                     </div>
                     <div class="credits-package-card" data-package="standard">
+                        <button class="credits-package-info-btn" data-package="standard" title="Paket Detayları">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                        </button>
                         <div class="credits-package-badge" id="lbl-credits-badge-standard">STANDART</div>
                         <div class="credits-package-icon">🔥</div>
                         <div class="credits-package-amount">100</div>
@@ -3392,6 +3406,13 @@
                         </button>
                     </div>
                     <div class="credits-package-card credits-package-card--popular" data-package="popular">
+                        <button class="credits-package-info-btn" data-package="popular" title="Paket Detayları">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                        </button>
                         <div class="credits-package-badge credits-package-badge--popular" id="lbl-credits-badge-popular">⭐ POPÜLER</div>
                         <div class="credits-package-icon">🚀</div>
                         <div class="credits-package-amount">200</div>
@@ -3403,6 +3424,13 @@
                         </button>
                     </div>
                     <div class="credits-package-card" data-package="pro">
+                        <button class="credits-package-info-btn" data-package="pro" title="Paket Detayları">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                        </button>
                         <div class="credits-package-badge credits-package-badge--pro" id="lbl-credits-badge-pro">💎 PRO</div>
                         <div class="credits-package-icon">💎</div>
                         <div class="credits-package-amount">500</div>
@@ -3414,6 +3442,13 @@
                         </button>
                     </div>
                     <div class="credits-package-card" data-package="ultra">
+                        <button class="credits-package-info-btn" data-package="ultra" title="Paket Detayları">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                        </button>
                         <div class="credits-package-badge" id="lbl-credits-badge-ultra" style="color:#fbbf24; background:rgba(251,191,36,0.1); border-color:rgba(251,191,36,0.2);">👑 ULTRA</div>
                         <div class="credits-package-icon">👑</div>
                         <div class="credits-package-amount">1000</div>
@@ -3431,6 +3466,86 @@
                     </svg>
                     <span id="lbl-credits-note">Shopier güvencesiyle · Türk kartları desteklenir · 7/24 destek</span>
                 </p>
+            </div>
+        </div>
+    </div>
+
+    <div id="credits-package-detail-modal" class="credits-modal-overlay">
+        <div class="credits-modal-panel" style="max-width: 500px;">
+            <div class="credits-modal-header">
+                <div class="credits-modal-header-icon" style="background: rgba(99, 102, 241, 0.15); border-color: rgba(99, 102, 241, 0.3);">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                </div>
+                <div class="credits-modal-header-text">
+                    <h2 class="credits-modal-title" id="lbl-package-detail-title">Paket Detayları</h2>
+                    <p class="credits-modal-subtitle" id="lbl-package-detail-subtitle">Kullanım limitleri ve karşılaştırmalar</p>
+                </div>
+                <button class="credits-modal-close" id="btn-close-package-detail" aria-label="Kapat">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="credits-package-detail-body" style="padding: 20px;">
+                <div class="detail-select-row" style="display: flex; gap: 12px; margin-bottom: 20px;">
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+                        <label id="lbl-select-base-package" style="font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase;">Mevcut Paket</label>
+                        <select id="select-base-package" style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 10px; color: #f1f5f9; font-size: 13px; width: 100%; font-family: inherit;">
+                            <option value="starter">BAŞLANGIÇ (50 Kredi)</option>
+                            <option value="standard">STANDART (100 Kredi)</option>
+                            <option value="popular">POPÜLER (200 Kredi)</option>
+                            <option value="pro">PRO (500 Kredi)</option>
+                            <option value="ultra">ULTRA (1000 Kredi)</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+                        <label id="lbl-select-compare-package" style="font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase;">Karşılaştırılacak Paket</label>
+                        <select id="select-compare-package" style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 10px; color: #f1f5f9; font-size: 13px; width: 100%; font-family: inherit;">
+                            <option value="none" id="opt-compare-none">Seçilmedi</option>
+                            <option value="starter">BAŞLANGIÇ (50 Kredi)</option>
+                            <option value="standard">STANDART (100 Kredi)</option>
+                            <option value="popular">POPÜLER (200 Kredi)</option>
+                            <option value="pro">PRO (500 Kredi)</option>
+                            <option value="ultra">ULTRA (1000 Kredi)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="package-rate-comparison" style="background: rgba(99, 102, 241, 0.06); border: 1px solid rgba(99, 102, 241, 0.15); border-radius: 14px; padding: 15px; margin-bottom: 20px; display: none;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-size: 12px; color: #94a3b8;" id="lbl-rate-compare-cost">Kredi Başına Maliyet:</span>
+                        <span style="font-size: 12px; font-weight: bold; color: #fff;" id="rate-compare-values">₺0.60 vs ₺0.45</span>
+                    </div>
+                    <div style="font-size: 12px; color: #34d399; font-weight: 600; display: flex; align-items: center; gap: 6px;" id="rate-compare-saving">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                            <polyline points="17 6 23 6 23 12"></polyline>
+                        </svg>
+                        <span>POPÜLER paketi ile kredi başına %25 tasarruf edersiniz!</span>
+                    </div>
+                </div>
+                
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 14px; overflow: hidden;">
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; padding: 12px 16px; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">
+                        <span id="lbl-table-model">Model Adı</span>
+                        <span id="lbl-table-base-usage" style="text-align: right;">Görsel Sayısı</span>
+                        <span id="lbl-table-compare-usage" style="text-align: right; display: none;">Karşılaştırma</span>
+                    </div>
+                    <div id="package-detail-models-list" class="custom-scrollbar" style="max-height: 250px; overflow-y: auto;">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="credits-modal-footer" style="padding: 0 20px 20px; display: flex; gap: 10px;">
+                <button id="btn-package-detail-buy" class="credits-package-btn credits-package-btn--popular" style="flex: 1; padding: 11px 0;">
+                    Paketi Satın Al
+                </button>
             </div>
         </div>
     </div>

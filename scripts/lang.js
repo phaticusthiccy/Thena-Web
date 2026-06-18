@@ -668,7 +668,19 @@ const translations = {
         "msgGiftErr403": "You cannot send gift credits to yourself.",
         "msgGiftErr400": "You do not have enough credits.",
         "msgGiftErrGeneric": "An error occurred while sending gift credits.",
-        "msgGiftSending": "Sending gift credits..."
+        "msgGiftSending": "Sending gift credits...",
+        "lblPackageDetailTitle": "Package Details",
+        "lblPackageDetailSubtitle": "Usage limits and package comparisons",
+        "lblSelectBasePackage": "Selected Package",
+        "lblSelectComparePackage": "Compare with Package",
+        "optCompareNone": "Not Selected",
+        "lblRateCompareCost": "Cost per Credit:",
+        "rateCompareSaving": "You save {0}% per credit with {1} package!",
+        "lblTableModel": "Model Name",
+        "lblTableBaseUsage": "Image Count",
+        "lblTableCompareUsage": "Comparison",
+        "btnPackageDetailBuy": "Buy Package",
+        "lblImagesUnit": "images"
     },
     "tr": {
         "lblSliderBefore": "Önce",
@@ -1339,7 +1351,19 @@ const translations = {
         "msgGiftErr403": "Kendinize hediye gönderemezsiniz.",
         "msgGiftErr400": "Yetersiz kredi bakiyesi.",
         "msgGiftErrGeneric": "Hediye kredi gönderilirken bir hata oluştu.",
-        "msgGiftSending": "Hediye kredi gönderiliyor..."
+        "msgGiftSending": "Hediye kredi gönderiliyor...",
+        "lblPackageDetailTitle": "Paket Detayları",
+        "lblPackageDetailSubtitle": "Kullanım limitleri ve karşılaştırmalar",
+        "lblSelectBasePackage": "Seçili Paket",
+        "lblSelectComparePackage": "Karşılaştırılacak Paket",
+        "optCompareNone": "Seçilmedi",
+        "lblRateCompareCost": "Kredi Başına Maliyet:",
+        "rateCompareSaving": "{1} paketi ile kredi başına %{0} tasarruf edersiniz!",
+        "lblTableModel": "Model Adı",
+        "lblTableBaseUsage": "Görsel Sayısı",
+        "lblTableCompareUsage": "Karşılaştırma",
+        "btnPackageDetailBuy": "Paketi Satın Al",
+        "lblImagesUnit": "görsel"
     }
 };
 
@@ -1892,6 +1916,51 @@ function updateLanguage(lang) {
     safelySetText('toon-cat-all', t.toonCatAll);
     safelySetText('toon-error-msg', t.toonErrorMsg);
     safelySetText('toon-retry-btn', t.toonRetryBtn);
+
+    safelySetText('lbl-package-detail-title', t.lblPackageDetailTitle);
+    safelySetText('lbl-package-detail-subtitle', t.lblPackageDetailSubtitle);
+    safelySetText('lbl-select-base-package', t.lblSelectBasePackage);
+    safelySetText('lbl-select-compare-package', t.lblSelectComparePackage);
+    safelySetText('opt-compare-none', t.optCompareNone);
+    safelySetText('lbl-rate-compare-cost', t.lblRateCompareCost);
+    safelySetText('lbl-table-model', t.lblTableModel);
+    safelySetText('lbl-table-base-usage', t.lblTableBaseUsage);
+    safelySetText('lbl-table-compare-usage', t.lblTableCompareUsage);
+    safelySetText('btn-package-detail-buy', t.btnPackageDetailBuy);
+
+    const baseSelect = document.getElementById('select-base-package');
+    if (baseSelect) {
+        const starterOpt = baseSelect.querySelector('option[value="starter"]');
+        if (starterOpt) starterOpt.textContent = `${t.creditsPackageStarter} (50 ${t.creditsPackageUnit})`;
+        const standardOpt = baseSelect.querySelector('option[value="standard"]');
+        if (standardOpt) standardOpt.textContent = `${t.creditsPackageStandard} (100 ${t.creditsPackageUnit})`;
+        const popularOpt = baseSelect.querySelector('option[value="popular"]');
+        if (popularOpt) popularOpt.textContent = `${t.creditsPackagePopular} (200 ${t.creditsPackageUnit})`;
+        const proOpt = baseSelect.querySelector('option[value="pro"]');
+        if (proOpt) proOpt.textContent = `${t.creditsPackagePro} (500 ${t.creditsPackageUnit})`;
+        const ultraOpt = baseSelect.querySelector('option[value="ultra"]');
+        if (ultraOpt) ultraOpt.textContent = `${t.creditsPackageUltra} (1000 ${t.creditsPackageUnit})`;
+    }
+
+    const compareSelect = document.getElementById('select-compare-package');
+    if (compareSelect) {
+        const noneOpt = compareSelect.querySelector('option[value="none"]');
+        if (noneOpt) noneOpt.textContent = t.optCompareNone;
+        const starterOpt = compareSelect.querySelector('option[value="starter"]');
+        if (starterOpt) starterOpt.textContent = `${t.creditsPackageStarter} (50 ${t.creditsPackageUnit})`;
+        const standardOpt = compareSelect.querySelector('option[value="standard"]');
+        if (standardOpt) standardOpt.textContent = `${t.creditsPackageStandard} (100 ${t.creditsPackageUnit})`;
+        const popularOpt = compareSelect.querySelector('option[value="popular"]');
+        if (popularOpt) popularOpt.textContent = `${t.creditsPackagePopular} (200 ${t.creditsPackageUnit})`;
+        const proOpt = compareSelect.querySelector('option[value="pro"]');
+        if (proOpt) proOpt.textContent = `${t.creditsPackagePro} (500 ${t.creditsPackageUnit})`;
+        const ultraOpt = compareSelect.querySelector('option[value="ultra"]');
+        if (ultraOpt) ultraOpt.textContent = `${t.creditsPackageUltra} (1000 ${t.creditsPackageUnit})`;
+    }
+
+    if (typeof window.refreshPackageDetailModal === 'function') {
+        window.refreshPackageDetailModal();
+    }
 
     if (typeof window.updateModelSortLanguage === 'function') {
         window.updateModelSortLanguage();

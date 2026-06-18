@@ -407,6 +407,249 @@
         });
     }
 
+    const packagesConfig = {
+        starter: { credits: 50, price: 29.99, rate: 0.60, nameTr: "BAŞLANGIÇ", nameEn: "STARTER", buyBtnId: "btn-credits-buy-starter" },
+        standard: { credits: 100, price: 49.99, rate: 0.50, nameTr: "STANDART", nameEn: "STANDARD", buyBtnId: "btn-credits-buy-standard" },
+        popular: { credits: 200, price: 89.99, rate: 0.45, nameTr: "POPÜLER", nameEn: "POPULAR", buyBtnId: "btn-credits-buy-popular" },
+        pro: { credits: 500, price: 199.99, rate: 0.40, nameTr: "PRO", nameEn: "PRO", buyBtnId: "btn-credits-buy-pro" },
+        ultra: { credits: 1000, price: 389.99, rate: 0.39, nameTr: "ULTRA", nameEn: "ULTRA", buyBtnId: "btn-credits-buy-ultra" }
+    };
+
+    async function ensureModelPricesLoaded() {
+        if (window.galleryModelPrices && Object.keys(window.galleryModelPrices).length > 0) {
+            return window.galleryModelPrices;
+        }
+        try {
+            const res = await fetch('https://create.thena.workers.dev/modelPrices');
+            if (res.ok) {
+                window.galleryModelPrices = await res.json();
+                return window.galleryModelPrices;
+            }
+        } catch (err) {
+            console.error('Error fetching model prices in credits.js', err);
+        }
+        return window.galleryModelPrices;
+    }
+
+    function getModelDisplayName(key) {
+        const mapping = window.modelKeyMapping || {};
+        for (const [name, val] of Object.entries(mapping)) {
+            if (val === key) return name;
+        }
+        const fallback = {
+            "gpt2": "GPT 2",
+            "kling30": "Kling 3.0",
+            "klingo1": "Kling O1",
+            "flux2pro": "Flux 2 Pro",
+            "seedream4": "Seedream 4",
+            "nanobanana1": "Nano Banana 1"
+        };
+        return fallback[key] || key.toUpperCase();
+    }
+
+    const packageDetailModal = document.getElementById('credits-package-detail-modal');
+    const btnClosePackageDetail = document.getElementById('btn-close-package-detail');
+    const selectBasePackage = document.getElementById('select-base-package');
+    const selectComparePackage = document.getElementById('select-compare-package');
+    const packageRateComparison = document.getElementById('package-rate-comparison');
+    const rateCompareValues = document.getElementById('rate-compare-values');
+    const rateCompareSaving = document.getElementById('rate-compare-saving');
+    const packageDetailModelsList = document.getElementById('package-detail-models-list');
+    const btnPackageDetailBuy = document.getElementById('btn-package-detail-buy');
+
+    function updateDisabledOptions() {
+        const baseId = selectBasePackage ? selectBasePackage.value : 'starter';
+        const compareId = selectComparePackage ? selectComparePackage.value : 'none';
+
+        if (selectComparePackage) {
+            Array.from(selectComparePackage.options).forEach(opt => {
+                if (opt.value === 'none') return;
+                opt.disabled = (opt.value === baseId);
+            });
+        }
+
+        if (selectBasePackage) {
+            Array.from(selectBasePackage.options).forEach(opt => {
+                opt.disabled = (opt.value === compareId);
+            });
+        }
+    }
+
+    function openPackageDetailModal(packageId) {
+        if (!packageDetailModal) return;
+        document.body.classList.add('no-scroll');
+        packageDetailModal.classList.add('active');
+        if (selectBasePackage) {
+            selectBasePackage.value = packageId;
+        }
+        if (selectComparePackage) {
+            selectComparePackage.value = 'none';
+        }
+        updateDisabledOptions();
+        refreshPackageDetailModal();
+        if (typeof playInformationSound === 'function') playInformationSound();
+    }
+
+    function closePackageDetailModal() {
+        if (!packageDetailModal) return;
+        packageDetailModal.classList.remove('active');
+        const creditsModal = document.getElementById('credits-modal');
+        if (!creditsModal || !creditsModal.classList.contains('active')) {
+            document.body.classList.remove('no-scroll');
+        }
+        if (typeof playInformationSound === 'function') playInformationSound();
+    }
+
+    window.refreshPackageDetailModal = async function() {
+        if (!packageDetailModal || !packageDetailModal.classList.contains('active')) return;
+        updateDisabledOptions();
+        const baseId = selectBasePackage ? selectBasePackage.value : 'starter';
+        const compareId = selectComparePackage ? selectComparePackage.value : 'none';
+        const basePkg = packagesConfig[baseId];
+        const comparePkg = compareId !== 'none' ? packagesConfig[compareId] : null;
+        
+        const prices = await ensureModelPricesLoaded();
+        const paidModels = [];
+        for (const [key, val] of Object.entries(prices)) {
+            if (val && val.credit && val.credit > 0) {
+                paidModels.push({ key, creditCost: val.credit });
+            }
+        }
+        paidModels.sort((a, b) => b.creditCost - a.creditCost);
+
+        if (packageDetailModelsList) {
+            packageDetailModelsList.innerHTML = '';
+            const lang = typeof currentLang !== 'undefined' ? currentLang : 'en';
+            
+            paidModels.forEach(m => {
+                const displayName = getModelDisplayName(m.key);
+                const baseCount = Math.floor(basePkg.credits / m.creditCost);
+                
+                const row = document.createElement('div');
+                row.className = 'package-detail-model-row';
+                
+                let compareHtml = '';
+                if (comparePkg) {
+                    const compareCount = Math.floor(comparePkg.credits / m.creditCost);
+                    const diffCount = compareCount - baseCount;
+                    const diffText = diffCount >= 0 ? `+${diffCount}` : `${diffCount}`;
+                    const diffClass = diffCount >= 0 ? '' : 'decreased';
+                    compareHtml = `<span class="package-detail-model-compare ${diffClass}">${compareCount} <span style="font-size: 10px; opacity:0.7;">(${diffText})</span></span>`;
+                } else {
+                    compareHtml = `<span class="package-detail-model-compare" style="display:none;"></span>`;
+                }
+                
+                const creditLabelText = lang === 'tr' ? 'kredi' : 'credits';
+                row.innerHTML = `
+                    <span class="package-detail-model-name">${displayName} <span class="package-detail-model-cost-tag">${m.creditCost} ${creditLabelText}</span></span>
+                    <span class="package-detail-model-usage">${baseCount}</span>
+                    ${compareHtml}
+                `;
+                packageDetailModelsList.appendChild(row);
+            });
+        }
+
+        const lblTableCompareUsage = document.getElementById('lbl-table-compare-usage');
+        if (lblTableCompareUsage) {
+            if (comparePkg) {
+                const lang = typeof currentLang !== 'undefined' ? currentLang : 'en';
+                const comparePkgName = lang === 'tr' ? comparePkg.nameTr : comparePkg.nameEn;
+                lblTableCompareUsage.textContent = comparePkgName;
+                lblTableCompareUsage.style.display = 'block';
+            } else {
+                lblTableCompareUsage.style.display = 'none';
+            }
+        }
+
+        if (packageRateComparison) {
+            if (comparePkg) {
+                const lang = typeof currentLang !== 'undefined' ? currentLang : 'en';
+                const valText = `₺${basePkg.rate.toFixed(2)} vs ₺${comparePkg.rate.toFixed(2)}`;
+                if (rateCompareValues) {
+                    rateCompareValues.textContent = valText;
+                }
+                let savingPercent = 0;
+                if (basePkg.rate > comparePkg.rate) {
+                    savingPercent = Math.round(((basePkg.rate - comparePkg.rate) / basePkg.rate) * 100);
+                } else if (comparePkg.rate > basePkg.rate) {
+                    savingPercent = Math.round(((comparePkg.rate - basePkg.rate) / comparePkg.rate) * 100);
+                }
+                if (rateCompareSaving && savingPercent > 0) {
+                    const baseName = lang === 'tr' ? basePkg.nameTr : basePkg.nameEn;
+                    const compName = lang === 'tr' ? comparePkg.nameTr : comparePkg.nameEn;
+                    let savingText = '';
+                    if (basePkg.rate > comparePkg.rate) {
+                        savingText = lang === 'tr'
+                            ? `${compName} paketi ile kredi başına %${savingPercent} tasarruf edersiniz!`
+                            : `You save ${savingPercent}% per credit with ${compName} package!`;
+                        rateCompareSaving.style.color = '#34d399';
+                    } else {
+                        savingText = lang === 'tr'
+                            ? `${baseName} paketi ile kredi başına %${savingPercent} daha tasarruflusunuz.`
+                            : `${baseName} package is ${savingPercent}% cheaper per credit.`;
+                        rateCompareSaving.style.color = '#f87171';
+                    }
+                    rateCompareSaving.querySelector('span').textContent = savingText;
+                }
+                packageRateComparison.style.display = 'block';
+            } else {
+                packageRateComparison.style.display = 'none';
+            }
+        }
+
+        if (btnPackageDetailBuy) {
+            const lang = typeof currentLang !== 'undefined' ? currentLang : 'en';
+            const pkgName = lang === 'tr' ? basePkg.nameTr : basePkg.nameEn;
+            btnPackageDetailBuy.textContent = lang === 'tr' ? `${pkgName} Paketini Satın Al` : `Buy ${pkgName} Package`;
+        }
+    };
+
+    document.querySelectorAll('.credits-package-info-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const pkgId = btn.getAttribute('data-package');
+            if (pkgId) {
+                openPackageDetailModal(pkgId);
+            }
+        });
+    });
+
+    if (btnClosePackageDetail) {
+        btnClosePackageDetail.addEventListener('click', closePackageDetailModal);
+    }
+    if (packageDetailModal) {
+        packageDetailModal.addEventListener('click', (e) => {
+            if (e.target === packageDetailModal) closePackageDetailModal();
+        });
+    }
+    if (selectBasePackage) {
+        selectBasePackage.addEventListener('change', () => {
+            updateDisabledOptions();
+            refreshPackageDetailModal();
+        });
+    }
+    if (selectComparePackage) {
+        selectComparePackage.addEventListener('change', () => {
+            updateDisabledOptions();
+            refreshPackageDetailModal();
+        });
+    }
+    if (btnPackageDetailBuy) {
+        btnPackageDetailBuy.addEventListener('click', () => {
+            const baseId = selectBasePackage ? selectBasePackage.value : 'starter';
+            const basePkg = packagesConfig[baseId];
+            if (basePkg) {
+                const mainBuyBtn = document.getElementById(basePkg.buyBtnId);
+                if (mainBuyBtn) {
+                    closePackageDetailModal();
+                    const creditsModal = document.getElementById('credits-modal');
+                    if (creditsModal) creditsModal.classList.remove('active');
+                    mainBuyBtn.click();
+                }
+            }
+        });
+    }
+
     setTimeout(startPolling, 800);
 
 })();

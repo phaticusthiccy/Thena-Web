@@ -64,6 +64,7 @@ const modelTranslationsTR = {
     "7d834fb8-ef08-4c97-b61c-1036e7113ae5": "Kling O1, Çok Modlu Görsel Dil (MVL) çerçevesi üzerine inşa edilmiş, birleşik bir çok modlu yapay zeka modelidir. Olağanüstü hızlı hizalama, hassas karakter tutarlılığı ve profesyonel yaratıcı kontrol ile yüksek kaliteli görüntü üretimi sağlamak üzere tasarlanmıştır.",
     "ff7f60c2-303a-44db-97e9-230c1767d86c": "Bu model, orijinal Flux.1'den büyük bir ilerlemeyi temsil ediyor ve basit görüntü oluşturmanın ötesine geçerek gerçek profesyonel düzeyde prodüksiyona ulaşıyor. Etkileyici bir şekilde, Flux 2 artık daha önce imkansız olan bir kontrol ve doğruluk seviyesi sunuyor.",
     "e73d4095-5fb5-40e5-ab6a-3ad7f6e1dcfd": "Seedream 4.0, metinden görüntüye sentezleme, gelişmiş düzenleme ve çoklu görüntü birleştirme özelliklerini tek bir güçlü mimaride birleştirerek yapay zeka sanat üretimini yeniden tanımlıyor.",
+    "0d85f61b-509b-49ba-8227-c136acaed22d": "Google'ın Nano Banana 1'i, Gemini 2.5 Flash Görüntü mimarisiyle çalışır. Hız ve verimlilik için tasarlanan bu cihaz, hızlı, yüksek kaliteli görüntü oluşturma ve sorunsuz görsel mantık yürütme sağlayarak hızlı prototipleme ve dinamik içerik oluşturma için idealdir.",
     "8gg12 61812 6628 19729 6b4a5 5060": "Yüksek çözünürlüklü görüntüler üretebilen kapsamlı işlem sonrası teknolojisine sahip ilk modeldir. Gürültü giderme işleminden sonra gerçek LUT filtreleri ekleyerek inanılmaz görseller yaratabiliyor.",
     "551ks 8g6g8 16gga 1h8h8 6b4a5 5060": "Flux2 kaynak verileri kullanılarak Thena V6 temel modeliyle ince ayar yapılmış, damıtılmış bir model. Güçlü, hızlı, çok yönlü.",
     "77h621 yy5271 gga166 hhau22 882hha 1a 3090": "Yüksek çözünürlüklü görüntüler, illüstrasyonlar ve genel kullanım için özel olarak tasarlanmış güçlü bir model.",
@@ -106,6 +107,8 @@ const MODEL_STATS = {
     "ff7f60c2-303a-44db-97e9-230c1767d86c": { intel: 4, qual: 5, speed: 2 },
     // Seedream 4
     "e73d4095-5fb5-40e5-ab6a-3ad7f6e1dcfd": { intel: 4, qual: 5, speed: 2 },
+    // Nano Banana 1
+    "0d85f61b-509b-49ba-8227-c136acaed22d": { intel: 4, qual: 4, speed: 3 },
     // Thena Movie
     "8gg12 61812 6628 19729 6b4a5 5060": { intel: 5, qual: 5, speed: 3 },
     // Thena Max
@@ -2265,7 +2268,10 @@ async function loadModels() {
         const exclusiveLabelText = isPaid ? (translations[currentLang].paidLabel || "Paid") : translations[currentLang].exclusiveLabel;
         const exclusiveSvg = isFlorence 
             ? `<svg class="flag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`
-            : `<svg class="flag-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 8c-.83 0-1.5-.67-1.5-1.5S4.67 5 5.5 5 7 5.67 7 6.5 6.33 8 5.5 8z"/></svg>`;
+            : (isPaid 
+                ? `<svg class="flag-icon paid-flag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M6 3h12l4 6-10 13L2 9z" fill="rgba(212, 175, 55, 0.15)"></path><path d="M11 3 8 9l4 13 4-13-3-6"></path><path d="M2 9h20"></path></svg>`
+                : `<svg class="flag-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 8c-.83 0-1.5-.67-1.5-1.5S4.67 5 5.5 5 7 5.67 7 6.5 6.33 8 5.5 8z"/></svg>`
+              );
 
         return `
                         <div class="model-card ${isHot ? 'hot-model' : ''} ${isPaid ? 'paid-model' : ''}" data-model-id="${model.id}" data-preview="${previewImage}">
@@ -2277,7 +2283,7 @@ async function loadModels() {
                                     <line x1="12" y1="8" x2="12.01" y2="8"></line>
                                 </svg>
                             </div>
-                            ${showExclusiveBadge ? `<div class="flag-item bg-exclusive">${exclusiveSvg}<span class="flag-text line-one">${exclusiveLabelText}</span></div>` : ''}
+                            ${showExclusiveBadge ? `<div class="flag-item bg-exclusive ${isPaid ? 'bg-exclusive-paid' : ''}">${exclusiveSvg}<span class="flag-text line-one">${exclusiveLabelText}</span></div>` : ''}
                             <div class="model-name">${model.model}</div>
                         </div>
                     `;
@@ -7369,6 +7375,7 @@ async function loadGalleryStatistics() {
             "Kling O1": "klingo1",
             "Flux 2 Pro": "flux2pro",
             "Seedream 4": "seedream4",
+            "Nano Banana 1": "nanobanana1",
             "Thena Ultra": "thenaUltra",
             "Thena Pro": "thenaPro",
             "Thena Movie": "thenaMovie",
