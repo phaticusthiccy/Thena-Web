@@ -18,6 +18,9 @@ const modelSpecs = {
     "ff7f60c2-303a-44db-97e9-230c1767d86c": {
         usedTechniques: ["Paid Models"],
     },
+    "e73d4095-5fb5-40e5-ab6a-3ad7f6e1dcfd": {
+        usedTechniques: ["Paid Models"],
+    },
     "8gg12 61812 6628 19729 6b4a5 5060": {
         usedTechniques: ["Photorealism", "General", "Movie"],
     },

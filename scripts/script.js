@@ -63,6 +63,7 @@ const modelTranslationsTR = {
     "9e64c073-c526-4f73-b489-d0c28d4dd37a": "Kling 3.0 Image, gelişmiş bir yapay zeka görüntü oluşturma aracıdır. Kling O1 ve 2.6 gibi önceki sürümlerin üzerine inşa edilen ve Çok Modlu Görsel Dil (MVL) olarak bilinen birleşik bir çok modlu çerçeve sunan bu araç, yapay zeka destekli görsel oluşturmada önemli bir evrimi temsil eder.",
     "7d834fb8-ef08-4c97-b61c-1036e7113ae5": "Kling O1, Çok Modlu Görsel Dil (MVL) çerçevesi üzerine inşa edilmiş, birleşik bir çok modlu yapay zeka modelidir. Olağanüstü hızlı hizalama, hassas karakter tutarlılığı ve profesyonel yaratıcı kontrol ile yüksek kaliteli görüntü üretimi sağlamak üzere tasarlanmıştır.",
     "ff7f60c2-303a-44db-97e9-230c1767d86c": "Bu model, orijinal Flux.1'den büyük bir ilerlemeyi temsil ediyor ve basit görüntü oluşturmanın ötesine geçerek gerçek profesyonel düzeyde prodüksiyona ulaşıyor. Etkileyici bir şekilde, Flux 2 artık daha önce imkansız olan bir kontrol ve doğruluk seviyesi sunuyor.",
+    "e73d4095-5fb5-40e5-ab6a-3ad7f6e1dcfd": "Seedream 4.0, metinden görüntüye sentezleme, gelişmiş düzenleme ve çoklu görüntü birleştirme özelliklerini tek bir güçlü mimaride birleştirerek yapay zeka sanat üretimini yeniden tanımlıyor.",
     "8gg12 61812 6628 19729 6b4a5 5060": "Yüksek çözünürlüklü görüntüler üretebilen kapsamlı işlem sonrası teknolojisine sahip ilk modeldir. Gürültü giderme işleminden sonra gerçek LUT filtreleri ekleyerek inanılmaz görseller yaratabiliyor.",
     "551ks 8g6g8 16gga 1h8h8 6b4a5 5060": "Flux2 kaynak verileri kullanılarak Thena V6 temel modeliyle ince ayar yapılmış, damıtılmış bir model. Güçlü, hızlı, çok yönlü.",
     "77h621 yy5271 gga166 hhau22 882hha 1a 3090": "Yüksek çözünürlüklü görüntüler, illüstrasyonlar ve genel kullanım için özel olarak tasarlanmış güçlü bir model.",
@@ -103,6 +104,8 @@ const MODEL_STATS = {
     "7d834fb8-ef08-4c97-b61c-1036e7113ae5": { intel: 4, qual: 4, speed: 2 },
     // Flux 2 Pro
     "ff7f60c2-303a-44db-97e9-230c1767d86c": { intel: 4, qual: 5, speed: 2 },
+    // Seedream 4
+    "e73d4095-5fb5-40e5-ab6a-3ad7f6e1dcfd": { intel: 4, qual: 5, speed: 2 },
     // Thena Movie
     "8gg12 61812 6628 19729 6b4a5 5060": { intel: 5, qual: 5, speed: 3 },
     // Thena Max
@@ -7365,6 +7368,7 @@ async function loadGalleryStatistics() {
             "Kling 3.0": "kling30",
             "Kling O1": "klingo1",
             "Flux 2 Pro": "flux2pro",
+            "Seedream 4": "seedream4",
             "Thena Ultra": "thenaUltra",
             "Thena Pro": "thenaPro",
             "Thena Movie": "thenaMovie",

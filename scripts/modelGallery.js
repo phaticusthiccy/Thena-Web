@@ -57,6 +57,7 @@
         "Kling 3.0": "kling30",
         "Kling O1": "klingo1",
         "Flux 2 Pro": "flux2pro",
+        "Seedream 4": "seedream4",
         "Thena Ultra": "thenaUltra",
         "Thena Pro": "thenaPro",
         "Thena Movie": "thenaMovie",
