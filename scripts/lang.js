@@ -203,6 +203,7 @@ const translations = {
         "filterSubCategories": "Sub Categories",
         "filterReset": "Reset Filters",
         "filterAll": "All",
+        "filterPaid": "Paid Models",
         "chatSearchPlaceholder": "Search characters...",
         "unknownCharacter": "Unknown Character",
         "characterNM": " (Default)",
@@ -278,7 +279,7 @@ const translations = {
         "msgModMedium": "Moderation set to medium.",
         "msgModLow": "Moderation set to low.",
         "msgModHigh": "Moderation set to high.",
-        "msgModUltraLocked": "Moderation level is locked to High for the Thena Ultra model.",
+        "msgModUltraLocked": "Moderation level is locked to High for this model.",
         "msgEnterApiKey": "Please enter an API Key first.",
         "msgModelUnavailableWait": "This model is currently unavailable. Remaining wait time: ",
         "msgRateLimitFail": "Rate limit check failed. Please try again.",
@@ -369,6 +370,7 @@ const translations = {
         "editorCropCancel": "Cancel",
         "editorCropApply": "Apply",
         "exclusiveLabel": "Exclusive",
+        "paidLabel": "Paid",
         "galleryStatsTitle": "Gallery Statistics",
         "statsModelsTitle": "Models Used",
         "statsExtrasTitle": "Extras Used",
@@ -416,6 +418,7 @@ const translations = {
         "mgTypeBase": "Base Model",
         "mgLblTotalUsage": "Total Generated",
         "mgLblPerUnit": "Images per $1",
+        "mgLblCredit": "Credits per Image",
         "mgOptPriceAsc": "Price (Low to High)",
         "mgOptPriceDesc": "Price (High to Low)",
         "mgOptUsageDesc": "Most Used",
@@ -614,7 +617,58 @@ const translations = {
         "tutorialOwnerDesc": "Have questions, feedback, or ideas? Click here to get in touch with the developer directly. We love hearing from our community!",
         "lblTutorialRestart": "TUTORIAL MODE",
         "descTutorialRestart": "Replay the onboarding tutorial at any time to revisit Thena\u2019s features.",
-        "btnTutorialRestart": "Start Tutorial"
+        "btnTutorialRestart": "Start Tutorial",
+        "navCredits": "Credits",
+        "creditWidgetTitle": "Remaining Credits",
+        "creditWidgetLabel": "credits",
+        "creditsModalTitle": "Credit Center",
+        "creditsModalSubtitle": "View your balance and buy credits",
+        "creditsModalClose": "Close",
+        "creditsBalanceLabel": "Remaining Credits",
+        "creditsRefreshTitle": "Refresh",
+        "creditsBreakdownPurchased": "Purchased",
+        "creditsBreakdownUsed": "Used",
+        "creditsBreakdownGifted": "Gifted",
+        "creditsBreakdownGiftReceived": "Gift Received",
+        "creditsNoApiWarning": "Please enter your API key to view credit balance.",
+        "creditsPackagesTitle": "Credit Packages",
+        "creditsPackageStarter": "STARTER",
+        "creditsPackageStandard": "STANDARD",
+        "creditsPackagePopular": "⭐ POPULAR",
+        "creditsPackagePro": "💎 PRO",
+        "creditsPackageUltra": "👑 ULTRA",
+        "creditsPackageUnit": "Credits",
+        "creditsPackageRateStarter": "≈ ₺0.60 / credit",
+        "creditsPackageRateStandard": "≈ ₺0.50 / credit",
+        "creditsPackageRatePopular": "≈ ₺0.45 / credit",
+        "creditsPackageRatePro": "≈ ₺0.40 / credit",
+        "creditsPackageRateUltra": "≈ ₺0.39 / credit",
+        "creditsPackageBtn": "Buy with Shopier",
+        "creditsPackagesNote": "Secured by Shopier · Turkish cards supported · 24/7 support",
+        "buyWarningTitle": "Important Notice",
+        "buyWarningDesc": "During the checkout process on the Shopier payment page, you MUST enter your API key in the 'Note' (Customer Note) field.<br><br>Otherwise, your purchased credits cannot be added to your account.",
+        "buyWarningCheckbox": "I have read and understood.",
+        "buyWarningCancel": "Cancel",
+        "buyWarningConfirm": "Buy Now",
+        "lblBuyWarningMyKey": "My API Key:",
+        "lblBuyWarningClickCopy": "Copy",
+        "lblCreditsGiftTitle": "Send Gift Credits",
+        "lblGiftTargetKey": "Recipient Connection Code",
+        "lblGiftAmount": "Amount to Send",
+        "lblBtnSendGift": "Send",
+        "lblGiftConfirmTitle": "Send Gift?",
+        "lblGiftConfirmDesc": "This action cannot be undone. Are you sure you want to send {0} credits to this connection code?",
+        "giftTargetKeyPlaceholder": "Enter recipient's connection code...",
+        "lblMyShareCodePrefix": "My Connection Code:",
+        "msgGiftSuccess": "Gift credits sent successfully!",
+        "msgGiftErrNoApiKey": "Please enter your API Key first.",
+        "msgGiftErrNoTargetKey": "Please enter the recipient connection code.",
+        "msgGiftErrInvalidAmount": "Please enter a valid credit amount.",
+        "msgGiftErr404": "Recipient connection code is incorrect or not registered to Thena.",
+        "msgGiftErr403": "You cannot send gift credits to yourself.",
+        "msgGiftErr400": "You do not have enough credits.",
+        "msgGiftErrGeneric": "An error occurred while sending gift credits.",
+        "msgGiftSending": "Sending gift credits..."
     },
     "tr": {
         "lblSliderBefore": "Önce",
@@ -820,6 +874,7 @@ const translations = {
         "filterSubCategories": "Alt Kategoriler",
         "filterReset": "Filtreleri Sıfırla",
         "filterAll": "Tümü",
+        "filterPaid": "Ücretli Modeller",
         "chatSearchPlaceholder": "Karakter ara...",
         "unknownCharacter": "Bilinmeyen Karakter",
         "characterNM": " (Varsayılan)",
@@ -895,7 +950,7 @@ const translations = {
         "msgModMedium": "Moderasyon düzeyi normal olarak ayarlandı.",
         "msgModLow": "Moderasyon düzeyi düşük olarak ayarlandı.",
         "msgModHigh": "Moderasyon düzeyi yüksek olarak ayarlandı.",
-        "msgModUltraLocked": "Thena Ultra modeli için moderasyon seviyesi yüksek olarak sabitlenmiştir.",
+        "msgModUltraLocked": "Bu model için moderasyon seviyesi yüksek olarak sabitlenmiştir.",
         "msgEnterApiKey": "Lütfen API Anahtarını girin.",
         "msgModelUnavailableWait": "Bu model şu anda kullanılamıyor. Kalan bekleme süresi: ",
         "msgRateLimitFail": "Hız limiti kontrolü başarısız oldu. Lütfen tekrar deneyin.",
@@ -986,6 +1041,7 @@ const translations = {
         "editorCropCancel": "İptal",
         "editorCropApply": "Uygula",
         "exclusiveLabel": "Seçkin",
+        "paidLabel": "Ücretli",
         "galleryStatsTitle": "Galeri İstatistikleri",
         "statsModelsTitle": "Kullanılan Modeller",
         "statsExtrasTitle": "Kullanılan Ekstralar",
@@ -1032,6 +1088,7 @@ const translations = {
         "mgTypeBase": "Temel Model",
         "mgLblTotalUsage": "Toplam Üretim",
         "mgLblPerUnit": "1₺ ile Üretim",
+        "mgLblCredit": "Görsel Başına Kredi",
         "mgOptPriceAsc": "Ücret (Artan)",
         "mgOptPriceDesc": "Ücret (Azalan)",
         "mgOptUsageDesc": "En Çok Kullanılan",
@@ -1231,7 +1288,58 @@ const translations = {
         "tutorialOwnerDesc": "Soruların, geri bildirimlerin veya önerilen mi var? Geliştiriciyle doğrudan iletişime geçmek için buraya tıkla. Topluluktan duymayı seviyoruz!",
         "lblTutorialRestart": "EğİTİM MODU",
         "descTutorialRestart": "Thena'nın özelliklerini tekrar keşfetmek için eğitim turunu istediğin zaman yeniden başlat.",
-        "btnTutorialRestart": "Eğitimi Başlat"
+        "btnTutorialRestart": "Eğitimi Başlat",
+        "navCredits": "Kredi",
+        "creditWidgetTitle": "Kalan Kredi",
+        "creditWidgetLabel": "kredi",
+        "creditsModalTitle": "Kredi Merkezi",
+        "creditsModalSubtitle": "Bakiyenizi görüntüleyin ve kredi satın alın",
+        "creditsModalClose": "Kapat",
+        "creditsBalanceLabel": "Kalan Kredi",
+        "creditsRefreshTitle": "Yenile",
+        "creditsBreakdownPurchased": "Satın Alınan",
+        "creditsBreakdownUsed": "Kullanılan",
+        "creditsBreakdownGifted": "Gönderilen",
+        "creditsBreakdownGiftReceived": "Alınan",
+        "creditsNoApiWarning": "Kredi bilgisini görmek için lütfen API anahtarınızı girin.",
+        "creditsPackagesTitle": "Kredi Paketleri",
+        "creditsPackageStarter": "BAŞLANGIÇ",
+        "creditsPackageStandard": "STANDART",
+        "creditsPackagePopular": "⭐ POPÜLER",
+        "creditsPackagePro": "💎 PRO",
+        "creditsPackageUltra": "👑 ULTRA",
+        "creditsPackageUnit": "Kredi",
+        "creditsPackageRateStarter": "≈ ₺0.60 / kredi",
+        "creditsPackageRateStandard": "≈ ₺0.50 / kredi",
+        "creditsPackageRatePopular": "≈ ₺0.45 / kredi",
+        "creditsPackageRatePro": "≈ ₺0.40 / kredi",
+        "creditsPackageRateUltra": "≈ ₺0.39 / kredi",
+        "creditsPackageBtn": "Shopier ile Al",
+        "creditsPackagesNote": "Shopier güvencesiyle · Türk kartları desteklenir · 7/24 destek",
+        "buyWarningTitle": "Önemli Uyarı",
+        "buyWarningDesc": "Satın alma işlemi sırasında Shopier ödeme sayfasındaki 'Not' (Müşteri Notu) bölümüne API anahtarınızı (API Key) yazmanız gerekmektedir.<br><br>Aksi takdirde satın aldığınız krediler hesabınıza tanımlanamayacaktır.",
+        "buyWarningCheckbox": "Okudum, anladım.",
+        "buyWarningCancel": "İptal",
+        "buyWarningConfirm": "Satın Al",
+        "lblBuyWarningMyKey": "API Anahtarım:",
+        "lblBuyWarningClickCopy": "Kopyala",
+        "lblCreditsGiftTitle": "Hediye Kredi Gönder",
+        "lblGiftTargetKey": "Alıcı Bağlantı Kodu",
+        "lblGiftAmount": "Gönderilecek Miktar",
+        "lblBtnSendGift": "Gönder",
+        "lblGiftConfirmTitle": "Hediye Gönder?",
+        "lblGiftConfirmDesc": "Bu işlem geri alınamaz. Bu bağlantı koduna {0} kredi göndermek istediğinizden emin misiniz?",
+        "giftTargetKeyPlaceholder": "Alıcının bağlantı kodunu girin...",
+        "lblMyShareCodePrefix": "Bağlantı Kodum:",
+        "msgGiftSuccess": "Hediye kredi başarıyla gönderildi!",
+        "msgGiftErrNoApiKey": "Lütfen önce kendi API anahtarınızı girin.",
+        "msgGiftErrNoTargetKey": "Lütfen alıcı bağlantı kodunu girin.",
+        "msgGiftErrInvalidAmount": "Lütfen geçerli bir kredi miktarı girin.",
+        "msgGiftErr404": "Alıcı bağlantı kodu yanlış veya Thena'ya kayıtlı değil.",
+        "msgGiftErr403": "Kendinize hediye gönderemezsiniz.",
+        "msgGiftErr400": "Yetersiz kredi bakiyesi.",
+        "msgGiftErrGeneric": "Hediye kredi gönderilirken bir hata oluştu.",
+        "msgGiftSending": "Hediye kredi gönderiliyor..."
     }
 };
 
@@ -1267,7 +1375,7 @@ function initDomCache() {
         'label-editor-upload', 'label-editor-presets', 'label-editor-instructions',
         'txt-editor-upload', 'txt-editor-loading-presets', 'editor-generate-btn', 'editor-preset-search',
         'editor-search-no-results-text',
-        'txt-filter-chip-all', 'opt-preset-all', 'opt-preset-safe', 'opt-preset-18plus', 'btn-preset-filter',
+        'txt-filter-chip-all', 'txt-filter-chip-paid', 'opt-preset-all', 'opt-preset-safe', 'opt-preset-18plus', 'btn-preset-filter',
         'lbl-crop-title', 'btn-crop-cancel', 'btn-crop-apply',
         'gallery-stats-title', 'stats-models-title', 'stats-extras-title', 'stats-cost-title', 'stats-approx-cost',
         'lbl-elinfo-title', 'lbl-elinfo-sub',
@@ -1299,7 +1407,23 @@ function initDomCache() {
         'lbl-editor-v3-cons-title', 'lbl-editor-v3-con-1', 'lbl-editor-v3-con-2',
         'txt-editor-model-v1-badge', 'txt-editor-model-v2-badge',
         'txt-nav-donate', 'txt-nav-showcase', 'txt-nav-developer', 
-        'txt-nav-apps', 'txt-nav-settings', 'txt-nav-language'
+        'txt-nav-apps', 'txt-nav-settings', 'txt-nav-language',
+        'credit-widget', 'credit-widget-label',
+        'lbl-credits-modal-title', 'lbl-credits-modal-subtitle', 'btn-close-credits',
+        'lbl-credits-balance-label', 'btn-refresh-credits',
+        'lbl-credits-breakdown-purchased', 'lbl-credits-breakdown-used',
+        'lbl-credits-breakdown-gifted', 'lbl-credits-breakdown-gift-received',
+        'lbl-credits-no-api-warning',
+        'lbl-credits-packages-title',
+        'lbl-credits-badge-starter', 'lbl-credits-badge-standard', 'lbl-credits-badge-popular', 'lbl-credits-badge-pro', 'lbl-credits-badge-ultra',
+        'lbl-credits-unit-starter', 'lbl-credits-unit-standard', 'lbl-credits-unit-popular', 'lbl-credits-unit-pro', 'lbl-credits-unit-ultra',
+        'lbl-credits-rate-starter', 'lbl-credits-rate-standard', 'lbl-credits-rate-popular', 'lbl-credits-rate-pro', 'lbl-credits-rate-ultra',
+        'btn-credits-buy-starter', 'btn-credits-buy-standard', 'btn-credits-buy-popular', 'btn-credits-buy-pro', 'btn-credits-buy-ultra',
+        'lbl-credits-note',
+        'lbl-buy-warning-title', 'lbl-buy-warning-desc', 'lbl-buy-warning-checkbox', 'btn-cancel-buy-warning', 'btn-confirm-buy-warning',
+        'lbl-buy-warning-my-key', 'lbl-buy-warning-click-copy',
+        'lbl-credits-gift-title', 'lbl-gift-target-key', 'lbl-gift-amount', 'lbl-btn-send-gift', 'lbl-gift-confirm-title', 'btn-cancel-gift-confirm', 'btn-confirm-gift-send',
+        'lbl-my-share-code-prefix'
     ];
 
     ids.forEach(id => {
@@ -1460,12 +1584,78 @@ function updateLanguage(lang) {
         ["txt-editor-model-v2-badge", t.editorModelV2Badge],
         ["txt-nav-donate", t.navDonate], ["txt-nav-showcase", t.navShowcase],
         ["txt-nav-developer", t.navDeveloper], ["txt-nav-apps", t.navApps],
-        ["txt-nav-settings", t.navSettings], ["txt-nav-language", t.navLanguage]
+        ["txt-nav-settings", t.navSettings], ["txt-nav-language", t.navLanguage],
+        ["credit-widget-label", t.creditWidgetLabel],
+        ["lbl-credits-modal-title", t.creditsModalTitle],
+        ["lbl-credits-modal-subtitle", t.creditsModalSubtitle],
+        ["lbl-credits-balance-label", t.creditsBalanceLabel],
+        ["lbl-credits-breakdown-purchased", t.creditsBreakdownPurchased],
+        ["lbl-credits-breakdown-used", t.creditsBreakdownUsed],
+        ["lbl-credits-breakdown-gifted", t.creditsBreakdownGifted],
+        ["lbl-credits-breakdown-gift-received", t.creditsBreakdownGiftReceived],
+        ["lbl-credits-no-api-warning", t.creditsNoApiWarning],
+        ["lbl-credits-packages-title", t.creditsPackagesTitle],
+        ["lbl-credits-badge-starter", t.creditsPackageStarter],
+        ["lbl-credits-badge-standard", t.creditsPackageStandard],
+        ["lbl-credits-badge-popular", t.creditsPackagePopular],
+        ["lbl-credits-badge-pro", t.creditsPackagePro],
+        ["lbl-credits-badge-ultra", t.creditsPackageUltra],
+        ["lbl-credits-unit-starter", t.creditsPackageUnit],
+        ["lbl-credits-unit-standard", t.creditsPackageUnit],
+        ["lbl-credits-unit-popular", t.creditsPackageUnit],
+        ["lbl-credits-unit-pro", t.creditsPackageUnit],
+        ["lbl-credits-unit-ultra", t.creditsPackageUnit],
+        ["lbl-credits-rate-starter", t.creditsPackageRateStarter],
+        ["lbl-credits-rate-standard", t.creditsPackageRateStandard],
+        ["lbl-credits-rate-popular", t.creditsPackageRatePopular],
+        ["lbl-credits-rate-pro", t.creditsPackageRatePro],
+        ["lbl-credits-rate-ultra", t.creditsPackageRateUltra],
+        ["btn-credits-buy-starter", t.creditsPackageBtn],
+        ["btn-credits-buy-standard", t.creditsPackageBtn],
+        ["btn-credits-buy-popular", t.creditsPackageBtn],
+        ["btn-credits-buy-pro", t.creditsPackageBtn],
+        ["btn-credits-buy-ultra", t.creditsPackageBtn],
+        ["lbl-credits-note", t.creditsPackagesNote],
+        ["lbl-buy-warning-title", t.buyWarningTitle],
+        ["lbl-buy-warning-checkbox", t.buyWarningCheckbox],
+        ["btn-cancel-buy-warning", t.buyWarningCancel],
+        ["btn-confirm-buy-warning", t.buyWarningConfirm],
+        ["lbl-buy-warning-my-key", t.lblBuyWarningMyKey],
+        ["lbl-buy-warning-click-copy", t.lblBuyWarningClickCopy],
+        ["lbl-credits-gift-title", t.lblCreditsGiftTitle],
+        ["lbl-gift-target-key", t.lblGiftTargetKey],
+        ["lbl-gift-amount", t.lblGiftAmount],
+        ["lbl-btn-send-gift", t.lblBtnSendGift],
+        ["lbl-gift-confirm-title", t.lblGiftConfirmTitle],
+        ["btn-cancel-gift-confirm", t.btnCancel],
+        ["btn-confirm-gift-send", t.lblBtnSendGift],
+        ["lbl-my-share-code-prefix", t.lblMyShareCodePrefix]
     ]
     
     idsToSetTextSafely.forEach(([id, text]) => {
         safelySetText(id, text);
     });
+
+    const buyWarningDescEl = cache['lbl-buy-warning-desc'] || document.getElementById('lbl-buy-warning-desc');
+    if (buyWarningDescEl && t.buyWarningDesc) {
+        buyWarningDescEl.innerHTML = t.buyWarningDesc;
+    }
+
+    const giftTargetKeyInput = cache['gift-target-key'] || document.getElementById('gift-target-key');
+    if (giftTargetKeyInput && t.giftTargetKeyPlaceholder) {
+        giftTargetKeyInput.placeholder = t.giftTargetKeyPlaceholder;
+    }
+
+    if (cache['credit-widget']) {
+        cache['credit-widget'].title = t.creditWidgetTitle;
+    }
+    if (cache['btn-refresh-credits']) {
+        cache['btn-refresh-credits'].title = t.creditsRefreshTitle;
+    }
+    if (cache['btn-close-credits']) {
+        cache['btn-close-credits'].setAttribute('aria-label', t.creditsModalClose);
+        cache['btn-close-credits'].title = t.creditsModalClose;
+    }
 
     const elInfoDescEl = document.getElementById('lbl-elinfo-desc');
     if (elInfoDescEl && t.elInfoDesc) elInfoDescEl.innerHTML = t.elInfoDesc;
@@ -1692,6 +1882,7 @@ function updateLanguage(lang) {
     safelySetText('editor-search-no-results-text', t.editorSearchNoResults);
 
     safelySetText('txt-filter-chip-all', t.filterAll);
+    safelySetText('txt-filter-chip-paid', t.filterPaid);
     safelySetText('txt-blur-toggle', t.btnRevealBlur);
 
     safelySetText('toon-header-badge-txt', t.toonHeaderBadge);
@@ -1761,8 +1952,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             document.querySelectorAll('.flag-text').forEach(el => {
-                if (translations[currentLang] && translations[currentLang].exclusiveLabel) {
-                    el.textContent = translations[currentLang].exclusiveLabel;
+                if (translations[currentLang]) {
+                    const card = el.closest('.model-card');
+                    if (card && card.classList.contains('paid-model')) {
+                        el.textContent = translations[currentLang].paidLabel || 'Paid';
+                    } else if (translations[currentLang].exclusiveLabel) {
+                        el.textContent = translations[currentLang].exclusiveLabel;
+                    }
                 }
             });
 

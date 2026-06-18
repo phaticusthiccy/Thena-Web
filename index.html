@@ -103,6 +103,16 @@
                 <span class="nav-btn-text" id="txt-nav-language">Dil</span>
             </button>
         </div>
+
+        <div id="credit-widget" title="Kalan Kredi">
+            <svg id="credit-widget-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            <span id="credit-widget-count">--</span>
+            <span id="credit-widget-label">kredi</span>
+        </div>
         <div class="background-text">THENA</div>
         <div class="container">
             <div class="shared-header">
@@ -668,7 +678,6 @@
                 <div class="input-group" id="editor-fusion-upload-group" style="display: none;">
                     <label id="label-editor-fusion-upload">Upload Two Images</label>
                     <div class="fusion-upload-areas-container" style="display: flex; gap: 15px; width: 100%; flex-wrap: wrap;">
-                        <!-- Image 1 Upload Area -->
                         <div class="image-editor-upload-area" id="editor-fusion-upload-1" style="flex: 1; min-width: 200px; min-height: 250px; position: relative;">
                             <input type="file" id="editor-fusion-file-input-1" accept="image/*" hidden>
                             <div class="upload-placeholder" id="editor-fusion-placeholder-1">
@@ -682,7 +691,6 @@
                             <img id="editor-fusion-preview-1" class="hidden" style="max-width: 100%; max-height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;">
                             <button id="editor-fusion-clear-1" class="hidden">&times;</button>
                         </div>
-                        <!-- Image 2 Upload Area -->
                         <div class="image-editor-upload-area" id="editor-fusion-upload-2" style="flex: 1; min-width: 200px; min-height: 250px; position: relative;">
                             <input type="file" id="editor-fusion-file-input-2" accept="image/*" hidden>
                             <div class="upload-placeholder" id="editor-fusion-placeholder-2">
@@ -980,6 +988,7 @@
                     </button>
                     <div id="model-filters" class="model-filter-container">
                         <button class="filter-chip active" data-filter="all" id="txt-filter-chip-all">All</button>
+                        <button class="filter-chip filter-chip-paid" data-filter="Paid" id="txt-filter-chip-paid">Paid Models</button>
                         <button class="filter-chip" data-filter="Anime">Anime</button>
                         <button class="filter-chip" data-filter="Photorealism">Real</button>
                         <button class="filter-chip" data-filter="General">General</button>
@@ -1691,6 +1700,72 @@
                 <button id="btn-confirm-reset"
                     style="background: #ff4444; color: #fff; border: none; box-shadow: 0 4px 15px rgba(255, 68, 68, 0.4);">Yes,
                     Delete Everything</button>
+            </div>
+        </div>
+    </div>
+    <div id="credits-buy-warning-modal" class="confirm-modal" style="z-index: 999999999 !important;">
+        <div class="confirm-content" style="max-width: 450px; max-height: 90vh; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(251, 191, 36, 0.3) transparent;">
+            <div class="confirm-icon" style="background: rgba(251, 191, 36, 0.1); color: #fbbf24; border-radius: 50%; width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </div>
+            <h3 id="lbl-buy-warning-title" style="color: #fbbf24; font-size: 1.5rem; margin-bottom: 12px; font-weight: 700;">Önemli Uyarı</h3>
+            <p id="lbl-buy-warning-desc" style="color: #e2e8f0; font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px; text-align: center;">
+                Satın alma işlemi sırasında Shopier ödeme sayfasındaki <strong>"Not"</strong> (Müşteri Notu) bölümüne <strong>API anahtarınızı</strong> (API Key) yazmanız gerekmektedir. Aksi takdirde satın aldığınız krediler hesabınıza tanımlanamayacaktır.
+            </p>
+            <img src="src/credit_help.gif" alt="How to purchase credits" style="width: 100%; max-width: 380px; border-radius: 12px; margin: 0 auto 20px; display: block; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+            
+            <div id="credits-buy-warning-checkbox-container" style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 24px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                <input type="checkbox" id="chk-buy-warning-understand" style="cursor: pointer; width: 18px; height: 18px; accent-color: #fbbf24;">
+                <label id="lbl-buy-warning-checkbox" for="chk-buy-warning-understand" style="cursor: pointer; font-size: 0.9rem; color: #94a3b8; user-select: none;">Okudum, anladım.</label>
+            </div>
+
+            <div id="credits-buy-warning-apikey-container" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding: 10px 14px; background: rgba(99, 102, 241, 0.05); border-radius: 8px; border: 1px solid rgba(99, 102, 241, 0.15); cursor: pointer; transition: all 0.2s ease; user-select: none;" title="Kopyalamak için tıklayın">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="color: #818cf8; fill: none;">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <span id="lbl-buy-warning-my-key" style="font-size: 0.9rem; color: #94a3b8; font-weight: 500;">API Anahtarım:</span>
+                    <span id="buy-warning-my-key-value" style="font-size: 0.9rem; color: #fff; font-family: monospace; font-weight: 600;">--</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 4px; color: #818cf8; font-size: 0.8rem; font-weight: 600;">
+                    <span id="lbl-buy-warning-click-copy">Kopyala</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="12" height="12">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="confirm-actions" style="display: flex; gap: 12px; width: 100%;">
+                <button id="btn-cancel-buy-warning" style="flex: 1; padding: 12px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s;">İptal</button>
+                <button id="btn-confirm-buy-warning" disabled style="flex: 1; padding: 12px; background: #fbbf24; color: #000; border: none; border-radius: 8px; font-weight: 700; cursor: not-allowed; opacity: 0.5; transition: all 0.2s; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.2);">Satın Al</button>
+            </div>
+        </div>
+    </div>
+    <div id="credits-gift-confirm-modal" class="confirm-modal" style="z-index: 999999999 !important;">
+        <div class="confirm-content" style="max-width: 450px; max-height: 90vh; overflow-y: auto;">
+            <div class="confirm-icon" style="background: rgba(99, 102, 241, 0.1); color: #818cf8; border-radius: 50%; width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 12 20 22 4 22 4 12"></polyline>
+                    <rect x="2" y="7" width="20" height="5"></rect>
+                    <line x1="12" y1="22" x2="12" y2="7"></line>
+                    <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+                    <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
+                </svg>
+            </div>
+            <h3 id="lbl-gift-confirm-title" style="color: #818cf8; font-size: 1.5rem; margin-bottom: 12px; font-weight: 700;">Hediye Gönder</h3>
+            <p id="lbl-gift-confirm-desc" style="color: #e2e8f0; font-size: 0.95rem; line-height: 1.5; margin-bottom: 24px; text-align: center;">
+                Bu işlem geri alınamaz. Bu bağlantı koduna hediye kredi göndermek istediğinizden emin misiniz?
+            </p>
+            
+            <div class="confirm-actions" style="display: flex; gap: 12px; width: 100%;">
+                <button id="btn-cancel-gift-confirm" style="flex: 1; padding: 12px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s;">İptal</button>
+                <button id="btn-confirm-gift-send" style="flex: 1; padding: 12px; background: #818cf8; color: #000; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);">Gönder</button>
             </div>
         </div>
     </div>
@@ -3128,6 +3203,7 @@
     <script src="scripts/customSelect.js"></script>
     <script src="scripts/elements.js"></script>
     <script src="scripts/aiStories.js" defer></script>
+    <script src="scripts/credits.js" defer></script>
     <div class="toon-author-popup" id="toon-author-popup" style="display:none;">
         <div class="toon-author-popup-backdrop" id="toon-author-popup-backdrop"></div>
         <div class="toon-author-popup-sheet">
@@ -3157,7 +3233,6 @@
         </div>
     </div>
 
-    <!-- ═══════════════════ TUTORIAL WELCOME MODAL ═══════════════════ -->
     <div id="tutorial-welcome-modal">
         <div class="tutorial-welcome-card">
             <div class="tutorial-welcome-sparkles" aria-hidden="true">
@@ -3175,6 +3250,191 @@
             </div>
         </div>
     </div>
+
+    <div id="credits-modal" class="credits-modal-overlay">
+        <div class="credits-modal-panel">
+            <div class="credits-modal-header">
+                <div class="credits-modal-header-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                </div>
+                <div class="credits-modal-header-text">
+                    <h2 class="credits-modal-title" id="lbl-credits-modal-title">Kredi Merkezi</h2>
+                    <p class="credits-modal-subtitle" id="lbl-credits-modal-subtitle">Bakiyenizi görüntüleyin ve kredi satın alın</p>
+                </div>
+                <button class="credits-modal-close" id="btn-close-credits" aria-label="Kapat">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="credits-balance-card">
+                <div class="credits-balance-main">
+                    <div class="credits-balance-glow"></div>
+                    <div class="credits-balance-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                    </div>
+                    <div class="credits-balance-info">
+                        <span class="credits-balance-label" id="lbl-credits-balance-label">Kalan Kredi</span>
+                        <span class="credits-balance-number" id="modal-credit-count">--</span>
+                    </div>
+                    <button class="credits-refresh-btn" id="btn-refresh-credits" title="Yenile">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="23 4 23 10 17 10"></polyline>
+                            <polyline points="1 20 1 14 7 14"></polyline>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="credits-balance-breakdown">
+                    <div class="credits-breakdown-item">
+                        <span class="credits-breakdown-label" id="lbl-credits-breakdown-purchased">Satın Alınan</span>
+                        <span class="credits-breakdown-value" id="modal-purchased">--</span>
+                    </div>
+                    <div class="credits-breakdown-divider"></div>
+                    <div class="credits-breakdown-item">
+                        <span class="credits-breakdown-label" id="lbl-credits-breakdown-used">Kullanılan</span>
+                        <span class="credits-breakdown-value credits-breakdown-used" id="modal-used">--</span>
+                    </div>
+                    <div class="credits-breakdown-divider"></div>
+                    <div class="credits-breakdown-item">
+                        <span class="credits-breakdown-label" id="lbl-credits-breakdown-gifted">Hediye</span>
+                        <span class="credits-breakdown-value credits-breakdown-gift" id="modal-gifted">--</span>
+                    </div>
+                    <div class="credits-breakdown-divider"></div>
+                    <div class="credits-breakdown-item">
+                        <span class="credits-breakdown-label" id="lbl-credits-breakdown-gift-received">Alınan Hediye</span>
+                        <span class="credits-breakdown-value credits-breakdown-gift" id="modal-gift-received">--</span>
+                    </div>
+                </div>
+                <div class="credits-no-api-warning" id="credits-no-api-warning" style="display:none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <span id="lbl-credits-no-api-warning">Kredi bilgisini görmek için lütfen API anahtarınızı girin.</span>
+                </div>
+            </div>
+
+            <div class="credits-gift-card">
+                <h3 class="credits-gift-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 12 20 22 4 22 4 12"></polyline>
+                        <rect x="2" y="7" width="20" height="5"></rect>
+                        <line x1="12" y1="22" x2="12" y2="7"></line>
+                        <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+                        <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
+                    </svg>
+                    <span id="lbl-credits-gift-title">Hediye Kredi Gönder</span>
+                </h3>
+                <div class="credits-gift-form">
+                    <div class="credits-gift-field">
+                        <div class="credits-gift-label-row">
+                            <label for="gift-target-key" id="lbl-gift-target-key">Alıcı Bağlantı Kodu</label>
+                            <span class="my-share-code-wrapper" id="my-share-code-container" style="display: none;" title="Kopyalamak için tıklayın">
+                                <span id="lbl-my-share-code-prefix">Bağlantı Kodum:</span>
+                                <span id="my-share-code-value" class="share-code-value">--</span>
+                            </span>
+                        </div>
+                        <input type="text" id="gift-target-key" placeholder="Alıcının bağlantı kodunu girin..." autocomplete="off">
+                    </div>
+                    <div class="credits-gift-field">
+                        <label for="gift-amount" id="lbl-gift-amount">Gönderilecek Miktar</label>
+                        <input type="number" id="gift-amount" min="1" step="1" placeholder="0">
+                    </div>
+                    <button id="btn-send-gift" class="credits-gift-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                        <span id="lbl-btn-send-gift">Gönder</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="credits-packages-section">
+                <h3 class="credits-packages-title" id="lbl-credits-packages-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                        <line x1="1" y1="10" x2="23" y2="10"></line>
+                    </svg>
+                    Kredi Paketleri
+                </h3>
+                <div class="credits-packages-grid">
+                    <div class="credits-package-card" data-package="starter">
+                        <div class="credits-package-badge" id="lbl-credits-badge-starter">BAŞLANGIÇ</div>
+                        <div class="credits-package-icon">⚡</div>
+                        <div class="credits-package-amount">50</div>
+                        <div class="credits-package-unit" id="lbl-credits-unit-starter">Kredi</div>
+                        <div class="credits-package-price">₺29.99</div>
+                        <div class="credits-package-per" id="lbl-credits-rate-starter">≈ ₺0.60 / kredi</div>
+                        <button class="credits-package-btn" id="btn-credits-buy-starter" data-url="https://www.shopier.com/ThenaAI/48093877" data-package="starter">
+                            Shopier ile Al
+                        </button>
+                    </div>
+                    <div class="credits-package-card" data-package="standard">
+                        <div class="credits-package-badge" id="lbl-credits-badge-standard">STANDART</div>
+                        <div class="credits-package-icon">🔥</div>
+                        <div class="credits-package-amount">100</div>
+                        <div class="credits-package-unit" id="lbl-credits-unit-standard">Kredi</div>
+                        <div class="credits-package-price">₺49.99</div>
+                        <div class="credits-package-per" id="lbl-credits-rate-standard">≈ ₺0.50 / kredi</div>
+                        <button class="credits-package-btn" id="btn-credits-buy-standard" data-url="https://www.shopier.com/ThenaAI/48093894" data-package="standard">
+                            Shopier ile Al
+                        </button>
+                    </div>
+                    <div class="credits-package-card credits-package-card--popular" data-package="popular">
+                        <div class="credits-package-badge credits-package-badge--popular" id="lbl-credits-badge-popular">⭐ POPÜLER</div>
+                        <div class="credits-package-icon">🚀</div>
+                        <div class="credits-package-amount">200</div>
+                        <div class="credits-package-unit" id="lbl-credits-unit-popular">Kredi</div>
+                        <div class="credits-package-price">₺89.99</div>
+                        <div class="credits-package-per" id="lbl-credits-rate-popular">≈ ₺0.45 / kredi</div>
+                        <button class="credits-package-btn credits-package-btn--popular" id="btn-credits-buy-popular" data-url="https://www.shopier.com/ThenaAI/48093992" data-package="popular">
+                            Shopier ile Al
+                        </button>
+                    </div>
+                    <div class="credits-package-card" data-package="pro">
+                        <div class="credits-package-badge credits-package-badge--pro" id="lbl-credits-badge-pro">💎 PRO</div>
+                        <div class="credits-package-icon">💎</div>
+                        <div class="credits-package-amount">500</div>
+                        <div class="credits-package-unit" id="lbl-credits-unit-pro">Kredi</div>
+                        <div class="credits-package-price">₺199.99</div>
+                        <div class="credits-package-per" id="lbl-credits-rate-pro">≈ ₺0.40 / kredi</div>
+                        <button class="credits-package-btn" id="btn-credits-buy-pro" data-url="https://www.shopier.com/ThenaAI/48094017" data-package="pro">
+                            Shopier ile Al
+                        </button>
+                    </div>
+                    <div class="credits-package-card" data-package="ultra">
+                        <div class="credits-package-badge" id="lbl-credits-badge-ultra" style="color:#fbbf24; background:rgba(251,191,36,0.1); border-color:rgba(251,191,36,0.2);">👑 ULTRA</div>
+                        <div class="credits-package-icon">👑</div>
+                        <div class="credits-package-amount">1000</div>
+                        <div class="credits-package-unit" id="lbl-credits-unit-ultra">Kredi</div>
+                        <div class="credits-package-price">₺389.99</div>
+                        <div class="credits-package-per" id="lbl-credits-rate-ultra">≈ ₺0.39 / kredi</div>
+                        <button class="credits-package-btn" id="btn-credits-buy-ultra" data-url="https://www.shopier.com/ThenaAI/48094054" data-package="ultra">
+                            Shopier ile Al
+                        </button>
+                    </div>
+                </div>
+                <p class="credits-packages-note">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                    <span id="lbl-credits-note">Shopier güvencesiyle · Türk kartları desteklenir · 7/24 destek</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
 </body>
 
 </html>

@@ -53,6 +53,10 @@
     }
 
     const modelKeyMapping = {
+        "GPT 2": "gpt2",
+        "Kling 3.0": "kling30",
+        "Kling O1": "klingo1",
+        "Flux 2 Pro": "flux2pro",
         "Thena Ultra": "thenaUltra",
         "Thena Pro": "thenaPro",
         "Thena Movie": "thenaMovie",
@@ -80,6 +84,8 @@
         "Thena Toonish": "thenaToonish",
         "Thena Apex": "thenaApex"
     };
+    window.modelKeyMapping = modelKeyMapping;
+
 
     async function fetchModels() {
         if (allModels.length > 0) return;
@@ -358,6 +364,30 @@
                 const lblSpeed = getLang('lblSpeed', 'Speed');
                 const lblUsage = getLang('mgLblTotalUsage', lang === 'tr' ? 'Toplam Üretim' : 'Total Generated');
                 const lblPerUnit = getLang('mgLblPerUnit', lang === 'tr' ? '1 ₺ ile Üretim' : 'Images per $1');
+                const lblCredit = getLang('mgLblCredit', lang === 'tr' ? 'Görsel Başına Kredi' : 'Credits per Image');
+                
+                let creditVal = undefined;
+                if (Object.keys(galleryModelPrices).length > 0) {
+                    const mName = model.model || '';
+                    const propKey = modelKeyMapping[mName];
+                    let priceObj = null;
+                    if (propKey && galleryModelPrices[propKey]) {
+                        priceObj = galleryModelPrices[propKey];
+                    } else if (galleryModelPrices[mName]) {
+                        priceObj = galleryModelPrices[mName];
+                    }
+                    if (priceObj) {
+                        creditVal = priceObj.credit;
+                    }
+                }
+                let creditDisplay = '—';
+                if (creditVal !== undefined && creditVal !== null && creditVal !== '') {
+                    if (Number(creditVal) === 0) {
+                        creditDisplay = `0 <span style="background: linear-gradient(135deg, #00ff88 0%, #00b359 100%); color: #000; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; margin-left: 6px; text-transform: uppercase; display: inline-block; vertical-align: middle;">${lang === 'tr' ? 'Ücretsiz' : 'Free'}</span>`;
+                    } else {
+                        creditDisplay = creditVal;
+                    }
+                }
                 
                 statsCard.innerHTML = `
                     <div class="metric-row"><span>${lblIntel}</span><div class="metric-dots">${makeDots(statsObj.intel||3)}</div></div>
@@ -366,8 +396,11 @@
                     <div class="metric-row" style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 14px;">
                         <span>${lblUsage}</span><span style="color:#fff; font-weight:600;">${usages}</span>
                     </div>
-                    <div class="metric-row" style="margin-bottom: 0;">
+                    <div class="metric-row">
                         <span>${lblPerUnit}</span><span style="color:#fff; font-weight:600;">${imgsPerUnit}</span>
+                    </div>
+                    <div class="metric-row" style="margin-bottom: 0;">
+                        <span>${lblCredit}</span><span style="color:#fff; font-weight:600; display: flex; align-items: center;">${creditDisplay}</span>
                     </div>
                 `;
             }
@@ -803,6 +836,14 @@
                     const lang = typeof currentLang !== 'undefined' ? currentLang : 'en';
                     rows[3].querySelector('span').textContent = getLang('mgLblTotalUsage', lang === 'tr' ? 'Toplam Üretim' : 'Total Generated');
                     rows[4].querySelector('span').textContent = getLang('mgLblPerUnit', lang === 'tr' ? '1 ₺ ile Üretim' : 'Images per $1');
+                    
+                    if (rows.length >= 6) {
+                        rows[5].querySelector('span').textContent = getLang('mgLblCredit', lang === 'tr' ? 'Görsel Başına Kredi' : 'Credits per Image');
+                        const valueSpan = rows[5].querySelector('span:last-child');
+                        if (valueSpan && valueSpan.querySelector('span')) {
+                            valueSpan.querySelector('span').textContent = lang === 'tr' ? 'Ücretsiz' : 'Free';
+                        }
+                    }
                 }
             }
             

@@ -59,6 +59,10 @@ genderStyles.innerHTML = `
 document.head.appendChild(genderStyles);
 
 const modelTranslationsTR = {
+    "e0701cd8-098a-437d-9ab7-c22c80401da1": "GPT Image 2, sadece güzel bir görüntüden daha fazlasını isteyen içerik oluşturucular için tasarlandı. Detaylı komutları işlemek, görüntülerin içinde temiz metin oluşturmak ve ilk nesilden daha keskin, daha akıllı ve daha inandırıcı sonuçlar üretmek üzere geliştirildi.",
+    "9e64c073-c526-4f73-b489-d0c28d4dd37a": "Kling 3.0 Image, gelişmiş bir yapay zeka görüntü oluşturma aracıdır. Kling O1 ve 2.6 gibi önceki sürümlerin üzerine inşa edilen ve Çok Modlu Görsel Dil (MVL) olarak bilinen birleşik bir çok modlu çerçeve sunan bu araç, yapay zeka destekli görsel oluşturmada önemli bir evrimi temsil eder.",
+    "7d834fb8-ef08-4c97-b61c-1036e7113ae5": "Kling O1, Çok Modlu Görsel Dil (MVL) çerçevesi üzerine inşa edilmiş, birleşik bir çok modlu yapay zeka modelidir. Olağanüstü hızlı hizalama, hassas karakter tutarlılığı ve profesyonel yaratıcı kontrol ile yüksek kaliteli görüntü üretimi sağlamak üzere tasarlanmıştır.",
+    "ff7f60c2-303a-44db-97e9-230c1767d86c": "Bu model, orijinal Flux.1'den büyük bir ilerlemeyi temsil ediyor ve basit görüntü oluşturmanın ötesine geçerek gerçek profesyonel düzeyde prodüksiyona ulaşıyor. Etkileyici bir şekilde, Flux 2 artık daha önce imkansız olan bir kontrol ve doğruluk seviyesi sunuyor.",
     "8gg12 61812 6628 19729 6b4a5 5060": "Yüksek çözünürlüklü görüntüler üretebilen kapsamlı işlem sonrası teknolojisine sahip ilk modeldir. Gürültü giderme işleminden sonra gerçek LUT filtreleri ekleyerek inanılmaz görseller yaratabiliyor.",
     "551ks 8g6g8 16gga 1h8h8 6b4a5 5060": "Flux2 kaynak verileri kullanılarak Thena V6 temel modeliyle ince ayar yapılmış, damıtılmış bir model. Güçlü, hızlı, çok yönlü.",
     "77h621 yy5271 gga166 hhau22 882hha 1a 3090": "Yüksek çözünürlüklü görüntüler, illüstrasyonlar ve genel kullanım için özel olarak tasarlanmış güçlü bir model.",
@@ -91,6 +95,14 @@ const NO_EXTRA_FEATURES_MODELS = ["81ggz 7j661 66281 yy161 1f4f4 21143"];
 const NO_PRO_RATE_LIMIT_MODELS = ["3c7a94a0-c844-471f-ae98-0f8c8508baf7"];
 const HIGH_MODERATION_ONLY_MODELS = ["81ggz 7j661 66281 yy161 1f4f4 21143"];
 const MODEL_STATS = {
+    // GPT 2
+    "e0701cd8-098a-437d-9ab7-c22c80401da1": { intel: 5, qual: 5, speed: 2 },
+    // Kling 3.0
+    "9e64c073-c526-4f73-b489-d0c28d4dd37a": { intel: 4, qual: 5, speed: 2 },
+    // Kling O1
+    "7d834fb8-ef08-4c97-b61c-1036e7113ae5": { intel: 4, qual: 4, speed: 2 },
+    // Flux 2 Pro
+    "ff7f60c2-303a-44db-97e9-230c1767d86c": { intel: 4, qual: 5, speed: 2 },
     // Thena Movie
     "8gg12 61812 6628 19729 6b4a5 5060": { intel: 5, qual: 5, speed: 3 },
     // Thena Max
@@ -219,7 +231,7 @@ const WHIMSICAL_FLAME_SVG = `
 
 .lw-flame-glow {
     position: absolute;
-    inset: -2px;
+    inset: 0;
     border-radius: 10px;
     border: 2px solid var(--primary);
     animation: lw-pulse 2s ease-in-out infinite;
@@ -232,6 +244,215 @@ const WHIMSICAL_FLAME_SVG = `
     <div class="lw-flame-wrapper">
         <div class="lw-flame-spinner"></div>
         <div class="lw-flame-spinner-2"></div>
+    </div>
+</div>
+`;
+
+const PAID_MODEL_EFFECT_SVG = `
+<style>
+@keyframes lw-paid-pulse {
+    0% { 
+        box-shadow: 0 0 6px rgba(var(--primary-rgb), 0.15), inset 0 0 4px rgba(var(--primary-rgb), 0.05); 
+        border-color: rgba(var(--primary-rgb), 0.25); 
+    }
+    50% { 
+        box-shadow: 0 0 16px rgba(var(--primary-rgb), 0.38), inset 0 0 8px rgba(var(--primary-rgb), 0.12); 
+        border-color: rgba(var(--primary-rgb), 0.45); 
+    }
+    100% { 
+        box-shadow: 0 0 6px rgba(var(--primary-rgb), 0.15), inset 0 0 4px rgba(var(--primary-rgb), 0.05); 
+        border-color: rgba(var(--primary-rgb), 0.25); 
+    }
+}
+
+@keyframes lw-paid-glide {
+    0% {
+        transform: rotate(45deg) translateX(-80px);
+        opacity: 0;
+    }
+    4% {
+        opacity: 1;
+    }
+    18% {
+        transform: rotate(45deg) translateX(320px);
+        opacity: 0;
+    }
+    100% {
+        transform: rotate(45deg) translateX(320px);
+        opacity: 0;
+    }
+}
+
+@keyframes lw-paid-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+.lw-paid-wrapper {
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    padding: 3.5px;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 10;
+    overflow: hidden;
+}
+
+.lw-paid-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 250%;
+    height: 250%;
+    background: conic-gradient(
+        from 0deg,
+        transparent 0%, 
+        transparent 50%,
+        rgba(var(--primary-rgb), 0.3) 75%, 
+        var(--primary) 92%, 
+        #ffffff 100%
+    );
+    animation: lw-spin 3.5s linear infinite;
+    pointer-events: none;
+}
+
+.lw-paid-glow {
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    border: 1px solid rgba(var(--primary-rgb), 0.25);
+    animation: lw-paid-pulse 3s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 9;
+}
+
+.paid-model-effect {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.lw-paid-sparkles-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 11;
+}
+
+.lw-paid-sparkle-item {
+    position: absolute;
+    width: 60px;
+    height: 1.5px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 40%, rgba(255, 255, 255, 0.8) 80%, #fff 100%);
+    opacity: 0;
+    pointer-events: none;
+    transform-origin: left center;
+}
+
+.lw-paid-sparkle-item::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(50%, -50%);
+    width: 4px;
+    height: 4px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 6px 1px #fff, 0 0 10px 2px var(--primary);
+}
+
+.lw-paid-sparkle-item.sp-1 {
+    top: -10%;
+    left: 15%;
+    animation: lw-paid-glide 5.5s linear infinite;
+    animation-delay: 0s;
+}
+.lw-paid-sparkle-item.sp-2 {
+    top: 25%;
+    left: -20%;
+    animation: lw-paid-glide 6.2s linear infinite;
+    animation-delay: 1.5s;
+}
+.lw-paid-sparkle-item.sp-3 {
+    top: -20%;
+    left: 45%;
+    animation: lw-paid-glide 5.8s linear infinite;
+    animation-delay: 3s;
+}
+.lw-paid-sparkle-item.sp-4 {
+    top: 50%;
+    left: -15%;
+    animation: lw-paid-glide 6.5s linear infinite;
+    animation-delay: 4.5s;
+}
+.lw-paid-sparkle-item.sp-5 {
+    top: 10%;
+    left: -10%;
+    animation: lw-paid-glide 5s linear infinite;
+    animation-delay: 2.2s;
+}
+.lw-paid-sparkle-item.sp-6 {
+    top: 70%;
+    left: -25%;
+    animation: lw-paid-glide 6s linear infinite;
+    animation-delay: 0.8s;
+}
+.lw-paid-sparkle-item.sp-7 {
+    top: -5%;
+    left: 70%;
+    animation: lw-paid-glide 5.2s linear infinite;
+    animation-delay: 3.8s;
+}
+.lw-paid-sparkle-item.sp-8 {
+    top: 85%;
+    left: -5%;
+    animation: lw-paid-glide 6.7s linear infinite;
+    animation-delay: 2.7s;
+}
+.lw-paid-sparkle-item.sp-9 {
+    top: 40%;
+    left: -30%;
+    animation: lw-paid-glide 5.9s linear infinite;
+    animation-delay: 5.1s;
+}
+
+.out-of-view.paid-model .paid-model-effect {
+    visibility: hidden !important;
+}
+.out-of-view.paid-model,
+.out-of-view.paid-model * {
+    will-change: auto !important;
+    animation-play-state: paused !important;
+}
+body.performance-mode .paid-model .paid-model-effect {
+    display: none !important;
+}
+body.power-saver-active .paid-model .paid-model-effect {
+    visibility: hidden !important;
+}
+</style>
+<div class="paid-model-effect" style="position: absolute; inset: 0; z-index: 10; pointer-events: none;">
+    <div class="lw-paid-glow"></div>
+    <div class="lw-paid-wrapper">
+        <div class="lw-paid-spinner"></div>
+    </div>
+    <div class="lw-paid-sparkles-container">
+        <div class="lw-paid-sparkle-item sp-1"></div>
+        <div class="lw-paid-sparkle-item sp-2"></div>
+        <div class="lw-paid-sparkle-item sp-3"></div>
+        <div class="lw-paid-sparkle-item sp-4"></div>
+        <div class="lw-paid-sparkle-item sp-5"></div>
+        <div class="lw-paid-sparkle-item sp-6"></div>
+        <div class="lw-paid-sparkle-item sp-7"></div>
+        <div class="lw-paid-sparkle-item sp-8"></div>
+        <div class="lw-paid-sparkle-item sp-9"></div>
     </div>
 </div>
 `;
@@ -2035,16 +2256,17 @@ async function loadModels() {
     modelSelector.innerHTML = models.map(model => {
         var previewImage = model.examples?.portraits?.[0] || '';
         const isHot = typeof HOT_MODELS !== 'undefined' && HOT_MODELS.includes(model.id);
+        const isPaid = typeof modelSpecs !== 'undefined' && modelSpecs[model.id]?.usedTechniques?.includes("Paid Models");
         const isFlorence = model.id === '7367ab 279dbf 417a8 51fe3 5050';
-        const showExclusiveBadge = isHot || isFlorence;
-        const exclusiveLabelText = translations[currentLang].exclusiveLabel;
+        const showExclusiveBadge = isHot || isFlorence || isPaid;
+        const exclusiveLabelText = isPaid ? (translations[currentLang].paidLabel || "Paid") : translations[currentLang].exclusiveLabel;
         const exclusiveSvg = isFlorence 
             ? `<svg class="flag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`
             : `<svg class="flag-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 8c-.83 0-1.5-.67-1.5-1.5S4.67 5 5.5 5 7 5.67 7 6.5 6.33 8 5.5 8z"/></svg>`;
 
         return `
-                        <div class="model-card ${isHot ? 'hot-model' : ''}" data-model-id="${model.id}" data-preview="${previewImage}">
-                            ${isHot ? WHIMSICAL_FLAME_SVG : ''}
+                        <div class="model-card ${isHot ? 'hot-model' : ''} ${isPaid ? 'paid-model' : ''}" data-model-id="${model.id}" data-preview="${previewImage}">
+                            ${isHot ? WHIMSICAL_FLAME_SVG : (isPaid ? PAID_MODEL_EFFECT_SVG : '')}
                             <div class="model-info-icon-wrapper" title="Model Details">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
@@ -7139,6 +7361,10 @@ async function loadGalleryStatistics() {
         } catch(e) { console.error('Error fetching prices', e); }
         
         const modelKeyMapping = {
+            "GPT 2": "gpt2",
+            "Kling 3.0": "kling30",
+            "Kling O1": "klingo1",
+            "Flux 2 Pro": "flux2pro",
             "Thena Ultra": "thenaUltra",
             "Thena Pro": "thenaPro",
             "Thena Movie": "thenaMovie",

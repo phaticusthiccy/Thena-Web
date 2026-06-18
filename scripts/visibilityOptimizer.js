@@ -221,7 +221,8 @@
             #history-clear-modal:not(.active),
             #delete-all-modal:not(.active),
             #hard-reset-modal:not(.active),
-            #app-switch-modal:not(.active) {
+            #app-switch-modal:not(.active),
+            #credits-modal:not(.active) {
                 content-visibility: hidden;
             }
 
@@ -238,7 +239,8 @@
             #history-clear-modal.active,
             #delete-all-modal.active,
             #hard-reset-modal.active,
-            #app-switch-modal.active {
+            #app-switch-modal.active,
+            #credits-modal.active {
                 content-visibility: visible !important;
             }
 

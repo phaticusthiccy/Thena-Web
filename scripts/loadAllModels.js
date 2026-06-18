@@ -6,6 +6,18 @@ let currentFetchedModels = [];
 const modelFilterContainer = document.getElementById('model-filters');
 const filterChips = document.querySelectorAll('.filter-chip');
 const modelSpecs = {
+    "e0701cd8-098a-437d-9ab7-c22c80401da1": {
+        usedTechniques: ["Paid Models"],
+    },
+    "9e64c073-c526-4f73-b489-d0c28d4dd37a": {
+        usedTechniques: ["Paid Models"],
+    },
+    "7d834fb8-ef08-4c97-b61c-1036e7113ae5": {
+        usedTechniques: ["Paid Models"],
+    },
+    "ff7f60c2-303a-44db-97e9-230c1767d86c": {
+        usedTechniques: ["Paid Models"],
+    },
     "8gg12 61812 6628 19729 6b4a5 5060": {
         usedTechniques: ["Photorealism", "General", "Movie"],
     },
@@ -104,19 +116,20 @@ function renderModels(modelsToRender) {
         let previewImage = model.examples?.portraits?.[0] || '';
         const delay = index * 50;
         const isHot = typeof HOT_MODELS !== 'undefined' && HOT_MODELS.includes(model.id);
+        const isPaid = typeof modelSpecs !== 'undefined' && modelSpecs[model.id]?.usedTechniques?.includes("Paid Models");
         const isFlorence = model.id === '7367ab 279dbf 417a8 51fe3 5050';
-        const showExclusiveBadge = isHot || isFlorence;
-        const exclusiveLabelText = translations[currentLang].exclusiveLabel;
+        const showExclusiveBadge = isHot || isFlorence || isPaid;
+        const exclusiveLabelText = isPaid ? (translations[currentLang].paidLabel || "Paid") : translations[currentLang].exclusiveLabel;
         const exclusiveSvg = isFlorence 
             ? `<svg class="flag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`
             : `<svg class="flag-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 8c-.83 0-1.5-.67-1.5-1.5S4.67 5 5.5 5 7 5.67 7 6.5 6.33 8 5.5 8z"/></svg>`;
         
         return `
-            <div class="model-card animate-in ${isHot ? 'hot-model' : ''}" 
+            <div class="model-card animate-in ${isHot ? 'hot-model' : ''} ${isPaid ? 'paid-model' : ''}" 
                  data-model-id="${model.id}" 
                  data-preview="${previewImage}"
                  style="animation-delay: ${delay}ms; --bg-image: url('${previewImage}')">
-                 ${isHot ? WHIMSICAL_FLAME_SVG : ''}
+                 ${isHot ? WHIMSICAL_FLAME_SVG : (isPaid ? PAID_MODEL_EFFECT_SVG : '')}
                 <div class="model-info-icon-wrapper" title="Model Details">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10"></circle>
@@ -156,6 +169,28 @@ function filterModelsByTag(tag) {
 
         if (tag === 'all') {
             isVisible = true;
+        } else if (tag === 'Paid') {
+            const prices = window.galleryModelPrices || {};
+            const nameEl = card.querySelector('.model-name');
+            const mName = nameEl ? nameEl.textContent.trim() : '';
+            const propKey = modelKeyMapping[mName];
+            
+            let creditVal = undefined;
+            let priceObj = null;
+            if (propKey && prices[propKey]) {
+                priceObj = prices[propKey];
+            } else if (prices[mName]) {
+                priceObj = prices[mName];
+            }
+            if (priceObj) {
+                creditVal = priceObj.credit;
+            }
+            
+            if (creditVal !== undefined && creditVal !== null && creditVal !== '') {
+                if (Number(creditVal) > 0) {
+                    isVisible = true;
+                }
+            }
         } else {
             const specs = modelSpecs[id];
             if (specs && specs.usedTechniques && specs.usedTechniques.includes(tag)) {
@@ -265,6 +300,18 @@ window.toggleShowAllModels = async function(e) {
         
         const fetchedModels = await response.json();
         currentFetchedModels = fetchedModels;
+        
+        if (!window.galleryModelPrices || Object.keys(window.galleryModelPrices).length === 0) {
+            try {
+                const prRes = await fetch('https://create.thena.workers.dev/modelPrices');
+                if (prRes.ok) {
+                    window.galleryModelPrices = await prRes.json();
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+        
         renderModels(fetchedModels);
         
         if (btnSortModels) btnSortModels.style.display = isActive ? 'none' : 'flex';
@@ -405,3 +452,51 @@ if (btnToggleChatLayout) {
         if (typeof playFeatureToggleSound === "function") playFeatureToggleSound(true);
     });
 }
+
+async function initializePaidModerationChecks() {
+    try {
+        const [modelsRes, pricesRes] = await Promise.all([
+            fetch('https://create.thena.workers.dev/models?type=all'),
+            fetch('https://create.thena.workers.dev/modelPrices')
+        ]);
+        
+        if (modelsRes.ok && pricesRes.ok) {
+            const allModelsList = await modelsRes.json();
+            const prices = await pricesRes.json();
+            window.galleryModelPrices = prices;
+            
+            const mapping = window.modelKeyMapping || {};
+            if (typeof HIGH_MODERATION_ONLY_MODELS !== 'undefined') {
+                allModelsList.forEach(m => {
+                    if (modelSpecs[m.id]) {
+                        const propKey = mapping[m.model];
+                        let creditVal = undefined;
+                        let priceObj = null;
+                        if (propKey && prices[propKey]) {
+                            priceObj = prices[propKey];
+                        } else if (prices[m.model]) {
+                            priceObj = prices[m.model];
+                        }
+                        if (priceObj) {
+                            creditVal = priceObj.credit;
+                        }
+                        
+                        if (creditVal !== undefined && creditVal !== null && creditVal !== '') {
+                            if (Number(creditVal) > 0) {
+                                if (!HIGH_MODERATION_ONLY_MODELS.includes(m.id)) {
+                                    HIGH_MODERATION_ONLY_MODELS.push(m.id);
+                                }
+                                if (typeof NO_EXTRA_FEATURES_MODELS !== 'undefined' && !NO_EXTRA_FEATURES_MODELS.includes(m.id)) {
+                                    NO_EXTRA_FEATURES_MODELS.push(m.id);
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    } catch (e) {
+        console.error("Error initializing paid moderation checks", e);
+    }
+}
+initializePaidModerationChecks();
