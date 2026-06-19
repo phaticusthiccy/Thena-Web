@@ -2968,19 +2968,24 @@ generateBtn.addEventListener('click', async () => {
             }
             if ((data.status == 401 && data.content.includes('not allowed')) || (data.status == 204)) {
                 const _modIconSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;display:inline-block;vertical-align:middle;margin:0 3px 1px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`;
-                if (moderationLevel === 'low') {
-                    showNotification(`${_modIconSvg} ` + (currentLang == "tr" ? translations.tr.msgNotAllowedLow : translations.en.msgNotAllowedLow), 'error');
+                console.log(HIGH_MODERATION_ONLY_MODELS,selectedModel);
+                if (HIGH_MODERATION_ONLY_MODELS.includes(selectedModel)) {
+                    showNotification(`${_modIconSvg} ` + (currentLang == "tr" ? translations.tr.msgNotAllowedHighMod : translations.en.msgNotAllowedHighMod), 'error');
                 } else {
-                    showNotification(`${_modIconSvg} ` + (currentLang == "tr" ? translations.tr.msgNotAllowed : translations.en.msgNotAllowed), 'error');
+                    if (moderationLevel === 'low') {
+                        showNotification(`${_modIconSvg} ` + (currentLang == "tr" ? translations.tr.msgNotAllowedLow : translations.en.msgNotAllowedLow), 'error');
+                    } else {
+                        showNotification(`${_modIconSvg} ` + (currentLang == "tr" ? translations.tr.msgNotAllowed : translations.en.msgNotAllowed), 'error');
+                    }
+                    const _modBtn = document.getElementById('moderation-btn');
+                    if (_modBtn) {
+                        _modBtn.classList.remove('mod-btn-alert');
+                        void _modBtn.offsetWidth;
+                        _modBtn.classList.add('mod-btn-alert');
+                        setTimeout(() => _modBtn.classList.remove('mod-btn-alert'), 4200);
+                    }
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
-                const _modBtn = document.getElementById('moderation-btn');
-                if (_modBtn) {
-                    _modBtn.classList.remove('mod-btn-alert');
-                    void _modBtn.offsetWidth;
-                    _modBtn.classList.add('mod-btn-alert');
-                    setTimeout(() => _modBtn.classList.remove('mod-btn-alert'), 4200);
-                }
-                window.scrollTo({ top: 0, behavior: 'smooth' });
                 isGeneratingImage = false;
                 const placeholder = document.getElementById('active-generation-placeholder');
                 if (placeholder) {
@@ -2991,6 +2996,16 @@ generateBtn.addEventListener('click', async () => {
             }
             if (data.status == 423) {
                 showNotification(currentLang == "tr" ? translations.tr.msgServerOverloaded : translations.en.msgServerOverloaded, 'error');
+                isGeneratingImage = false;
+                const placeholder = document.getElementById('active-generation-placeholder');
+                if (placeholder) {
+                    placeholder.style.opacity = '0';
+                    setTimeout(() => placeholder.remove(), 300);
+                }
+                return;
+            }
+            if (data.status == 503) {
+                showNotification(currentLang == "tr" ? translations.tr.modelMaintenance : translations.en.modelMaintenance, 'error');
                 isGeneratingImage = false;
                 const placeholder = document.getElementById('active-generation-placeholder');
                 if (placeholder) {

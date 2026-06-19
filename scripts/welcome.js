@@ -89,6 +89,12 @@
         var appModal = document.getElementById('app-switch-modal');
         if (appModal) appModal.classList.remove('active');
 
+        var creditsModal = document.getElementById('credits-modal');
+        if (creditsModal) {
+            var closeBtn = document.getElementById('btn-close-credits');
+            if (closeBtn) closeBtn.click();
+        }
+
         var spl   = document.getElementById('tutorial-spotlight-overlay');
         var frame = document.getElementById('tutorial-spotlight-frame');
         var bbl   = document.getElementById('tutorial-bubble');
@@ -164,6 +170,14 @@
         }, 550);
     }
 
+
+    function ensureCreditsModalOpen() {
+        var modal = document.getElementById('credits-modal');
+        if (modal && !modal.classList.contains('active')) {
+            var widget = document.getElementById('credit-widget');
+            if (widget) widget.click();
+        }
+    }
 
     var TUTORIAL_STEPS = [
         {
@@ -259,6 +273,76 @@
             descKey:      'tutorialElementsDesc',
             scrollBlock:  'center',
             bubbleAbove:  true
+        },
+        {
+            selector:     '#credit-widget',
+            titleKey:     'tutorialCreditWidgetTitle',
+            descKey:      'tutorialCreditWidgetDesc',
+            scrollBlock:  'nearest',
+            onEnter: function() {
+                var closeBtn = document.getElementById('btn-close-credits');
+                if (closeBtn) closeBtn.click();
+            }
+        },
+        {
+            selector:     '.credits-balance-card',
+            titleKey:     'tutorialCreditsBalanceTitle',
+            descKey:      'tutorialCreditsBalanceDesc',
+            scrollBlock:  'center',
+            onEnter:      ensureCreditsModalOpen,
+            onLeave: function(nextIdx) {
+                var nextStep = TUTORIAL_STEPS[nextIdx];
+                var isModal = nextStep && nextStep.selector && nextStep.selector.indexOf('.credits-') === 0;
+                if (!isModal) {
+                    var closeBtn = document.getElementById('btn-close-credits');
+                    if (closeBtn) closeBtn.click();
+                }
+            }
+        },
+        {
+            selector:     '.credits-balance-breakdown',
+            titleKey:     'tutorialCreditsBreakdownTitle',
+            descKey:      'tutorialCreditsBreakdownDesc',
+            scrollBlock:  'center',
+            onEnter:      ensureCreditsModalOpen,
+            onLeave: function(nextIdx) {
+                var nextStep = TUTORIAL_STEPS[nextIdx];
+                var isModal = nextStep && nextStep.selector && nextStep.selector.indexOf('.credits-') === 0;
+                if (!isModal) {
+                    var closeBtn = document.getElementById('btn-close-credits');
+                    if (closeBtn) closeBtn.click();
+                }
+            }
+        },
+        {
+            selector:     '.credits-gift-card',
+            titleKey:     'tutorialCreditsGiftTitle',
+            descKey:      'tutorialCreditsGiftDesc',
+            scrollBlock:  'center',
+            onEnter:      ensureCreditsModalOpen,
+            onLeave: function(nextIdx) {
+                var nextStep = TUTORIAL_STEPS[nextIdx];
+                var isModal = nextStep && nextStep.selector && nextStep.selector.indexOf('.credits-') === 0;
+                if (!isModal) {
+                    var closeBtn = document.getElementById('btn-close-credits');
+                    if (closeBtn) closeBtn.click();
+                }
+            }
+        },
+        {
+            selector:     '.credits-packages-section',
+            titleKey:     'tutorialCreditsPackagesTitle',
+            descKey:      'tutorialCreditsPackagesDesc',
+            scrollBlock:  'center',
+            onEnter:      ensureCreditsModalOpen,
+            onLeave: function(nextIdx) {
+                var nextStep = TUTORIAL_STEPS[nextIdx];
+                var isModal = nextStep && nextStep.selector && nextStep.selector.indexOf('.credits-') === 0;
+                if (!isModal) {
+                    var closeBtn = document.getElementById('btn-close-credits');
+                    if (closeBtn) closeBtn.click();
+                }
+            }
         },
         {
             selector:     '#btn-switch-apps',
@@ -476,7 +560,7 @@
         function goToStep(idx) {
             var leaving = TUTORIAL_STEPS[currentStepIndex];
             if (leaving && typeof leaving.onLeave === 'function') {
-                try { leaving.onLeave(); } catch(e) {}
+                try { leaving.onLeave(idx); } catch(e) {}
             }
             var entering = TUTORIAL_STEPS[idx];
             if (entering && typeof entering.onEnter === 'function') {

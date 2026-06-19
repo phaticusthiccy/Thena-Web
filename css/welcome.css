@@ -248,7 +248,7 @@
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.82);
-    z-index: 20001;
+    z-index: 30001;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.45s ease;
@@ -260,7 +260,7 @@
 
 #tutorial-spotlight-frame {
     position: fixed;
-    z-index: 20002;
+    z-index: 30002;
     pointer-events: none;
     border-radius: 12px;
     opacity: 0;
@@ -284,7 +284,7 @@
 
 #tutorial-bubble {
     position: fixed;
-    z-index: 20010;
+    z-index: 30010;
     width: min(400px, calc(100vw - 32px));
     background: linear-gradient(160deg, rgba(12, 12, 18, 0.98), rgba(8, 8, 14, 0.98));
     border: 1px solid rgba(var(--primary-rgb), 0.4);

@@ -14,7 +14,7 @@
 
   <p>
     <a href="https://github.com/phaticusthiccy/Thena-Web/releases">
-      <img src="https://img.shields.io/badge/S%C3%BCr%C3%BCm-3.6.2-blue?style=for-the-badge&logo=git&logoColor=white" alt="Sürüm 3.6.2" />
+      <img src="https://img.shields.io/badge/S%C3%BCr%C3%BCm-3.7.4-blue?style=for-the-badge&logo=git&logoColor=white" alt="Sürüm 3.7.4" />
     </a>
     <a href="https://github.com/phaticusthiccy/Thena-Web/issues">
       <img src="https://img.shields.io/github/issues/phaticusthiccy/Thena-Web?style=for-the-badge&logo=github&color=e11d48" alt="Sorunlar" />
@@ -74,7 +74,7 @@ Platform dört temel sütun üzerine kurulmuştur:
 ## ✨ Temel Özellikler
 
 ### 🎨 Gelişmiş Görsel Üretimi
-* **Çoklu Model Motoru** — Özelleşmiş görsel kontrol noktaları (Fotorealizm, Anime, Sinematik ve cel-shaded modern anime stili olan *Thena Toonish*) arasında sorunsuzca geçiş yapın.
+* **Çoklu Model Motoru** — Thena'nın kendi görsel üretme modellerinin yanı sıra dünya çapındaki en gelişmiş görüntü modelleri ile birlikte oluşturmaya başlayın!
 * **Hassas En Boy Oranları** — Kare (1:1), Dikey (3:4, 9:16) ve Geniş Ekran (16:9, 4:3) formatları için hazır en boy oranı adaptörleri.
 * **Optimizasyon Modları** — Hızlı iterasyonlar için **Hızlı Mod (Fast Mode)**, yapısal karmaşıklık için **Yaratıcı & Yoğun** modlar ve süper örneklenmiş çıktılar için **HighRes** ölçekleme.
 * **Komut Mühendisliği Araçları**:
@@ -88,7 +88,7 @@ Platform dört temel sütun üzerine kurulmuştur:
 * **Gerçek Zamanlı Duygu Analizi** — Canlı duygu analizi motoru, karakterin yanıtlarını analiz ederek yüz ifadesini hikayenin duygusal tonuna göre otomatik günceller.
 * **Dinamik Kullanıcı Profilleri** — İsim, yaş ve cinsiyet tercihlerinizi özelleştirin; yapay zeka karakteri tonunu, hafıza sınırlarını ve yanıt yapılarını size özel olarak uyarlar.
 * **The Warden Denetimi** — Ayarlanabilir seviyelere (Düşük / Orta / Yüksek) sahip entegre yerel içerik moderasyonu.
-* **Arayüz Düzenleri** — Sohbet veritabanları için tam içe/dışa aktarma araçlarıyla birlikte akıcı ızgara, liste ve kompakt kütüphane görünümleri.
+* **Arayüz Düzenleri** — Hızlı diyalog ilerlemesi için bir **Geç Düğmesi (Skip Button)** ve sohbet veritabanları için tam içe/dışa aktarma araçlarıyla birlikte akıcı ızgara, liste ve kompakt kütüphane görünümleri.
 
 ### 🖼️ Profesyonel Görüntü Düzenleyici
 * **Yapay Zeka Outpaint** — Canvas sınırlarını dışa doğru genişleterek, yeni tanımlanan alanları yapay zeka ile bağlamsal olarak doldurun.
@@ -103,6 +103,18 @@ Platform dört temel sütun üzerine kurulmuştur:
 * **Dikkati Dağıtmayan Okuma** — Webtoon formatına uygun, dikey akışlı okuma deneyimi.
 * **Bölüm Durum Yöneticisi** — Doğrudan IndexedDB üzerinde önbelleğe alınan bölüm ilerlemelerini ("Devam Ediyor" ve "Tamamlandı") izler.
 * **Tembel Yükleme (Lazy Loading)** — Yüksek çözünürlüklü çizgi roman sahneleri sadece ekrana girdiğinde yüklenerek CPU/GPU kaynaklarını korur.
+
+### 🪙 Kredi ve Hediye Ekosistemi
+* **Canlı Bakiye Takibi** — Ana başlıkta yer alan etkileşimli widget, güncellemelerde nabız gibi yanıp sönerek ve düşük kredilerde uyarı vererek mevcut token bakiyenizi gerçek zamanlı gösterir.
+* **Detaylı Paket Analizi** — Farklı ücretli yapay zeka modelleri genelinde fiyat oranlarını (₺) karşılaştıran ve tahmini kullanımları gösteren detaylı karşılaştırma pencereleri.
+* **Bağlantı Kodları** — Cihazlar arası veya kullanıcılar arası hediye kredileri güvenli bir şekilde göndermek ve almak için bağlantı kodunuzu kolayca paylaşın.
+* **Güvenli Satın Alım Doğrulaması** — Anahtar onay kutuları ve hızlı API anahtarı kopyalama özellikleri ile yanlışlıkla çift sipariş verilmesini önleyin.
+
+### 🎬 Sinematik Giriş ve Tanıtım Rehberi
+* **Sinematik Giriş** — 8-bitlik prosedürel sentezleyici ses efektleri eşliğinde ilk açılışta dönen harflerle göz alıcı bir başlık animasyonu sunumu.
+* **Etkileşimli Tur (Spotlight)** — Kullanıcılara modelleri, sihirli değneği, outpaint özelliğini ve ayarları nasıl kullanacaklarını öğreten adım adım vurgulama turu (19 etkileşimli adım).
+* **Akıcı Geçişler ve Kapatma Seçenekleri** — İstediğiniz zaman atlanabilen veya ayarlar panelinden yeniden başlatılabilen, özel başarı sesleri ve görsel bildirimlerle donatılmış duyarlı maske katmanı.
+
 
 ### 📊 Performans ve Optimizasyon
 * **Sistem HUD Göstergesi** — FPS, RAM kullanımı ve GPU render döngülerini izleyen, sürüklenebilir ve boyutu ayarlanabilir canlı performans paneli.
@@ -122,9 +134,15 @@ Platformu yöneten temel betik modüllerinin ve dosyaların açıklamaları şu 
 ```
 Thena-Web/
 ├── index.html                  # Semantik yapısal giriş noktası ve düzen çerçevesi
+├── trailer.html                # Bağımsız sinematik tanıtım fragmanı sunum katmanı
 ├── manifest.json               # PWA yapılandırması ve mobil ikon ayarları
 ├── css/
-│   └── style.css               # Birleştirilmiş stil sayfaları, tema motorları ve animasyonlar
+│   ├── style.css               # Birleştirilmiş stil sayfaları, tema motorları ve animasyonlar
+│   ├── welcome.css             # Sinematik hoş geldiniz ekranı ve etkileşimli rehber stilleri
+│   ├── trailer.css             # Video oynatıcı kapsayıcısı ve sinematik giriş stilleri
+│   ├── editor-search.css       # Fotoğraf düzenleyici yerelleştirilmiş arama stilleri ve düzen kuralları
+│   ├── model-gallery.css       # Yapay zeka model tarayıcı kart galerisi düzen stilleri
+│   └── prompt-preview.css      # Görsel komut kelime analizleri ve katmanları için CSS stilleri
 └── scripts/
     ├── script.js               # Ana uygulama denetleyicisi (Orkestratör ve Görsel Üretimi)
     ├── elements.js             # Seçici optimizasyonu için ÖNBELLEĞE ALINMIŞ DOM öğesi kaydı
@@ -143,6 +161,9 @@ Thena-Web/
     ├── promptPreview.js        # Görsel komut uzunluğu ve anahtar kelime yoğunluğu göstergeleri
     ├── promptexpansion.js      # Komut genişletme motoru ("Sihirli Değnek" mantığı)
     ├── trailer.js              # Tanıtım fragmanı video denetleyicisi
+    ├── welcome.js              # Sinematik giriş ve etkileşimli kullanım rehberi (tutorial)
+    ├── credits.js              # Kredi sistemi entegrasyonu (hediye gönderme, paketler, bakiye sorgulama)
+    ├── customSelect.js         # Özelleştirilmiş açılır menü (dropdown) seçim öğeleri yöneticisi
     └── sw.js                   # Çevrimdışı PWA kullanımı için Service Worker önbellek denetleyicisi
 ```
 

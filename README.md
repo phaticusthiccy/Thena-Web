@@ -14,7 +14,7 @@
 
   <p>
     <a href="https://github.com/phaticusthiccy/Thena-Web/releases">
-      <img src="https://img.shields.io/badge/Version-3.6.2-blue?style=for-the-badge&logo=git&logoColor=white" alt="Version 3.6.2" />
+      <img src="https://img.shields.io/badge/Version-3.7.4-blue?style=for-the-badge&logo=git&logoColor=white" alt="Version 3.7.4" />
     </a>
     <a href="https://github.com/phaticusthiccy/Thena-Web/issues">
       <img src="https://img.shields.io/github/issues/phaticusthiccy/Thena-Web?style=for-the-badge&logo=github&color=e11d48" alt="Issues" />
@@ -74,7 +74,7 @@ The platform is designed around four key pillars:
 ## ✨ Key Features
 
 ### 🎨 Advanced Image Generation
-* **Multi-Model Engine** — Seamlessly toggle between multiple specialized checkpoints (Photorealism, Anime, Cinematic, andcel-shaded *Thena Toonish* style).
+* **Multi-Model Engine** — Start creating with Thena's own image generation models, as well as the most advanced image models worldwide!
 * **Precise Aspect Ratios** — Built-in aspect adapters for Standard (1:1), Portrait (3:4, 9:16), and Widescreen (16:9, 4:3) ratios.
 * **Optimization Modes** — Choose between **Fast Mode** for rapid iterations, **Creative & Dense** for structural complexity, and **HighRes** for supersampled rendering.
 * **Prompt Engineering Tools**:
@@ -88,7 +88,7 @@ The platform is designed around four key pillars:
 * **Real-Time Sentiment Analysis** — An emotional state engine analyzes the character's narrative output to automatically update their visual facial expression.
 * **Dynamic User Profiles** — Customize username, age, and gender preferences; the system dynamically adapts the AI character's tone, memory boundaries, and response structures.
 * **The Warden Guard** — Built-in local content moderation with adjustable levels (Low / Medium / High).
-* **Interface Settings** — Fluid grid, list, and compact library views with full export/import utilities for chat databases.
+* **Interface Settings** — Fluid grid, list, and compact library views with full export/import utilities, including a dialogue **Skip Button** for rapid conversation pacing.
 
 ### 🖼️ Professional Image Editor
 * **AI Outpainting** — Extrapolate and extend canvas borders outward, filling newly defined areas seamlessly.
@@ -103,6 +103,18 @@ The platform is designed around four key pillars:
 * **Distraction-Free Reading** — Optimized vertical flow designed for webtoon layout consumption.
 * **Chapter State Manager** — Tracks current episode progression ("Ongoing" and "Completed") cached directly in IndexedDB.
 * **Lazy Loading** — High-resolution comic sequences load on viewport entry, preserving CPU/GPU resources.
+
+### 🪙 Credits & Gifting Ecosystem
+* **Live Balance Tracking** — Interactive header widget displays your current token balance in real-time, pulsing on updates and warning on low credits.
+* **Detailed Package Analytics** — Detailed comparison modals comparing pricing rates (₺) and estimating usages across different paid AI models.
+* **Connection Codes** — Easily share your connection code to send and receive peer-to-peer gifts securely.
+* **Safe Purchase Verification** — Prevent accidental double orders with key verification checkboxes and quick API key copying features.
+
+### 🎬 Cinematic Welcome & Spotlight Guide
+* **Cinematic Intro** — Eye-catching letter spinning title intro animation accompanied by 8-bit procedurally generated synthesizers.
+* **Interactive Spotlight Tour** — Step-by-step element highlight tours (19 interactive steps) teaching users how to use models, prompt magic wands, outpainting, and settings.
+* **Smooth Transitions & Skip Options** — Fully responsive overlay mask with quick skip actions, restart options in settings, and custom success audio/visual notifications.
+
 
 ### 📊 Performance & Optimization
 * **System Stats HUD** — A draggable, resizable performance overlay tracking estimated FPS, memory usage, and GPU render cycles.
@@ -122,9 +134,15 @@ Here is a breakdown of the core script modules that orchestrate the platform:
 ```
 Thena-Web/
 ├── index.html                  # Semantic structural entrypoint and layout framework
+├── trailer.html                # Standalone cinematic trailer presentation layer
 ├── manifest.json               # PWA configuration and mobile icons settings
 ├── css/
-│   └── style.css               # Unified stylesheets, theme engines, and animations
+│   ├── style.css               # Unified stylesheets, theme engines, and animations
+│   ├── welcome.css             # Cinematic welcome and interactive spotlight guide styles
+│   ├── trailer.css             # Video player container and cinematic intro styles
+│   ├── editor-search.css       # Photo editor localized search styles and layout rules
+│   ├── model-gallery.css       # Layout styles for the AI model browser card gallery
+│   └── prompt-preview.css      # CSS styles for visual prompt keyword analytics and overlays
 └── scripts/
     ├── script.js               # Main application controller (Orchestrator & Image Gen)
     ├── elements.js             # CACHED DOM element registry for selector optimization
@@ -143,6 +161,9 @@ Thena-Web/
     ├── promptPreview.js        # Visual prompt length and keyword density indicators
     ├── promptexpansion.js      # Prompt expansion engine ("Magic Wand" logic)
     ├── trailer.js              # Introduction trailer video controller
+    ├── welcome.js              # Cinematic introduction and interactive user guide (tutorial)
+    ├── credits.js              # Credits system integration (gifting, packages, balance check)
+    ├── customSelect.js         # Styled custom dropdown selection elements controller
     └── sw.js                   # Service Worker cache controller for offline PWA usage
 ```
 
