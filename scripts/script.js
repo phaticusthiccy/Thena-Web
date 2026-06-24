@@ -64,6 +64,7 @@ const modelTranslationsTR = {
     "7d834fb8-ef08-4c97-b61c-1036e7113ae5": "Kling O1, Çok Modlu Görsel Dil (MVL) çerçevesi üzerine inşa edilmiş, birleşik bir çok modlu yapay zeka modelidir. Olağanüstü hızlı hizalama, hassas karakter tutarlılığı ve profesyonel yaratıcı kontrol ile yüksek kaliteli görüntü üretimi sağlamak üzere tasarlanmıştır.",
     "ff7f60c2-303a-44db-97e9-230c1767d86c": "Bu model, orijinal Flux.1'den büyük bir ilerlemeyi temsil ediyor ve basit görüntü oluşturmanın ötesine geçerek gerçek profesyonel düzeyde prodüksiyona ulaşıyor. Etkileyici bir şekilde, Flux 2 artık daha önce imkansız olan bir kontrol ve doğruluk seviyesi sunuyor.",
     "e73d4095-5fb5-40e5-ab6a-3ad7f6e1dcfd": "Seedream 4.0, metinden görüntüye sentezleme, gelişmiş düzenleme ve çoklu görüntü birleştirme özelliklerini tek bir güçlü mimaride birleştirerek yapay zeka sanat üretimini yeniden tanımlıyor.",
+    "3b3c78c3-c1ee-445b-8bb4-07452697a050": "Midjourney V8.1, V8 Alpha serisinin bir sonraki sürümüdür ve görüntü anlama, yapısal istikrar, detay kalitesi ve genel üretim yeteneğinde sürekli ilerlemeyi temsil eder. Daha yüksek çözünürlüklü çıktılar, daha karmaşık kompozisyonlar ve daha ileriye dönük yaratıcı iş akışları için tasarlanmıştır.",
     "0d85f61b-509b-49ba-8227-c136acaed22d": "Google'ın Nano Banana 1'i, Gemini 2.5 Flash Görüntü mimarisiyle çalışır. Hız ve verimlilik için tasarlanan bu cihaz, hızlı, yüksek kaliteli görüntü oluşturma ve sorunsuz görsel mantık yürütme sağlayarak hızlı prototipleme ve dinamik içerik oluşturma için idealdir.",
     "8gg12 61812 6628 19729 6b4a5 5060": "Yüksek çözünürlüklü görüntüler üretebilen kapsamlı işlem sonrası teknolojisine sahip ilk modeldir. Gürültü giderme işleminden sonra gerçek LUT filtreleri ekleyerek inanılmaz görseller yaratabiliyor.",
     "551ks 8g6g8 16gga 1h8h8 6b4a5 5060": "Flux2 kaynak verileri kullanılarak Thena V6 temel modeliyle ince ayar yapılmış, damıtılmış bir model. Güçlü, hızlı, çok yönlü.",
@@ -109,6 +110,8 @@ const MODEL_STATS = {
     "e73d4095-5fb5-40e5-ab6a-3ad7f6e1dcfd": { intel: 4, qual: 5, speed: 2 },
     // Nano Banana 1
     "0d85f61b-509b-49ba-8227-c136acaed22d": { intel: 4, qual: 4, speed: 3 },
+    // Midjourney V8
+    "3b3c78c3-c1ee-445b-8bb4-07452697a050": { intel: 5, qual: 5, speed: 3 },
     // Thena Movie
     "8gg12 61812 6628 19729 6b4a5 5060": { intel: 5, qual: 5, speed: 3 },
     // Thena Max
@@ -672,6 +675,8 @@ class PaginatedResult {
     }
 }
 
+let galleryStatsCache = null;
+
 const dbHelper = {
     open: () => {
         return new Promise((resolve, reject) => {
@@ -698,13 +703,146 @@ const dbHelper = {
             request.onerror = (event) => reject('Database error: ' + event.target.errorCode);
         });
     },
+    get: async (timestamp) => {
+        const db = await dbHelper.open();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction([STORE_NAME], 'readonly');
+            const store = transaction.objectStore(STORE_NAME);
+            const request = store.get(timestamp);
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    },
+    getStatsCache: async () => {
+        if (galleryStatsCache) {
+            return galleryStatsCache;
+        }
+        try {
+            const cached = localStorage.getItem('thena_gallery_stats_cache');
+            if (cached) {
+                const parsed = JSON.parse(cached);
+                const dbCount = await dbHelper.count();
+                if (parsed.count === dbCount) {
+                    galleryStatsCache = parsed;
+                    return galleryStatsCache;
+                }
+            }
+        } catch (e) {
+            console.error('Error reading stats cache', e);
+        }
+
+        const allItems = await dbHelper.getAll();
+        let modelCounts = {};
+        let featuresCounts = {
+            fast: 0, creative: 0, dense: 0, movie: 0, highRes: 0, enhance: 0
+        };
+        
+        for (const item of allItems) {
+            const m = item.model || 'Unknown';
+            modelCounts[m] = (modelCounts[m] || 0) + 1;
+            
+            if (item.features) {
+                if (item.features.fast) featuresCounts.fast++;
+                if (item.features.creative) featuresCounts.creative++;
+                if (item.features.dense) featuresCounts.dense++;
+                if (item.features.movie) featuresCounts.movie++;
+                if (item.features.highRes) featuresCounts.highRes++;
+                if (item.features.enhance) featuresCounts.enhance++;
+            }
+        }
+
+        galleryStatsCache = {
+            count: allItems.length,
+            modelCounts,
+            featuresCounts
+        };
+
+        try {
+            localStorage.setItem('thena_gallery_stats_cache', JSON.stringify(galleryStatsCache));
+        } catch (e) {
+            console.error('Error saving stats cache', e);
+        }
+
+        return galleryStatsCache;
+    },
+    updateStatsCacheOnAdd: (item) => {
+        if (!galleryStatsCache) return;
+        
+        galleryStatsCache.count++;
+        const m = item.model || 'Unknown';
+        galleryStatsCache.modelCounts[m] = (galleryStatsCache.modelCounts[m] || 0) + 1;
+        
+        if (item.features) {
+            if (item.features.fast) galleryStatsCache.featuresCounts.fast++;
+            if (item.features.creative) galleryStatsCache.featuresCounts.creative++;
+            if (item.features.dense) galleryStatsCache.featuresCounts.dense++;
+            if (item.features.movie) galleryStatsCache.featuresCounts.movie++;
+            if (item.features.highRes) galleryStatsCache.featuresCounts.highRes++;
+            if (item.features.enhance) galleryStatsCache.featuresCounts.enhance++;
+        }
+        
+        try {
+            localStorage.setItem('thena_gallery_stats_cache', JSON.stringify(galleryStatsCache));
+        } catch (e) {
+            console.error('Error saving stats cache', e);
+        }
+    },
+    updateStatsCacheOnDelete: async (timestamp) => {
+        if (!galleryStatsCache) return;
+        
+        try {
+            const item = await dbHelper.get(timestamp);
+            if (item) {
+                galleryStatsCache.count = Math.max(0, galleryStatsCache.count - 1);
+                const m = item.model || 'Unknown';
+                if (galleryStatsCache.modelCounts[m]) {
+                    galleryStatsCache.modelCounts[m]--;
+                    if (galleryStatsCache.modelCounts[m] <= 0) {
+                        delete galleryStatsCache.modelCounts[m];
+                    }
+                }
+                
+                if (item.features) {
+                    if (item.features.fast) galleryStatsCache.featuresCounts.fast = Math.max(0, galleryStatsCache.featuresCounts.fast - 1);
+                    if (item.features.creative) galleryStatsCache.featuresCounts.creative = Math.max(0, galleryStatsCache.featuresCounts.creative - 1);
+                    if (item.features.dense) galleryStatsCache.featuresCounts.dense = Math.max(0, galleryStatsCache.featuresCounts.dense - 1);
+                    if (item.features.movie) galleryStatsCache.featuresCounts.movie = Math.max(0, galleryStatsCache.featuresCounts.movie - 1);
+                    if (item.features.highRes) galleryStatsCache.featuresCounts.highRes = Math.max(0, galleryStatsCache.featuresCounts.highRes - 1);
+                    if (item.features.enhance) galleryStatsCache.featuresCounts.enhance = Math.max(0, galleryStatsCache.featuresCounts.enhance - 1);
+                }
+                
+                localStorage.setItem('thena_gallery_stats_cache', JSON.stringify(galleryStatsCache));
+            }
+        } catch (e) {
+            console.error('Error updating stats cache on delete', e);
+            galleryStatsCache = null;
+            localStorage.removeItem('thena_gallery_stats_cache');
+        }
+    },
+    clearStatsCache: () => {
+        galleryStatsCache = {
+            count: 0,
+            modelCounts: {},
+            featuresCounts: {
+                fast: 0, creative: 0, dense: 0, movie: 0, highRes: 0, enhance: 0
+            }
+        };
+        try {
+            localStorage.setItem('thena_gallery_stats_cache', JSON.stringify(galleryStatsCache));
+        } catch (e) {
+            console.error('Error saving stats cache', e);
+        }
+    },
     add: async (data) => {
         const db = await dbHelper.open();
         return new Promise((resolve, reject) => {
             const transaction = db.transaction([STORE_NAME], 'readwrite');
             const store = transaction.objectStore(STORE_NAME);
             const request = store.add(data);
-            request.onsuccess = () => resolve(request.result);
+            request.onsuccess = () => {
+                dbHelper.updateStatsCacheOnAdd(data);
+                resolve(request.result);
+            };
             request.onerror = () => reject(request.error);
         });
     },
@@ -811,6 +949,7 @@ const dbHelper = {
         });
     },
     delete: async (timestamp) => {
+        await dbHelper.updateStatsCacheOnDelete(timestamp);
         const db = await dbHelper.open();
         return new Promise((resolve, reject) => {
             const transaction = db.transaction([STORE_NAME], 'readwrite');
@@ -831,6 +970,7 @@ const dbHelper = {
         });
     },
     clear: async () => {
+        dbHelper.clearStatsCache();
         const db = await dbHelper.open();
         return new Promise((resolve, reject) => {
             const transaction = db.transaction([STORE_NAME], 'readwrite');
@@ -841,6 +981,10 @@ const dbHelper = {
         });
     },
     update: async (data) => {
+        galleryStatsCache = null;
+        try {
+            localStorage.removeItem('thena_gallery_stats_cache');
+        } catch (e) {}
         const db = await dbHelper.open();
         return new Promise((resolve, reject) => {
             const transaction = db.transaction([STORE_NAME], 'readwrite');
@@ -2913,36 +3057,50 @@ generateBtn.addEventListener('click', async () => {
             generationSuccess = true;
             playSuccessSound();
             const modelData = models.find(m => m.id === selectedModel);
-            let finalImageUrl = data.image;
-            if (!finalImageUrl.startsWith('data:image') && !finalImageUrl.startsWith('http')) {
-                finalImageUrl = `data:image/png;base64,${data.image}`;
-            }
+            
+            let imagesArray = Array.isArray(data.image) ? data.image : [data.image];
+            let firstFinalImageUrl = '';
 
-            let thumbnailUrl = finalImageUrl;
-            try {
-                thumbnailUrl = await createThumbnail(finalImageUrl, 0.5);
-            } catch (err) {
-                console.warn("Thumbnail generation failed:", err);
-            }
+            for (let i = 0; i < imagesArray.length; i++) {
+                let currentImg = imagesArray[i];
+                if (!currentImg) continue;
 
-            await dbHelper.add({
-                url: finalImageUrl,
-                thumbnailUrl: thumbnailUrl,
-                prompt: prompt,
-                model: modelData ? modelData.model : 'Unknown',
-                size: selectedSize,
-                timestamp: new Date().toISOString(),
-                moderation: moderationLevel,
-                elements: (typeof getSelectedElementObjects === 'function' ? getSelectedElementObjects().map(e => ({ loraID: e.loraID, name: e.name })) : []),
-                features: {
-                    fast: isFast,
-                    creative: isCreative,
-                    dense: isDense,
-                    movie: isMovie,
-                    highRes: isHighRes,
-                    enhance: isEnhance
+                let finalImageUrl = currentImg;
+                if (!finalImageUrl.startsWith('data:image') && !finalImageUrl.startsWith('http')) {
+                    finalImageUrl = `data:image/png;base64,${currentImg}`;
                 }
-            });
+
+                if (i === 0) {
+                    firstFinalImageUrl = finalImageUrl;
+                }
+
+                let thumbnailUrl = finalImageUrl;
+                try {
+                    thumbnailUrl = await createThumbnail(finalImageUrl, 0.5);
+                } catch (err) {
+                    console.warn("Thumbnail generation failed:", err);
+                }
+
+                await dbHelper.add({
+                    url: finalImageUrl,
+                    thumbnailUrl: thumbnailUrl,
+                    prompt: prompt,
+                    model: modelData ? modelData.model : 'Unknown',
+                    size: selectedSize,
+                    timestamp: new Date().toISOString(),
+                    moderation: moderationLevel,
+                    elements: (typeof getSelectedElementObjects === 'function' ? getSelectedElementObjects().map(e => ({ loraID: e.loraID, name: e.name })) : []),
+                    features: {
+                        fast: isFast,
+                        creative: isCreative,
+                        dense: isDense,
+                        movie: isMovie,
+                        highRes: isHighRes,
+                        enhance: isEnhance
+                    }
+                });
+            }
+
             isGeneratingImage = false;
             if (galleryModal.classList.contains('active')) {
                 const placeholder = document.getElementById('active-generation-placeholder');
@@ -2951,7 +3109,7 @@ generateBtn.addEventListener('click', async () => {
                 await loadGallery();
                 await applyFilters();
             }
-            showNotification(currentLang == "tr" ? translations.tr.msgImgSaved : translations.en.msgImgSaved, 'success', finalImageUrl);
+            showNotification(currentLang == "tr" ? translations.tr.msgImgSaved : translations.en.msgImgSaved, 'success', firstFinalImageUrl || data.image);
         } else {
             playErrorSound();
 
@@ -4732,8 +4890,21 @@ function openRedirectModal(type) {
     }
     btnRedirectConfirm.textContent = t.btnGo;
     btnRedirectCancel.textContent = t.btnCancel;
+
+    const apiDocsContainer = document.getElementById('redirect-api-docs-container');
+    const apiDocsBtn = document.getElementById('btn-redirect-api-docs');
+    if (apiDocsContainer && apiDocsBtn) {
+        if (type === 'owner') {
+            apiDocsContainer.style.display = 'block';
+            apiDocsBtn.textContent = t.btnApiDocs || "API Documentation";
+        } else {
+            apiDocsContainer.style.display = 'none';
+        }
+    }
+
     redirectModal.classList.add('active');
 }
+
 //document.getElementById('btn-open-bot').addEventListener('click', () => openRedirectModal('bot'));
 document.getElementById('btn-open-owner').addEventListener('click', () => openRedirectModal('owner'));
 document.getElementById('btn-donate').addEventListener('click', () => openRedirectModal('donate'));
@@ -4744,10 +4915,15 @@ btnRedirectConfirm.addEventListener('click', () => {
     window.open(targetUrl, '_blank');
     redirectModal.classList.remove('active');
 });
+const btnRedirectApiDocs = document.getElementById('btn-redirect-api-docs');
+if (btnRedirectApiDocs) {
+    btnRedirectApiDocs.addEventListener('click', () => {
+        window.location.href = 'api.html';
+    });
+}
 redirectModal.addEventListener('click', (e) => {
     if (e.target === redirectModal) redirectModal.classList.remove('active');
 });
-
 const deleteAllBtn = document.getElementById('delete-all-btn');
 const deleteAllModal = document.getElementById('delete-all-modal');
 const btnCancelAll = document.getElementById('btn-cancel-all');
@@ -7336,6 +7512,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeStatsBtn = document.getElementById('close-gallery-stats');
     const statsModal = document.getElementById('gallery-stats-modal');
     
+    // Warm up the stats cache in the background 1 second after page load
+    setTimeout(() => {
+        if (typeof dbHelper !== 'undefined' && typeof dbHelper.getStatsCache === 'function') {
+            dbHelper.getStatsCache().catch(e => console.error('Error warming up stats cache:', e));
+        }
+    }, 1000);
+    
     if (openStatsBtn && statsModal && closeStatsBtn) {
         openStatsBtn.addEventListener('click', async () => {
             if (typeof playInformationSound === "function") playInformationSound();
@@ -7357,26 +7540,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function loadGalleryStatistics() {
     try {
-        const allItems = await dbHelper.getAll();
-        
-        let modelCounts = {};
-        let featuresCounts = {
-            fast: 0, creative: 0, dense: 0, movie: 0, highRes: 0, enhance: 0
-        };
-        
-        for (const item of allItems) {
-            const m = item.model || 'Unknown';
-            modelCounts[m] = (modelCounts[m] || 0) + 1;
-            
-            if (item.features) {
-                if (item.features.fast) featuresCounts.fast++;
-                if (item.features.creative) featuresCounts.creative++;
-                if (item.features.dense) featuresCounts.dense++;
-                if (item.features.movie) featuresCounts.movie++;
-                if (item.features.highRes) featuresCounts.highRes++;
-                if (item.features.enhance) featuresCounts.enhance++;
-            }
-        }
+        const stats = await dbHelper.getStatsCache();
+        const modelCounts = stats.modelCounts;
+        const featuresCounts = stats.featuresCounts;
         
         let prices = {};
         try {
@@ -7391,6 +7557,7 @@ async function loadGalleryStatistics() {
             "Flux 2 Pro": "flux2pro",
             "Seedream 4": "seedream4",
             "Nano Banana 1": "nanobanana1",
+            "Midjourney V8": "midjourneyV8",
             "Thena Ultra": "thenaUltra",
             "Thena Pro": "thenaPro",
             "Thena Movie": "thenaMovie",
@@ -7432,13 +7599,18 @@ async function loadGalleryStatistics() {
         
         for (const [mName, count] of Object.entries(modelCounts)) {
             const propKey = modelKeyMapping[mName];
+            let costPerItem = 0;
             if (propKey && prices[propKey]) {
-                const costPerItem = prices[propKey][currentLang] || 0;
-                totalCost += costPerItem * count;
+                costPerItem = prices[propKey][currentLang] || 0;
             } else if (prices[mName]) { 
-                const costPerItem = prices[mName][currentLang] || 0;
-                totalCost += costPerItem * count;
+                costPerItem = prices[mName][currentLang] || 0;
             }
+            
+            if (propKey === "midjourneyV8" || mName === "midjourneyV8") {
+                costPerItem = costPerItem / 4;
+            }
+            
+            totalCost += costPerItem * count;
         }
         
         const modelsList = document.getElementById('stats-models-list');
@@ -7453,6 +7625,10 @@ async function loadGalleryStatistics() {
                 costPerItem = prices[propKey][currentLang] || 0;
             } else if (prices[mName]) { 
                 costPerItem = prices[mName][currentLang] || 0;
+            }
+            
+            if (propKey === "midjourneyV8" || mName === "midjourneyV8") {
+                costPerItem = costPerItem / 4;
             }
             
             const totalModelCost = costPerItem * count;

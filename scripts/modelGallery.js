@@ -60,6 +60,7 @@
         "Flux 2 Pro": "flux2pro",
         "Seedream 4": "seedream4",
         "Nano Banana 1": "nanobanana1",
+        "Midjourney V8": "midjourneyV8",
         "Thena Ultra": "thenaUltra",
         "Thena Pro": "thenaPro",
         "Thena Movie": "thenaMovie",

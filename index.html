@@ -69,8 +69,8 @@
             <button class="nav-btn" id="btn-open-owner" title="Developer">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                     stroke-linejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
                 </svg>
                 <span class="nav-btn-text" id="txt-nav-developer">Geliştirici</span>
             </button>
@@ -1786,6 +1786,11 @@
                 <button class="redirect-btn btn-stay" id="btn-redirect-cancel">Cancel</button>
                 <button class="redirect-btn btn-go" id="btn-redirect-confirm">Go</button>
             </div>
+            <div id="redirect-api-docs-container" style="margin-top: 15px; display: none; width: 100%;">
+                <button class="redirect-btn" id="btn-redirect-api-docs" style="width: 100%; padding: 12px; background: rgba(var(--primary-rgb), 0.08); color: var(--primary); border: 1px dashed rgba(var(--primary-rgb), 0.4); border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 13px;">
+                    API Documentation
+                </button>
+            </div>
         </div>
     </div>
     <div id="share-modal">
@@ -2021,8 +2026,8 @@
             </div>
 
             <div class="setting-group" style="margin-bottom: 25px; text-align: left;">
-                <label style="display:flex; align-items:center; gap:8px; color:#888; margin-bottom:8px; font-size:13px; font-weight:600; letter-spacing:0.4px;">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <label style="display:flex; justify-content:flex-start; align-items:center; gap:8px; color:#888; margin-bottom:10px; font-size:13px; font-weight:600; letter-spacing:0.4px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
                     </svg>
                     <span id="lbl-tutorial-restart">TUTORIAL MODE</span>

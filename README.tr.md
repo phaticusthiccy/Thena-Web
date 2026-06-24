@@ -14,7 +14,7 @@
 
   <p>
     <a href="https://github.com/phaticusthiccy/Thena-Web/releases">
-      <img src="https://img.shields.io/badge/S%C3%BCr%C3%BCm-3.7.4-blue?style=for-the-badge&logo=git&logoColor=white" alt="Sürüm 3.7.4" />
+      <img src="https://img.shields.io/badge/S%C3%BCr%C3%BCm-3.8.0-blue?style=for-the-badge&logo=git&logoColor=white" alt="Sürüm 3.8.0" />
     </a>
     <a href="https://github.com/phaticusthiccy/Thena-Web/issues">
       <img src="https://img.shields.io/github/issues/phaticusthiccy/Thena-Web?style=for-the-badge&logo=github&color=e11d48" alt="Sorunlar" />
@@ -74,7 +74,8 @@ Platform dört temel sütun üzerine kurulmuştur:
 ## ✨ Temel Özellikler
 
 ### 🎨 Gelişmiş Görsel Üretimi
-* **Çoklu Model Motoru** — Thena'nın kendi görsel üretme modellerinin yanı sıra dünya çapındaki en gelişmiş görüntü modelleri ile birlikte oluşturmaya başlayın!
+* **Çoklu Model Motoru** — Thena'nın kendi görsel üretme modellerinin yanı sıra dünya çapındaki en gelişmiş görüntü modelleri ve yeni eklenen **Midjourney V8.1** ile birlikte oluşturmaya başlayın!
+* **Çoklu Görsel Üretimi ve Galeri Kaydı** — Tek bir API yanıtında dönen çoklu görsel dizilerini işleyecek şekilde güncellenen üretim akışı, tüm çıktıları otomatik olarak yerel veritabanına kaydeder.
 * **Hassas En Boy Oranları** — Kare (1:1), Dikey (3:4, 9:16) ve Geniş Ekran (16:9, 4:3) formatları için hazır en boy oranı adaptörleri.
 * **Optimizasyon Modları** — Hızlı iterasyonlar için **Hızlı Mod (Fast Mode)**, yapısal karmaşıklık için **Yaratıcı & Yoğun** modlar ve süper örneklenmiş çıktılar için **HighRes** ölçekleme.
 * **Komut Mühendisliği Araçları**:
@@ -125,6 +126,12 @@ Platform dört temel sütun üzerine kurulmuştur:
 * **Yerel Veritabanı** — Tüm özel karakterlerin, üretilen görsellerin, favorilerin ve sohbet geçmişinin cihazınızda çevrimdışı kalmasını sağlayan `IndexedDB` desteği.
 * **Gizlilik Odaklı** — API anahtarları ve kişisel profil detayları, üçüncü taraf sunuculara gönderilmeden doğrudan tarayıcının `LocalStorage` alanında saklanır.
 
+### 🔌 Geliştirici API Portalı ve Etkileşimli Konsol
+* **Kapsamlı API Dokümantasyonu (`api.html`)** — Görsel üretimi, model fiyatları, ETA bilgileri, sohbet robotu karakter verileri ve kredi paylaşımı gibi tüm uç noktaları detaylandıran yerel dökümantasyon sayfası.
+* **Etkileşimli API Konsolu** — Yerleşik bir oyun alanı (playground) üzerinden, gerçek zamanlı JSON yanıt ağacı ve istek parametreleri ile API uç noktalarını doğrudan test edin.
+* **Çoklu Dil Kod Örnekleri** — Farklı yazılım dillerinde hazırlanmış, doğrudan entegre edilebilen hazır istemci kod blokları.
+* **Kolay Erişim Arayüzü** — Yenilenen üst menüdeki kod simgeli bağlantı ve yönlendirme paneli üzerinden dökümantasyona saniyeler içinde ulaşın.
+
 ---
 
 ## 📂 Kod Tabanı Mimarisi ve Dosya Yapısı
@@ -135,6 +142,7 @@ Platformu yöneten temel betik modüllerinin ve dosyaların açıklamaları şu 
 Thena-Web/
 ├── index.html                  # Semantik yapısal giriş noktası ve düzen çerçevesi
 ├── trailer.html                # Bağımsız sinematik tanıtım fragmanı sunum katmanı
+├── api.html                  # Geliştirici API dokümantasyon sayfası ve etkileşimli konsol
 ├── manifest.json               # PWA yapılandırması ve mobil ikon ayarları
 ├── css/
 │   ├── style.css               # Birleştirilmiş stil sayfaları, tema motorları ve animasyonlar

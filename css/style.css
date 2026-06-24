@@ -3222,6 +3222,13 @@ body.performance-mode .whimsical-flame-effect {
     transform: scale(1.05);
 }
 
+#btn-redirect-api-docs:hover {
+    background: rgba(var(--primary-rgb), 0.15) !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.2);
+    transform: scale(1.02);
+}
+
 .btn-stay {
     background: #222;
     color: #fff;

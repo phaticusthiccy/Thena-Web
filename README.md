@@ -14,7 +14,7 @@
 
   <p>
     <a href="https://github.com/phaticusthiccy/Thena-Web/releases">
-      <img src="https://img.shields.io/badge/Version-3.7.4-blue?style=for-the-badge&logo=git&logoColor=white" alt="Version 3.7.4" />
+      <img src="https://img.shields.io/badge/Version-3.8.0-blue?style=for-the-badge&logo=git&logoColor=white" alt="Version 3.8.0" />
     </a>
     <a href="https://github.com/phaticusthiccy/Thena-Web/issues">
       <img src="https://img.shields.io/github/issues/phaticusthiccy/Thena-Web?style=for-the-badge&logo=github&color=e11d48" alt="Issues" />
@@ -74,7 +74,8 @@ The platform is designed around four key pillars:
 ## ✨ Key Features
 
 ### 🎨 Advanced Image Generation
-* **Multi-Model Engine** — Start creating with Thena's own image generation models, as well as the most advanced image models worldwide!
+* **Multi-Model Engine** — Start creating with Thena's own image generation models, as well as the most advanced image models worldwide, including the newly added **Midjourney V8.1** model!
+* **Multi-Image Generation & Saving** — Upgraded generation pipeline to handle multiple parallel images returned in a single API payload, automatically saving all results into the local database.
 * **Precise Aspect Ratios** — Built-in aspect adapters for Standard (1:1), Portrait (3:4, 9:16), and Widescreen (16:9, 4:3) ratios.
 * **Optimization Modes** — Choose between **Fast Mode** for rapid iterations, **Creative & Dense** for structural complexity, and **HighRes** for supersampled rendering.
 * **Prompt Engineering Tools**:
@@ -125,6 +126,12 @@ The platform is designed around four key pillars:
 * **Local Database Storage** — Powered by `IndexedDB`, ensuring all custom characters, generated images, favorites, and transcripts are kept offline on your device.
 * **Privacy by Design** — API keys and personal profile details are saved directly in `LocalStorage` without third-party transit.
 
+### 🔌 Developer API Hub & Interactive Console
+* **Comprehensive API Documentation (`api.html`)** — Fully documented local API endpoints for image generation, model pricing, ETAs, chatbot character metadata, and credit sharing.
+* **Interactive API Console** — Test API requests directly from a built-in UI playground with real-time response rendering and JSON tree views.
+* **Easy Code Integration** — Ready-to-use client snippets in multiple programming languages.
+* **Dedicated Navigation** — Instant access to local documentation from the updated header menu and redirection prompts.
+
 ---
 
 ## 📂 Codebase Architecture & File Structure
@@ -135,6 +142,7 @@ Here is a breakdown of the core script modules that orchestrate the platform:
 Thena-Web/
 ├── index.html                  # Semantic structural entrypoint and layout framework
 ├── trailer.html                # Standalone cinematic trailer presentation layer
+├── api.html                  # Developer API documentation page & interactive playground
 ├── manifest.json               # PWA configuration and mobile icons settings
 ├── css/
 │   ├── style.css               # Unified stylesheets, theme engines, and animations

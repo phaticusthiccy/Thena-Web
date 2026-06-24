@@ -448,7 +448,8 @@
             "klingo1": "Kling O1",
             "flux2pro": "Flux 2 Pro",
             "seedream4": "Seedream 4",
-            "nanobanana1": "Nano Banana 1"
+            "nanobanana1": "Nano Banana 1",
+            "midjourneyV8": "Midjourney V8",
         };
         return fallback[key] || key.toUpperCase();
     }
