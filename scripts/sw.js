@@ -45,6 +45,7 @@ const ASSETS_TO_CACHE = [
     './scripts/modelGallery.js',
     './scripts/customSelect.js',
     './scripts/welcome.js',
+    './scripts/updates.js'
 ];
 
 self.addEventListener('install', (event) => {

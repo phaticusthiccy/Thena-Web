@@ -11455,6 +11455,7 @@ body.power-saver-active .hot-model .whimsical-flame-effect {
     line-height: 1.3;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -11466,6 +11467,7 @@ body.power-saver-active .hot-model .whimsical-flame-effect {
     line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -13327,6 +13329,7 @@ span.toon-detail-status-badge.toon-status-ongoing {
 
 .credits-gift-field input[type=number] {
     -moz-appearance: textfield;
+    appearance: textfield;
 }
 
 .credits-gift-btn {
