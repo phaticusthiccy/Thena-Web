@@ -1,3 +1,6 @@
+let updatesData = [];
+let activeUpdateIndex = 0;
+
 async function fetchUpdates() {
     try {
         if (window.location.protocol === 'file:') {
@@ -128,6 +131,10 @@ function showUpdatesToast(update) {
 
 function markLatestUpdateAsRead() {
     if (updatesData.length === 0) return;
+    const tutorialSeen = localStorage.getItem('tutorialSeen') === 'true';
+    if (!tutorialSeen) {
+        return;
+    }
     const latestUpdate = updatesData[0];
     localStorage.setItem('lastSeenUpdateVersion', latestUpdate.id);
     
