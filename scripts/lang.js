@@ -564,10 +564,16 @@ const translations = {
         "toonReaderSeasonEnd": "You are at the end of the season. Please switch to the next season.",
         "toonReaderEpEnded": "Episode Ended",
         "toonReaderSeasonEnded": "Season Ended",
+        "navUpdates": "Updates",
+        "lblUpdatesSidebarTitle": "Patch History",
+        "updateNotificationTitle": "New Update Available!",
+        "updateNotificationDesc": "A new version of Thena has been released.",
+        "btnRead": "Read",
+        "btnClose": "Close",
         "navDonate": "Donate",
         "navShowcase": "Showcase",
         "navDeveloper": "API",
-        "navApps": "Apps",
+        "navApps": "Menu",
         "navSettings": "Settings",
         "navLanguage": "Language",
         "tutorialWelcomeTitle": "Welcome to Thena! ✨",
@@ -1260,10 +1266,16 @@ const translations = {
         "toonReaderSeasonEnd": "Sezonun sonundasınız. Lütfen sonraki sezona geçin.",
         "toonReaderEpEnded": "Bölüm Bitti",
         "toonReaderSeasonEnded": "Sezon Bitti",
+        "navUpdates": "Yenilikler",
+        "lblUpdatesSidebarTitle": "Güncelleme Geçmişi",
+        "updateNotificationTitle": "Yeni Güncelleme Yayınlandı!",
+        "updateNotificationDesc": "Thena'nın yeni bir sürümü yayınlandı. Detayları görmek için dokunun.",
+        "btnRead": "Oku",
+        "btnClose": "Kapat",
         "navDonate": "Destek",
         "navShowcase": "Vitrin",
         "navDeveloper": "API",
-        "navApps": "Uygulamalar",
+        "navApps": "Menü",
         "navSettings": "Ayarlar",
         "navLanguage": "Dil",
         "tutorialWelcomeTitle": "Thena'ya Hoş Geldin! ✨",
@@ -1635,6 +1647,12 @@ function updateLanguage(lang) {
         ["txt-nav-donate", t.navDonate], ["txt-nav-showcase", t.navShowcase],
         ["txt-nav-developer", t.navDeveloper], ["txt-nav-apps", t.navApps],
         ["txt-nav-settings", t.navSettings], ["txt-nav-language", t.navLanguage],
+        ["txt-nav-updates", t.navUpdates],
+        ["lbl-updates-sidebar-title", t.lblUpdatesSidebarTitle],
+        ["lbl-update-toast-title", t.updateNotificationTitle],
+        ["lbl-update-toast-desc", t.updateNotificationDesc],
+        ["btn-update-toast-read", t.btnRead],
+        ["btn-update-toast-close", t.btnClose],
         ["credit-widget-label", t.creditWidgetLabel],
         ["lbl-credits-modal-title", t.creditsModalTitle],
         ["lbl-credits-modal-subtitle", t.creditsModalSubtitle],
@@ -2002,6 +2020,10 @@ function updateLanguage(lang) {
 
     if (typeof window.aiStoriesUpdateLang === 'function') {
         window.aiStoriesUpdateLang(lang);
+    }
+    
+    if (typeof window.updateUpdatesLanguage === 'function') {
+        window.updateUpdatesLanguage(lang);
     }
 }
 

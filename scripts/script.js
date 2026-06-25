@@ -1266,12 +1266,20 @@ function autoResize(element) {
 const savedApiKey = localStorage.getItem(LS_KEYS.API_KEY);
 if (savedApiKey) apiKeyInput.value = savedApiKey;
 const savedPrompt = localStorage.getItem(LS_KEYS.PROMPT);
-if (savedPrompt) promptInput.value = savedPrompt;
+if (savedPrompt) {
+    promptInput.value = savedPrompt;
+    autoResize(promptInput);
+    setTimeout(() => autoResize(promptInput), 50);
+}
 apiKeyInput.addEventListener('input', () => {
     const apiKey = apiKeyInput.value.trim();
     if (apiKey) localStorage.setItem(LS_KEYS.API_KEY, apiKey);
     else localStorage.removeItem(LS_KEYS.API_KEY);
     checkFormReady();
+});
+
+window.addEventListener('resize', () => {
+    autoResize(promptInput);
 });
 
 promptInput.addEventListener('input', () => {
@@ -7512,7 +7520,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeStatsBtn = document.getElementById('close-gallery-stats');
     const statsModal = document.getElementById('gallery-stats-modal');
     
-    // Warm up the stats cache in the background 1 second after page load
     setTimeout(() => {
         if (typeof dbHelper !== 'undefined' && typeof dbHelper.getStatsCache === 'function') {
             dbHelper.getStatsCache().catch(e => console.error('Error warming up stats cache:', e));

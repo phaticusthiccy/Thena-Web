@@ -82,7 +82,15 @@
                     <rect x="14" y="14" width="7" height="7"></rect>
                     <rect x="3" y="14" width="7" height="7"></rect>
                 </svg>
-                <span class="nav-btn-text" id="txt-nav-apps">Uygulamalar</span>
+                <span class="nav-btn-text" id="txt-nav-apps">Menü</span>
+            </button>
+            <button class="nav-btn" id="btn-updates" title="Gelen Yenilikler">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                <span class="nav-btn-text" id="txt-nav-updates">Yenilikler</span>
+                <span class="nav-badge" id="updates-badge" style="display: none;"></span>
             </button>
             <button class="nav-btn" id="btn-open-settings" title="Settings">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -2851,7 +2859,63 @@
         </div>
     </div>
 
+    <!-- Gelen Yenilikler Modalı (Valorant Style Patch Notes) -->
+    <div id="updates-modal" class="confirm-modal">
+        <div class="confirm-content updates-modal-content">
+            <!-- Sidebar (Past Updates) -->
+            <div class="updates-sidebar">
+                <div class="updates-sidebar-header">
+                    <h3 id="lbl-updates-sidebar-title">GÜNCELLEME GEÇMİŞİ</h3>
+                </div>
+                <div class="updates-list-wrapper custom-scrollbar" id="updates-list">
+                    <!-- Populated dynamically via updates.js -->
+                </div>
+            </div>
+            <!-- Main Content Area -->
+            <div class="updates-main-content">
+                <button id="btn-updates-close" class="updates-close-btn" aria-label="Close">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+                <div class="updates-detail-area custom-scrollbar" id="updates-detail-container">
+                    <!-- Dynamically populated Valorant-style update content -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Yeni Güncelleme Bildirim Penceresi (Slide-in popup toast) -->
+    <div id="updates-notification-toast" class="updates-toast">
+        <!-- Laser Scanline -->
+        <div class="toast-scanline"></div>
+        <!-- Corner Brackets HUD -->
+        <div class="toast-hud-frame">
+            <div class="toast-hud-frame-tr"></div>
+            <div class="toast-hud-frame-bl"></div>
+        </div>
+        <div class="updates-toast-content">
+            <div class="updates-toast-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+            </div>
+            <div class="updates-toast-text">
+                <h4 id="lbl-update-toast-title">Yeni Güncelleme!</h4>
+                <p id="lbl-update-toast-desc">Thena için yeni bir güncelleme yayınlandı.</p>
+            </div>
+            <div class="updates-toast-actions">
+                <button id="btn-update-toast-read" class="toast-btn toast-btn-read">Oku</button>
+                <button id="btn-update-toast-close" class="toast-btn toast-btn-close">Kapat</button>
+            </div>
+        </div>
+    </div>
+
     <script src="scripts/cpu.js"></script>
+    <script src="scripts/updatesData.js"></script>
+    <script src="scripts/updates.js"></script>
     <script src="scripts/script.js"></script>
     <script src="scripts/welcome.js"></script>
     <script src="scripts/promptexpansion.js"></script>
