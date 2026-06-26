@@ -27,6 +27,9 @@ const modelSpecs = {
     "3b3c78c3-c1ee-445b-8bb4-07452697a050": {
         usedTechniques: ["Paid Models"],
     },
+    "883bw633-dsf1-df21-ff21-991728ba6610": {
+        usedTechniques: ["Paid Models"],
+    },
     "8gg12 61812 6628 19729 6b4a5 5060": {
         usedTechniques: ["Photorealism", "General", "Movie"],
     },
@@ -40,9 +43,6 @@ const modelSpecs = {
         usedTechniques: ["Photorealism"]
     },
     "5g72h1 y661hp k771ns 33bb21 77bagl 6b 3090": {
-        usedTechniques: ["Anime"]
-    },
-    "6781x 66189 00m162 16g61 00y71 6000": {
         usedTechniques: ["Anime"]
     },
     "4c3e77 uy8g8 16gga 54h8h 999a5 5060": {

@@ -450,6 +450,7 @@
             "seedream4": "Seedream 4",
             "nanobanana1": "Nano Banana 1",
             "midjourneyV8": "Midjourney V8",
+            "nijiv7": "Niji V7",
         };
         return fallback[key] || key.toUpperCase();
     }

@@ -61,6 +61,7 @@
         "Seedream 4": "seedream4",
         "Nano Banana 1": "nanobanana1",
         "Midjourney V8": "midjourneyV8",
+        "Niji V7": "nijiv7",
         "Thena Ultra": "thenaUltra",
         "Thena Pro": "thenaPro",
         "Thena Movie": "thenaMovie",

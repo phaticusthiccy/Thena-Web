@@ -1,5 +1,110 @@
 window.thenaUpdates = [
   {
+    "id": "v3.8.3",
+    "version": "3.8.3",
+    "title": {
+      "en": "THENA PATCH NOTES v3.8.3",
+      "tr": "THENA GÜNCELLEME NOTLARI v3.8.3"
+    },
+    "subtitle": {
+      "en": "Niji 7 model release, service worker reliability, and onboarding fixes.",
+      "tr": "Niji 7 model lansmanı, servis çalışanı kararlılığı ve başlangıç turu düzeltmeleri."
+    },
+    "category": {
+      "en": "System & Model Updates",
+      "tr": "Sistem & Model Güncellemeleri"
+    },
+    "author": "Thena Dev Team",
+    "date": "27/06/2026",
+    "bannerImage": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80",
+    "sections": [
+      {
+        "title": {
+          "en": "SERVICE WORKER & CACHING",
+          "tr": "SERVİS ÇALIŞANI & ÖNBELLEKLEME"
+        },
+        "intro": {
+          "en": "Improvements to offline caching reliability and service worker resiliency.",
+          "tr": "Çevrimdışı önbellekleme güvenilirliği ve servis çalışanı kararlılığı iyileştirildi."
+        },
+        "groups": [
+          {
+            "name": {
+              "en": "Fault-Tolerant Cache",
+              "tr": "Hata Toleranslı Önbellek"
+            },
+            "items": [
+              {
+                "en": "Implemented fault-tolerant caching in the service worker, allowing installation to succeed even if individual resources fail.",
+                "tr": "Tekil kaynaklar yüklenemese bile kurulumun başarılı olmasını sağlamak için servis çalışanında hata toleranslı önbellekleme uygulandı."
+              },
+              {
+                "en": "Added updates.js script to the precached assets list for offline functionality.",
+                "tr": "Çevrimdışı işlevsellik için updates.js betiği önbelleğe alınacak varlıklar listesine eklendi."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "MODEL UPDATES",
+          "tr": "MODEL GÜNCELLEMELERİ"
+        },
+        "intro": {
+          "en": "We updated our active generation models catalog.",
+          "tr": "Aktif görsel oluşturma modelleri kataloğumuzu güncelledik."
+        },
+        "groups": [
+          {
+            "name": {
+              "en": "Model Changes",
+              "tr": "Model Değişiklikleri"
+            },
+            "items": [
+              {
+                "en": "Added Niji 7 model support for advanced anime and cartoon generation.",
+                "tr": "Gelişmiş anime ve çizgi film tasarımları için Niji 7 modeli desteği eklendi."
+              },
+              {
+                "en": "Removed the deprecated Thena Anime Fast model.",
+                "tr": "Artık kullanılmayan eski Thena Anime Fast modeli sistemden kaldırıldı."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "SYSTEM & UI STABILITY",
+          "tr": "SİSTEM & ARAYÜZ KARARLILIĞI"
+        },
+        "intro": {
+          "en": "Onboarding logic refinements and standard styling alignments.",
+          "tr": "Rehber mantığı iyileştirmeleri ve standart stil hizalamaları."
+        },
+        "groups": [
+          {
+            "name": {
+              "en": "UI & Logic Fixes",
+              "tr": "Arayüz & Mantık Düzeltmeleri"
+            },
+            "items": [
+              {
+                "en": "Restricted update read markers to trigger only after the initial onboarding tutorial is completed.",
+                "tr": "Güncelleme okundu işaretleyicisinin tetiklenmesi yalnızca başlangıç rehber turu tamamlandıktan sonrasına kısıtlandı."
+              },
+              {
+                "en": "Added modern line-clamp and appearance declarations for better CSS rendering compatibility across newer browser engines.",
+                "tr": "Daha yeni tarayıcı motorlarında daha iyi CSS işleme uyumluluğu için modern line-clamp ve appearance bildirimleri eklendi."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "v3.8.2",
     "version": "3.8.2",
     "title": {

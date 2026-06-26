@@ -65,13 +65,13 @@ const modelTranslationsTR = {
     "ff7f60c2-303a-44db-97e9-230c1767d86c": "Bu model, orijinal Flux.1'den büyük bir ilerlemeyi temsil ediyor ve basit görüntü oluşturmanın ötesine geçerek gerçek profesyonel düzeyde prodüksiyona ulaşıyor. Etkileyici bir şekilde, Flux 2 artık daha önce imkansız olan bir kontrol ve doğruluk seviyesi sunuyor.",
     "e73d4095-5fb5-40e5-ab6a-3ad7f6e1dcfd": "Seedream 4.0, metinden görüntüye sentezleme, gelişmiş düzenleme ve çoklu görüntü birleştirme özelliklerini tek bir güçlü mimaride birleştirerek yapay zeka sanat üretimini yeniden tanımlıyor.",
     "3b3c78c3-c1ee-445b-8bb4-07452697a050": "Midjourney V8.1, V8 Alpha serisinin bir sonraki sürümüdür ve görüntü anlama, yapısal istikrar, detay kalitesi ve genel üretim yeteneğinde sürekli ilerlemeyi temsil eder. Daha yüksek çözünürlüklü çıktılar, daha karmaşık kompozisyonlar ve daha ileriye dönük yaratıcı iş akışları için tasarlanmıştır.",
+    "883bw633-dsf1-df21-ff21-991728ba6610": "Niji, Midjourney'nin anime odaklı model serisidir ve özellikle illüstrasyon, karakter odaklı görseller ve stilize görsel hikaye anlatımı için geliştirilmiştir. Spellbrush ile iş birliği içinde oluşturulan Niji, daha güçlü karakter çekiciliği, etkileyici duygular, dinamik kompozisyonlar ve anime ve manga estetiğinden ilham alan bir görsel dil için optimize edilmiştir.",
     "0d85f61b-509b-49ba-8227-c136acaed22d": "Google'ın Nano Banana 1'i, Gemini 2.5 Flash Görüntü mimarisiyle çalışır. Hız ve verimlilik için tasarlanan bu cihaz, hızlı, yüksek kaliteli görüntü oluşturma ve sorunsuz görsel mantık yürütme sağlayarak hızlı prototipleme ve dinamik içerik oluşturma için idealdir.",
     "8gg12 61812 6628 19729 6b4a5 5060": "Yüksek çözünürlüklü görüntüler üretebilen kapsamlı işlem sonrası teknolojisine sahip ilk modeldir. Gürültü giderme işleminden sonra gerçek LUT filtreleri ekleyerek inanılmaz görseller yaratabiliyor.",
     "551ks 8g6g8 16gga 1h8h8 6b4a5 5060": "Flux2 kaynak verileri kullanılarak Thena V6 temel modeliyle ince ayar yapılmış, damıtılmış bir model. Güçlü, hızlı, çok yönlü.",
     "77h621 yy5271 gga166 hhau22 882hha 1a 3090": "Yüksek çözünürlüklü görüntüler, illüstrasyonlar ve genel kullanım için özel olarak tasarlanmış güçlü bir model.",
     "754019 b5df2e e606f1 a7600b 96b0c8 94": "Thena Photoreal, son derece gerçekçi görüntüler üretmek için özel olarak tasarlanmış bir modeldir. Profesyonelce hazırlanmış komut dosyalarıyla harika sonuçlar verir.",
     "5g72h1 y661hp k771ns 33bb21 77bagl 6b 3090": "Thena'nın anime görselleri oluşturmak için titizlikle eğitilmiş temel modeli. Son derece stilize, güçlü ve tutarlı.",
-    "6781x 66189 00m162 16g61 00y71 6000": "Thena Anime Fast, anime görsellerini hızlı ve düşük maliyetle oluşturmak için özel olarak eğitilmiş temel bir aydınlatma modelidir.",
     "4c3e77 uy8g8 16gga 54h8h 999a5 5060": "Thena MiniWa, animasyon stili ve anime görsellerini birleştiren, hızlı, çok yönlü ve stilize edilmiş bir modeldir.",
     "771ks 71g6g8 hlh8h8 6b4a5 77b4a5 5060": "Thena'nın son derece canlı ve parlak anime görselleri oluşturmak için kullandığı model. Basitleştirilmiş bir Anime Core modeli ve son işlem teknikleri kullanır.",
     "911ks fdg6g8 66h8h8 900a5 zxb4a5 9000": "Müstehçen veya NSFW içerik oluşturmak için mutlak doğrulukta bir model. Thena Movie temel modeline dayanmaktadır. İnsanların ve sahnelerin gerçekçi görüntülerini oluşturabilir.",
@@ -112,6 +112,8 @@ const MODEL_STATS = {
     "0d85f61b-509b-49ba-8227-c136acaed22d": { intel: 4, qual: 4, speed: 3 },
     // Midjourney V8
     "3b3c78c3-c1ee-445b-8bb4-07452697a050": { intel: 5, qual: 5, speed: 3 },
+    // Niji V7
+    "883bw633-dsf1-df21-ff21-991728ba6610": { intel: 5, qual: 4, speed: 3 },
     // Thena Movie
     "8gg12 61812 6628 19729 6b4a5 5060": { intel: 5, qual: 5, speed: 3 },
     // Thena Max
@@ -122,8 +124,6 @@ const MODEL_STATS = {
     "754019 b5df2e e606f1 a7600b 96b0c8 94": { intel: 2, qual: 2, speed: 1 },
     // Thena Anime Core
     "5g72h1 y661hp k771ns 33bb21 77bagl 6b 3090": { intel: 4, qual: 4, speed: 2 },
-    // Thena Anime Fast
-    "6781x 66189 00m162 16g61 00y71 6000": { intel: 2, qual: 3, speed: 5 },
     // Thena MiniWa
     "4c3e77 uy8g8 16gga 54h8h 999a5 5060": { intel: 3, qual: 3, speed: 4 },
     // Thena Radiant
@@ -7565,6 +7565,7 @@ async function loadGalleryStatistics() {
             "Seedream 4": "seedream4",
             "Nano Banana 1": "nanobanana1",
             "Midjourney V8": "midjourneyV8",
+            "Niji V7": "nijiv7",
             "Thena Ultra": "thenaUltra",
             "Thena Pro": "thenaPro",
             "Thena Movie": "thenaMovie",
@@ -7613,7 +7614,7 @@ async function loadGalleryStatistics() {
                 costPerItem = prices[mName][currentLang] || 0;
             }
             
-            if (propKey === "midjourneyV8" || mName === "midjourneyV8") {
+            if (propKey === "midjourneyV8" || mName === "midjourneyV8" || propKey === "nijiv7" || mName === "nijiv7") {
                 costPerItem = costPerItem / 4;
             }
             
@@ -7634,7 +7635,7 @@ async function loadGalleryStatistics() {
                 costPerItem = prices[mName][currentLang] || 0;
             }
             
-            if (propKey === "midjourneyV8" || mName === "midjourneyV8") {
+            if (propKey === "midjourneyV8" || mName === "midjourneyV8" || propKey === "nijiv7" || mName === "nijiv7") {
                 costPerItem = costPerItem / 4;
             }
             
