@@ -1397,6 +1397,25 @@
                                     </div>
                                 </div>
 
+                                <!-- Shared Images -->
+                                <div class="api-endpoint-card" onclick="showEndpointDoc('yan-public-images')" style="padding: 14px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; cursor: pointer;">
+                                    <div style="flex: 1; min-width: 250px;">
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <span style="font-size: 9px; font-weight: 700; color: #00ff88; background: rgba(0, 255, 136, 0.1); padding: 2px 6px; border-radius: 4px; font-family:'JetBrains Mono', monospace;">GET</span>
+                                            <h4 id="lbl-yan-public-images-title" style="font-size: 13px; font-weight: 600; color: var(--text-primary);">Shared Images</h4>
+                                        </div>
+                                        <code style="font-family:'JetBrains Mono', monospace; font-size:11px; color: var(--text-muted); display: block; margin-top: 4px;">/myPublicImages?key={key}</code>
+                                    </div>
+                                    <div style="display: flex; gap: 8px; align-items: center;">
+                                        <button onclick="event.stopPropagation(); window.open('https://create.thena.workers.dev/myPublicImages?key={key}', '_blank')" class="copy-btn" style="border-style: solid; padding: 4px 8px; font-size: 11px;" title="Open raw URL">
+                                            ↗
+                                        </button>
+                                        <button class="copy-btn btn-txt-view" style="border-style: solid; padding: 4px 10px; font-size: 11px;">
+                                            View Docs
+                                        </button>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>                </div>
                     </div>
@@ -1463,6 +1482,7 @@
                 yanShowcaseTitle: "Showcase Images",
                 yanCreditsTitle: "Credit Management",
                 yanGiftTitle: "Credit Sharing",
+                yanPublicImagesTitle: "Shared Images",
                 btnOpen: "Open",
  
                 introTitle: "Getting Started",
@@ -1573,6 +1593,7 @@
                 yanShowcaseTitle: "Vitrin Görselleri",
                 yanCreditsTitle: "Kredi Yönetimi",
                 yanGiftTitle: "Kredi Paylaşımı",
+                yanPublicImagesTitle: "Paylaşılan Resimler",
                 btnOpen: "Aç",
 
                 introTitle: "Başlangıç",
@@ -2435,6 +2456,38 @@
                         }
                     }
                 ]
+            },
+            'yan-public-images': {
+                method: 'GET',
+                path: '/myPublicImages?key={key}',
+                noAuth: true,
+                noErrors: true,
+                title: {
+                    en: 'Shared Images',
+                    tr: 'Paylaşılan Resimler'
+                },
+                desc: {
+                    en: 'Retrieve shared images associated with the provided API key.',
+                    tr: 'Girilen API anahtarı ile ilişkili paylaşılan resimleri getirir.'
+                },
+                isBody: false,
+                params: [
+                    { name: 'key', type: 'string', required: 'Yes', desc: { en: 'Your API key.', tr: 'Buraya API key girilecek.' } }
+                ],
+                response: [
+                    {
+                        "prompt": "",
+                        "model": "Thena Portraıts",
+                        "ratio": "768x1024",
+                        "image": "Image URL",
+                        "thumb": "Image URL (deprecated)",
+                        "uniqID_showcase": "ID",
+                        "moderation_level": "high",
+                        "extra_features": [
+                            "extra", "features"
+                        ]
+                    }
+                ]
             }
         };
 
@@ -2537,6 +2590,8 @@ print("Response:", response.json())`
             if (creditsTitleEl) creditsTitleEl.textContent = getTranslated('yanCreditsTitle');
             const giftTitleEl = document.getElementById('lbl-yan-gift-title');
             if (giftTitleEl) giftTitleEl.textContent = getTranslated('yanGiftTitle');
+            const publicImagesTitleEl = document.getElementById('lbl-yan-public-images-title');
+            if (publicImagesTitleEl) publicImagesTitleEl.textContent = getTranslated('yanPublicImagesTitle');
             
             document.querySelectorAll('.btn-txt-view').forEach(el => {
                 el.textContent = getTranslated('btnView');
@@ -3191,7 +3246,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             const doc = endpointDocs[currentActiveDocId];
             if (!doc) return;
 
-            if (doc.method === 'POST' || currentActiveDocId === 'yan-credits') {
+            if (doc.method === 'POST' || currentActiveDocId === 'yan-credits' || currentActiveDocId === 'yan-public-images') {
                 addConsoleHeaderRow('Content-Type', 'application/json');
             }
 
@@ -3710,7 +3765,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 const moderationSelect = document.getElementById('c-moderation');
                 if (moderationSelect) moderationSelect.value = "high";
 
-            } else if (id === 'yan-credits') {
+            } else if (id === 'yan-credits' || id === 'yan-public-images') {
                 const keyParamInput = document.getElementById('c-key-param');
                 if (keyParamInput) keyParamInput.value = "";
             } else if (id === 'yan-gift') {
@@ -3931,7 +3986,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
 
             let consoleFieldsHtml = '';
-            if (currentActiveDocId === 'yan-credits') {
+            if (currentActiveDocId === 'yan-credits' || currentActiveDocId === 'yan-public-images') {
                 consoleFieldsHtml = `
                     <div class="console-field">
                         <label for="c-key-param">${currentLang === 'tr' ? 'API Anahtarı' : 'API Key'}</label>

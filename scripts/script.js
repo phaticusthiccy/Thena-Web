@@ -168,86 +168,6 @@ const MODEL_STATS = {
 const HOT_MODELS = ["81ggz 7j661 66281 yy161 1f4f4 21143", "3c7a94a0-c844-471f-ae98-0f8c8508baf7", "8gg12 61812 6628 19729 6b4a5 5060"];
 
 const WHIMSICAL_FLAME_SVG = `
-<style>
-@keyframes lw-spin {
-    0% { transform: translate(-50%, -50%) rotate(0deg); }
-    100% { transform: translate(-50%, -50%) rotate(360deg); }
-}
-@keyframes lw-spin-reverse {
-    0% { transform: translate(-50%, -50%) rotate(0deg); }
-    100% { transform: translate(-50%, -50%) rotate(-360deg); }
-}
-@keyframes lw-pulse {
-    0% { box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.2), inset 0 0 10px rgba(var(--primary-rgb), 0.1); border-color: rgba(var(--primary-rgb), 0.4); }
-    50% { box-shadow: 0 0 35px rgba(var(--primary-rgb), 0.8), inset 0 0 20px rgba(var(--primary-rgb), 0.5); border-color: var(--primary); }
-    100% { box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.2), inset 0 0 10px rgba(var(--primary-rgb), 0.1); border-color: rgba(var(--primary-rgb), 0.4); }
-}
-
-.lw-flame-wrapper {
-    position: absolute;
-    inset: -3px;
-    border-radius: 11px;
-    padding: 3px;
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-    z-index: 10;
-    overflow: hidden;
-}
-
-.lw-flame-spinner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 250%;
-    height: 250%;
-    background: conic-gradient(
-        transparent 0%, 
-        transparent 25%, 
-        rgba(var(--primary-rgb), 0.5) 40%, 
-        var(--primary) 48%, 
-        #ffffff 50%, 
-        transparent 52%,
-        transparent 75%,
-        rgba(var(--primary-rgb), 0.5) 90%,
-        var(--primary) 98%,
-        #ffffff 100%
-    );
-    animation: lw-spin 3s linear infinite;
-    pointer-events: none;
-}
-
-.lw-flame-spinner-2 {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 250%;
-    height: 250%;
-    background: conic-gradient(
-        transparent 0%, 
-        transparent 35%, 
-        rgba(var(--primary-rgb), 0.3) 45%, 
-        #ffffff 50%, 
-        transparent 55%,
-        transparent 85%,
-        rgba(var(--primary-rgb), 0.3) 95%,
-        #ffffff 100%
-    );
-    animation: lw-spin-reverse 5s linear infinite;
-    pointer-events: none;
-}
-
-.lw-flame-glow {
-    position: absolute;
-    inset: 0;
-    border-radius: 10px;
-    border: 2px solid var(--primary);
-    animation: lw-pulse 2s ease-in-out infinite;
-    pointer-events: none;
-    z-index: 9;
-}
-</style>
 <div class="whimsical-flame-effect" style="position: absolute; inset: 0; z-index: 10; pointer-events: none;">
     <div class="lw-flame-glow"></div>
     <div class="lw-flame-wrapper">
@@ -258,195 +178,6 @@ const WHIMSICAL_FLAME_SVG = `
 `;
 
 const PAID_MODEL_EFFECT_SVG = `
-<style>
-@keyframes lw-paid-pulse {
-    0% { 
-        box-shadow: 0 0 6px rgba(var(--primary-rgb), 0.15), inset 0 0 4px rgba(var(--primary-rgb), 0.05); 
-        border-color: rgba(var(--primary-rgb), 0.25); 
-    }
-    50% { 
-        box-shadow: 0 0 16px rgba(var(--primary-rgb), 0.38), inset 0 0 8px rgba(var(--primary-rgb), 0.12); 
-        border-color: rgba(var(--primary-rgb), 0.45); 
-    }
-    100% { 
-        box-shadow: 0 0 6px rgba(var(--primary-rgb), 0.15), inset 0 0 4px rgba(var(--primary-rgb), 0.05); 
-        border-color: rgba(var(--primary-rgb), 0.25); 
-    }
-}
-
-@keyframes lw-paid-glide {
-    0% {
-        transform: rotate(45deg) translateX(-80px);
-        opacity: 0;
-    }
-    4% {
-        opacity: 1;
-    }
-    18% {
-        transform: rotate(45deg) translateX(320px);
-        opacity: 0;
-    }
-    100% {
-        transform: rotate(45deg) translateX(320px);
-        opacity: 0;
-    }
-}
-
-@keyframes lw-paid-float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-4px); }
-}
-
-.lw-paid-wrapper {
-    position: absolute;
-    inset: 0;
-    border-radius: 12px;
-    padding: 3.5px;
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-    z-index: 10;
-    overflow: hidden;
-}
-
-.lw-paid-spinner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 250%;
-    height: 250%;
-    background: conic-gradient(
-        from 0deg,
-        transparent 0%, 
-        transparent 50%,
-        rgba(var(--primary-rgb), 0.3) 75%, 
-        var(--primary) 92%, 
-        #ffffff 100%
-    );
-    animation: lw-spin 3.5s linear infinite;
-    pointer-events: none;
-}
-
-.lw-paid-glow {
-    position: absolute;
-    inset: 0;
-    border-radius: 12px;
-    border: 1px solid rgba(var(--primary-rgb), 0.25);
-    animation: lw-paid-pulse 3s ease-in-out infinite;
-    pointer-events: none;
-    z-index: 9;
-}
-
-.paid-model-effect {
-    position: absolute;
-    inset: 0;
-    z-index: 10;
-    pointer-events: none;
-    overflow: hidden;
-    border-radius: 12px;
-}
-
-.lw-paid-sparkles-container {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 11;
-}
-
-.lw-paid-sparkle-item {
-    position: absolute;
-    width: 60px;
-    height: 1.5px;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 40%, rgba(255, 255, 255, 0.8) 80%, #fff 100%);
-    opacity: 0;
-    pointer-events: none;
-    transform-origin: left center;
-}
-
-.lw-paid-sparkle-item::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translate(50%, -50%);
-    width: 4px;
-    height: 4px;
-    background: #fff;
-    border-radius: 50%;
-    box-shadow: 0 0 6px 1px #fff, 0 0 10px 2px var(--primary);
-}
-
-.lw-paid-sparkle-item.sp-1 {
-    top: -10%;
-    left: 15%;
-    animation: lw-paid-glide 5.5s linear infinite;
-    animation-delay: 0s;
-}
-.lw-paid-sparkle-item.sp-2 {
-    top: 25%;
-    left: -20%;
-    animation: lw-paid-glide 6.2s linear infinite;
-    animation-delay: 1.5s;
-}
-.lw-paid-sparkle-item.sp-3 {
-    top: -20%;
-    left: 45%;
-    animation: lw-paid-glide 5.8s linear infinite;
-    animation-delay: 3s;
-}
-.lw-paid-sparkle-item.sp-4 {
-    top: 50%;
-    left: -15%;
-    animation: lw-paid-glide 6.5s linear infinite;
-    animation-delay: 4.5s;
-}
-.lw-paid-sparkle-item.sp-5 {
-    top: 10%;
-    left: -10%;
-    animation: lw-paid-glide 5s linear infinite;
-    animation-delay: 2.2s;
-}
-.lw-paid-sparkle-item.sp-6 {
-    top: 70%;
-    left: -25%;
-    animation: lw-paid-glide 6s linear infinite;
-    animation-delay: 0.8s;
-}
-.lw-paid-sparkle-item.sp-7 {
-    top: -5%;
-    left: 70%;
-    animation: lw-paid-glide 5.2s linear infinite;
-    animation-delay: 3.8s;
-}
-.lw-paid-sparkle-item.sp-8 {
-    top: 85%;
-    left: -5%;
-    animation: lw-paid-glide 6.7s linear infinite;
-    animation-delay: 2.7s;
-}
-.lw-paid-sparkle-item.sp-9 {
-    top: 40%;
-    left: -30%;
-    animation: lw-paid-glide 5.9s linear infinite;
-    animation-delay: 5.1s;
-}
-
-.out-of-view.paid-model .paid-model-effect {
-    visibility: hidden !important;
-}
-.out-of-view.paid-model,
-.out-of-view.paid-model * {
-    will-change: auto !important;
-    animation-play-state: paused !important;
-}
-body.performance-mode .paid-model .paid-model-effect {
-    display: none !important;
-}
-body.power-saver-active .paid-model .paid-model-effect {
-    visibility: hidden !important;
-}
-</style>
 <div class="paid-model-effect" style="position: absolute; inset: 0; z-index: 10; pointer-events: none;">
     <div class="lw-paid-glow"></div>
     <div class="lw-paid-wrapper">
@@ -5062,9 +4793,34 @@ const closeShareBtn = document.getElementById('btn-share-close');
 const copyShareLinkBtn = document.getElementById('btn-share-copy');
 const shareUrlDisplay = document.getElementById('share-url-display');
 
-if (shareBtn) {
-    shareBtn.addEventListener('click', async (e) => {
+const shareWarningModal = document.getElementById('share-warning-modal');
+const btnShareWarningCancel = document.getElementById('btn-share-warning-cancel');
+const btnShareWarningConfirm = document.getElementById('btn-share-warning-confirm');
+
+let handleShareUpload = null;
+
+if (shareBtn && shareWarningModal) {
+    shareBtn.addEventListener('click', (e) => {
         e.stopPropagation();
+        shareWarningModal.classList.add('active');
+    });
+
+    if (btnShareWarningCancel) {
+        btnShareWarningCancel.addEventListener('click', () => {
+            shareWarningModal.classList.remove('active');
+        });
+    }
+
+    if (shareWarningModal) {
+        shareWarningModal.addEventListener('click', (e) => {
+            if (e.target === shareWarningModal) {
+                shareWarningModal.classList.remove('active');
+            }
+        });
+    }
+
+    handleShareUpload = async () => {
+        shareWarningModal.classList.remove('active');
 
         const t = translations[currentLang];
 
@@ -5188,7 +4944,11 @@ if (shareBtn) {
             if (typeof playErrorSound === "function") playErrorSound();
             showNotification(currentLang == "tr" ? translations.tr.msgUploadFailed : translations.en.msgUploadFailed, "error");
         }
-    });
+    };
+
+    if (btnShareWarningConfirm) {
+        btnShareWarningConfirm.addEventListener('click', handleShareUpload);
+    }
 }
 
 if (closeShareBtn) {
@@ -6037,7 +5797,7 @@ if (showcaseRefresh) {
 }
 
 let currentShowcasePage = 1;
-const itemsPerShowcasePage = 8;
+const itemsPerShowcasePage = 12;
 let currentActiveShowcaseList = [];
 let isShowcaseRendering = false;
 
@@ -6158,6 +5918,14 @@ function renderShowcaseBatch() {
 
     currentShowcasePage++;
     isShowcaseRendering = false;
+
+    setTimeout(() => {
+        if (showcaseGrid && showcaseGrid.scrollHeight <= showcaseGrid.clientHeight) {
+            if ((currentShowcasePage - 1) * itemsPerShowcasePage < currentActiveShowcaseList.length) {
+                renderShowcaseBatch();
+            }
+        }
+    }, 150);
 }
 
 function applyShowcaseFilters() {
@@ -6212,6 +5980,158 @@ if (showcaseGrid) {
     });
 }
 
+const openMySharesBtn = document.getElementById('open-my-shares-btn');
+const mySharesModal = document.getElementById('my-shares-modal');
+const closeMySharesBtn = document.getElementById('close-my-shares');
+const mySharesGrid = document.getElementById('my-shares-grid');
+const mySharesLoader = document.getElementById('my-shares-loader');
+
+async function fetchMyShares() {
+    if (!mySharesGrid || !mySharesLoader) return;
+    mySharesGrid.innerHTML = '';
+    mySharesLoader.classList.remove('hidden');
+
+    const apiKeyInput = document.getElementById('api-key');
+    const apiKey = apiKeyInput ? apiKeyInput.value.trim() : '';
+
+    if (!apiKey) {
+        mySharesLoader.classList.add('hidden');
+        if (typeof showNotification === 'function') {
+            showNotification(currentLang == "tr" ? "Lütfen geçerli bir API anahtarı girin." : "Please enter a valid API key.", "error");
+        }
+        if (typeof playErrorSound === "function") playErrorSound();
+        return;
+    }
+
+    try {
+        const response = await fetch(`https://create.thena.workers.dev/myPublicImages?key=${apiKey}`);
+        if (!response.ok) {
+            if (typeof playErrorSound === "function") playErrorSound();
+            if (typeof showNotification === 'function') {
+                showNotification(currentLang == "tr" ? translations.tr.mySharesFetchErr : translations.en.mySharesFetchErr, "error");
+            }
+            return;
+        }
+
+        const data = await response.json();
+
+        if (data.length === 0) {
+            mySharesGrid.innerHTML = `<div class="empty-gallery">${currentLang == "tr" ? translations.tr.mySharesEmpty : translations.en.mySharesEmpty}</div>`;
+            return;
+        }
+
+        const t = translations[currentLang];
+        const copyMsg = t.btnShareCopied || 'Copied!';
+
+        const html = data.map((item, index) => {
+            let spanClass = '';
+
+            if (item.moderation_level !== 'high') {
+                spanClass = 'sensitive-medium';
+            }
+
+            const mappedItem = {
+                url: item.image,
+                thumb: item.thumb,
+                prompt: item.prompt,
+                model: item.model,
+                size: item.ratio,
+                timestamp: new Date().toISOString(),
+                moderation: item.moderation_level || 'high',
+                features: {}
+            };
+
+            if (Array.isArray(item.extra_features)) {
+                item.extra_features.forEach(f => {
+                    if (f === 'fastMode') mappedItem.features.fast = true;
+                    else if (f === 'denseMode') mappedItem.features.dense = true;
+                    else mappedItem.features[f] = true;
+                });
+            }
+
+            const itemData = encodeURIComponent(JSON.stringify(mappedItem));
+            const shareUrl = `https://create.thena.workers.dev/publicShowcase?id=${item.uniqID_showcase}`;
+
+            return `
+                <div class="gallery-item ${spanClass}" style="animation-delay: ${index * 50}ms" data-item="${itemData}">
+                    <img src="${item.thumb || item.image}" loading="lazy" alt="Shared Image">
+                    
+                    <div class="gallery-item-info" style="justify-content: flex-end; align-items: stretch; flex-direction: column; gap: 8px;">
+                        <div class="info-meta" style="font-size: 0.8rem; font-weight: 500; opacity: 0.9; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            ${item.model.replace(/i/g, 'I')}
+                        </div>
+                        <div style="display: flex; gap: 6px; align-items: center; width: 100%; pointer-events: auto;">
+                            <input type="text" readonly value="${shareUrl}" class="share-item-url-input" 
+                                   style="flex: 1; min-width: 0; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 4px 8px; color: #ccc; font-size: 11px; outline: none; cursor: pointer; text-overflow: ellipsis;"
+                                   onclick="event.stopPropagation(); this.select(); document.execCommand('copy'); showNotification('${copyMsg}', 'success');">
+                            <button class="gallery-copy-btn" title="Copy Link"
+                                    style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 6px; background: var(--primary); color: #000; border: none; cursor: pointer; transition: all 0.2s;"
+                                    onclick="event.stopPropagation(); const inp = this.previousElementSibling; inp.select(); document.execCommand('copy'); showNotification('${copyMsg}', 'success');">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+        }).join('');
+
+        mySharesGrid.innerHTML = html;
+
+        requestAnimationFrame(() => {
+            const newItems = mySharesGrid.querySelectorAll('.gallery-item');
+            newItems.forEach(item => item.classList.add('show'));
+        });
+
+    } catch (error) {
+        console.error('Fetch shared images error:', error);
+        mySharesGrid.innerHTML = `<div class="empty-gallery">${currentLang == "tr" ? translations.tr.mySharesFetchErr : translations.en.mySharesFetchErr}</div>`;
+        if (typeof playErrorSound === "function") playErrorSound();
+    } finally {
+        mySharesLoader.classList.add('hidden');
+    }
+}
+
+if (openMySharesBtn && mySharesModal) {
+    openMySharesBtn.addEventListener('click', () => {
+        mySharesModal.classList.add('active');
+        document.body.classList.add('no-scroll');
+        fetchMyShares();
+    });
+}
+
+if (closeMySharesBtn) {
+    closeMySharesBtn.addEventListener('click', () => {
+        mySharesModal.classList.remove('active');
+        document.body.classList.remove('no-scroll');
+    });
+}
+
+if (mySharesModal) {
+    mySharesModal.addEventListener('click', (e) => {
+        if (e.target === mySharesModal) {
+            mySharesModal.classList.remove('active');
+            document.body.classList.remove('no-scroll');
+        }
+    });
+}
+
+if (mySharesGrid) {
+    mySharesGrid.addEventListener('click', (e) => {
+        const item = e.target.closest('.gallery-item');
+        if (item) {
+            try {
+                const data = JSON.parse(decodeURIComponent(item.dataset.item));
+                data.isShowcase = true;
+                if (typeof openLightbox === "function") openLightbox(data);
+            } catch (err) {
+                console.error("Error parsing item data", err);
+            }
+        }
+    });
+}
+
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         const featModal = document.getElementById('feature-info-modal');
@@ -6249,6 +6169,12 @@ document.addEventListener('keydown', (e) => {
         const showcaseModal = document.getElementById('showcase-modal');
         if (showcaseModal && showcaseModal.classList.contains('active')) {
             showcaseModal.classList.remove('active');
+            document.body.classList.remove('no-scroll');
+        }
+
+        const mySharesModal = document.getElementById('my-shares-modal');
+        if (mySharesModal && mySharesModal.classList.contains('active')) {
+            mySharesModal.classList.remove('active');
             document.body.classList.remove('no-scroll');
         }
 

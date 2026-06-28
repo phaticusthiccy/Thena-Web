@@ -220,11 +220,12 @@ function filterModelsByTag(tag) {
                 card.style.animation = 'none';
             } else {
                 card.style.opacity = '';
-                void card.offsetWidth;
                 
                 const delay = visibleIndex * 50; 
-                card.style.animationDelay = `${delay}ms`;
-                card.classList.add('animate-filter-in');
+                requestAnimationFrame(() => {
+                    card.style.animationDelay = `${delay}ms`;
+                    card.classList.add('animate-filter-in');
+                });
             }
             visibleIndex++;
         } else {

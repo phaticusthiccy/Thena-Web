@@ -1,5 +1,106 @@
 [
   {
+    "id": "v3.8.4",
+    "version": "3.8.4",
+    "title": {
+      "en": "THENA PATCH NOTES v3.8.4",
+      "tr": "THENA GÜNCELLEME NOTLARI v3.8.4"
+    },
+    "subtitle": {
+      "en": "My Shared Images portal, new API endpoints, and performance optimizations.",
+      "tr": "Paylaştıklarım resim portali, yeni API uç noktası ve performans optimizasyonları."
+    },
+    "category": {
+      "en": "Feature Release",
+      "tr": "Özellik Güncellemesi"
+    },
+    "author": "Thena Dev Team",
+    "date": "29/06/2026",
+    "bannerImage": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80",
+    "sections": [
+      {
+        "title": {
+          "en": "MY SHARED IMAGES PORTAL",
+          "tr": "PAYLAŞTIKLARIM RESİM PORTALİ"
+        },
+        "intro": {
+          "en": "Manage your shared public gallery creations directly from the workspace dashboard.",
+          "tr": "Topluluk galerisinde paylaştığınız görselleri doğrudan kontrol panelinden yönetin."
+        },
+        "groups": [
+          {
+            "name": {
+              "en": "User Gallery Shares",
+              "tr": "Kullanıcı Paylaşımları"
+            },
+            "items": [
+              {
+                "en": "Added a dedicated 'My Shares' modal grid to view all your shared public showcase images.",
+                "tr": "Topluluk galerisinde paylaştığınız tüm resimleri listelemek için özel 'Paylaştıklarım' ızgara arayüzü eklendi."
+              },
+              {
+                "en": "Introduced a warning confirmation modal before uploading and sharing images to the public community feed.",
+                "tr": "Görselleri topluluk akışına yükleyip paylaşmadan önce kullanıcıyı bilgilenden onay kutusu eklendi."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "DEVELOPER API EXPANSION",
+          "tr": "API GELİŞTİRİCİ PORTALİ"
+        },
+        "intro": {
+          "en": "We added new integration utilities for developer pipelines.",
+          "tr": "Geliştiricilerin iş akışları için yeni entegrasyon araçları sunduk."
+        },
+        "groups": [
+          {
+            "name": {
+              "en": "Shared Images Endpoint",
+              "tr": "Paylaşılan Resimler Endpoint'i"
+            },
+            "items": [
+              {
+                "en": "Added GET /myPublicImages?key={key} API documentation to retrieve user's public image URLs.",
+                "tr": "Kullanıcının paylaştığı resimlerin URL'lerini almak için GET /myPublicImages?key={key} API uç noktası dökümantasyonu eklendi."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "PERFORMANCE & CPU OPTIMIZATIONS",
+          "tr": "PERFORMANS & CPU OPTİMİZASYONLARI"
+        },
+        "intro": {
+          "en": "Substantial engine refactoring to decrease CPU load and browser repaints.",
+          "tr": "İşlemci yükünü ve tarayıcı çizimlerini azaltmak için kapsamlı altyapı iyileştirmeleri."
+        },
+        "groups": [
+          {
+            "name": {
+              "en": "Animation & Rendering Control",
+              "tr": "Animasyon & Çizim Kontrolü"
+            },
+            "items": [
+              {
+                "en": "Optimized visibilityOptimizer.js to dynamically pause animations of offscreen components using data-vo-paused attributes.",
+                "tr": "Görünür ekranda yer almayan inaktif öğelerin animasyonlarını otomatik olarak durdurarak pil tasarrufu sağlayan visibilityOptimizer.js optimize edildi."
+              },
+              {
+                "en": "Replaced synchronous layout thrashing with requestAnimationFrame for smoother model filter transitions.",
+                "tr": "Daha akıcı model filtre geçişleri sağlamak amacıyla eşzamanlı sayfa düzeni tetiklemeleri requestAnimationFrame ile değiştirildi."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "v3.8.3",
     "version": "3.8.3",
     "title": {

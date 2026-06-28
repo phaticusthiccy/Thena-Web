@@ -203,6 +203,8 @@
         const style = document.createElement('style');
         style.id = 'vo-global-style';
         style.textContent = `
+            [data-vo-paused],
+            [data-vo-paused] *,
             [data-vo-paused]::before,
             [data-vo-paused]::after {
                 animation-play-state: paused !important;

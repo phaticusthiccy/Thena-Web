@@ -1344,6 +1344,16 @@
                         <line x1="6" y1="20" x2="6" y2="14" class="stats-icon-line stats-icon-line-3"></line>
                     </svg>
                 </button>
+                <button class="control-btn" id="open-my-shares-btn" title="Paylaştıklarım" style="margin-left: 10px; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.05); color: #fff;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="18" cy="5" r="3"></circle>
+                        <circle cx="6" cy="12" r="3"></circle>
+                        <circle cx="18" cy="19" r="3"></circle>
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                    <span id="lbl-my-shares-btn">Paylaştıklarım</span>
+                </button>
                 <button class="close-btn" id="close-gallery" style="margin-left: auto;">&times;</button>
             </div>
             <div class="gallery-controls">
@@ -1581,6 +1591,24 @@
     <div id="original-image-modal" class="confirm-modal" style="z-index: 25000;">
         <div class="confirm-content" style="max-width: 90%; max-height: 90vh; background: transparent; border: none; padding: 0; box-shadow: none; display: flex; align-items: center; justify-content: center;">
             <img id="original-image-modal-img" src="" style="max-width: 100%; max-height: 90vh; border-radius: 8px; object-fit: contain;">
+        </div>
+    </div>
+    <div id="share-warning-modal" class="confirm-modal" style="z-index: 99999999 !important;">
+        <div class="confirm-content">
+            <div class="confirm-icon" style="background: rgba(var(--primary-rgb), 0.1); color: var(--primary);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+            </div>
+            <h3 id="share-warning-title">Görseli Paylaş</h3>
+            <p id="share-warning-desc">Bu görsel sunucuya yüklenecek ve topluluk galerisinde herkese açık olarak paylaşılacaktır. Devam etmek istiyor musunuz?</p>
+            <div class="confirm-actions">
+                <button id="btn-share-warning-cancel">İptal</button>
+                <button id="btn-share-warning-confirm">Evet, Paylaş</button>
+            </div>
         </div>
     </div>
     <div id="confirm-modal" class="confirm-modal">
@@ -2096,6 +2124,25 @@
             </div>
 
             <div class="gallery-grid" id="showcase-grid">
+            </div>
+        </div>
+    </div>
+
+    <div id="my-shares-modal" class="gallery-modal my-shares-mode">
+        <div class="gallery-content my-shares-content-wrapper">
+            <div class="gallery-header">
+                <h2 class="gallery-title" id="my-shares-title">Paylaştıklarım</h2>
+                <button class="close-btn" id="close-my-shares" style="margin-left: auto;">&times;</button>
+            </div>
+
+            <div id="my-shares-loader" class="hidden">
+                <div class="loader-text">Paylaştıklarım Yükleniyor...</div>
+                <div class="loader-track">
+                    <div id="my-shares-progress-bar" class="progress-bar" style="width: 100%;"></div>
+                </div>
+            </div>
+
+            <div class="gallery-grid" id="my-shares-grid">
             </div>
         </div>
     </div>

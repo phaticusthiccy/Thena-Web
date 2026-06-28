@@ -109,6 +109,14 @@ const translations = {
         "msgPromptGenerating": "Prompt is being generated...",
         "shareTitle": "Public Share Link",
         "shareDesc": "Your image is now publicly accessible via this link. Anyone with this URL can view the image.",
+        "shareWarningTitle": "Share Image",
+        "shareWarningDesc": "This image will be uploaded to the server and shared publicly in the community gallery. Do you want to proceed?",
+        "btnConfirmShare": "Yes, Share",
+        "lblMySharesBtn": "My Shares",
+        "mySharesTitle": "My Shared Images",
+        "mySharesLoading": "Loading Shared Images...",
+        "mySharesFetchErr": "Failed to load shared images.",
+        "mySharesEmpty": "You haven't shared any images yet.",
         "btnShareCopy": "Copy Link",
         "btnShareView": "View Image",
         "btnShareWait": "Wait...",
@@ -811,6 +819,14 @@ const translations = {
         "msgPromptGenerating": "Prompt üretiliyor...",
         "shareTitle": "Genel Paylaşım Bağlantısı",
         "shareDesc": "Resminiz artık bu bağlantı üzerinden herkese açık. URL'ye sahip olan herkes resmi görüntüleyebilir.",
+        "shareWarningTitle": "Görseli Paylaş",
+        "shareWarningDesc": "Bu görsel sunucuya yüklenecek ve topluluk galerisinde herkese açık olarak paylaşılacaktır. Devam etmek istiyor musunuz?",
+        "btnConfirmShare": "Evet, Paylaş",
+        "lblMySharesBtn": "Paylaştıklarım",
+        "mySharesTitle": "Paylaştıklarım",
+        "mySharesLoading": "Paylaştıklarım Yükleniyor...",
+        "mySharesFetchErr": "Paylaştıklarım yüklenemedi.",
+        "mySharesEmpty": "Henüz hiç görsel paylaşmadınız.",
         "btnShareCopy": "Bağlantıyı Kopyala",
         "btnShareView": "Resmi Görüntüle",
         "btnShareWait": "Bekleyin...",
@@ -1764,7 +1780,11 @@ function updateLanguage(lang) {
         ["#random-prompt-modal-title", t.randomPromptTitle], ["#random-prompt-subtitle", t.randomPromptSubtitle],
         ["#btn-random-cancel", t.btnKeepOriginal], ["#btn-random-apply", t.btnRandomApply],
         ["#btn-close-settings", t.btnClose], ["#share-title", t.shareTitle], ["#share-desc", t.shareDesc],
-        ["#txt-share-view", t.btnShareView]
+        ["#txt-share-view", t.btnShareView],
+        ["#share-warning-title", t.shareWarningTitle], ["#share-warning-desc", t.shareWarningDesc],
+        ["#btn-share-warning-cancel", t.btnCancel], ["#btn-share-warning-confirm", t.btnConfirmShare],
+        ["#open-my-shares-btn", t.lblMySharesBtn], ["#lbl-my-shares-btn", t.lblMySharesBtn],
+        ["#my-shares-title", t.mySharesTitle], ["#my-shares-modal .loader-text", t.mySharesLoading]
     ]
     
     idsToSetQueryText.forEach(([id, text]) => {
