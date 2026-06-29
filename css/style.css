@@ -1649,6 +1649,15 @@ body.performance-mode .whimsical-flame-effect {
     transform: scale(0.98);
 }
 
+.generate-btn-cost {
+    font-style: italic;
+    font-size: 0.85em;
+    opacity: 0.85;
+    margin-left: 5px;
+    font-weight: normal;
+}
+
+
 .notification {
     position: fixed;
     top: 20px;

@@ -21,6 +21,9 @@ const modelSpecs = {
     "e73d4095-5fb5-40e5-ab6a-3ad7f6e1dcfd": {
         usedTechniques: ["Paid Models"],
     },
+    "9ef23216-249f-459d-90d4-5a25eceb0876": {
+        usedTechniques: ["Paid Models"],
+    },
     "0d85f61b-509b-49ba-8227-c136acaed22d": {
         usedTechniques: ["Paid Models"],
     },
@@ -319,6 +322,9 @@ window.toggleShowAllModels = async function(e) {
                 const prRes = await fetch('https://create.thena.workers.dev/modelPrices');
                 if (prRes.ok) {
                     window.galleryModelPrices = await prRes.json();
+                    if (typeof window.updateGenerateBtnText === 'function') {
+                        window.updateGenerateBtnText();
+                    }
                 }
             } catch (err) {
                 console.error(err);

@@ -1,5 +1,102 @@
 window.thenaUpdates = [
   {
+    "id": "v3.8.5",
+    "version": "3.8.5",
+    "title": {
+      "en": "THENA PATCH NOTES v3.8.5",
+      "tr": "THENA GÜNCELLEME NOTLARI v3.8.5"
+    },
+    "subtitle": {
+      "en": "Seedream 5 Lite launch, button cost display, and updated visual assets.",
+      "tr": "Seedream 5 Lite modeli, buton bakiye maliyeti gösterimi ve yenilenmiş görsel varlıklar."
+    },
+    "category": {
+      "en": "Feature Release",
+      "tr": "Özellik Güncellemesi"
+    },
+    "author": "Thena Dev Team",
+    "date": "29/06/2026",
+    "bannerImage": "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=1200&q=80",
+    "sections": [
+      {
+        "title": {
+          "en": "NEW AI MODEL RELEASE",
+          "tr": "YENİ YAPAY ZEKA MODELİ"
+        },
+        "intro": {
+          "en": "We are launching the next generation Seedream model family.",
+          "tr": "Yeni nesil Seedream model ailesinin en yeni üyesini sunuyoruz."
+        },
+        "groups": [
+          {
+            "name": {
+              "en": "Seedream 5 Lite",
+              "tr": "Seedream 5 Lite Entegrasyonu"
+            },
+            "items": [
+              {
+                "en": "Integrated Seedream 5 Lite, designed for precise instruction following, professional graphic layout designs, and cleaner details.",
+                "tr": "Çok parçalı talimatları yüksek doğrulukla takip eden, afiş ve tasarım işleri için temiz detaylar sunan Seedream 5 Lite modeli entegre edildi."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "UI & ERROR HANDLING IMPROVEMENTS",
+          "tr": "ARAYÜZ & HATA YÖNETİMİ"
+        },
+        "intro": {
+          "en": "Refining pricing visibility and error notifications.",
+          "tr": "Fiyatlandırma görünürlüğü ve hata bildirimleri iyileştirildi."
+        },
+        "groups": [
+          {
+            "name": {
+              "en": "Dynamic Pricing & Prompts",
+              "tr": "Danimik Fiyatlandırma & Prompt Yönetimi"
+            },
+            "items": [
+              {
+                "en": "Added dynamic credit cost helper text next to the image generation button for paid models.",
+                "tr": "Ücretli modeller seçildiğinde, görsel oluşturma butonunun yanında o modelin kredi maliyetini gösteren dinamik ibare eklendi."
+              },
+              {
+                "en": "Refined prompt error notifications: replaced maintenance alerts with prompt acceptance error messages when generation fails.",
+                "tr": "Hata bildirimleri güncellendi; oluşturma hatası durumunda bakım uyarısı yerine promptun model tarafından kabul edilmediğini belirten yeni hata mesajları eklendi."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "GRAPHICAL ASSETS REFRESH",
+          "tr": "GÖRSEL TASARIM REHBERİ"
+        },
+        "intro": {
+          "en": "Optimized page banners and preview thumbnails.",
+          "tr": "Sayfa afişleri ve önizleme görselleri optimize edildi."
+        },
+        "groups": [
+          {
+            "name": {
+              "en": "WebP Image Assets",
+              "tr": "WebP Grafik Dosyaları"
+            },
+            "items": [
+              {
+                "en": "Updated and optimized settings, gallery, trailer, and image generator WebP graphics inside the source directories.",
+                "tr": "Kaynak dizinlerdeki ayarlar, galeri, tanıtım ve jeneratör WebP görselleri yenilenmiş ve optimize edilmiş halleriyle güncellendi."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "v3.8.4",
     "version": "3.8.4",
     "title": {

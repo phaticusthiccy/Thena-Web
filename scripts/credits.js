@@ -447,6 +447,7 @@
             "kling30": "Kling 3.0",
             "klingo1": "Kling O1",
             "flux2pro": "Flux 2 Pro",
+            "seedream5lite": "Seedream 5 Lite",
             "seedream4": "Seedream 4",
             "nanobanana1": "Nano Banana 1",
             "midjourneyV8": "Midjourney V8",

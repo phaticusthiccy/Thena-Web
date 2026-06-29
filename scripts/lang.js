@@ -283,7 +283,7 @@ const translations = {
         "msgMaxSeed": "Maximum Seed is 900000000. Value updated.",
         "msgImgSaved": "The image has been saved to the gallery.",
         "msgLimitExceeded": "Limit Exceeded! Please wait a few seconds and try again.",
-        "modelMaintenance": "This model is currently under maintenance. Please try again later.",
+        "cantAcceptPrompt": "This model cannot accept this prompt.",
         "msgServerOverloaded": "Thena is currently overloaded. Please try again later.",
         "msgGenError": "There was an error generating the image. Please try again.",
         "msgPromptUpdated": "Prompt updated successfully!",
@@ -993,7 +993,7 @@ const translations = {
         "msgMaxSeed": "Maksimum Seed 900000000. Değer güncellendi.",
         "msgImgSaved": "Resim galeriye kaydedildi.",
         "msgLimitExceeded": "Limit tükendi! Lütfen biraz bekleyin ve tekrar deneyin.",
-        "modelMaintenance": "Bu model şu anda bakım altında. Lütfen daha sonra tekrar deneyin.",
+        "cantAcceptPrompt": "Bu model bu promptu kabul edemedi. Farklı bir model seçmeyi deneyin.",
         "msgServerOverloaded": "Thena şuanda çok yoğun. Lütfen daha sonra tekrar deneyin.",
         "msgGenError": "Resim oluşturulamadı! Lütfen tekrar deneyin.",
         "msgPromptUpdated": "Prompt başarıyla güncellendi!",
@@ -1579,7 +1579,13 @@ function updateLanguage(lang) {
 
     if (cache['prompt']) cache['prompt'].placeholder = t.promptPlaceholder;
     if (cache['api-key']) cache['api-key'].placeholder = t.apiKeyPlaceholder;
-    if (cache['generate-btn']) cache['generate-btn'].textContent = t.generateBtn;
+    if (cache['generate-btn']) {
+        if (typeof window.updateGenerateBtnText === 'function') {
+            window.updateGenerateBtnText();
+        } else {
+            cache['generate-btn'].textContent = t.generateBtn;
+        }
+    }
     if (cache['gallery-btn']) cache['gallery-btn'].textContent = t.galleryBtn;
 
     const apiKeyLabel = cache['label-api-key'];
@@ -2180,6 +2186,80 @@ function updateAppSwitcherLang(lang) {
         storiesSubtitleText.innerText = (lang === 'tr') ? translations.tr.storiesSubtitle : translations.en.storiesSubtitle;
     }
 }
+
+function updateGenerateBtnText() {
+    const btn = document.getElementById('generate-btn');
+    if (!btn) return;
+
+    const lang = typeof currentLang !== 'undefined' ? currentLang : 'en';
+    const t = translations[lang];
+    if (!t) return;
+
+    let baseText = t.generateBtn || "Generate Image";
+
+    const activeCard = document.querySelector('.model-card.active');
+    if (activeCard && activeCard.classList.contains('paid-model')) {
+        const nameEl = activeCard.querySelector('.model-name');
+        if (nameEl) {
+            const mName = nameEl.textContent.trim();
+            const mapping = window.modelKeyMapping || {
+                "GPT 2": "gpt2",
+                "Kling 3.0": "kling30",
+                "Kling O1": "klingo1",
+                "Flux 2 Pro": "flux2pro",
+                "Seedream 4": "seedream4",
+                "Seedream 5 Lite": "seedream5lite",
+                "Nano Banana 1": "nanobanana1",
+                "Midjourney V8": "midjourneyV8",
+                "Niji V7": "nijiv7",
+                "Thena Ultra": "thenaUltra",
+                "Thena Pro": "thenaPro",
+                "Thena Movie": "thenaMovie",
+                "Thena V8": "thenaV8",
+                "Thena V7": "thenaV7",
+                "Thena V6": "thenaV6",
+                "Thena Max": "thenaMax",
+                "Thena Anime Core": "thenaAnimeCore",
+                "Thena Anime Fast": "thenaAnimeFast",
+                "Thena Photoreal": "thenaPhotoreal",
+                "Thena MiniWa": "thenaMiniWa",
+                "Thena Radiant": "thenaRadiant",
+                "Thena Bloomlight": "thenaBloomlight",
+                "Thena Portraits": "thenaPortraits",
+                "Thena Florence": "thenaFlorence",
+                "Thena Alchemy": "thenaAlchemy",
+                "Thena Nyx": "thenaNyx",
+                "Thena Photoreal V2": "thenaPhotorealV2",
+                "Thena Rewave": "thenaRewave",
+                "Thena Pastel": "thenaPastel",
+                "Thena Noir": "thenaNoir",
+                "Thena Analog": "thenaAnalog",
+                "Thena Pixel": "thenaPixel",
+                "Image Editor": "imageEditor",
+                "Thena Toonish": "thenaToonish",
+                "Thena Apex": "thenaApex"
+            };
+            const propKey = mapping[mName];
+            const prices = window.galleryModelPrices || {};
+            let priceObj = null;
+            if (propKey && prices[propKey]) {
+                priceObj = prices[propKey];
+            } else if (prices[mName]) {
+                priceObj = prices[mName];
+            }
+            const creditCost = priceObj ? (priceObj.credit || 0) : 0;
+            if (creditCost > 0) {
+                const creditLabel = lang === 'tr' ? 'kredi' : 'credits';
+                btn.innerHTML = `${baseText} <span class="generate-btn-cost">(${creditCost} ${creditLabel})</span>`;
+                return;
+            }
+        }
+    }
+
+    btn.textContent = baseText;
+}
+window.updateGenerateBtnText = updateGenerateBtnText;
+
 
 document.addEventListener('DOMContentLoaded', () => {
     document.documentElement.lang = currentLang;

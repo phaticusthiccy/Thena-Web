@@ -63,6 +63,7 @@ const modelTranslationsTR = {
     "9e64c073-c526-4f73-b489-d0c28d4dd37a": "Kling 3.0 Image, gelişmiş bir yapay zeka görüntü oluşturma aracıdır. Kling O1 ve 2.6 gibi önceki sürümlerin üzerine inşa edilen ve Çok Modlu Görsel Dil (MVL) olarak bilinen birleşik bir çok modlu çerçeve sunan bu araç, yapay zeka destekli görsel oluşturmada önemli bir evrimi temsil eder.",
     "7d834fb8-ef08-4c97-b61c-1036e7113ae5": "Kling O1, Çok Modlu Görsel Dil (MVL) çerçevesi üzerine inşa edilmiş, birleşik bir çok modlu yapay zeka modelidir. Olağanüstü hızlı hizalama, hassas karakter tutarlılığı ve profesyonel yaratıcı kontrol ile yüksek kaliteli görüntü üretimi sağlamak üzere tasarlanmıştır.",
     "ff7f60c2-303a-44db-97e9-230c1767d86c": "Bu model, orijinal Flux.1'den büyük bir ilerlemeyi temsil ediyor ve basit görüntü oluşturmanın ötesine geçerek gerçek profesyonel düzeyde prodüksiyona ulaşıyor. Etkileyici bir şekilde, Flux 2 artık daha önce imkansız olan bir kontrol ve doğruluk seviyesi sunuyor.",
+    "9ef23216-249f-459d-90d4-5a25eceb0876": "Seedream 5.0, ByteDance'in en yeni Seed serisi görüntü modelidir ve \"bana güzel bir şey yap\" jeneratöründen ziyade güvenilir bir görsel üretim aracı olarak tasarlanmıştır. En önemli yükseltme basittir: Ne demek istediğinizi anlar, çok parçalı talimatları daha az sürprizle takip eder ve gerçek tasarım çalışmalarında (reklamlar, ürün görselleri, posterler, diyagramlar ve eğitim grafikleri) kullanılabilecek kadar temiz ayrıntılar oluşturur.",
     "e73d4095-5fb5-40e5-ab6a-3ad7f6e1dcfd": "Seedream 4.0, metinden görüntüye sentezleme, gelişmiş düzenleme ve çoklu görüntü birleştirme özelliklerini tek bir güçlü mimaride birleştirerek yapay zeka sanat üretimini yeniden tanımlıyor.",
     "3b3c78c3-c1ee-445b-8bb4-07452697a050": "Midjourney V8.1, V8 Alpha serisinin bir sonraki sürümüdür ve görüntü anlama, yapısal istikrar, detay kalitesi ve genel üretim yeteneğinde sürekli ilerlemeyi temsil eder. Daha yüksek çözünürlüklü çıktılar, daha karmaşık kompozisyonlar ve daha ileriye dönük yaratıcı iş akışları için tasarlanmıştır.",
     "883bw633-dsf1-df21-ff21-991728ba6610": "Niji, Midjourney'nin anime odaklı model serisidir ve özellikle illüstrasyon, karakter odaklı görseller ve stilize görsel hikaye anlatımı için geliştirilmiştir. Spellbrush ile iş birliği içinde oluşturulan Niji, daha güçlü karakter çekiciliği, etkileyici duygular, dinamik kompozisyonlar ve anime ve manga estetiğinden ilham alan bir görsel dil için optimize edilmiştir.",
@@ -106,6 +107,8 @@ const MODEL_STATS = {
     "7d834fb8-ef08-4c97-b61c-1036e7113ae5": { intel: 4, qual: 4, speed: 2 },
     // Flux 2 Pro
     "ff7f60c2-303a-44db-97e9-230c1767d86c": { intel: 4, qual: 5, speed: 2 },
+    // Seedream 5 Lite
+    "9ef23216-249f-459d-90d4-5a25eceb0876": { intel: 5, qual: 5, speed: 3 },
     // Seedream 4
     "e73d4095-5fb5-40e5-ab6a-3ad7f6e1dcfd": { intel: 4, qual: 5, speed: 2 },
     // Nano Banana 1
@@ -2479,6 +2482,10 @@ function checkFormReady() {
         document.querySelector(".generate-btn").style.cursor = "not-allowed";
         generateBtn.disabled = true;
     }
+
+    if (typeof window.updateGenerateBtnText === 'function') {
+        window.updateGenerateBtnText();
+    }
 }
 if (savedApiKey) checkFormReady();
 generateBtn.addEventListener('click', async () => {
@@ -2902,7 +2909,7 @@ generateBtn.addEventListener('click', async () => {
                 return;
             }
             if (data.status == 503) {
-                showNotification(currentLang == "tr" ? translations.tr.modelMaintenance : translations.en.modelMaintenance, 'error');
+                showNotification(currentLang == "tr" ? translations.tr.cantAcceptPrompt : translations.en.cantAcceptPrompt, 'error');
                 isGeneratingImage = false;
                 const placeholder = document.getElementById('active-generation-placeholder');
                 if (placeholder) {
@@ -7488,6 +7495,7 @@ async function loadGalleryStatistics() {
             "Kling 3.0": "kling30",
             "Kling O1": "klingo1",
             "Flux 2 Pro": "flux2pro",
+            "Seedream 5 Lite": "seedream5lite",
             "Seedream 4": "seedream4",
             "Nano Banana 1": "nanobanana1",
             "Midjourney V8": "midjourneyV8",
