@@ -661,6 +661,102 @@
         }, allInAt + 1400);
     }
 
+    function showLanguageSelectionModal(isRestart) {
+        var modal = document.getElementById('tutorial-language-modal');
+        if (!modal) {
+            if (isRestart) startCinematicIntro(); else showWelcomeModal();
+            return;
+        }
+
+        var enBtn = document.getElementById('lang-btn-en');
+        var trBtn = document.getElementById('lang-btn-tr');
+
+        modal.style.display = '';
+
+        requestAnimationFrame(function () {
+            requestAnimationFrame(function () { modal.classList.add('tut-visible'); });
+        });
+
+        function handleSelection(lang) {
+            modal.classList.remove('tut-visible');
+            setTimeout(function () {
+                modal.style.display = 'none';
+
+                localStorage.setItem('thena-language', lang);
+                document.documentElement.lang = lang;
+
+                try {
+                    if (typeof currentLang !== 'undefined') {
+                        currentLang = lang;
+                    }
+                } catch (e) {}
+
+                if (typeof updateLanguage === 'function') {
+                    updateLanguage(lang);
+                }
+                if (typeof updateAppSwitcherLang === 'function') {
+                    updateAppSwitcherLang(lang);
+                }
+
+                var sortTextEl = document.getElementById('sort-text');
+                if (sortTextEl) {
+                    sortTextEl.textContent = typeof sortNewestFirst !== 'undefined' && sortNewestFirst
+                        ? (lang === 'tr' ? 'En Yeni' : 'Newest')
+                        : (lang === 'tr' ? 'En Eski' : 'Oldest');
+                }
+
+                if (typeof window.updateDataManagementLanguage === 'function') {
+                    window.updateDataManagementLanguage();
+                }
+                if (typeof window.updateTutorialRestartLang === 'function') {
+                    window.updateTutorialRestartLang();
+                }
+                if (typeof window.updateTutorialStepLang === 'function') {
+                    window.updateTutorialStepLang();
+                }
+
+                document.querySelectorAll('.flag-text').forEach(function(el) {
+                    if (typeof translations !== 'undefined' && translations[lang]) {
+                        var card = el.closest('.model-card');
+                        if (card && card.classList.contains('paid-model')) {
+                            el.textContent = translations[lang].paidLabel || 'Paid';
+                        } else if (translations[lang].exclusiveLabel) {
+                            el.textContent = translations[lang].exclusiveLabel;
+                        }
+                    }
+                });
+
+                if (typeof renderCharacters === 'function' && typeof allCharacters !== 'undefined' && allCharacters.length > 0) {
+                    renderCharacters(allCharacters);
+                }
+
+                if (isRestart) {
+                    startCinematicIntro();
+                } else {
+                    showWelcomeModal();
+                }
+            }, 450);
+        }
+
+        function clickEn() {
+            cleanupListeners();
+            handleSelection('en');
+        }
+
+        function clickTr() {
+            cleanupListeners();
+            handleSelection('tr');
+        }
+
+        function cleanupListeners() {
+            if (enBtn) enBtn.removeEventListener('click', clickEn);
+            if (trBtn) trBtn.removeEventListener('click', clickTr);
+        }
+
+        if (enBtn) enBtn.addEventListener('click', clickEn);
+        if (trBtn) trBtn.addEventListener('click', clickTr);
+    }
+
     function showWelcomeModal() {
         var modal   = document.getElementById('tutorial-welcome-modal');
         if (!modal) return;
@@ -674,6 +770,8 @@
         if (descEl)  descEl.textContent  = tutT('tutorialWelcomeDesc');
         if (yesBtn)  yesBtn.textContent  = tutT('tutorialYes');
         if (noBtn)   noBtn.textContent   = tutT('tutorialNo');
+
+        modal.style.display = '';
 
         requestAnimationFrame(function () {
             requestAnimationFrame(function () { modal.classList.add('tut-visible'); });
@@ -718,17 +816,17 @@
                     var op = parseFloat(window.getComputedStyle(loadingScreen).opacity);
                     if (loadingScreen.classList.contains('fade-out') || op < 0.1) {
                         obs.disconnect();
-                        setTimeout(showWelcomeModal, 900);
+                        setTimeout(function () { showLanguageSelectionModal(false); }, 900);
                     }
                 });
                 obs.observe(loadingScreen, { attributes: true, attributeFilter: ['class', 'style'] });
 
                 setTimeout(function () {
                     obs.disconnect();
-                    if (localStorage.getItem('tutorialSeen') !== 'true') showWelcomeModal();
+                    if (localStorage.getItem('tutorialSeen') !== 'true') showLanguageSelectionModal(false);
                 }, 5000);
             } else {
-                setTimeout(showWelcomeModal, 900);
+                setTimeout(function () { showLanguageSelectionModal(false); }, 900);
             }
         } catch (e) {}
     }
@@ -755,7 +853,7 @@
             localStorage.removeItem('tutorialSeen');
             setTimeout(function () {
                 if (typeof playSuccessSound === 'function') playSuccessSound();
-                startCinematicIntro();
+                showLanguageSelectionModal(true);
             }, 450);
         });
 

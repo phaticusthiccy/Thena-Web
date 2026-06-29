@@ -1,5 +1,82 @@
 [
   {
+    "id": "v3.8.5-hotfix",
+    "version": "3.8.5-hotfix",
+    "title": {
+      "en": "THENA PATCH NOTES v3.8.5-HOTFIX",
+      "tr": "THENA GÜNCELLEME NOTLARI v3.8.5-HOTFIX"
+    },
+    "subtitle": {
+      "en": "Initial language selection modal, welcome flow updates, and model catalog rendering optimizations.",
+      "tr": "Başlangıç dil seçimi modalı, katılım akışı güncellemeleri ve model kataloğu render optimizasyonları."
+    },
+    "category": {
+      "en": "Hotfix Release",
+      "tr": "Hotfix Sürümü"
+    },
+    "author": "Thena Dev Team",
+    "date": "30/06/2026",
+    "bannerImage": "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&w=1200&q=80",
+    "sections": [
+      {
+        "title": {
+          "en": "INITIAL LANGUAGE SELECTION MODAL",
+          "tr": "BAŞLANGIÇ DİL SEÇİM MODALI"
+        },
+        "intro": {
+          "en": "Added a step for new users to choose their language before the intro begins.",
+          "tr": "Yeni kullanıcıların sinematik tanıtım başlamadan önce dillerini seçebilmeleri için yeni bir adım eklendi."
+        },
+        "groups": [
+          {
+            "name": {
+              "en": "Language Prompt",
+              "tr": "Dil Tercih Penceresi"
+            },
+            "items": [
+              {
+                "en": "Introduced #tutorial-language-modal at the start of the onboarding flow to set preferred language (TR/EN) before welcome messages.",
+                "tr": "Katılım akışının başlangıcına, karşılama mesajlarından önce Türkçe/İngilizce dil tercihini ayarlayan #tutorial-language-modal eklendi."
+              },
+              {
+                "en": "Synchronized language selection to reload catalog translations, active character layouts, and settings options instantly.",
+                "tr": "Dil tercihi seçildiğinde katalog çevirilerini, aktif karakter şablonlarını ve ayarlar panelini anında güncelleyecek şekilde senkronize edildi."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "MODEL CATALOG PERFORMANCE OPTIMIZATIONS",
+          "tr": "KATALOG PERFORMANS İYİLEŞTİRMELERİ"
+        },
+        "intro": {
+          "en": "Optimized catalog rendering for smoother interactions.",
+          "tr": "Daha akıcı katalog filtrelemeleri için render süreçleri optimize edildi."
+        },
+        "groups": [
+          {
+            "name": {
+              "en": "Intersection Observer & Visibility",
+              "tr": "Intersection Observer & Görünürlük Kontrolü"
+            },
+            "items": [
+              {
+                "en": "Implemented lazy IntersectionObserver tracking inside loadAllModels.js to manage card visibility and lifecycle efficiently.",
+                "tr": "Kartların görünürlük ve yaşam döngülerini performanslı yönetmek için loadAllModels.js içine lazy IntersectionObserver takibi eklendi."
+              },
+              {
+                "en": "Removed model-cards from visibilityOptimizer.js selectors list and increased mutation throttle to 500ms to reduce CPU usage.",
+                "tr": "İşlemci yükünü azaltmak amacıyla model kartları visibilityOptimizer.js listesinden çıkarıldı ve mutasyon algılama gecikmesi 500ms'ye yükseltildi."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "v3.8.5",
     "version": "3.8.5",
     "title": {

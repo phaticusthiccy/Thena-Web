@@ -644,14 +644,13 @@ textarea:focus {
     height: 24px;
     z-index: 20;
     color: rgba(255, 255, 255, 0.6);
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(4px);
+    background: rgba(10, 10, 10, 0.75);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
+    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
     cursor: pointer;
 }
 
@@ -676,9 +675,8 @@ textarea:focus {
     border-radius: 8px;
     padding: 16px;
     cursor: pointer;
-    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), border-color 0.6s ease, box-shadow 0.6s ease, filter 0.6s ease;
-    will-change: transform, opacity;
-    filter: brightness(1) saturate(1);
+    transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+    will-change: auto;
     box-shadow: 0 0 0 transparent;
     position: relative;
     overflow: hidden;
@@ -686,6 +684,9 @@ textarea:focus {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    contain: layout paint style;
+    content-visibility: auto;
+    contain-intrinsic-size: 140px;
     -webkit-user-select: none !important;
     -moz-user-select: none !important;
     -ms-user-select: none !important;
@@ -701,9 +702,9 @@ textarea:focus {
     bottom: 0;
     background-size: cover;
     background-position: center;
-    background-image: var(--bg-image);
+    background-image: var(--bg-image, none);
     opacity: 0.8;
-    transition: opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: opacity 0.3s ease, transform 0.3s ease;
     z-index: 0;
     -webkit-user-select: none !important;
     -moz-user-select: none !important;
@@ -731,7 +732,6 @@ textarea:focus {
     transform: translateY(-8px) scale(1.02);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 15px rgba(var(--primary-rgb), 0.1);
     z-index: 10;
-    filter: saturate(1.1) !important;
 }
 
 .model-card:hover .model-name {
@@ -750,12 +750,11 @@ textarea:focus {
     transform: scale(1.06);
     filter: saturate(1.1) brightness(2) !important;
     box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.4), inset 0 0 10px rgba(var(--primary-rgb), 0.1);
-    animation: active-card-glow-pulse 2s ease-in-out infinite alternate;
     -webkit-user-select: none !important;
     -moz-user-select: none !important;
     -ms-user-select: none !important;
     user-select: none !important;
-    will-change: filter, transform, box-shadow, border-color;
+    will-change: auto;
 }
 
 .model-card.active .flag-item.bg-exclusive {
@@ -880,8 +879,13 @@ textarea:focus {
     background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%);
     background-size: 200% 100%;
     animation: flag-shimmer 2.4s linear infinite;
+    animation-play-state: paused;
     border-radius: inherit;
     pointer-events: none;
+}
+
+.model-card:hover .flag-item::before {
+    animation-play-state: running;
 }
 
 @keyframes flag-shimmer {
@@ -1171,8 +1175,7 @@ body.performance-mode .whimsical-flame-effect {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.85);
     z-index: 30000;
     display: flex;
     align-items: center;
@@ -1180,7 +1183,7 @@ body.performance-mode .whimsical-flame-effect {
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
-    will-change: opacity, backdrop-filter;
+    will-change: opacity;
 }
 
 .feature-modal.active {
@@ -1252,8 +1255,6 @@ body.performance-mode .whimsical-flame-effect {
     border-radius: 6px;
     letter-spacing: 0.8px;
     pointer-events: none;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
     transition: opacity 0.2s ease, visibility 0.2s ease;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     white-space: nowrap;
@@ -1521,7 +1522,7 @@ body.performance-mode .whimsical-flame-effect {
     border-radius: 6px;
     color: #888;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     font-size: 13px;
     font-weight: 500;
     position: relative;
@@ -5090,18 +5091,16 @@ body.performance-mode .history-header {
     opacity: 0;
     visibility: hidden;
     transform: translateY(-5px);
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease, max-width 0.3s ease, max-height 0.3s ease;
     content-visibility: hidden;
     max-width: 0;
     max-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
     padding: 0;
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(15, 15, 15, 0.95);
     border: 1px solid rgba(255, 255, 255, 0.04);
     border-radius: 14px;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
 }
 
 .model-filter-container.visible {
@@ -5439,10 +5438,8 @@ body.performance-mode .filter-chip-paid::before {
         order: 10;
         max-width: 100%;
         max-height: 0;
-        background: rgba(255, 255, 255, 0.02);
+        background: rgba(15, 15, 15, 0.95);
         border: 1px solid rgba(255, 255, 255, 0.04);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
         border-radius: 14px;
         padding: 0;
     }
@@ -9683,6 +9680,7 @@ body.performance-mode .model-filter-container {
     100% { transform: translate(-50%, -50%) scale(1.25) translateZ(0); }
 }
 .out-of-view,
+.out-of-view *,
 .out-of-view::before,
 .out-of-view::after,
 .out-of-view .plasma-base-glow,
@@ -11155,8 +11153,8 @@ body.power-saver-active .hot-model .whimsical-flame-effect {
     box-shadow: 0 0 10px rgba(255, 175, 30, 0.3);
 }
 
-.model-card { will-change: auto; }
-.model-card:hover, .model-card.active { will-change: transform, box-shadow, filter; }
+.model-card:hover { will-change: transform, box-shadow, filter; }
+.model-card.active { will-change: auto; }
 .gallery-item { will-change: auto; }
 .gallery-item:hover { will-change: transform, opacity; }
 .app-card { will-change: auto; }
@@ -11220,8 +11218,8 @@ body.power-saver-active .hot-model .whimsical-flame-effect {
 }
 
 @supports (contain: paint) {
-    .model-card, .gallery-item, .mg-card, .char-card { contain: layout paint; }
-    .model-card:hover, .model-card.active, .gallery-item:hover, .mg-card:hover { contain: layout; }
+    .gallery-item, .mg-card, .char-card { contain: layout paint; }
+    .gallery-item:hover, .mg-card:hover { contain: layout; }
 }
 
 #view-ai-stories {

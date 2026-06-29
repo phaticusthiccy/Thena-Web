@@ -3,14 +3,11 @@
 
     const CFG = {
         ANIMATED_SELECTORS: [
-            '.model-card',
             '.gallery-item',
             '.showcase-item',
             '.app-card',
             '.char-card',
             '.char-card-inner',
-            '.flag-item',
-            '.flag-item.bg-exclusive',
             '.plasma-ring',
             '.plasma-svg',
             '[class*="plasma"]',
@@ -39,7 +36,6 @@
 
         BACKDROP_SELECTORS: [
             '.notification',
-            '.model-info-icon-wrapper',
             '#moderation-btn',
             '#editor-moderation-btn',
             '.gallery-item .gallery-overlay',
@@ -71,7 +67,7 @@
             '#lightbox.active',
         ],
         ROOT_MARGIN: '50px',
-        MUTATION_THROTTLE_MS: 250,
+        MUTATION_THROTTLE_MS: 500,
     };
 
     let _observer = null;

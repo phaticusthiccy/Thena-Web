@@ -116,6 +116,88 @@ function sortModels(modelsToSort, criteria) {
     });
 }
 
+let _cardEffectObserver = null;
+const _effectInjectedSet = new WeakSet();
+const _bgLoadedSet = new WeakSet();
+const MAX_STAGGER_CARDS = 6;
+
+function _injectCardEffect(card) {
+    if (_effectInjectedSet.has(card)) return;
+    _effectInjectedSet.add(card);
+    
+    const effectType = card.dataset.effect;
+    if (effectType === 'hot' && typeof WHIMSICAL_FLAME_SVG !== 'undefined') {
+        card.insertAdjacentHTML('afterbegin', WHIMSICAL_FLAME_SVG);
+    } else if (effectType === 'paid' && typeof PAID_MODEL_EFFECT_SVG !== 'undefined') {
+        card.insertAdjacentHTML('afterbegin', PAID_MODEL_EFFECT_SVG);
+    }
+}
+
+function _removeCardEffect(card) {
+    if (!_effectInjectedSet.has(card)) return;
+    _effectInjectedSet.delete(card);
+    
+    const flame = card.querySelector('.whimsical-flame-effect');
+    if (flame) flame.remove();
+    const paid = card.querySelector('.paid-model-effect');
+    if (paid) paid.remove();
+}
+
+function _loadCardBackground(card) {
+    if (_bgLoadedSet.has(card)) return;
+    const preview = card.dataset.preview;
+    if (!preview) return;
+    _bgLoadedSet.add(card);
+    card.style.setProperty('--bg-image', `url('${preview}')`);
+}
+
+function _unloadCardBackground(card) {
+    if (!_bgLoadedSet.has(card)) return;
+    _bgLoadedSet.delete(card);
+    card.style.removeProperty('--bg-image');
+}
+
+function _initCardEffectObserver() {
+    if (_cardEffectObserver) {
+        _cardEffectObserver.disconnect();
+    }
+    
+    _cardEffectObserver = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+            const card = entry.target;
+            if (entry.isIntersecting) {
+                card.classList.remove('out-of-view');
+                _injectCardEffect(card);
+                _loadCardBackground(card);
+            } else {
+                card.classList.add('out-of-view');
+                _removeCardEffect(card);
+                _unloadCardBackground(card);
+            }
+        }
+    }, {
+        root: null,
+        rootMargin: '100px 0px',
+        threshold: 0
+    });
+}
+
+function _observeModelCards() {
+    if (!_cardEffectObserver) _initCardEffectObserver();
+    
+    const cards = document.querySelectorAll('.model-card[data-effect]');
+    cards.forEach(card => {
+        _cardEffectObserver.observe(card);
+    });
+    
+    const allCards = document.querySelectorAll('.model-card:not([data-effect])');
+    allCards.forEach(card => {
+        if (card.dataset.preview) {
+            _cardEffectObserver.observe(card);
+        }
+    });
+}
+
 function renderModels(modelsToRender) {
     const modelSelector = document.getElementById('model-selector');
     modelSelector.innerHTML = '';
@@ -126,7 +208,8 @@ function renderModels(modelsToRender) {
 
     const newHtml = modelsToRender.map((model, index) => {
         let previewImage = model.examples?.portraits?.[0] || '';
-        const delay = index * 50;
+        const delay = index < MAX_STAGGER_CARDS ? index * 50 : 0;
+        const animClass = index < MAX_STAGGER_CARDS ? 'animate-in' : '';
         const isHot = typeof HOT_MODELS !== 'undefined' && HOT_MODELS.includes(model.id);
         const isPaid = typeof modelSpecs !== 'undefined' && modelSpecs[model.id]?.usedTechniques?.includes("Paid Models");
         const isFlorence = model.id === '7367ab 279dbf 417a8 51fe3 5050';
@@ -139,12 +222,14 @@ function renderModels(modelsToRender) {
                 : `<svg class="flag-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 8c-.83 0-1.5-.67-1.5-1.5S4.67 5 5.5 5 7 5.67 7 6.5 6.33 8 5.5 8z"/></svg>`
               );
         
+        const effectAttr = isHot ? 'data-effect="hot"' : (isPaid ? 'data-effect="paid"' : '');
+        
         return `
-            <div class="model-card animate-in ${isHot ? 'hot-model' : ''} ${isPaid ? 'paid-model' : ''}" 
+            <div class="model-card ${animClass} out-of-view ${isHot ? 'hot-model' : ''} ${isPaid ? 'paid-model' : ''}" 
                  data-model-id="${model.id}" 
                  data-preview="${previewImage}"
-                 style="animation-delay: ${delay}ms; --bg-image: url('${previewImage}')">
-                 ${isHot ? WHIMSICAL_FLAME_SVG : (isPaid ? PAID_MODEL_EFFECT_SVG : '')}
+                 ${effectAttr}
+                 ${delay ? `style="animation-delay: ${delay}ms"` : ''}>
                 <div class="model-info-icon-wrapper" title="Model Details">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10"></circle>
@@ -167,16 +252,16 @@ function renderModels(modelsToRender) {
             card.classList.add('active');
             if (typeof createConfetti === 'function') createConfetti(card);
         }
-        const previewImage = card.dataset.preview;
-        if (previewImage) card.style.filter = 'saturate(0.3)';
+    });
+    
+    requestAnimationFrame(() => {
+        _observeModelCards();
     });
 }
 
 function filterModelsByTag(tag) {
     const cards = document.querySelectorAll('.model-card');
     const isPerfMode = document.body.classList.contains('performance-mode');
-    
-    let visibleIndex = 0;
 
     cards.forEach(card => {
         const id = card.dataset.modelId;
@@ -213,28 +298,20 @@ function filterModelsByTag(tag) {
             }
         }
         card.classList.remove('animate-filter-in');
-        card.style.animationDelay = '0s';
+        card.style.animationDelay = '';
         if (isVisible) {
             card.style.display = 'flex';
-
-            if (isPerfMode) {
-                card.style.opacity = '1';
-                card.style.transform = 'none';
-                card.style.animation = 'none';
-            } else {
-                card.style.opacity = '';
-                
-                const delay = visibleIndex * 50; 
-                requestAnimationFrame(() => {
-                    card.style.animationDelay = `${delay}ms`;
-                    card.classList.add('animate-filter-in');
-                });
-            }
-            visibleIndex++;
+            card.style.opacity = '1';
+            card.style.transform = '';
+            card.style.animation = '';
         } else {
             card.style.display = 'none';
             card.style.opacity = '';
         }
+    });
+    
+    requestAnimationFrame(() => {
+        _observeModelCards();
     });
 }
 

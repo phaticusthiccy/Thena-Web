@@ -215,20 +215,22 @@ let isMuted = localStorage.getItem('thena-mute-mode') === 'true';
 
 function playTone(type, freqStart, freqEnd, duration, delay = 0, volume = 0.1) {
     if (isMuted) return;
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = type;
-    osc.frequency.setValueAtTime(freqStart, audioCtx.currentTime + delay);
-    if (freqEnd) {
-        osc.frequency.exponentialRampToValueAtTime(freqEnd, audioCtx.currentTime + delay + duration);
-    }
-    gain.gain.setValueAtTime(volume, audioCtx.currentTime + delay);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + delay + duration);
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.start(audioCtx.currentTime + delay);
-    osc.stop(audioCtx.currentTime + delay + duration);
+    setTimeout(() => {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freqStart, audioCtx.currentTime + delay);
+        if (freqEnd) {
+            osc.frequency.exponentialRampToValueAtTime(freqEnd, audioCtx.currentTime + delay + duration);
+        }
+        gain.gain.setValueAtTime(volume, audioCtx.currentTime + delay);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + delay + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(audioCtx.currentTime + delay);
+        osc.stop(audioCtx.currentTime + delay + duration + 0.1);
+    }, 10);
 }
 
 function playStartSound() {
@@ -2159,9 +2161,10 @@ async function loadModels() {
                 : `<svg class="flag-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 8c-.83 0-1.5-.67-1.5-1.5S4.67 5 5.5 5 7 5.67 7 6.5 6.33 8 5.5 8z"/></svg>`
               );
 
+        const effectAttr = isHot ? 'data-effect="hot"' : (isPaid ? 'data-effect="paid"' : '');
+
         return `
-                        <div class="model-card ${isHot ? 'hot-model' : ''} ${isPaid ? 'paid-model' : ''}" data-model-id="${model.id}" data-preview="${previewImage}">
-                            ${isHot ? WHIMSICAL_FLAME_SVG : (isPaid ? PAID_MODEL_EFFECT_SVG : '')}
+                        <div class="model-card out-of-view ${isHot ? 'hot-model' : ''} ${isPaid ? 'paid-model' : ''}" data-model-id="${model.id}" data-preview="${previewImage}" ${effectAttr}>
                             <div class="model-info-icon-wrapper" title="Model Details">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
@@ -2174,6 +2177,12 @@ async function loadModels() {
                         </div>
                     `;
     }).join('');
+
+    requestAnimationFrame(() => {
+        if (typeof _observeModelCards === 'function') {
+            _observeModelCards();
+        }
+    });
 
     if (modelSelector && !modelSelector.hasAttribute('data-delegated')) {
         modelSelector.setAttribute('data-delegated', 'true');
@@ -2375,57 +2384,56 @@ function createConfetti(element) {
         '#ffffff'
     ];
 
-    const particleCount = 20;
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
+    requestAnimationFrame(() => {
+        const fragment = document.createDocumentFragment();
+        const particleCount = 20;
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
 
-    for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'confetti';
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'confetti';
 
-        const side = Math.floor(Math.random() * 4);
-        let startX, startY;
+            const side = Math.floor(Math.random() * 4);
+            let startX, startY;
 
-        switch (side) {
-            case 0:
-                startX = rect.left + Math.random() * rect.width;
-                startY = rect.top;
-                break;
-            case 1:
-                startX = rect.right;
-                startY = rect.top + Math.random() * rect.height;
-                break;
-            case 2:
-                startX = rect.left + Math.random() * rect.width;
-                startY = rect.bottom;
-                break;
-            case 3:
-                startX = rect.left;
-                startY = rect.top + Math.random() * rect.height;
-                break;
+            switch (side) {
+                case 0:
+                    startX = rect.left + Math.random() * rect.width;
+                    startY = rect.top;
+                    break;
+                case 1:
+                    startX = rect.right;
+                    startY = rect.top + Math.random() * rect.height;
+                    break;
+                case 2:
+                    startX = rect.left + Math.random() * rect.width;
+                    startY = rect.bottom;
+                    break;
+                case 3:
+                    startX = rect.left;
+                    startY = rect.top + Math.random() * rect.height;
+                    break;
+            }
+
+            particle.style.left = startX + 'px';
+            particle.style.top = startY + 'px';
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+            const angle = Math.atan2(startY - centerY, startX - centerX);
+            const velocity = 60 + Math.random() * 50;
+            const tx = Math.cos(angle) * velocity;
+            const ty = Math.sin(angle) * velocity;
+
+            particle.style.setProperty('--tx', tx + 'px');
+            particle.style.setProperty('--ty', ty + 'px');
+            particle.style.animation = `confetti-burst ${0.6 + Math.random() * 0.4}s ease-out forwards`;
+
+            fragment.appendChild(particle);
+            setTimeout(() => particle.remove(), 1000);
         }
-
-        particle.style.left = startX + 'px';
-        particle.style.top = startY + 'px';
-
-        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
-
-        const angle = Math.atan2(startY - centerY, startX - centerX);
-
-        const velocity = 60 + Math.random() * 50;
-
-        const tx = Math.cos(angle) * velocity;
-        const ty = Math.sin(angle) * velocity;
-
-        particle.style.setProperty('--tx', tx + 'px');
-        particle.style.setProperty('--ty', ty + 'px');
-
-        document.body.appendChild(particle);
-
-        particle.style.animation = `confetti-burst ${0.6 + Math.random() * 0.4}s ease-out forwards`;
-
-        setTimeout(() => particle.remove(), 1000);
-    }
+        document.body.appendChild(fragment);
+    });
 }
 document.querySelectorAll('.aspect-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -7705,7 +7713,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (!_visibilityObserver) return;
         const heavyElements = document.querySelectorAll(`
-            .model-card, 
             .glitch-text, 
             .plasma-container,
             .model-suggest-blink,
@@ -7728,7 +7735,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const mutObs = new MutationObserver(function() {
             if (_observeTimeout) clearTimeout(_observeTimeout);
-            _observeTimeout = setTimeout(_observeHeavyElements, 1000);
+            _observeTimeout = setTimeout(_observeHeavyElements, 1500);
         });
         mutObs.observe(document.body, { childList: true, subtree: true });
     }
