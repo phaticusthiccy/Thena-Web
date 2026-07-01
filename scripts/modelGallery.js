@@ -60,6 +60,7 @@
         "Flux 2 Pro": "flux2pro",
         "Seedream 4": "seedream4",
         "Seedream 5 Lite": "seedream5lite",
+        "Nano Banana 2 Lite": "nanobanana2lite",
         "Nano Banana 1": "nanobanana1",
         "Midjourney V8": "midjourneyV8",
         "Niji V7": "nijiv7",

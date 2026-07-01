@@ -229,20 +229,16 @@ function renderUpdateDetails(index) {
     }
     
     container.innerHTML = `
-        <!-- Cyber Banner Container -->
         <div class="patch-banner-container">
             <img src="${update.bannerImage}" class="patch-banner-img" alt="${titleText}" onerror="this.src='https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80'">
             <div class="patch-banner-overlay"></div>
-            <!-- Brackets HUD Frame -->
             <div class="patch-hud-frame">
                 <div class="patch-hud-frame-tr"></div>
                 <div class="patch-hud-frame-bl"></div>
             </div>
-            <!-- Floating cyber Version badge -->
             <div class="patch-banner-version-badge">${update.id}</div>
         </div>
         
-        <!-- Header Info -->
         <div class="patch-info-container">
             <h1 class="patch-title">${titleText}</h1>
             <p class="patch-subtitle">${subtitleText}</p>
@@ -256,7 +252,6 @@ function renderUpdateDetails(index) {
             <div class="patch-info-divider"></div>
         </div>
         
-        <!-- Body Content -->
         <div class="patch-body-container">
             ${sectionsHtml}
         </div>

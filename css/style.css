@@ -3068,6 +3068,29 @@ body.performance-mode .whimsical-flame-effect {
     box-shadow: 0 5px 15px rgba(var(--primary-rgb), 0.3);
 }
 
+#btn-eta-cancel {
+    background: #1a1a1a;
+    color: #fff;
+    border-color: #333;
+}
+
+#btn-eta-cancel:hover {
+    background: #252525;
+    border-color: #555;
+}
+
+#btn-eta-confirm {
+    background: var(--primary);
+    color: #000;
+    border: none;
+    box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.2);
+}
+
+#btn-eta-confirm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(var(--primary-rgb), 0.4);
+}
+
 .notification.busy-alert {
     top: 90px;
     border-color: #ffaa00;

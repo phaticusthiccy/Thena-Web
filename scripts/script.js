@@ -67,6 +67,7 @@ const modelTranslationsTR = {
     "e73d4095-5fb5-40e5-ab6a-3ad7f6e1dcfd": "Seedream 4.0, metinden görüntüye sentezleme, gelişmiş düzenleme ve çoklu görüntü birleştirme özelliklerini tek bir güçlü mimaride birleştirerek yapay zeka sanat üretimini yeniden tanımlıyor.",
     "3b3c78c3-c1ee-445b-8bb4-07452697a050": "Midjourney V8.1, V8 Alpha serisinin bir sonraki sürümüdür ve görüntü anlama, yapısal istikrar, detay kalitesi ve genel üretim yeteneğinde sürekli ilerlemeyi temsil eder. Daha yüksek çözünürlüklü çıktılar, daha karmaşık kompozisyonlar ve daha ileriye dönük yaratıcı iş akışları için tasarlanmıştır.",
     "883bw633-dsf1-df21-ff21-991728ba6610": "Niji, Midjourney'nin anime odaklı model serisidir ve özellikle illüstrasyon, karakter odaklı görseller ve stilize görsel hikaye anlatımı için geliştirilmiştir. Spellbrush ile iş birliği içinde oluşturulan Niji, daha güçlü karakter çekiciliği, etkileyici duygular, dinamik kompozisyonlar ve anime ve manga estetiğinden ilham alan bir görsel dil için optimize edilmiştir.",
+    "0d48d936-a562-4739-b493-4f7ec81c1578": "Nano Banana 2 Lite, Google'ın Nano Banana görüntü ailesinden hızlı, hafif ve uygun maliyetli bir yapay zeka görüntü oluşturma ve düzenleme modelidir. Lite sürümü olarak hız ve ölçeklenebilirliğe odaklanmıştır. Daha geniş Nano Banana serisinin pratik güçlü yönlerini korur.",
     "0d85f61b-509b-49ba-8227-c136acaed22d": "Google'ın Nano Banana 1'i, Gemini 2.5 Flash Görüntü mimarisiyle çalışır. Hız ve verimlilik için tasarlanan bu cihaz, hızlı, yüksek kaliteli görüntü oluşturma ve sorunsuz görsel mantık yürütme sağlayarak hızlı prototipleme ve dinamik içerik oluşturma için idealdir.",
     "8gg12 61812 6628 19729 6b4a5 5060": "Yüksek çözünürlüklü görüntüler üretebilen kapsamlı işlem sonrası teknolojisine sahip ilk modeldir. Gürültü giderme işleminden sonra gerçek LUT filtreleri ekleyerek inanılmaz görseller yaratabiliyor.",
     "551ks 8g6g8 16gga 1h8h8 6b4a5 5060": "Flux2 kaynak verileri kullanılarak Thena V6 temel modeliyle ince ayar yapılmış, damıtılmış bir model. Güçlü, hızlı, çok yönlü.",
@@ -113,6 +114,8 @@ const MODEL_STATS = {
     "e73d4095-5fb5-40e5-ab6a-3ad7f6e1dcfd": { intel: 4, qual: 5, speed: 2 },
     // Nano Banana 1
     "0d85f61b-509b-49ba-8227-c136acaed22d": { intel: 4, qual: 4, speed: 3 },
+    // Nano Banana 2 Lite
+    "0d48d936-a562-4739-b493-4f7ec81c1578": { intel: 5, qual: 4, speed: 5 },
     // Midjourney V8
     "3b3c78c3-c1ee-445b-8bb4-07452697a050": { intel: 5, qual: 5, speed: 3 },
     // Niji V7
@@ -2496,6 +2499,67 @@ function checkFormReady() {
     }
 }
 if (savedApiKey) checkFormReady();
+
+function showEtaWarningModal(totalSec) {
+    return new Promise((resolve) => {
+        const modal = document.getElementById('eta-warning-modal');
+        const confirmBtn = document.getElementById('btn-eta-confirm');
+        const cancelBtn = document.getElementById('btn-eta-cancel');
+        const descEl = document.getElementById('eta-warning-desc');
+        const titleEl = document.getElementById('eta-warning-title');
+
+        if (!modal || !confirmBtn || !cancelBtn) {
+            resolve(true);
+            return;
+        }
+
+        const t = translations[currentLang] || translations.en;
+        titleEl.textContent = t.etaWarningTitle || 'High Generation Time';
+        
+        let descText = t.etaWarningDesc || 'The selected model has a high estimated generation time (~{ETA}s). Starting this generation may take longer. Do you want to proceed?';
+        descText = descText.replace('{ETA}', totalSec);
+        descEl.innerHTML = descText;
+
+        confirmBtn.textContent = t.btnContinue || 'Continue';
+        cancelBtn.textContent = t.btnCancel || 'Cancel';
+
+        if (typeof playDeleteAllWarningSound === "function") {
+            playDeleteAllWarningSound();
+        }
+
+        modal.classList.add('active');
+
+        const cleanUp = (value) => {
+            modal.classList.remove('active');
+            confirmBtn.removeEventListener('click', onConfirm);
+            cancelBtn.removeEventListener('click', onCancel);
+            modal.removeEventListener('click', onOverlayClick);
+            resolve(value);
+        };
+
+        function onConfirm(e) {
+            e.stopPropagation();
+            cleanUp(true);
+        }
+
+        function onCancel(e) {
+            e.stopPropagation();
+            cleanUp(false);
+        }
+
+        function onOverlayClick(e) {
+            if (e.target === modal) {
+                e.stopPropagation();
+                cleanUp(false);
+            }
+        }
+
+        confirmBtn.addEventListener('click', onConfirm);
+        cancelBtn.addEventListener('click', onCancel);
+        modal.addEventListener('click', onOverlayClick);
+    });
+}
+
 generateBtn.addEventListener('click', async () => {
     if (!generateBtn.classList.contains('ready')) return;
     const currentLength = promptInput.value.trim().length;
@@ -2511,6 +2575,41 @@ generateBtn.addEventListener('click', async () => {
         showNotification(currentLang == "tr" ? translations.tr.msgPromptLong1 + maxAllowed + translations.tr.msgPromptLong2 : translations.en.msgPromptLong1 + maxAllowed + translations.en.msgPromptLong2, "error");
         return;
     }
+
+    let fetchedModelETA = null;
+    const originalBtnHTML = generateBtn.innerHTML;
+    generateBtn.disabled = true;
+    generateBtn.classList.add('generating');
+    generateBtn.innerHTML = (currentLang === 'tr' ? 'Kontrol ediliyor...' : 'Checking...') + '<span class="loading-spinner"></span>';
+
+    try {
+        const resETA = await fetch("https://create.thena.workers.dev/modelETAs");
+        fetchedModelETA = await resETA.json();
+    } catch (e) {
+        console.error("Failed to fetch model ETAs:", e);
+    }
+
+    let proceed = true;
+    if (fetchedModelETA) {
+        const _selectedModelName = models.find(m => m.id === selectedModel)?.model ?? selectedModel;
+        const _etaData = fetchedModelETA[_selectedModelName];
+        if (_etaData) {
+            const _modelLoadSec = Math.round(_etaData.modelLoadingTime ?? 0);
+            const _imgGenSec = Math.round(_etaData.imageGenerationTime ?? 0);
+            const totalSec = _modelLoadSec + _imgGenSec;
+            if (totalSec > 80) {
+                proceed = await showEtaWarningModal(totalSec);
+            }
+        }
+    }
+
+    if (!proceed) {
+        generateBtn.disabled = false;
+        generateBtn.classList.remove('generating');
+        generateBtn.innerHTML = originalBtnHTML;
+        return;
+    }
+
     playStartSound();
     const prompt = promptInput.value.trim();
     const apiKey = apiKeyInput.value.trim();
@@ -2676,8 +2775,15 @@ generateBtn.addEventListener('click', async () => {
         });
     }
 
-    var modelETA = await fetch("https://create.thena.workers.dev/modelETAs")
-    modelETA = await modelETA.json()
+    var modelETA = fetchedModelETA;
+    if (!modelETA) {
+        try {
+            var responseETA = await fetch("https://create.thena.workers.dev/modelETAs");
+            modelETA = await responseETA.json();
+        } catch (e) {
+            modelETA = {};
+        }
+    }
 
     const _selectedModelName = models.find(m => m.id === selectedModel)?.model ?? selectedModel;
     const _etaData = (modelETA && modelETA[_selectedModelName]) ? modelETA[_selectedModelName] : {};
@@ -7505,6 +7611,7 @@ async function loadGalleryStatistics() {
             "Flux 2 Pro": "flux2pro",
             "Seedream 5 Lite": "seedream5lite",
             "Seedream 4": "seedream4",
+            "Nano Banana 2 Lite": "nanobanana2lite",
             "Nano Banana 1": "nanobanana1",
             "Midjourney V8": "midjourneyV8",
             "Niji V7": "nijiv7",

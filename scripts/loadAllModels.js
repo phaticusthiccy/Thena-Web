@@ -18,6 +18,9 @@ const modelSpecs = {
     "ff7f60c2-303a-44db-97e9-230c1767d86c": {
         usedTechniques: ["Paid Models"],
     },
+    "0d48d936-a562-4739-b493-4f7ec81c1578": {
+        usedTechniques: ["Paid Models"],
+    },
     "e73d4095-5fb5-40e5-ab6a-3ad7f6e1dcfd": {
         usedTechniques: ["Paid Models"],
     },

@@ -1124,7 +1124,6 @@
 
 
         <main>
-            <!-- Introduction Section -->
             <section id="introduction">
                 <h1 id="lbl-intro-title">Getting Started</h1>
                 <p class="section-desc" id="lbl-intro-desc">Welcome to the Thena AI Developer API documentation. Thena provides a fast, robust, and highly optimized API for generating high-quality images using various cutting-edge AI models.</p>
@@ -1137,7 +1136,6 @@
                 <div class="api-options-container" style="margin-top: 30px;">
                     <h3 id="lbl-options-title" style="font-size: 16px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.5px; margin-bottom: 15px;">API CATEGORIES</h3>
                     
-                    <!-- Accordion 1: Main APIs -->
                     <div class="accordion-item" style="border: 1px solid var(--border); border-radius: 12px; margin-bottom: 15px; overflow: hidden; background: var(--bg-secondary); transition: all 0.3s;">
                         <button class="accordion-trigger" onclick="toggleAccordion('acc-main')" style="width: 100%; padding: 18px 24px; background: none; border: none; text-align: left; color: var(--text-primary); font-size: 15px; font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; align-items: center; outline: none; transition: background 0.2s;">
                             <span id="lbl-acc-main-title" style="display: flex; align-items: center; gap: 10px;">
@@ -1155,7 +1153,6 @@
                         <div class="accordion-content" id="acc-main" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background: rgba(0,0,0,0.2);">
                             <div style="padding: 10px 24px 24px 24px; display: flex; flex-direction: column; gap: 16px;">
                                 
-                                <!-- Görsel Oluşturma (Senkron) -->
                                 <div class="api-endpoint-card" onclick="showEndpointDoc('image-gen')" style="padding: 16px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
                                     <div>
                                         <div style="display: flex; align-items: center; gap: 8px;">
@@ -1163,6 +1160,19 @@
                                             <h4 id="lbl-doc-gen-async-title" style="font-size: 14px; font-weight: 600; color: var(--text-primary);">Image Generation (Sync)</h4>
                                         </div>
                                         <p id="lbl-doc-gen-async-desc" style="font-size: 12px; color: var(--text-muted); margin: 4px 0 0 0;">Create new images from text prompts synchronously.</p>
+                                        <p id="lbl-doc-gen-async-note" style="font-size: 11.5px; color: #ff5f56; background: rgba(255, 95, 86, 0.1); border: 1px solid rgba(255, 95, 86, 0.2); padding: 4px 8px; border-radius: 6px; margin-top: 8px; display: inline-block; font-weight: 500;"></p>
+                                    </div>
+                                    <span style="font-size: 11px; font-weight: 600; color: var(--primary); background: rgba(var(--primary-rgb), 0.1); padding: 4px 8px; border-radius: 6px;" class="btn-txt-view">View Docs</span>
+                                </div>
+
+                                <div class="api-endpoint-card" onclick="showEndpointDoc('image-gen-stream')" style="padding: 16px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+                                    <div>
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <span style="font-size: 9px; font-weight: 700; color: #00ccff; background: rgba(0, 204, 255, 0.1); padding: 2px 6px; border-radius: 4px; font-family:'JetBrains Mono', monospace;">POST</span>
+                                            <h4 id="lbl-doc-gen-stream-title" style="font-size: 14px; font-weight: 600; color: var(--text-primary);">Image Generation (Stream / Poll)</h4>
+                                        </div>
+                                        <p id="lbl-doc-gen-stream-desc" style="font-size: 12px; color: var(--text-muted); margin: 4px 0 0 0;">Create new images from text prompts with real-time progress streaming.</p>
+                                        <p id="lbl-doc-gen-stream-note" style="font-size: 11.5px; color: #00ccff; background: rgba(0, 204, 255, 0.1); border: 1px solid rgba(0, 204, 255, 0.2); padding: 4px 8px; border-radius: 6px; margin-top: 8px; display: inline-block; font-weight: 500;"></p>
                                     </div>
                                     <span style="font-size: 11px; font-weight: 600; color: var(--primary); background: rgba(var(--primary-rgb), 0.1); padding: 4px 8px; border-radius: 6px;" class="btn-txt-view">View Docs</span>
                                 </div>
@@ -1172,7 +1182,6 @@
                         </div>
                     </div>
 
-                    <!-- Accordion 2: Auxiliary APIs -->
                     <div class="accordion-item" style="border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--bg-secondary); transition: all 0.3s;">
                         <button class="accordion-trigger" onclick="toggleAccordion('acc-aux')" style="width: 100%; padding: 18px 24px; background: none; border: none; text-align: left; color: var(--text-primary); font-size: 15px; font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; align-items: center; outline: none; transition: background 0.2s;">
                             <span id="lbl-acc-aux-title" style="display: flex; align-items: center; gap: 10px;">
@@ -1188,7 +1197,6 @@
                         <div class="accordion-content" id="acc-aux" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background: rgba(0,0,0,0.2);">
                             <div style="padding: 10px 24px 24px 24px; display: flex; flex-direction: column; gap: 12px;">
                                 
-                                <!-- Active Models -->
                                 <div class="api-endpoint-card" onclick="showEndpointDoc('yan-models')" style="padding: 14px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; cursor: pointer;">
                                     <div style="flex: 1; min-width: 250px;">
                                         <div style="display: flex; align-items: center; gap: 8px;">
@@ -1207,7 +1215,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Model Prices -->
                                 <div class="api-endpoint-card" onclick="showEndpointDoc('yan-prices')" style="padding: 14px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; cursor: pointer;">
                                     <div style="flex: 1; min-width: 250px;">
                                         <div style="display: flex; align-items: center; gap: 8px;">
@@ -1226,7 +1233,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Model ETAs -->
                                 <div class="api-endpoint-card" onclick="showEndpointDoc('yan-etas')" style="padding: 14px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; cursor: pointer;">
                                     <div style="flex: 1; min-width: 250px;">
                                         <div style="display: flex; align-items: center; gap: 8px;">
@@ -1245,7 +1251,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Random Prompts -->
                                 <div class="api-endpoint-card" onclick="showEndpointDoc('yan-rand')" style="padding: 14px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; cursor: pointer;">
                                     <div style="flex: 1; min-width: 250px;">
                                         <div style="display: flex; align-items: center; gap: 8px;">
@@ -1264,7 +1269,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Prompt Gen -->
                                 <div class="api-endpoint-card" onclick="showEndpointDoc('yan-enh')" style="padding: 14px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; cursor: pointer;">
                                     <div style="flex: 1; min-width: 250px;">
                                         <div style="display: flex; align-items: center; gap: 8px;">
@@ -1283,7 +1287,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Total Usage -->
                                 <div class="api-endpoint-card" onclick="showEndpointDoc('yan-total')" style="padding: 14px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; cursor: pointer;">
                                     <div style="flex: 1; min-width: 250px;">
                                         <div style="display: flex; align-items: center; gap: 8px;">
@@ -1302,7 +1305,6 @@
                                     </div>
                                 </div>
 
-                                <!-- AI Characters -->
                                 <div class="api-endpoint-card" onclick="showEndpointDoc('yan-chars')" style="padding: 14px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; cursor: pointer;">
                                     <div style="flex: 1; min-width: 250px;">
                                         <div style="display: flex; align-items: center; gap: 8px;">
@@ -1321,7 +1323,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Clip Prior -->
                                 <div class="api-endpoint-card" onclick="showEndpointDoc('yan-clip')" style="padding: 14px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; cursor: pointer;">
                                     <div style="flex: 1; min-width: 250px;">
                                         <div style="display: flex; align-items: center; gap: 8px;">
@@ -1340,7 +1341,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Showcase Images -->
                                 <div class="api-endpoint-card" onclick="showEndpointDoc('yan-showcase')" style="padding: 14px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; cursor: pointer;">
                                     <div style="flex: 1; min-width: 250px;">
                                         <div style="display: flex; align-items: center; gap: 8px;">
@@ -1359,7 +1359,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Credit Management -->
                                 <div class="api-endpoint-card" onclick="showEndpointDoc('yan-credits')" style="padding: 14px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; cursor: pointer;">
                                     <div style="flex: 1; min-width: 250px;">
                                         <div style="display: flex; align-items: center; gap: 8px;">
@@ -1378,7 +1377,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Credit Sharing -->
                                 <div class="api-endpoint-card" onclick="showEndpointDoc('yan-gift')" style="padding: 14px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; cursor: pointer;">
                                     <div style="flex: 1; min-width: 250px;">
                                         <div style="display: flex; align-items: center; gap: 8px;">
@@ -1397,7 +1395,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Shared Images -->
                                 <div class="api-endpoint-card" onclick="showEndpointDoc('yan-public-images')" style="padding: 14px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; cursor: pointer;">
                                     <div style="flex: 1; min-width: 250px;">
                                         <div style="display: flex; align-items: center; gap: 8px;">
@@ -1424,10 +1421,8 @@
 
 
 
-            <!-- Endpoints Section (Dynamic Documentation Viewer) -->
             <section id="endpoints" class="dynamic-doc-section">
                 <div id="endpoints-doc-viewer" class="endpoints-viewer-card">
-                    <!-- Default placeholder will be dynamically rendered here -->
                 </div>
             </section>
 
@@ -1453,6 +1448,10 @@
                 lblAccAuxTitle: "Auxiliary API Endpoints",
                 docGenAsyncTitle: "Image Generation (Sync)",
                 docGenAsyncDesc: "Create new images from text prompts synchronously.",
+                docGenAsyncNote: "⚠️ Timeout Note: The request automatically cancels after 100 seconds.",
+                docGenStreamTitle: "Image Generation (Stream / Poll)",
+                docGenStreamDesc: "Create new images from text prompts with real-time progress streaming.",
+                docGenStreamNote: "ℹ️ Processing Note: Requests can continue running for up to 8 minutes.",
 
                 statusPending: "Coming Soon",
                 btnView: "View Docs",
@@ -1564,6 +1563,10 @@
                 lblAccAuxTitle: "Yan API Adresleri",
                 docGenAsyncTitle: "Görsel Oluşturma Dökümanı (Senkron)",
                 docGenAsyncDesc: "Yazılı istemlerden senkron olarak yeni görseller oluşturun.",
+                docGenAsyncNote: "⚠️ Önemli Not: İstek 100 saniye dolduğunda otomatik iptal olur.",
+                docGenStreamTitle: "Görsel Oluşturma (Stream / Poll)",
+                docGenStreamDesc: "Yazılı istemlerden gerçek zamanlı ilerleme akışı (stream) ile yeni görseller oluşturun.",
+                docGenStreamNote: "ℹ️ Bilgi: İstekler 8 dakika boyunca çalışmaya devam edebilir.",
 
                 statusPending: "Yakında",
                 btnView: "Dökümanı Gör",
@@ -1682,7 +1685,7 @@
                     const data = await res.json();
                     if (data && Array.isArray(data)) {
                         fetchedModels = data;
-                        if (currentActiveDocId === 'image-gen') {
+                        if (currentActiveDocId === 'image-gen' || currentActiveDocId === 'image-gen-stream') {
                             const selectEl = document.getElementById('c-model');
                             if (selectEl) {
                                 let modelOptionsHtml = '';
@@ -1837,6 +1840,207 @@
                         body: {
                             status: 415,
                             content: "Request body.height is not valid! Must be number!",
+                            image: "",
+                            bot: "t.me/ThenaAIBot",
+                            channel: "t.me/ThenaAI"
+                        }
+                    },
+                    {
+                        status: 200,
+                        body: {
+                            status: 429,
+                            content: "Reached request limit! You can't send more than 2 thena request every 60 sec",
+                            image: "",
+                            bot: "t.me/ThenaAIBot",
+                            channel: "t.me/ThenaAI"
+                        }
+                    },
+                    {
+                        status: 200,
+                        body: {
+                            status: 400,
+                            content: "Not enough credit!",
+                            image: "",
+                            bot: "t.me/ThenaAIBot",
+                            channel: "t.me/ThenaAI"
+                        }
+                    },
+                    {
+                        status: 200,
+                        body: {
+                            status: 401,
+                            content: "Not reachable! This prompt is not allowed! (NSFW content)",
+                            image: "",
+                            bot: "t.me/ThenaAIBot",
+                            channel: "t.me/ThenaAI"
+                        }
+                    },
+                    {
+                        status: 200,
+                        body: {
+                            status: 415,
+                            content: "Request body.model is not valid!",
+                            image: "",
+                            bot: "t.me/ThenaAIBot",
+                            channel: "t.me/ThenaAI"
+                        }
+                    },
+                    {
+                        status: 200,
+                        body: {
+                            status: 401,
+                            content: "Not reachable!",
+                            image: "",
+                            bot: "t.me/ThenaAIBot",
+                            channel: "t.me/ThenaAI"
+                        }
+                    },
+                    {
+                        status: 200,
+                        body: {
+                            status: 429,
+                            content: "Reached request limit! You can't send more than 50 request every 30 sec",
+                            image: "",
+                            bot: "t.me/ThenaAIBot",
+                            channel: "t.me/ThenaAI"
+                        }
+                    },
+                    {
+                        status: 200,
+                        body: {
+                            status: 503,
+                            content: "Payload error. Request was not implemented.\n\nGPU Status: %98\nDate: 2026-06-23\nID: 9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+                            image: "",
+                            bot: "t.me/ThenaAIBot",
+                            channel: "t.me/ThenaAI"
+                        }
+                    },
+                    {
+                        status: 200,
+                        body: {
+                            status: 401,
+                            content: "Not reachable! This prompt is not allowed!",
+                            image: "",
+                            bot: "t.me/ThenaAIBot",
+                            channel: "t.me/ThenaAI"
+                        }
+                    }
+                ]
+            },
+            'image-gen-stream': {
+                method: 'POST',
+                path: '/createSyncPoll',
+                authHeaderName: 'apikey',
+                authDesc: {
+                    en: 'Enter your API key here.',
+                    tr: 'Buraya API key girilecek.'
+                },
+                title: {
+                    en: 'Image Generation (Stream / Poll)',
+                    tr: 'Görsel Oluşturma Dökümanı (Stream / Poll)'
+                },
+                desc: {
+                    en: 'Generate high-quality images from a text prompt with real-time progress streaming using Server-Sent Events (SSE).',
+                    tr: 'Server-Sent Events (SSE) kullanarak gerçek zamanlı ilerleme akışı ile yazılı bir istemden (prompt) yeni görseller oluşturun.'
+                },
+                isBody: true,
+                params: [
+                    { name: 'model', type: 'string', required: 'Yes', desc: { en: 'The unique identifier of the target generative AI model to be utilized for image creation.', tr: 'Görsel üretiminde kullanılacak hedef yapay zeka modelinin benzersiz kimlik belirteci (ID).' } },
+                    { name: 'prompt', type: 'string', required: 'Yes', desc: { en: 'The detailed textual prompt describing the scene, style, subjects, and aesthetic details of the image to be generated.', tr: 'Oluşturulacak görselin kompozisyonunu, stilini, nesnelerini ve estetik detaylarını belirten ayrıntılı metin açıklaması (prompt).' } },
+                    { name: 'ratio', type: 'string', required: 'Yes', desc: { en: 'The target aspect ratio of the generated image. Supported values: `1:1`, `3:4`, `9:16`, `4:3`, `16:9`.', tr: 'Üretilecek görselin en-boy oranı çözünürlük yerleşimi. Desteklenen değerler: `1:1`, `3:4`, `9:16`, `4:3`, `16:9`.' } },
+                    { name: 'creative', type: 'boolean', required: 'Yes', desc: { en: 'Enables or disables creative mode, allowing the model to introduce stylistic variations and enhanced artistic details.', tr: 'Yaratıcı (creative) modu etkinleştirir. Modelin üretime sanatsal detaylar ve stilistik varyasyonlar katmasına izin verir.' } },
+                    { name: 'fastMode', type: 'boolean', required: 'No', desc: { en: 'Optimizes generation speed for faster processing times, at the expense of minor image quality details (default: `false`).', tr: 'Üretim hızını optimize ederek daha hızlı sonuç üretir; çok ufak detay kalitesi kayıplarına yol açabilir (varsayılan: `false`).' } },
+                    { name: 'denseMode', type: 'boolean', required: 'No', desc: { en: 'Applies an aggressive detail density multiplier to enrich the generation with complex stylistic elements and high-density textures (default: `false`).', tr: 'Görseldeki detay yoğunluğunu artırarak daha karmaşık sanatsal ögeler ve dokular eklenmesini sağlar (varsayılan: `false`).' } },
+                    { name: 'enhance', type: 'boolean', required: 'No', desc: { en: 'Enables automatic prompt enhancement, rewriting the input text to achieve higher aesthetic quality and richer descriptions (default: `false`).', tr: 'Otomatik prompt geliştirme özelliğini açar; girdi metnini daha yüksek estetik kalite ve zengin betimlemeler elde etmek için otomatik olarak yeniden yazar (varsayılan: `false`).' } },
+                    { name: 'highRes', type: 'boolean', required: 'No', desc: { en: 'Instructs the generator to process and output the image in raw PNG format instead of the standard compressed WEBP format (default: `false`).', tr: 'Üreticinin görseli standart sıkıştırılmış WEBP formatı yerine ham PNG formatında işlemesini ve kaydetmesini sağlar (varsayılan: `false`).' } },
+                    { name: 'movieFilter', type: 'boolean', required: 'No', desc: { en: 'Applies a cinematic/photorealistic grading filter to the final image (supported on `Thena Movie`, `Thena Max`, `Thena Radiant`, `Thena Alchemy`, and `Thena Nyx` models only, default: `false`).', tr: 'Nihai görsele sinematik ve fotogerçekçi bir tonlama/renk filtresi uygular (yalnızca `Thena Movie`, `Thena Max`, `Thena Radiant`, `Thena Alchemy` ve `Thena Nyx` modellerinde desteklenir, varsayılan: `false`).' } },
+                    { name: 'moderation', type: 'string', required: 'No', desc: { en: 'Defines the NSFW safety filter threshold and policy enforcement level. Options: `low`, `medium`, `high` (default: `high`).', tr: 'NSFW içerik filtreleme eşiğini ve politika denetim seviyesini belirler. Alabileceği değerler: `low`, `medium`, `high` (varsayılan: `high`).' } },
+                    { name: 'advanced', type: 'object', required: 'No', desc: { en: 'An optional object containing advanced hyperparameter configurations for fine-tuning the generation process.', tr: 'Görsel üretim sürecini ince ayarlamak için gelişmiş hiperparametre konfigürasyonlarını içeren isteğe bağlı nesne.' } },
+                    { name: 'advanced.steps', type: 'number', required: 'No', desc: { en: 'The number of diffusion denoising steps. Higher values improve image detail but increase processing time (Range: `1` to `30`).', tr: 'Difüzyon gürültü giderme adım sayısı. Yüksek değerler detayları artırır ancak üretim süresini uzatır (Aralık: `1` - `30`).' } },
+                    { name: 'advanced.seed', type: 'number', required: 'No', desc: { en: 'A unique 32-bit integer seed value to initialize the random number generator, enabling deterministic and reproducible outputs.', tr: 'Rastgele sayı üretecini başlatmak için kullanılan 32-bitlik benzersiz tamsayı (seed). Aynı tohum değeriyle tutarlı ve tekrar üretilebilir sonuçlar elde edilir.' } },
+                    { name: 'advanced.cfg_scale', type: 'number', required: 'No', desc: { en: 'Classifier-Free Guidance scale. Determines how strongly the model adheres to the input prompt text (Range: `1` to `20`).', tr: 'Yönlendirme ölçeği (CFG Scale). Modelin girilen prompt metnine ne kadar sıkı bağlı kalacağını belirler (Aralık: `1` - `20`).' } }
+                ],
+                response: `data: {"status": 202, "progress": 25}
+
+data: {"status": 202, "progress": 75}
+
+data: {"status": 200, "progress": 100, "image": "Base64 Image", "bot": "t.me/ThenaAIBot", "channel": "t.me/ThenaAI"}`,
+                errors: [
+                    {
+                        status: 200,
+                        body: {
+                            status: 401,
+                            content: "Not reachable! Please write your API key.",
+                            image: "",
+                            bot: "t.me/ThenaAIBot",
+                            channel: "t.me/ThenaAI"
+                        }
+                    },
+                    {
+                        status: 200,
+                        body: {
+                            status: 401,
+                            content: "Not reachable! This API key is not valid! (Public API)",
+                            image: "",
+                            bot: "t.me/ThenaAIBot",
+                            channel: "t.me/ThenaAI"
+                        }
+                    },
+                    {
+                        status: 200,
+                        body: {
+                            status: 423,
+                            content: "Request locked! All GPUs are full! Please use https://t.me/ThenaAIBot",
+                            image: "",
+                            bot: "t.me/ThenaAIBot",
+                            channel: "t.me/ThenaAI"
+                        }
+                    },
+                    {
+                        status: 200,
+                        body: {
+                            status: 415,
+                            content: "Request body is not valid!",
+                            image: "",
+                            bot: "t.me/ThenaAIBot",
+                            channel: "t.me/ThenaAI"
+                        }
+                    },
+                    {
+                        status: 200,
+                        body: {
+                            status: 400,
+                            content: "Request body params missing!",
+                            image: "",
+                            bot: "t.me/ThenaAIBot",
+                            channel: "t.me/ThenaAI"
+                        }
+                    },
+                    {
+                        status: 200,
+                        body: {
+                            status: 415,
+                            content: "Request body.prompt is not valid! Must be string!",
+                            image: "",
+                            bot: "t.me/ThenaAIBot",
+                            channel: "t.me/ThenaAI"
+                        }
+                    },
+                    {
+                        status: 200,
+                        body: {
+                            status: 415,
+                            content: "Request body.creative is not valid! Must be boolean!",
+                            image: "",
+                            bot: "t.me/ThenaAIBot",
+                            channel: "t.me/ThenaAI"
+                        }
+                    },
+                    {
+                        status: 200,
+                        body: {
+                            status: 415,
+                            content: "Request body.model is not valid! Must be string!",
                             image: "",
                             bot: "t.me/ThenaAIBot",
                             channel: "t.me/ThenaAI"
@@ -2575,6 +2779,14 @@ print("Response:", response.json())`
             
             document.getElementById('lbl-doc-gen-async-title').textContent = getTranslated('docGenAsyncTitle');
             document.getElementById('lbl-doc-gen-async-desc').textContent = getTranslated('docGenAsyncDesc');
+            const docGenAsyncNoteEl = document.getElementById('lbl-doc-gen-async-note');
+            if (docGenAsyncNoteEl) docGenAsyncNoteEl.textContent = getTranslated('docGenAsyncNote');
+            const docGenStreamTitleEl = document.getElementById('lbl-doc-gen-stream-title');
+            if (docGenStreamTitleEl) docGenStreamTitleEl.textContent = getTranslated('docGenStreamTitle');
+            const docGenStreamDescEl = document.getElementById('lbl-doc-gen-stream-desc');
+            if (docGenStreamDescEl) docGenStreamDescEl.textContent = getTranslated('docGenStreamDesc');
+            const docGenStreamNoteEl = document.getElementById('lbl-doc-gen-stream-note');
+            if (docGenStreamNoteEl) docGenStreamNoteEl.textContent = getTranslated('docGenStreamNote');
 
             
             document.getElementById('lbl-yan-models-title').textContent = getTranslated('yanModelsTitle');
@@ -3171,7 +3383,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 const onclickVal = btn.getAttribute('onclick') || '';
                 if (onclickVal.includes(`'${tab}'`)) {
                     btn.classList.add('active');
-                    btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    const container = btn.parentElement;
+                    if (container) {
+                        const leftPos = btn.offsetLeft - container.offsetLeft;
+                        container.scrollTo({ left: leftPos, behavior: 'smooth' });
+                    }
                 } else {
                     btn.classList.remove('active');
                 }
@@ -3740,9 +3956,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             renderActiveDoc();
             updateCodeDisplay();
             
-            const targetEl = document.getElementById('endpoints');
+            const targetEl = document.querySelector('#endpoints-doc-viewer > div:nth-child(1)') || document.getElementById('endpoints');
             if (targetEl) {
-                const offset = 80;
+                const offset = 140;
                 const bodyRect = document.body.getBoundingClientRect().top;
                 const elementRect = targetEl.getBoundingClientRect().top;
                 const elementPosition = elementRect - bodyRect;
@@ -3759,7 +3975,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             const promptInput = document.getElementById('c-prompt');
             const modelSelect = document.getElementById('c-model');
             
-            if (id === 'image-gen') {
+            if (id === 'image-gen' || id === 'image-gen-stream') {
                 if (promptInput) promptInput.value = "A cybernetic wolf in a neon city, synthwave style";
                 if (modelSelect) modelSelect.value = "flux2pro";
                 const moderationSelect = document.getElementById('c-moderation');
@@ -3800,7 +4016,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             if (!currentActiveDocId) return;
             const doc = endpointDocs[currentActiveDocId];
             if (!doc) return;
-            const responseJsonStr = JSON.stringify(doc.response, null, 2);
+            const responseJsonStr = typeof doc.response === 'string' ? doc.response : JSON.stringify(doc.response, null, 2);
             navigator.clipboard.writeText(responseJsonStr).then(() => {
                 const btn = document.getElementById('btn-copy-doc-response');
                 if (btn) {
@@ -3961,6 +4177,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let highlightedJson = '';
             if (doc.response === null || doc.response === '') {
                 highlightedJson = currentLang === 'tr' ? '(Dönen veri yok - STATUS 200 OK)' : '(No data returned - STATUS 200 OK)';
+            } else if (typeof doc.response === 'string') {
+                highlightedJson = escapeHtml(doc.response);
             } else {
                 let responseJsonStr = JSON.stringify(doc.response, null, 2);
                 highlightedJson = responseJsonStr
@@ -3973,7 +4191,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             const fullPath = `https://create.thena.workers.dev${doc.path}`;
 
             let consoleActionBtn = '';
-            if (currentActiveDocId === 'image-gen') {
+            if (currentActiveDocId === 'image-gen' || currentActiveDocId === 'image-gen-stream') {
                 consoleActionBtn = `
                     <button class="copy-btn" onclick="loadDocInConsole('${currentActiveDocId}')" style="border-style: solid; font-size: 11px; padding: 4px 10px;">
                         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 4px; vertical-align: middle;">
@@ -4044,7 +4262,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         </select>
                     </div>
                 `;
-            } else if (currentActiveDocId === 'image-gen') {
+            } else if (currentActiveDocId === 'image-gen' || currentActiveDocId === 'image-gen-stream') {
                 let promptVal = 'A cybernetic wolf in a neon city, synthwave style';
                 
                 let modelOptionsHtml = '';
@@ -4224,7 +4442,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             } else {
                 errorSectionHtml = `
                     <div class="error-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
-                        <!-- 401 -->
                         <div class="error-card premium-error-card error-card-401">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <span style="font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 800; color: #ff5f56; text-shadow: 0 0 15px rgba(255, 95, 86, 0.2);">401</span>
@@ -4234,7 +4451,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                             <p style="font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; margin: 0;">${getTranslated('err401Desc')}</p>
                         </div>
 
-                        <!-- 403 -->
                         <div class="error-card premium-error-card error-card-403">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <span style="font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 800; color: #ffbd2e; text-shadow: 0 0 15px rgba(255, 189, 46, 0.2);">403</span>
@@ -4244,7 +4460,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                             <p style="font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; margin: 0;">${getTranslated('err403Desc')}</p>
                         </div>
 
-                        <!-- 429 -->
                         <div class="error-card premium-error-card error-card-429">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <span style="font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 800; color: #ffbd2e; text-shadow: 0 0 15px rgba(255, 189, 46, 0.2);">429</span>
@@ -4254,7 +4469,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                             <p style="font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; margin: 0;">${getTranslated('err429Desc')}</p>
                         </div>
 
-                        <!-- 500 -->
                         <div class="error-card premium-error-card error-card-500">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <span style="font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 800; color: #a0a0a0; text-shadow: 0 0 15px rgba(160, 160, 160, 0.2);">500</span>
@@ -4268,7 +4482,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
 
             viewer.innerHTML = `
-                <!-- 1. API Documentation Reference Details -->
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 20px;">
                     <div>
                         <h2 style="margin: 0 0 8px 0; font-size: 20px; font-weight: 700; color: var(--text-primary); font-family: 'Inter', sans-serif; border: none; padding: 0;">${titleText}</h2>
@@ -4287,7 +4500,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
                 <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.6; margin: 0 0 24px 0; font-family: 'Inter', sans-serif;">${descText}</p>
 
-                <!-- Headers Section -->
                 <div>
                     <h3 style="font-size: 12px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.5px; margin-bottom: 12px;">${getTranslated('lblRequestHeaders')}</h3>
                     <table>
@@ -4305,10 +4517,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     </table>
                 </div>
 
-                <!-- Parameters Section -->
                 ${paramsTableHtml}
 
-                <!-- Example Response Section -->
                 <div style="margin-top: 28px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                         <h3 style="font-size: 12px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.5px; margin: 0;">${getTranslated('lblExampleResponse')}</h3>
@@ -4321,7 +4531,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
                 <hr style="border: 0; border-top: 1px solid rgba(255, 255, 255, 0.08); margin: 40px 0;">
 
-                <!-- 2. Code Examples Section -->
                 <div>
                     <h2 style="font-size: 20px; font-weight: 700; color: var(--text-primary); font-family: 'Inter', sans-serif; margin-bottom: 8px; border: none; padding: 0;">${getTranslated('examplesTitle')}</h2>
                     <p class="section-desc" style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.6; margin: 0 0 20px 0; font-family: 'Inter', sans-serif;">${getTranslated('examplesDesc')}</p>
@@ -4362,8 +4571,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
                 <hr style="border: 0; border-top: 1px solid rgba(255, 255, 255, 0.08); margin: 40px 0;">
 
-                <!-- 3. Interactive Console Section -->
-                <div>
+                <div id="interactive-console">
                     <h2 style="font-size: 20px; font-weight: 700; color: var(--text-primary); font-family: 'Inter', sans-serif; margin-bottom: 8px; border: none; padding: 0;">${getTranslated('consoleTitle')}</h2>
                     <p class="section-desc" style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.6; margin: 0 0 20px 0; font-family: 'Inter', sans-serif;">${getTranslated('consoleDesc')}</p>
 
@@ -4414,7 +4622,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
                 <hr style="border: 0; border-top: 1px solid rgba(255, 255, 255, 0.08); margin: 40px 0;">
 
-                <!-- 4. Error Codes Section -->
                 <div>
                     <h2 style="font-size: 20px; font-weight: 700; color: var(--text-primary); font-family: 'Inter', sans-serif; margin-bottom: 8px; border: none; padding: 0;">${getTranslated('errorsTitle')}</h2>
                     <p class="section-desc" style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.6; margin: 0 0 20px 0; font-family: 'Inter', sans-serif;">${getTranslated('errorsDesc')}</p>
@@ -4427,7 +4634,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             const activeTabBtn = viewer.querySelector('.code-tab.active');
             if (activeTabBtn) {
                 setTimeout(() => {
-                    activeTabBtn.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'center' });
+                    const container = activeTabBtn.parentElement;
+                    if (container) {
+                        const leftPos = activeTabBtn.offsetLeft - container.offsetLeft;
+                        container.scrollTo({ left: leftPos, behavior: 'auto' });
+                    }
                 }, 50);
             }
         }

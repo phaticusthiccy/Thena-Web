@@ -1,5 +1,106 @@
 [
   {
+    "id": "v3.8.6",
+    "version": "3.8.6",
+    "title": {
+      "en": "THENA PATCH NOTES v3.8.6",
+      "tr": "THENA GÜNCELLEME NOTLARI v3.8.6"
+    },
+    "subtitle": {
+      "en": "Nano Banana 2 Lite model release, high generation time alerts, and SSE stream API endpoints.",
+      "tr": "Nano Banana 2 Lite modeli, yüksek görsel üretim süresi uyarıları ve SSE yayın akışlı API entegrasyonu."
+    },
+    "category": {
+      "en": "Feature Release",
+      "tr": "Özellik Güncellemesi"
+    },
+    "author": "Thena Dev Team",
+    "date": "01/07/2026",
+    "bannerImage": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80",
+    "sections": [
+      {
+        "title": {
+          "en": "NEW AI MODEL RELEASE",
+          "tr": "YENİ YAPAY ZEKA MODELİ"
+        },
+        "intro": {
+          "en": "We are launching the ultra-fast Nano Banana 2 Lite model.",
+          "tr": "Aşırı hızlı yeni Nano Banana 2 Lite modelini sunuyoruz."
+        },
+        "groups": [
+          {
+            "name": {
+              "en": "Nano Banana 2 Lite",
+              "tr": "Nano Banana 2 Lite Entegrasyonu"
+            },
+            "items": [
+              {
+                "en": "Integrated Google's Nano Banana 2 Lite, a lightweight and cost-effective image generation model optimized for high rendering speed.",
+                "tr": "Google'ın hızlı görsel üretim ve düzenleme için optimize edilmiş, hafif ve uygun maliyetli Nano Banana 2 Lite modeli entegre edildi."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "HIGH GENERATION TIME ALERT",
+          "tr": "YÜKSEK ÜRETİM SÜRESİ UYARISI"
+        },
+        "intro": {
+          "en": "Added pre-generation checks for heavy models with high processing times.",
+          "tr": "Yüksek işlem süresine sahip ağır modeller için üretim öncesi kontrol mekanizması eklendi."
+        },
+        "groups": [
+          {
+            "name": {
+              "en": "ETA Warnings",
+              "tr": "Tahmini Süre Uyarısı"
+            },
+            "items": [
+              {
+                "en": "Introduced #eta-warning-modal to alert users if a selected model has a high estimated loading and generation time (> 80s).",
+                "tr": "Seçilen modelin tahmini yükleme ve görsel oluşturma süresi 80 saniyeden fazla olduğunda kullanıcıyı uyaran #eta-warning-modal eklendi."
+              },
+              {
+                "en": "Integrated Turkish and English translation files with new keys (etaWarningTitle, etaWarningDesc, btnContinue) and interactive confirm actions.",
+                "tr": "Yeni dil anahtarlarıyla (etaWarningTitle, etaWarningDesc, btnContinue) etkileşimli onaylama butonlarının Türkçe ve İngilizce dil çevirileri sağlandı."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "REAL-TIME STREAMING API ENDPOINT",
+          "tr": "GERÇEK ZAMANLI AKIŞLI API ENTEGRASYONU"
+        },
+        "intro": {
+          "en": "We added streaming progress details to the developer portal documentation.",
+          "tr": "Geliştirici portali dökümanlarına gerçek zamanlı ilerleme akışı sağlayan endpoint dökümantasyonu eklendi."
+        },
+        "groups": [
+          {
+            "name": {
+              "en": "SSE Integration",
+              "tr": "SSE Entegrasyonu"
+            },
+            "items": [
+              {
+                "en": "Documented the POST /createSyncPoll endpoint utilizing Server-Sent Events (SSE) for tracking image generation progress (e.g., 25%, 75%, 100%).",
+                "tr": "Görsel üretme ilerlemesini (örn. %25, %75, %100) adım adım takip etmek için Server-Sent Events (SSE) teknolojisini kullanan POST /createSyncPoll dökümantasyonu eklendi."
+              },
+              {
+                "en": "Fixed scroll jumping bugs on active code examples tabs for a cleaner api.html console UX.",
+                "tr": "Daha akıcı bir konsol deneyimi sağlamak amacıyla aktif kod örneği sekmelerindeki kayma ve zıplama hataları giderildi."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "v3.8.5-hotfix",
     "version": "3.8.5-hotfix",
     "title": {
