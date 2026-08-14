@@ -4817,7 +4817,6 @@ body.performance-mode .history-header {
 .lightbox-details {
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
-    padding-right: 4px;
 }
 
 .gallery-grid::-webkit-scrollbar,
@@ -11217,7 +11216,7 @@ body.power-saver-active .hot-model .whimsical-flame-effect {
 }
 
 .gallery-item img, .showcase-item img, .mg-card img { content-visibility: auto; }
-#lightbox-img { content-visibility: visible; }
+#lightbox-img { content-visibility: visible; border-radius: 22px; padding: 10px; }
 
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {

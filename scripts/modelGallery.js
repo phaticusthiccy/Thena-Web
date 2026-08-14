@@ -89,7 +89,8 @@
         "Thena Pixel": "thenaPixel",
         "Image Editor": "imageEditor",
         "Thena Toonish": "thenaToonish",
-        "Thena Apex": "thenaApex"
+        "Thena Apex": "thenaApex",
+        "Thena Max 2": "thenaMax2"
     };
     window.modelKeyMapping = modelKeyMapping;
 

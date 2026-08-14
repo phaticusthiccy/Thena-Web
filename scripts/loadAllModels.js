@@ -102,6 +102,9 @@ const modelSpecs = {
     "81ggz 7j661 66281 yy161 1f4f4 21143": {
         usedTechniques: ["General"]
     },
+    "49d3f70a-c3c6-42f4-a1ad-0493b29e165b": {
+        usedTechniques: ["General"]
+    },
     "00ac5ccc-3698-4083-abfc-885c850d4c03": {
         usedTechniques: ["Anime"]
     }

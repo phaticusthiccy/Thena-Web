@@ -92,6 +92,7 @@ const modelTranslationsTR = {
     "3c7a94a0-c844-471f-ae98-0f8c8508baf7": "Thena Ultra'dan ilham alan, gürültü tabanlı akıl yürütme yeteneğine sahip yeni nesil yapay zeka modeli. Geliştirilen ikinci akıl yürütme odaklı sürüm.",
     "db85483f-b998-4dee-b9b8-f3e1dcfb4a6d": "Thena Toonish, keskin gölgelendirmeler ve canlı renklere sahip temiz, modern anime estetiği üzerine uzmanlaşmıştır. Aşırı sade karakter portreleri, günlük yaşam sahneleri ve klasik animasyon stilleri yaratmada öne çıkar.",
     "00ac5ccc-3698-4083-abfc-885c850d4c03": "Keskin, renkli ve son derece stilize anime estetiğine adanmış bir model. Thena Apex, dinamik gölgelendirme ve zengin renk paletlerinde öne çıkarak hafif roman (light novel) kapakları ve premium illüstrasyonlar için ideal bir deneyim sunar.",
+    "49d3f70a-c3c6-42f4-a1ad-0493b29e165b": "Kapsamlı bir eğitim süreciyle eski Thena Max ve Thena Movie modellerinin bir araya getirilmesi sonucu geliştirilen yeni Max 2 modeli.",
     "524ks ffs6g8 091h8h 660a5 1dn55 1000": "Yeni difüzyon mimarisi ile oluşturulan 7. versiyon. Her resim türünde başarılı sonuçlar çıkaran, güçlü ve aşırı hızlı model."
 };
 const UNSUPPORTED_FAST_MODELS = ["551ks 8g6g8 16gga 1h8h8 6b4a5 5060"];
@@ -124,6 +125,8 @@ const MODEL_STATS = {
     "8gg12 61812 6628 19729 6b4a5 5060": { intel: 5, qual: 5, speed: 3 },
     // Thena Max
     "551ks 8g6g8 16gga 1h8h8 6b4a5 5060": { intel: 4, qual: 5, speed: 2 },
+    // Thena Max 2
+    "49d3f70a-c3c6-42f4-a1ad-0493b29e165b": { intel: 4, qual: 5, speed: 3 },
     // Thena V6
     "77h621 yy5271 gga166 hhau22 882hha 1a 3090": { intel: 4, qual: 4, speed: 3 },
     // Thena Photoreal
@@ -7468,11 +7471,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.addEventListener('beforeunload', (e) => {
-        if (isChatGeneratingImage) {
-            e.preventDefault();
-            e.returnValue = '';
-            return '';
-        }
+        const message = typeof currentLang !== 'undefined' && currentLang === 'tr' ? 'Emin misiniz?' : 'Are you sure?';
+        e.preventDefault();
+        e.returnValue = message;
+        return message;
     });
 
     window.addEventListener('keydown', (e) => {
@@ -7648,7 +7650,8 @@ async function loadGalleryStatistics() {
             "Anything to Real": "thenaToReal",
             "4K Upscale": "thenaUpscale",
             "Fusion": "thenaFusion",
-            "Gender Swap": "thenaGenderSwap"
+            "Gender Swap": "thenaGenderSwap",
+            "Thena Max 2": "thenaMax2"
         };
         
         const t = translations[currentLang];

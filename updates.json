@@ -1,5 +1,102 @@
 [
   {
+    "id": "v3.8.7",
+    "version": "3.8.7",
+    "title": {
+      "en": "THENA PATCH NOTES v3.8.7",
+      "tr": "THENA GÜNCELLEME NOTLARI v3.8.7"
+    },
+    "subtitle": {
+      "en": "Thena Max 2 model release, lightbox styling refinements, and navigation safeguards.",
+      "tr": "Thena Max 2 model lansmanı, görsel inceleme ekranı iyileştirmeleri ve sayfa ayrılma koruması."
+    },
+    "category": {
+      "en": "Feature Release",
+      "tr": "Özellik Güncellemesi"
+    },
+    "author": "Thena Dev Team",
+    "date": "14/08/2026",
+    "bannerImage": "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=1200&q=80",
+    "sections": [
+      {
+        "title": {
+          "en": "NEW AI MODEL RELEASE",
+          "tr": "YENİ YAPAY ZEKA MODELİ"
+        },
+        "intro": {
+          "en": "We are launching the next generation Thena Max 2 hybrid model.",
+          "tr": "Eski Thena Max ve Thena Movie modellerinin hibrit harmanı olan yeni Thena Max 2 modelini sunuyoruz."
+        },
+        "groups": [
+          {
+            "name": {
+              "en": "Thena Max 2 Integration",
+              "tr": "Thena Max 2 Entegrasyonu"
+            },
+            "items": [
+              {
+                "en": "Integrated Thena Max 2, developed by merging Thena Max and Thena Movie models through extensive fine-tuning.",
+                "tr": "Kapsamlı bir eğitim süreciyle Thena Max ve Thena Movie modellerini bir araya getiren yeni Thena Max 2 modeli entegre edildi."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "UI & LIGHTBOX STYLING",
+          "tr": "ARAYÜZ & LIGHTBOX İYİLEŞTİRMELERİ"
+        },
+        "intro": {
+          "en": "Visual refinements for image preview lightbox containers.",
+          "tr": "Görsel inceleme penceresi (lightbox) için estetik ve düzen ayarlamaları yapıldı."
+        },
+        "groups": [
+          {
+            "name": {
+              "en": "Lightbox Polish",
+              "tr": "Lightbox Düzenlemeleri"
+            },
+            "items": [
+              {
+                "en": "Applied smooth rounded corners and padding to lightbox modal image previews (#lightbox-img).",
+                "tr": "Lightbox görsel inceleme modali resim önizlemelerine yumuşak yuvarlatılmış köşeler ve iç boşluklar eklendi."
+              },
+              {
+                "en": "Optimized scrollbar padding for image detail meta containers.",
+                "tr": "Görsel detay panellerindeki kaydırma çubuğu boşlukları optimize edildi."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "NAVIGATION SAFEGUARD",
+          "tr": "SAYFA AYRILMA KORUMASI"
+        },
+        "intro": {
+          "en": "Added browser close/reload prompt protection to prevent accidental loss of work.",
+          "tr": "Yanlışlıkla sayfanın kapatılmasını veya yenilenmesini önlemek için koruma uyarısı eklendi."
+        },
+        "groups": [
+          {
+            "name": {
+              "en": "Page Leave Prompt",
+              "tr": "Ayrılma Onay Uyarısı"
+            },
+            "items": [
+              {
+                "en": "Updated beforeunload event listener to display a localized confirmation prompt ('Emin misiniz?' / 'Are you sure?') before leaving the page.",
+                "tr": "Sayfadan ayrılmadan önce kullanıcıdan onay alan yerelleştirilmiş uyarı mekanizması ('Emin misiniz?' / 'Are you sure?') güncellendi."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "v3.8.6",
     "version": "3.8.6",
     "title": {
