@@ -66,6 +66,9 @@ const modelSpecs = {
     "7ca6e691-cecd-4a8d-bb88-d2c6303576a1": {
         usedTechniques: ["General", "NSFW"]
     },
+    "4ceb1c3e-3cdb-4158-8166-62b6d17e0901": {
+        usedTechniques: ["General"]
+    },
     "176ks dd131 81927 a1165 p00183 6000": {
         usedTechniques: ["NSFW", "Photorealism"]
     },
@@ -126,9 +129,14 @@ let _cardEffectObserver = null;
 const _effectInjectedSet = new WeakSet();
 const _bgLoadedSet = new WeakSet();
 const MAX_STAGGER_CARDS = 6;
+const modelCardLiteMedia = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+function useLightModelCards() {
+    return modelCardLiteMedia.matches || document.body.classList.contains('performance-mode') || document.body.classList.contains('power-saver-active');
+}
 
 function _injectCardEffect(card) {
-    if (_effectInjectedSet.has(card)) return;
+    if (!card.dataset.effect || useLightModelCards() || _effectInjectedSet.has(card)) return;
     _effectInjectedSet.add(card);
     
     const effectType = card.dataset.effect;
@@ -190,23 +198,15 @@ function _initCardEffectObserver() {
 
 function _observeModelCards() {
     if (!_cardEffectObserver) _initCardEffectObserver();
-    
-    const cards = document.querySelectorAll('.model-card[data-effect]');
-    cards.forEach(card => {
+    else _cardEffectObserver.disconnect();
+    document.querySelectorAll('#model-selector .model-card').forEach(card => {
         _cardEffectObserver.observe(card);
-    });
-    
-    const allCards = document.querySelectorAll('.model-card:not([data-effect])');
-    allCards.forEach(card => {
-        if (card.dataset.preview) {
-            _cardEffectObserver.observe(card);
-        }
     });
 }
 
 function renderModels(modelsToRender) {
     const modelSelector = document.getElementById('model-selector');
-    modelSelector.innerHTML = '';
+    const staggerCount = useLightModelCards() ? 0 : MAX_STAGGER_CARDS;
     
     if (typeof models !== 'undefined') {
         models = modelsToRender; 
@@ -214,8 +214,8 @@ function renderModels(modelsToRender) {
 
     const newHtml = modelsToRender.map((model, index) => {
         let previewImage = model.examples?.portraits?.[0] || '';
-        const delay = index < MAX_STAGGER_CARDS ? index * 50 : 0;
-        const animClass = index < MAX_STAGGER_CARDS ? 'animate-in' : '';
+        const delay = index < staggerCount ? index * 50 : 0;
+        const animClass = index < staggerCount ? 'animate-in' : '';
         const isHot = typeof HOT_MODELS !== 'undefined' && HOT_MODELS.includes(model.id);
         const isPaid = typeof modelSpecs !== 'undefined' && modelSpecs[model.id]?.usedTechniques?.includes("Paid Models");
         const isFlorence = model.id === '7367ab 279dbf 417a8 51fe3 5050';
@@ -256,18 +256,15 @@ function renderModels(modelsToRender) {
         if (typeof selectedModel !== 'undefined' && selectedModel === modelId) {
             card.classList.remove('animate-in', 'animate-filter-in');
             card.classList.add('active');
-            if (typeof createConfetti === 'function') createConfetti(card);
+            if (typeof createConfetti === 'function' && !useLightModelCards()) createConfetti(card);
         }
     });
     
-    requestAnimationFrame(() => {
-        _observeModelCards();
-    });
+    _observeModelCards();
 }
 
 function filterModelsByTag(tag) {
     const cards = document.querySelectorAll('.model-card');
-    const isPerfMode = document.body.classList.contains('performance-mode');
 
     cards.forEach(card => {
         const id = card.dataset.modelId;
@@ -316,9 +313,6 @@ function filterModelsByTag(tag) {
         }
     });
     
-    requestAnimationFrame(() => {
-        _observeModelCards();
-    });
 }
 
 if (filterChips) {

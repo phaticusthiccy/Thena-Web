@@ -78,6 +78,7 @@ const modelTranslationsTR = {
     "771ks 71g6g8 hlh8h8 6b4a5 77b4a5 5060": "Thena'nın son derece canlı ve parlak anime görselleri oluşturmak için kullandığı model. Basitleştirilmiş bir Anime Core modeli ve son işlem teknikleri kullanır.",
     "911ks fdg6g8 66h8h8 900a5 zxb4a5 9000": "Müstehçen veya NSFW içerik oluşturmak için mutlak doğrulukta bir model. Thena Movie temel modeline dayanmaktadır. İnsanların ve sahnelerin gerçekçi görüntülerini oluşturabilir.",
     "7ca6e691-cecd-4a8d-bb88-d2c6303576a1": "Akış eşleme (flow matching) ve Qwen3-VL ile birleşik 34 katmanlı DiT mimarisi üzerine kurulu 8. sürüm. İnanılmaz bir prompt uyumu ve olağanüstü görüntü kalitesi sunar.",
+    "4ceb1c3e-3cdb-4158-8166-62b6d17e0901": "Thena mimarisinin bir sonraki evrimi olan 9. sürüm; rafine detay sentezi, gelişmiş komut (prompt) kavrama yeteneği ve üstün görsel tutarlılık ile yüksek çözünürlüklü üretim yapmak üzere tasarlandı.",
     "81ggz 7j661 66281 yy161 1f4f4 21143": "Thena'nın en güçlü gürültü ile akıl yürütme modeli. Saf güç ve benzersiz kalitenin birleşimi.",
     "176ks dd131 81927 a1165 p00183 6000": "Fotorealizmin zirvesi. Her detayı kusursuz bir hassasiyetle yakalayan Thena Portraits, istemlerinizi yüksek kaliteli başyapıtlara dönüştürür.",
     "7367ab 279dbf 417a8 51fe3 5050": "Yüksek çözünürlüklü, sadece açık içerikler için titizlikle tasarlanmış bir model. Yükske netlikte tutarlı görüntüler üretebilir.",
@@ -139,6 +140,8 @@ const MODEL_STATS = {
     "771ks 71g6g8 hlh8h8 6b4a5 77b4a5 5060": { intel: 4, qual: 4, speed: 4 },
     // Thena Bloomlight
     "911ks fdg6g8 66h8h8 900a5 zxb4a5 9000": { intel: 3, qual: 4, speed: 3 },
+    // Thena V9
+    "4ceb1c3e-3cdb-4158-8166-62b6d17e0901": { intel: 4, qual: 4, speed: 5 },
     // Thena V8
     "7ca6e691-cecd-4a8d-bb88-d2c6303576a1": { intel: 4, qual: 4, speed: 5 },
     // Thena V7
@@ -2379,6 +2382,7 @@ function restoreExtras() {
 
 function createConfetti(element) {
     if (document.body.classList.contains('performance-mode')) return;
+    if (element.matches('.model-card') && typeof useLightModelCards === 'function' && useLightModelCards()) return;
     const rect = element.getBoundingClientRect();
 
     const style = getComputedStyle(document.documentElement);
@@ -7620,6 +7624,7 @@ async function loadGalleryStatistics() {
             "Thena Ultra": "thenaUltra",
             "Thena Pro": "thenaPro",
             "Thena Movie": "thenaMovie",
+            "Thena V9": "thenaV9",
             "Thena V8": "thenaV8",
             "Thena V7": "thenaV7",
             "Thena V6": "thenaV6",

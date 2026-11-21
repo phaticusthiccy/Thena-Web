@@ -67,6 +67,7 @@
         "Thena Ultra": "thenaUltra",
         "Thena Pro": "thenaPro",
         "Thena Movie": "thenaMovie",
+        "Thena V9": "thenaV9",
         "Thena V8": "thenaV8",
         "Thena V7": "thenaV7",
         "Thena V6": "thenaV6",

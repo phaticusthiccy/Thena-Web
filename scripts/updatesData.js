@@ -1,5 +1,106 @@
 window.thenaUpdates = [
   {
+    "id": "v3.8.8",
+    "version": "3.8.8",
+    "title": {
+      "en": "THENA PATCH NOTES v3.8.8",
+      "tr": "THENA GÜNCELLEME NOTLARI v3.8.8"
+    },
+    "subtitle": {
+      "en": "Thena V9 model debut, adaptive model card optimizations, and comprehensive WebKit cross-browser styling.",
+      "tr": "Thena V9 model lansmanı, adaptif model kartı optimizasyonları ve kapsamlı WebKit çapraz tarayıcı geliştirmeleri."
+    },
+    "category": {
+      "en": "Feature Release",
+      "tr": "Özellik Güncellemesi"
+    },
+    "author": "Thena Dev Team",
+    "date": "21/11/2026",
+    "bannerImage": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80",
+    "sections": [
+      {
+        "title": {
+          "en": "NEW AI MODEL: THENA V9",
+          "tr": "YENİ YAPAY ZEKA MODELİ: THENA V9"
+        },
+        "intro": {
+          "en": "Introducing the 9th generation flagship model of the Thena architecture.",
+          "tr": "Thena mimarisinin 9. nesil amiral gemisi modelini kullanıma sunuyoruz."
+        },
+        "groups": [
+          {
+            "name": {
+              "en": "Thena V9 Release",
+              "tr": "Thena V9 Entegrasyonu"
+            },
+            "items": [
+              {
+                "en": "Integrated Thena V9, engineered for refined detail synthesis, superior prompt comprehension, and ultra-high visual consistency at maximum rendering speed (Speed: 5/5).",
+                "tr": "Rafine detay sentezi, gelişmiş prompt kavrama yeteneği ve üstün görsel tutarlılığı en yüksek üretim hızıyla (Hız: 5/5) birleştiren Thena V9 mimarisi sisteme entegre edildi."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "PERFORMANCE & ADAPTIVE MODEL CARDS",
+          "tr": "PERFORMANS & ADAPTİF MODEL KARTLARI"
+        },
+        "intro": {
+          "en": "Introduced intelligent lite rendering for lower-spec devices and reduced motion preferences.",
+          "tr": "Düşük donanımlı cihazlar ve hareket kısıtlama tercihleri için akıllı hafif render modu devreye alındı."
+        },
+        "groups": [
+          {
+            "name": {
+              "en": "Lite Mode & Observer Enhancements",
+              "tr": "Lite Mod & Kart Gözlemci Optimizasyonu"
+            },
+            "items": [
+              {
+                "en": "Implemented useLightModelCards() to adaptively disable confetti, heavy card visual effects, and stagger delays under performance-mode, power-saver, or prefers-reduced-motion.",
+                "tr": "Performans modu, güç tasarrufu veya hareket azaltma tercihi etkin olduğunda konfeti efektlerini, ağır kart efektlerini ve kademeli gecikmeleri dinamik olarak devre dışı bırakan useLightModelCards() mekanizması geliştirildi."
+              },
+              {
+                "en": "Consolidated model card IntersectionObservers into a single streamlined pipeline, eliminating redundant DOM lookups and unneeded requestAnimationFrame cycles.",
+                "tr": "Model kartı IntersectionObserver yapısı tek bir aerodinamik hatta toplanarak gereksiz DOM sorguları ve ardışık requestAnimationFrame döngüleri optimize edildi."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "CROSS-BROWSER & WEBKIT COMPATIBILITY",
+          "tr": "ÇAPRAZ TARAYICI & WEBKIT UYUMLULUĞU"
+        },
+        "intro": {
+          "en": "Enhanced rendering consistency across Safari, iOS WebKit, and mobile browsers.",
+          "tr": "Safari, iOS WebKit ve mobil tarayıcılarda görsel tutarlılık artırıldı."
+        },
+        "groups": [
+          {
+            "name": {
+              "en": "Backdrop & WebKit Fixes",
+              "tr": "Backdrop-Filter ve WebKit Düzeltmeleri"
+            },
+            "items": [
+              {
+                "en": "Added -webkit-backdrop-filter vendor prefixes across modals, navigation bars, dropdowns, and overlays to guarantee glassmorphism effects on Safari and iOS.",
+                "tr": "Safari ve iOS cihazlarda glassmorphism bulanıklık efektlerinin kusursuz çalışması için modal, menü ve katmanlara -webkit-backdrop-filter ön eki uygulandı."
+              },
+              {
+                "en": "Optimized background text clip rules and selection boundaries (-webkit-background-clip / -webkit-user-select) for unified rendering.",
+                "tr": "Metin arka plan kırpma (-webkit-background-clip) ve seçim sınırlandırma kuralları standartlaştırılarak görsel bozulmaların önüne geçildi."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "v3.8.7",
     "version": "3.8.7",
     "title": {
